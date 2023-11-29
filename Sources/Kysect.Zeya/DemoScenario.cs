@@ -10,22 +10,24 @@ public class DemoScenario
     private readonly IGithubIntegrationService _githubIntegrationService;
     private readonly IRepositoryValidationReporter _reporter;
     private readonly IGithubRepositoryProvider _githubRepositoryProvider;
+    private readonly RepositoryValidator _repositoryValidator;
     private readonly ILogger _logger;
 
     public DemoScenario(
         IGithubIntegrationService githubIntegrationService,
         IRepositoryValidationReporter reporter,
         IGithubRepositoryProvider githubRepositoryProvider,
-        ILogger logger)
+        ILogger logger,
+        RepositoryValidator repositoryValidator)
     {
         _githubIntegrationService = githubIntegrationService;
         _reporter = reporter;
         _logger = logger;
+        _repositoryValidator = repositoryValidator;
         _githubRepositoryProvider = githubRepositoryProvider;
     }
 
-    public void Process(
-        IReadOnlyCollection<IRepositoryValidationRule<GithubRepository>> validationRules)
+    public void Process()
     {
         _logger.LogInformation("Loading github repositories for validation");
         IReadOnlyCollection<GithubRepository> repositories = _githubRepositoryProvider.GetAll();
@@ -38,9 +40,8 @@ public class DemoScenario
         }
 
         var report = RepositoryValidationReport.Empty;
-        var repositoryValidator = new RepositoryValidator(_logger);
         foreach (var githubRepository in repositories)
-            report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
+            report = report.Compose(_repositoryValidator.Validate(githubRepository, "Demo-validation"));
 
         _reporter.Report(report);
     }

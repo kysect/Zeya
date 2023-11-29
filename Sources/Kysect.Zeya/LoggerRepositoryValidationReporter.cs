@@ -18,7 +18,7 @@ public class LoggerRepositoryValidationReporter : IRepositoryValidationReporter
         foreach (var diagnostic in repositoryValidationReport.Diagnostics)
         {
             // TODO: use severity
-            _logger.LogInformation($"{diagnostic.Project}: [{diagnostic.Code}] {diagnostic.Message}");
+            _logger.LogWarning($"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
         }
     }
 }

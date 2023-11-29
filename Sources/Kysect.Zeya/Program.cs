@@ -17,6 +17,6 @@ public class Program
 
         };
 
-        demoScenario.Process(validationRules);
+        demoScenario.Process();
     }
 }

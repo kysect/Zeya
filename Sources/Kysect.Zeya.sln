@@ -3,15 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34310.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya", "Kysect.Zeya\Kysect.Zeya.csproj", "{CF936EEC-86BD-440C-808D-32568A516467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya", "Kysect.Zeya\Kysect.Zeya.csproj", "{CF936EEC-86BD-440C-808D-32568A516467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Tui", "Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj", "{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tui", "Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj", "{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.DataAccess.Abstractions", "Kysect.Zeya.DataAccess.Abstractions\Kysect.Zeya.DataAccess.Abstractions.csproj", "{D26AE0E3-344F-4B66-A46C-93979BCE897C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DataAccess.Abstractions", "Kysect.Zeya.DataAccess.Abstractions\Kysect.Zeya.DataAccess.Abstractions.csproj", "{D26AE0E3-344F-4B66-A46C-93979BCE897C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Abstractions", "Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj", "{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Abstractions", "Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj", "{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.GithubIntegration", "Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj", "{D4CBE8A6-C887-479A-B952-08DF938C6A1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegration", "Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj", "{D4CBE8A6-C887-479A-B952-08DF938C6A1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.ValidationRules", "Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj", "{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Tests", "Kysect.Zeya.Tests\Kysect.Zeya.Tests.csproj", "{1274C349-8B79-498C-88A7-F7D64D4650B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
