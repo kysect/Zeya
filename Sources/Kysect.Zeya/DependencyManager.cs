@@ -7,6 +7,7 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ValidationRules;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,7 @@ public class DependencyManager
         serviceCollection.AddSingleton<IGithubIntegrationService, GithubIntegrationService>();
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<RepositoryValidator>();
+        serviceCollection.AddSingleton<DotnetCli>();
 
         serviceCollection = AddScenarioExecution(serviceCollection);
 
