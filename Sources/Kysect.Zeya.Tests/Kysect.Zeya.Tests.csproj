@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.ProjectSystemIntegration\Kysect.Zeya.ProjectSystemIntegration.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj" />
   </ItemGroup>
 

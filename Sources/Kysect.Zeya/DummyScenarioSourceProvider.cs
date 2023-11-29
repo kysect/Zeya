@@ -26,6 +26,9 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: ValidateTargetFrameworkVersion
                  Parameters:
                    AllowedVersions: [net8.0, netstandard2.0]
+               - Name: ValidateCentralPackageManagerConfig
+                 Parameters:
+                   MasterFile: MasterDirectory.Packages.props
                """;
     }
 }

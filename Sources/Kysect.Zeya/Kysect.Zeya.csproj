@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="MasterDirectory.Packages.props">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -8,6 +8,7 @@ using Kysect.ScenarioLib.YamlParser;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ManagedDotnetCli;
+using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ValidationRules;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,7 +21,7 @@ public class DependencyManager
     {
         IServiceCollection serviceCollection = new ServiceCollection();
 
-        ILogger logger = PredefinedLogger.CreateConsoleLogger("Zeya");
+        ILogger logger = CreateConsoleLogger();
         var githubIntegrationOptions = new GithubIntegrationOptions()
         {
         };
@@ -39,6 +40,7 @@ public class DependencyManager
         serviceCollection = AddScenarioExecution(serviceCollection);
 
         serviceCollection.AddSingleton<DemoScenario>();
+        serviceCollection.AddSingleton<DirectoryPackagesParser>();
 
         return serviceCollection.BuildServiceProvider();
     }
@@ -60,5 +62,20 @@ public class DependencyManager
             .AddSingleton<IScenarioStepParser, ScenarioStepReflectionParser>(_ => ScenarioStepReflectionParser.Create(assemblies))
             .AddAllImplementationOf<IScenarioStepExecutor>(assemblies)
             .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, assemblies));
+    }
+
+    // TODO: disable IncludeScopes in default implementation PredefinedLogger.CreateConsoleLogger
+    private static ILogger CreateConsoleLogger(string category = "", LogLevel logLevel = LogLevel.Trace)
+    {
+        using ILoggerFactory loggerFactory = LoggerFactory
+            .Create(b => b.AddFilter(null, logLevel)
+                .AddSimpleConsole(options =>
+                {
+                    options.IncludeScopes = false;
+                    options.SingleLine = true;
+                    options.TimestampFormat = "HH:mm:ss ";
+                }));
+
+        return loggerFactory.CreateLogger(category);
     }
 }
