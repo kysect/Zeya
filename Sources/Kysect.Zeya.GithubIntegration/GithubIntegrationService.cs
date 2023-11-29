@@ -8,11 +8,13 @@ namespace Kysect.Zeya.GithubIntegration;
 public class GithubIntegrationService : IGithubIntegrationService
 {
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
+    private readonly IPathFormatStrategy _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(GithubIntegrationOptions githubIntegrationOptions, ILogger logger)
+    public GithubIntegrationService(GithubIntegrationOptions githubIntegrationOptions, IPathFormatStrategy pathFormatStrategy, ILogger logger)
     {
         _githubIntegrationOptions = githubIntegrationOptions;
+        _pathFormatStrategy = pathFormatStrategy;
         _logger = logger;
     }
 
@@ -23,7 +25,7 @@ public class GithubIntegrationService : IGithubIntegrationService
 
 
         repositoryFetcher.EnsureRepositoryUpdated(
-            new UseOwnerAndRepoForFolderNameStrategy(_githubIntegrationOptions.CacheDirectoryPath),
+            _pathFormatStrategy,
             new GithubUtils.RepositorySync.Models.GithubRepository(repository.Owner, repository.Name));
     }
 }

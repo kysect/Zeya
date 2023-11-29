@@ -1,4 +1,5 @@
-﻿using Kysect.CommonLib.DependencyInjection;
+using Kysect.CommonLib.DependencyInjection;
+using Kysect.GithubUtils.RepositorySync;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +18,12 @@ public class DependencyManager
         {
         };
 
+        var pathFormatStrategy = new UseOwnerAndRepoForFolderNameStrategy(githubIntegrationOptions.CacheDirectoryPath);
+
         serviceCollection.AddSingleton(logger);
         serviceCollection.AddSingleton(githubIntegrationOptions);
+        serviceCollection.AddSingleton<IPathFormatStrategy>(pathFormatStrategy);
+        serviceCollection.AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>();
         serviceCollection.AddSingleton<IGithubIntegrationService, GithubIntegrationService>();
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<DemoScenario>();

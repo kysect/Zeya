@@ -9,32 +9,36 @@ public class DemoScenario
 {
     private readonly IGithubIntegrationService _githubIntegrationService;
     private readonly IRepositoryValidationReporter _reporter;
+    private readonly IGithubRepositoryProvider _githubRepositoryProvider;
     private readonly ILogger _logger;
 
     public DemoScenario(
         IGithubIntegrationService githubIntegrationService,
         IRepositoryValidationReporter reporter,
+        IGithubRepositoryProvider githubRepositoryProvider,
         ILogger logger)
     {
         _githubIntegrationService = githubIntegrationService;
         _reporter = reporter;
         _logger = logger;
+        _githubRepositoryProvider = githubRepositoryProvider;
     }
 
     public void Process(
-        IReadOnlyCollection<GithubRepository> repositories,
         IReadOnlyCollection<IRepositoryValidationRule<GithubRepository>> validationRules)
     {
-        var repositoryValidator = new RepositoryValidator(_logger);
-        _logger.LogInformation("Clone {Count} repositories", repositories.Count);
+        _logger.LogInformation("Loading github repositories for validation");
+        IReadOnlyCollection<GithubRepository> repositories = _githubRepositoryProvider.GetAll();
 
+        _logger.LogInformation("Clone {Count} repositories", repositories.Count);
         foreach (var repository in repositories)
         {
             _logger.LogTabDebug(1, $"Clone repository {repository.FullName}");
             _githubIntegrationService.CloneOrUpdate(repository);
         }
 
-        RepositoryValidationReport report = RepositoryValidationReport.Empty;
+        var report = RepositoryValidationReport.Empty;
+        var repositoryValidator = new RepositoryValidator(_logger);
         foreach (var githubRepository in repositories)
             report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
 
