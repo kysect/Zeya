@@ -25,6 +25,6 @@ public class DotnetCli
     {
         _logger.LogTrace("Execute dotnet build of {Project} for getting value of {Property}", projectPath, propertyName);
         var result = _cmdProcess.ExecuteCommand($"dotnet build \"{projectPath}\" --getProperty:{propertyName}");
-        return result.StandardOutput;
+        return result.StandardOutput.Trim();
     }
 }

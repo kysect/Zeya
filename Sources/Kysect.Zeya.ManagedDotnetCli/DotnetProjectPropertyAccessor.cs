@@ -11,7 +11,7 @@ public class DotnetProjectPropertyAccessor
         _cli = cli;
     }
 
-    public bool ManagePackageVersionsCentrally()
+    public bool IsManagePackageVersionsCentrally()
     {
         return GetBoolValue("ManagePackageVersionsCentrally");
     }
@@ -19,6 +19,11 @@ public class DotnetProjectPropertyAccessor
     public bool IsTestProject()
     {
         return GetBoolValue("IsTestProject");
+    }
+
+    public string GetTargetFramework()
+    {
+        return _cli.GetProperty(_projectPath, "TargetFramework");
     }
 
     private bool GetBoolValue(string propertyName)

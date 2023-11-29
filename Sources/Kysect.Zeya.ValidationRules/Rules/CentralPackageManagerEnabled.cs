@@ -39,7 +39,7 @@ public class CentralPackageManagerEnabledValidationRule : IScenarioStepExecutor<
             return;
 
         var projectPropertyAccessor = new DotnetProjectPropertyAccessor(selectedProjectDefault, _dotnetCli);
-        var managePackageVersionsCentrally = projectPropertyAccessor.ManagePackageVersionsCentrally();
+        var managePackageVersionsCentrally = projectPropertyAccessor.IsManagePackageVersionsCentrally();
         if (!managePackageVersionsCentrally)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
