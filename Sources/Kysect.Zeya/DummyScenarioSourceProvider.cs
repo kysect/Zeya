@@ -1,4 +1,4 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+using Kysect.ScenarioLib.Abstractions;
 
 namespace Kysect.Zeya;
 
@@ -29,6 +29,9 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: ValidateCentralPackageManagerConfig
                  Parameters:
                    MasterFile: MasterDirectory.Packages.props
+               - Name: LicenseFileExists
+                 Parameters:
+                   Null: Null
                """;
     }
 }
