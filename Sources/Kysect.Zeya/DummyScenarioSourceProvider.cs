@@ -35,6 +35,9 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: GithubActionWorkflowConfigured
                  Parameters:
                    FileName: dotnet.yml
+               - Name: DirectoryBuildPropsContainsRequiredFields
+                 Parameters:
+                   RequiredFields: ["Authors", "Company", "PackageReadmeFile", "PackageLicenseFile", "Nullable", "LangVersion", "ImplicitUsings", "RepositoryUrl", "Version"]
                """;
     }
 }
