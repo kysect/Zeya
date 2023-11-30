@@ -1,4 +1,4 @@
-using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.ScenarioLib.Abstractions;
 
 namespace Kysect.Zeya;
 
@@ -32,6 +32,9 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: LicenseFileExists
                  Parameters:
                    Null: Null
+               - Name: GithubActionWorkflowConfigured
+                 Parameters:
+                   FileName: dotnet.yml
                """;
     }
 }
