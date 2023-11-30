@@ -1,0 +1,41 @@
+name: Publish nuget
+
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  working-directory: Sources
+  release-directory: ./artifacts/package/release
+  dotnet-version: 8.0.x
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ env.working-directory }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.dotnet-version }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build -c Release --no-restore --verbosity normal
+
+    - name: Test
+      run: dotnet test -c Release --no-build --verbosity normal
+
+    - name: Pack
+      run: dotnet pack
+
+    - name: Publish to Nuget
+      run: dotnet nuget push ${{ env.release-directory }}/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

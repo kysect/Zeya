@@ -29,9 +29,18 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: ValidateCentralPackageManagerConfig
                  Parameters:
                    MasterFile: MasterDirectory.Packages.props
-               - Name: LicenseFileExists
+               - Name: ContainsRequiredFile
                  Parameters:
-                   Null: Null
+                   FilePath: LICENSE
+                   Sample: Sample\LICENSE
+               - Name: ContainsRequiredFile
+                 Parameters:
+                   FilePath: .github\workflows\build-test.yml
+                   Sample: Sample\build-test.yml
+               - Name: ContainsRequiredFile
+                 Parameters:
+                   FilePath: .github\workflows\nuget-publish.yml
+                   Sample: Sample\nuget-publish.yml
                - Name: GithubActionWorkflowConfigured
                  Parameters:
                    FileName: dotnet.yml
