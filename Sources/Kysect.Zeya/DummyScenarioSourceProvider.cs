@@ -26,6 +26,8 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                  Parameters:
                    PullRequestReviewRequired: true
                    ConversationResolutionRequired: true
+               - Name: Github.AutoBranchDeletionEnabled
+               
                
                - Name: SourceCodeDirectoryExists
                  Parameters:
