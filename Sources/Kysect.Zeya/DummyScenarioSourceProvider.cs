@@ -16,6 +16,12 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
     public string GetScenarioSourceCode(string scenarioName)
     {
         return """
+               - Name: Github.RepositoryLicense
+                 Parameters:
+                   OwnerName: Kysect
+                   Year: 2023
+                   LicenseType: MIT
+               
                - Name: SourceCodeDirectoryExists
                  Parameters:
                    ExpectedSourceDirectoryName: Sources
@@ -54,7 +60,9 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                         "PublishRepositoryUrl",
                         "IncludeSymbols",
                         "SymbolPackageFormat",
-                        "EmbedUntrackedSources"
+                        "EmbedUntrackedSources",
+                        "PackageIcon",
+                        "PackageLicenseExpression"
                    ]
                - Name: RequiredPackagesAdded
                  Parameters:
