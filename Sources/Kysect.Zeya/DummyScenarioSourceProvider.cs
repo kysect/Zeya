@@ -27,6 +27,12 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                    PullRequestReviewRequired: true
                    ConversationResolutionRequired: true
                - Name: Github.AutoBranchDeletionEnabled
+               - Name: Github.BuildWorkflowEnabled
+                 Parameters:
+                   MasterFile: Samples\build-test.yml
+               - Name: Github.BuildWorkflowEnabled
+                 Parameters:
+                   MasterFile: Samples\nuget-publish.yml
                
                
                - Name: SourceCodeDirectoryExists
@@ -39,18 +45,6 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: ValidateCentralPackageManagerConfig
                  Parameters:
                    MasterFile: Samples\MasterDirectory.Packages.props
-               - Name: ContainsRequiredFile
-                 Parameters:
-                   FilePath: LICENSE
-                   Sample: Samples\LICENSE
-               - Name: ContainsRequiredFile
-                 Parameters:
-                   FilePath: .github\workflows\build-test.yml
-                   Sample: Samples\build-test.yml
-               - Name: ContainsRequiredFile
-                 Parameters:
-                   FilePath: .github\workflows\nuget-publish.yml
-                   Sample: Samples\nuget-publish.yml
                - Name: DirectoryBuildPropsContainsRequiredFields
                  Parameters:
                    RequiredFields: [

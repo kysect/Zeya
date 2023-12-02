@@ -10,7 +10,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubC
     [ScenarioStep("Github.AutoBranchDeletionEnabled")]
     public record Arguments() : IScenarioStep
     {
-        public static string DiagnosticCode => RuleDescription.Github.BranchProtectionEnabled;
+        public static string DiagnosticCode => RuleDescription.Github.AutoBranchDeletionEnabled;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 

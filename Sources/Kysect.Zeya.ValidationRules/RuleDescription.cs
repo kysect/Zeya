@@ -8,5 +8,6 @@ public static class RuleDescription
         public static string ReadmeExists = "GHR0002";
         public static string BranchProtectionEnabled = "GHR0003";
         public static string AutoBranchDeletionEnabled = "GHR0003";
+        public static string BuildWorkflowEnabled = "GHR0004";
     }
 }
