@@ -1,4 +1,5 @@
-﻿using Kysect.CommonLib.Logging;
+﻿using System.IO.Abstractions;
+using Kysect.CommonLib.Logging;
 using Kysect.GithubUtils.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
@@ -15,6 +16,7 @@ public class RepositoryValidator
     private readonly IScenarioStepParser _scenarioStepParser;
     private readonly IScenarioStepHandler _scenarioStepHandler;
     private readonly IPathFormatStrategy _pathFormatStrategy;
+    private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 
     public RepositoryValidator(
@@ -23,7 +25,8 @@ public class RepositoryValidator
         IScenarioSourceCodeParser scenarioSourceCodeParser,
         IScenarioStepParser scenarioStepParser,
         IScenarioStepHandler scenarioStepHandler,
-        IPathFormatStrategy pathFormatStrategy)
+        IPathFormatStrategy pathFormatStrategy,
+        IFileSystem fileSystem)
     {
         _logger = logger;
         _scenarioProvider = scenarioProvider;
@@ -31,6 +34,7 @@ public class RepositoryValidator
         _scenarioStepParser = scenarioStepParser;
         _scenarioStepHandler = scenarioStepHandler;
         _pathFormatStrategy = pathFormatStrategy;
+        _fileSystem = fileSystem;
     }
     public RepositoryValidationReport Validate(GithubRepository repository, string validationScenarioName)
     {
@@ -41,7 +45,7 @@ public class RepositoryValidator
         IReadOnlyCollection<IScenarioStep> steps = scenarioStepNodes.Select(_scenarioStepParser.ParseScenarioStep).ToList();
 
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
-        var githubRepositoryAccessor = new GithubRepositoryAccessor(repository, _pathFormatStrategy);
+        var githubRepositoryAccessor = new GithubRepositoryAccessor(repository, _pathFormatStrategy, _fileSystem);
         var repositoryValidationContext = new RepositoryValidationContext(githubRepositoryAccessor, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 

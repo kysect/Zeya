@@ -1,22 +1,32 @@
-﻿using Kysect.GithubUtils.RepositorySync;
+﻿using System.IO.Abstractions;
+using Kysect.GithubUtils.RepositorySync;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 
 namespace Kysect.Zeya.GithubIntegration;
 
-public class GithubRepositoryAccessor : IGithubRepositoryAccessor
+public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatStrategy pathFormatStrategy, IFileSystem fileSystem)
+    : IGithubRepositoryAccessor
 {
-    private readonly IPathFormatStrategy _pathFormatStrategy;
+    public GithubRepository Repository { get; } = repository;
 
-    public GithubRepositoryAccessor(GithubRepository repository, IPathFormatStrategy pathFormatStrategy)
-    {
-        _pathFormatStrategy = pathFormatStrategy;
-        Repository = repository;
-    }
-
-    public GithubRepository Repository { get; }
     public string GetFullPath()
     {
-        return _pathFormatStrategy.GetPathToRepository(Repository.Owner, Repository.Name);
+        return pathFormatStrategy.GetPathToRepository(Repository.Owner, Repository.Name);
+    }
+
+    public bool Exists(string partialPath)
+    {
+        return fileSystem.File.Exists(GetFullPathToFile(partialPath));
+    }
+
+    public string ReadFile(string partialPath)
+    {
+        return fileSystem.File.ReadAllText(GetFullPathToFile(partialPath));
+    }
+
+    private string GetFullPathToFile(string partialPath)
+    {
+        return Path.Combine(GetFullPath(), partialPath);
     }
 }

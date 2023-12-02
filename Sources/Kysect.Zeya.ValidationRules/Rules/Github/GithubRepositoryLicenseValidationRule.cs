@@ -1,10 +1,9 @@
-﻿using System.IO.Abstractions;
-using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 
-namespace Kysect.Zeya.ValidationRules.Rules;
+namespace Kysect.Zeya.ValidationRules.Rules.Github;
 
-public class GithubRepositoryLicenseValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<GithubRepositoryLicenseValidationRule.Arguments>
+public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<GithubRepositoryLicenseValidationRule.Arguments>
 {
     [ScenarioStep("Github.RepositoryLicense")]
     public record Arguments(string OwnerName, string Year, string LicenseType) : IScenarioStep
@@ -17,17 +16,16 @@ public class GithubRepositoryLicenseValidationRule(IFileSystem fileSystem) : ISc
     {
         var repositoryValidationContext = context.GetValidationContext();
 
-        var pathToLicenseFile = Path.Combine(repositoryValidationContext.RepositoryAccessor.GetFullPath(), ValidationConstants.LicenseFileName);
-        if (!fileSystem.File.Exists(pathToLicenseFile))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.LicenseFileName))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 Arguments.DiagnosticCode,
-                $"License file was not found by path {pathToLicenseFile}",
+                $"License file was not found by path {ValidationConstants.LicenseFileName}",
                 Arguments.DefaultSeverity);
             return;
         }
 
-        var licenseContent = fileSystem.File.ReadAllText(pathToLicenseFile);
+        var licenseContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.LicenseFileName);
         if (!licenseContent.StartsWith(arguments.LicenseType))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
