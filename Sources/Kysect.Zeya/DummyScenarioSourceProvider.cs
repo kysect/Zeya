@@ -22,6 +22,10 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                    Year: 2023
                    LicenseType: MIT
                - Name: Github.ReadmeExists
+               - Name: Github.BranchProtectionEnabled
+                 Parameters:
+                   PullRequestReviewRequired: true
+                   ConversationResolutionRequired: true
                
                - Name: SourceCodeDirectoryExists
                  Parameters:
@@ -68,10 +72,7 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: RequiredPackagesAdded
                  Parameters:
                    Packages: ["Kysect.Editorconfig"]
-               - Name: GithubBranchProtectionEnabled
-                 Parameters:
-                   PullRequestReviewRequired: true
-                   ConversationResolutionRequired: true
+               
                """;
     }
 }
