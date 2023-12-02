@@ -34,10 +34,12 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                  Parameters:
                    MasterFile: Samples\nuget-publish.yml
                
-               
-               - Name: SourceCodeDirectoryExists
+               - Name: SourceCode.SourcesMustNotBeInRoot
                  Parameters:
                    ExpectedSourceDirectoryName: Sources
+
+
+
                - Name: CentralPackageManagerEnabled
                - Name: ValidateTargetFrameworkVersion
                  Parameters:

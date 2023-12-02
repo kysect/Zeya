@@ -10,4 +10,9 @@ public static class RuleDescription
         public static string AutoBranchDeletionEnabled = "GHR0003";
         public static string BuildWorkflowEnabled = "GHR0004";
     }
+
+    public static class SourceCode
+    {
+        public static string SourcesMustNotBeInRoot = "SRC00001";
+    }
 }
