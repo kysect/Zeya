@@ -21,6 +21,7 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                    OwnerName: Kysect
                    Year: 2023
                    LicenseType: MIT
+               - Name: Github.ReadmeExists
                
                - Name: SourceCodeDirectoryExists
                  Parameters:
