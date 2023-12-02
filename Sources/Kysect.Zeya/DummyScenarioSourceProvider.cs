@@ -15,14 +15,11 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
 
     public string GetScenarioSourceCode(string scenarioName)
     {
-        // TODO: remove Null: Null after lib will support steps without arguments
         return """
                - Name: SourceCodeDirectoryExists
                  Parameters:
                    ExpectedSourceDirectoryName: Sources
                - Name: CentralPackageManagerEnabled
-                 Parameters:
-                   Null: Null
                - Name: ValidateTargetFrameworkVersion
                  Parameters:
                    AllowedVersions: [net8.0, netstandard2.0]
@@ -43,10 +40,29 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                    Sample: Samples\nuget-publish.yml
                - Name: DirectoryBuildPropsContainsRequiredFields
                  Parameters:
-                   RequiredFields: ["Authors", "Company", "PackageReadmeFile", "PackageLicenseFile", "Nullable", "LangVersion", "ImplicitUsings", "RepositoryUrl", "Version", "UseArtifactsOutput"]
+                   RequiredFields: [
+                        "Authors",
+                        "Company",
+                        "PackageReadmeFile",
+                        "PackageLicenseFile",
+                        "Nullable",
+                        "LangVersion",
+                        "ImplicitUsings",
+                        "RepositoryUrl",
+                        "Version",
+                        "UseArtifactsOutput",
+                        "PublishRepositoryUrl",
+                        "IncludeSymbols",
+                        "SymbolPackageFormat",
+                        "EmbedUntrackedSources"
+                   ]
                - Name: RequiredPackagesAdded
                  Parameters:
                    Packages: ["Kysect.Editorconfig"]
+               - Name: GithubBranchProtectionEnabled
+                 Parameters:
+                   PullRequestReviewRequired: true
+                   ConversationResolutionRequired: true
                """;
     }
 }

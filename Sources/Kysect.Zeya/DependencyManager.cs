@@ -12,6 +12,7 @@ using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ValidationRules;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Octokit;
 
 namespace Kysect.Zeya;
 
@@ -36,6 +37,7 @@ public class DependencyManager
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<RepositoryValidator>();
         serviceCollection.AddSingleton<DotnetCli>();
+        serviceCollection.AddSingleton<GitHubClient>(sp => new GitHubClient(new ProductHeaderValue("Zeya")) {Credentials = new Credentials(githubToken)});
 
         serviceCollection = AddScenarioExecution(serviceCollection);
 
