@@ -12,6 +12,11 @@ public record ValidateCentralPackageManagerConfig(string MasterFile) : IScenario
     public static string DiagnosticCode = "SRC00004";
     public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
 
+    public static string GetMessageMissedConfigurationFile(ValidateCentralPackageManagerConfig request)
+    {
+        return $"Configuration file Directory.Package.props for Central Package Management is missed.";
+    }
+
     public static string GetMessageAboutMissed(ValidateCentralPackageManagerConfig request, NugetVersion nugetVersion)
     {
         return $"Nuget {nugetVersion.PackageName} version is not specified in master Directory.Package.props";

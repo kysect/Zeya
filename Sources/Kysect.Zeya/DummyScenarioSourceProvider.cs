@@ -28,25 +28,25 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                    AllowedVersions: [net8.0, netstandard2.0]
                - Name: ValidateCentralPackageManagerConfig
                  Parameters:
-                   MasterFile: MasterDirectory.Packages.props
+                   MasterFile: Samples\MasterDirectory.Packages.props
                - Name: ContainsRequiredFile
                  Parameters:
                    FilePath: LICENSE
-                   Sample: Sample\LICENSE
+                   Sample: Samples\LICENSE
                - Name: ContainsRequiredFile
                  Parameters:
                    FilePath: .github\workflows\build-test.yml
-                   Sample: Sample\build-test.yml
+                   Sample: Samples\build-test.yml
                - Name: ContainsRequiredFile
                  Parameters:
                    FilePath: .github\workflows\nuget-publish.yml
-                   Sample: Sample\nuget-publish.yml
-               - Name: GithubActionWorkflowConfigured
-                 Parameters:
-                   FileName: dotnet.yml
+                   Sample: Samples\nuget-publish.yml
                - Name: DirectoryBuildPropsContainsRequiredFields
                  Parameters:
-                   RequiredFields: ["Authors", "Company", "PackageReadmeFile", "PackageLicenseFile", "Nullable", "LangVersion", "ImplicitUsings", "RepositoryUrl", "Version"]
+                   RequiredFields: ["Authors", "Company", "PackageReadmeFile", "PackageLicenseFile", "Nullable", "LangVersion", "ImplicitUsings", "RepositoryUrl", "Version", "UseArtifactsOutput"]
+               - Name: RequiredPackagesAdded
+                 Parameters:
+                   Packages: ["Kysect.Editorconfig"]
                """;
     }
 }
