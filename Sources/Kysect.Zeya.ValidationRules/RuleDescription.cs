@@ -18,5 +18,6 @@ public static class RuleDescription
         public static string CentralPackageManagerEnabled = "SRC0003";
         public static string CentralPackageManagerVersionSynchronized = "SRC0004";
         public static string RequiredPackagesAdded = "SRC0005";
+        public static string ArtifactsOutputEnables = "SRC0006";
     }
 }

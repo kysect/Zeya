@@ -34,8 +34,7 @@ public class CentralPackageManagerVersionSynchronizedValidationRule(
             .Parse(masterFileContent)
             .ToDictionary(p => p.PackageName, p => p.Version);
 
-        var directoryBuildProsPath = Path.Combine(ValidationConstants.DefaultSourceCodeDirectory, ValidationConstants.DirectoryPackagePropsFileName);
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(directoryBuildProsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 Arguments.DiagnosticCode,
@@ -44,7 +43,7 @@ public class CentralPackageManagerVersionSynchronizedValidationRule(
             return;
         }
 
-        string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(directoryBuildProsPath);
+        string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(ValidationConstants.DirectoryPackagePropsPath);
         IReadOnlyCollection<NugetVersion> currentProjectPackages = directoryPackagesParser.Parse(currentProjectDirectoryPackage);
 
         foreach (var nugetVersion in currentProjectPackages)

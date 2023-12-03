@@ -1,6 +1,5 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using System.IO.Abstractions;
 using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules;
@@ -19,27 +18,22 @@ public record DirectoryBuildPropsContainsRequiredFields(IReadOnlyCollection<stri
 
 public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenarioStepExecutor<DirectoryBuildPropsContainsRequiredFields>
 {
-    private readonly IFileSystem _fileSystem;
-
-    public DirectoryBuildPropsContainsRequiredFieldsValidationRule(IFileSystem fileSystem)
-    {
-        _fileSystem = fileSystem;
-    }
-
     public void Execute(ScenarioContext context, DirectoryBuildPropsContainsRequiredFields request)
     {
         var repositoryValidationContext = context.GetValidationContext();
 
-        var filePath = Path.Combine(repositoryValidationContext.RepositoryAccessor.GetFullPath(), "Sources", "Directory.Build.props");
-
-        var buildPropsValues = new Dictionary<string, string>();
-
-        if (_fileSystem.File.Exists(filePath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
         {
-            var directoryBuildPropsContent = _fileSystem.File.ReadAllText(filePath);
-            var directoryBuildPropsParser = new DirectoryBuildPropsParser();
-            buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
+            repositoryValidationContext.DiagnosticCollector.Add(
+                DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
+                "Directory.Build.props file is not exists.",
+                DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
+            return;
         }
+
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryPackagePropsPath);
+        var directoryBuildPropsParser = new DirectoryBuildPropsParser();
+        Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
         foreach (var requiredField in request.RequiredFields)
         {

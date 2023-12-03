@@ -47,6 +47,15 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: SourceCode.RequiredPackagesAdded
                  Parameters:
                    Packages: ["Kysect.Editorconfig"]
+               - Name: SourceCode.ArtifactsOutputEnabled
+               - Name: DirectoryBuildPropsContainsRequiredFields
+               Parameters:
+                 RequiredFields: [
+                      "Nullable",
+                      "LangVersion",
+                      "ImplicitUsings",
+                 ]
+
 
 
                - Name: DirectoryBuildPropsContainsRequiredFields
@@ -56,12 +65,8 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                         "Company",
                         "PackageReadmeFile",
                         "PackageLicenseFile",
-                        "Nullable",
-                        "LangVersion",
-                        "ImplicitUsings",
                         "RepositoryUrl",
                         "Version",
-                        "UseArtifactsOutput",
                         "PublishRepositoryUrl",
                         "IncludeSymbols",
                         "SymbolPackageFormat",
