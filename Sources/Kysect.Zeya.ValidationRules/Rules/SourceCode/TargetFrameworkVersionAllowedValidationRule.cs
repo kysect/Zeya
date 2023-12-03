@@ -34,7 +34,7 @@ public class TargetFrameworkVersionAllowedValidationRule(IFileSystem fileSystem,
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
                     Arguments.DiagnosticCode,
-                    $"Framework versions {targetFramework} is not allowed.",
+                    $"Framework versions {targetFramework} is not allowed but used in {projectFile}.",
                     Arguments.DefaultSeverity);
             }
         }

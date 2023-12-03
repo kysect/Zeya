@@ -6,27 +6,29 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSystem, ILogger logger) : IScenarioStepExecutor<SourceCodeRequiredPackagesAddedValidationRule.Required>
+public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSystem, ILogger logger) : IScenarioStepExecutor<SourceCodeRequiredPackagesAddedValidationRule.Argument>
 {
     [ScenarioStep("SourceCode.RequiredPackagesAdded")]
-    public record Required(IReadOnlyCollection<string> Packages) : IScenarioStep
+    public record Argument(IReadOnlyCollection<string> Packages) : IScenarioStep
     {
         public static string DiagnosticCode => RuleDescription.SourceCode.RequiredPackagesAdded;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
-    public void Execute(ScenarioContext context, Required request)
+    public void Execute(ScenarioContext context, Argument request)
     {
         var repositoryValidationContext = context.GetValidationContext();
 
-        var filePath = Path.Combine(repositoryValidationContext.RepositoryAccessor.GetFullPath(), "Sources", "Directory.Build.props");
-        if (!fileSystem.File.Exists(filePath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
         {
-            logger.LogError("Directory.Build.props file is missed.");
+            repositoryValidationContext.DiagnosticCollector.Add(
+                DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
+                "Directory.Build.props file is not exists.",
+                DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
             return;
         }
 
-        var directoryBuildProps = fileSystem.File.ReadAllText(filePath);
+        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryPackagePropsPath);
         var parser = new DirectoryBuildPropsParser();
         var addedPackages = parser.GetListOfPackageReference(directoryBuildProps).ToHashSet();
 
@@ -35,9 +37,9 @@ public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSyste
             if (!addedPackages.Contains(requestPackage))
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
-                    Required.DiagnosticCode,
+                    Argument.DiagnosticCode,
                     $"Package {requestPackage} is not add to all solution.",
-                    Required.DefaultSeverity);
+                    Argument.DefaultSeverity);
             }
         }
     }

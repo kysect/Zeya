@@ -1,5 +1,4 @@
-﻿using Kysect.CommonLib.Logging;
-using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
 
@@ -35,7 +34,7 @@ public class DemoScenario
         _logger.LogInformation("Clone {Count} repositories", repositories.Count);
         foreach (var repository in repositories)
         {
-            _logger.LogTabDebug(1, $"Clone repository {repository.FullName}");
+            _logger.LogDebug($"Clone repository {repository.FullName}");
             _githubIntegrationService.CloneOrUpdate(repository);
         }
 

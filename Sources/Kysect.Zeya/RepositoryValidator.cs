@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using Kysect.CommonLib.Logging;
+using Kysect.CommonLib.Reflection;
 using Kysect.GithubUtils.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
@@ -49,9 +49,11 @@ public class RepositoryValidator
         var repositoryValidationContext = new RepositoryValidationContext(githubRepositoryAccessor, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
+        var reflectionAttributeFinder = new ReflectionAttributeFinder();
         foreach (IScenarioStep scenarioStep in steps)
         {
-            _logger.LogTabDebug(1, $"Validate via rule {scenarioStep.GetType().Name}");
+            var attributeFromType = reflectionAttributeFinder.GetAttributeFromInstance<ScenarioStepAttribute>(scenarioStep);
+            _logger.LogDebug($"Validate via rule {attributeFromType.ScenarioName}");
             _scenarioStepHandler.Handle(scenarioContext, scenarioStep);
         }
 

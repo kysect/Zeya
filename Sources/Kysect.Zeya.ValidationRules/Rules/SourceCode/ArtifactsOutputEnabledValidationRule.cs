@@ -23,6 +23,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
                 Arguments.DiagnosticCode,
                 "Directory.Build.props file is not exists and does not contains UseArtifactsOutput option",
                 Arguments.DefaultSeverity);
+            return;
         }
 
         var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryPackagePropsPath);

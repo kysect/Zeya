@@ -43,7 +43,7 @@ public class CentralPackageManagerVersionSynchronizedValidationRule(
             return;
         }
 
-        string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(ValidationConstants.DirectoryPackagePropsPath);
+        string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(request.MasterFile);
         IReadOnlyCollection<NugetVersion> currentProjectPackages = directoryPackagesParser.Parse(currentProjectDirectoryPackage);
 
         foreach (var nugetVersion in currentProjectPackages)

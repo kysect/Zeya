@@ -49,23 +49,12 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                    Packages: ["Kysect.Editorconfig"]
                - Name: SourceCode.ArtifactsOutputEnabled
                - Name: DirectoryBuildPropsContainsRequiredFields
-               Parameters:
-                 RequiredFields: [
-                      "Nullable",
-                      "LangVersion",
-                      "ImplicitUsings",
-                 ]
+                 Parameters:
+                   RequiredFields: ["Nullable", "LangVersion", "ImplicitUsings"]
 
                - Name: Nuget.MetadataSpecified
                  Parameters:
-                   RequiredValues: [
-                     "PackageIcon",
-                     "PackageReadmeFile",
-                     "RepositoryUrl",
-                     "Version",
-                     "PublishRepositoryUrl"
-                   ]
-
+                   RequiredValues: ["PackageIcon", "PackageReadmeFile", "RepositoryUrl", "PublishRepositoryUrl"]
                    RequiredKeyValues:
                      Authors: Kysect
                      Company: Kysect

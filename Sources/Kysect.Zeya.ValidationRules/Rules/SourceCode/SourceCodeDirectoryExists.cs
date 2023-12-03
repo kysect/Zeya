@@ -5,16 +5,16 @@ using Kysect.Zeya.Abstractions.Models;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<SourcesMustNotBeInRootValidationRule.SourceCodeDirectoryExists>
+public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<SourcesMustNotBeInRootValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.SourcesMustNotBeInRoot")]
-    public record SourceCodeDirectoryExists(string ExpectedSourceDirectoryName) : IScenarioStep
+    public record Arguments(string ExpectedSourceDirectoryName) : IScenarioStep
     {
         public static string DiagnosticCode => RuleDescription.SourceCode.SourcesMustNotBeInRoot;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
-    public void Execute(ScenarioContext context, SourceCodeDirectoryExists request)
+    public void Execute(ScenarioContext context, Arguments request)
     {
         var repositoryValidationContext = context.GetValidationContext();
 
@@ -24,9 +24,9 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         if (solutionsInRoot.Any())
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                SourceCodeDirectoryExists.DiagnosticCode,
+                Arguments.DiagnosticCode,
                 $"Sources must not located in root of repository. Founded solution files: {solutionsInRoot.ToSingleString()}",
-                SourceCodeDirectoryExists.DefaultSeverity);
+                Arguments.DefaultSeverity);
         }
 
         var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, request.ExpectedSourceDirectoryName);
@@ -34,9 +34,9 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         if (!fileSystem.File.Exists(expectedSourceDirectoryPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                SourceCodeDirectoryExists.DiagnosticCode,
+                Arguments.DiagnosticCode,
                 $"Directory for sources was not found in repository",
-                SourceCodeDirectoryExists.DefaultSeverity);
+                Arguments.DefaultSeverity);
         }
     }
 }
