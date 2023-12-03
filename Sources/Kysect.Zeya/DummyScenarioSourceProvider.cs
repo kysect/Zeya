@@ -56,24 +56,23 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                       "ImplicitUsings",
                  ]
 
-
-
-               - Name: DirectoryBuildPropsContainsRequiredFields
+               - Name: Nuget.MetadataSpecified
                  Parameters:
-                   RequiredFields: [
-                        "Authors",
-                        "Company",
-                        "PackageReadmeFile",
-                        "PackageLicenseFile",
-                        "RepositoryUrl",
-                        "Version",
-                        "PublishRepositoryUrl",
-                        "IncludeSymbols",
-                        "SymbolPackageFormat",
-                        "EmbedUntrackedSources",
-                        "PackageIcon",
-                        "PackageLicenseExpression"
+                   RequiredValues: [
+                     "PackageIcon",
+                     "PackageReadmeFile",
+                     "RepositoryUrl",
+                     "Version",
+                     "PublishRepositoryUrl"
                    ]
+
+                   RequiredKeyValues:
+                     Authors: Kysect
+                     Company: Kysect
+                     PackageLicenseExpression: MIT
+                     DebugType: portable
+                     IncludeSymbols: true
+                     SymbolPackageFormat: snupkg
                """;
     }
 }

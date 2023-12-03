@@ -20,4 +20,9 @@ public static class RuleDescription
         public static string RequiredPackagesAdded = "SRC0005";
         public static string ArtifactsOutputEnables = "SRC0006";
     }
+
+    public static class Nuget
+    {
+        public static string MetadataSpecified = "NUP0001";
+    }
 }
