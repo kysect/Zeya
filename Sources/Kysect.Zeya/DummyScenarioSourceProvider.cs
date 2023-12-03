@@ -37,13 +37,12 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: SourceCode.SourcesMustNotBeInRoot
                  Parameters:
                    ExpectedSourceDirectoryName: Sources
-
+               - Name: SourceCode.TargetFrameworkVersionAllowed
+                 Parameters:
+                   AllowedVersions: [net8.0, netstandard2.0]
 
 
                - Name: CentralPackageManagerEnabled
-               - Name: ValidateTargetFrameworkVersion
-                 Parameters:
-                   AllowedVersions: [net8.0, netstandard2.0]
                - Name: ValidateCentralPackageManagerConfig
                  Parameters:
                    MasterFile: Samples\MasterDirectory.Packages.props
