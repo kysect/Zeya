@@ -10,7 +10,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Kysect.CommonLib" Version="0.1.10" />
+    <PackageReference Include="Kysect.CommonLib" Version="0.1.13" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Reflection;
 using Kysect.CommonLib.DependencyInjection;
+using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.GithubUtils.RepositorySync;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
@@ -24,7 +25,7 @@ public class DependencyManager
     {
         IServiceCollection serviceCollection = new ServiceCollection();
 
-        ILogger logger = CreateConsoleLogger();
+        ILogger logger = CreateLogger();
 
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
@@ -79,17 +80,15 @@ public class DependencyManager
     }
 
     // TODO: disable IncludeScopes in default implementation PredefinedLogger.CreateConsoleLogger
-    private static ILogger CreateConsoleLogger(string category = "", LogLevel logLevel = LogLevel.Trace)
+    private static ILogger CreateLogger(LogLevel logLevel = LogLevel.Trace)
     {
-        using ILoggerFactory loggerFactory = LoggerFactory
-            .Create(b => b.AddFilter(null, logLevel)
-                .AddSimpleConsole(options =>
-                {
-                    options.IncludeScopes = false;
-                    options.SingleLine = true;
-                    options.TimestampFormat = "HH:mm:ss ";
-                }));
+        using var logConfigurationBuilder = new LogConfigurationBuilder();
 
-        return loggerFactory.CreateLogger(category);
+        return logConfigurationBuilder
+            .SetLevel(logLevel)
+            .SetDefaultCategory("Zeya")
+            .AddSpectreConsole()
+            .AddSerilogToFile("Zeya.log")
+            .Build();
     }
 }
