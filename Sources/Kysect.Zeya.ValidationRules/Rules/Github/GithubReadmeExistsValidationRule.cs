@@ -20,7 +20,7 @@ public class GithubReadmeExistsValidationRule : IScenarioStepExecutor<GithubRead
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 Arguments.DiagnosticCode,
-                "ReadmeExists.md file was not found",
+                "Readme.md file was not found",
                 Arguments.DefaultSeverity);
         }
     }
