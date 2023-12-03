@@ -40,9 +40,10 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: SourceCode.TargetFrameworkVersionAllowed
                  Parameters:
                    AllowedVersions: [net8.0, netstandard2.0]
+               - Name: SourceCode.CentralPackageManagerEnabled
 
 
-               - Name: CentralPackageManagerEnabled
+
                - Name: ValidateCentralPackageManagerConfig
                  Parameters:
                    MasterFile: Samples\MasterDirectory.Packages.props

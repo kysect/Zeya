@@ -1,4 +1,4 @@
-namespace Kysect.Zeya.ValidationRules;
+﻿namespace Kysect.Zeya.ValidationRules;
 
 public static class RuleDescription
 {
@@ -15,5 +15,6 @@ public static class RuleDescription
     {
         public static string SourcesMustNotBeInRoot = "SRC00001";
         public static string TargetFrameworkVersionAllowed = "SRC00002";
+        public static string CentralPackageManagerEnabled = "SRC0003";
     }
 }
