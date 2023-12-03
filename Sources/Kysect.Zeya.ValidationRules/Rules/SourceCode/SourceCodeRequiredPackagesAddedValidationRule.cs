@@ -19,7 +19,7 @@ public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSyste
     {
         var repositoryValidationContext = context.GetValidationContext();
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
@@ -28,7 +28,7 @@ public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSyste
             return;
         }
 
-        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryPackagePropsPath);
+        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
         var parser = new DirectoryBuildPropsParser();
         var addedPackages = parser.GetListOfPackageReference(directoryBuildProps).ToHashSet();
 

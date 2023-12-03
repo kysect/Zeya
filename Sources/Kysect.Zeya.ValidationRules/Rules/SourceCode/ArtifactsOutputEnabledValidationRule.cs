@@ -17,7 +17,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
     {
         var repositoryValidationContext = context.GetValidationContext();
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 Arguments.DiagnosticCode,
@@ -26,7 +26,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryPackagePropsPath);
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 

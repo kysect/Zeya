@@ -22,7 +22,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
     {
         var repositoryValidationContext = context.GetValidationContext();
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
@@ -31,7 +31,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryPackagePropsPath);
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
