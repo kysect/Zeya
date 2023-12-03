@@ -44,7 +44,9 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                - Name: SourceCode.CentralPackageManagerVersionSynchronized
                  Parameters:
                    MasterFile: Samples\MasterDirectory.Packages.props
-
+               - Name: SourceCode.RequiredPackagesAdded
+                 Parameters:
+                   Packages: ["Kysect.Editorconfig"]
 
 
                - Name: DirectoryBuildPropsContainsRequiredFields
@@ -67,10 +69,6 @@ public class DummyScenarioSourceProvider : IScenarioSourceProvider
                         "PackageIcon",
                         "PackageLicenseExpression"
                    ]
-               - Name: RequiredPackagesAdded
-                 Parameters:
-                   Packages: ["Kysect.Editorconfig"]
-               
                """;
     }
 }
