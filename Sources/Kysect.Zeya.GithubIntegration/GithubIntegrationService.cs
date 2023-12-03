@@ -2,6 +2,7 @@
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Kysect.Zeya.GithubIntegration;
 
@@ -11,9 +12,9 @@ public class GithubIntegrationService : IGithubIntegrationService
     private readonly IPathFormatStrategy _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(GithubIntegrationOptions githubIntegrationOptions, IPathFormatStrategy pathFormatStrategy, ILogger logger)
+    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, IPathFormatStrategy pathFormatStrategy, ILogger logger)
     {
-        _githubIntegrationOptions = githubIntegrationOptions;
+        _githubIntegrationOptions = githubIntegrationOptions.Value;
         _pathFormatStrategy = pathFormatStrategy;
         _logger = logger;
     }

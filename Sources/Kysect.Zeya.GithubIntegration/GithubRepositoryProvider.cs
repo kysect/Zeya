@@ -1,19 +1,17 @@
 ﻿using Kysect.GithubUtils.RepositoryDiscovering;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubRepositoryProvider : IGithubRepositoryProvider
 {
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
-    private readonly ILogger _logger;
 
-    public GithubRepositoryProvider(GithubIntegrationOptions githubIntegrationOptions, ILogger logger)
+    public GithubRepositoryProvider(IOptions<GithubIntegrationOptions> githubIntegrationOptions)
     {
-        _githubIntegrationOptions = githubIntegrationOptions;
-        _logger = logger;
+        _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 
     public IReadOnlyCollection<GithubRepository> GetAll()

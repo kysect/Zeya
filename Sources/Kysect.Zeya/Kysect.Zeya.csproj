@@ -21,19 +21,4 @@
     <ProjectReference Include="..\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Samples\build-test.yml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Samples\LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Samples\MasterDirectory.Packages.props">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Samples\nuget-publish.yml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ValidationRules
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tests", "Kysect.Zeya.Tests\Kysect.Zeya.Tests.csproj", "{1274C349-8B79-498C-88A7-F7D64D4650B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.ManagedDotnetCli", "Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj", "{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ManagedDotnetCli", "Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj", "{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.ProjectSystemIntegration", "Kysect.Zeya.ProjectSystemIntegration\Kysect.Zeya.ProjectSystemIntegration.csproj", "{D3859EFE-D740-4800-8B56-EFE181DF7057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ProjectSystemIntegration", "Kysect.Zeya.ProjectSystemIntegration\Kysect.Zeya.ProjectSystemIntegration.csproj", "{D3859EFE-D740-4800-8B56-EFE181DF7057}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Demo", "Kysect.Zeya.Demo\Kysect.Zeya.Demo.csproj", "{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

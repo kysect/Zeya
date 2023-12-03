@@ -40,7 +40,7 @@ public class DemoScenario
 
         var report = RepositoryValidationReport.Empty;
         foreach (var githubRepository in repositories)
-            report = report.Compose(_repositoryValidator.Validate(githubRepository, "Demo-validation"));
+            report = report.Compose(_repositoryValidator.Validate(githubRepository, @"Demo-validation.yaml"));
 
         _reporter.Report(report);
     }
