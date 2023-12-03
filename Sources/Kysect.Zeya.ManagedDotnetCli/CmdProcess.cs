@@ -66,7 +66,8 @@ public class CmdProcess
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 FileName = "sh",
-                Arguments = $"-c {command}"
+                // KB: will not work without ""
+                Arguments = $"-c \"{command}\""
             };
         }
 
