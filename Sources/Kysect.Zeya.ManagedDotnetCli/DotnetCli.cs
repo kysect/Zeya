@@ -23,7 +23,7 @@ public class DotnetCli
     public string GetProperty(string projectPath, string propertyName)
     {
         _logger.LogTrace("Execute dotnet build of {Project} for getting value of {Property}", projectPath, propertyName);
-        var result = _cmdProcess.ExecuteCommand($"dotnet build \'{projectPath}\' --getProperty:{propertyName}");
+        var result = _cmdProcess.ExecuteCommand($"dotnet build \"{projectPath}\" --getProperty:{propertyName}");
         return result.StandardOutput.Trim();
     }
 }
