@@ -18,6 +18,7 @@ public class CentralPackageManagerEnabledValidationRule(IFileSystem fileSystem, 
     {
         var repositoryValidationContext = context.GetValidationContext();
 
+        // TODO: use info from Directory.Package.props instead
         var selectedProjectDefault = fileSystem
             .Directory
             .EnumerateFiles(repositoryValidationContext.RepositoryAccessor.GetFullPath(), "*.csproj", SearchOption.AllDirectories)
