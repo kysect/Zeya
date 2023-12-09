@@ -31,7 +31,7 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
 
         var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, request.ExpectedSourceDirectoryName);
 
-        if (!fileSystem.File.Exists(expectedSourceDirectoryPath))
+        if (!fileSystem.Directory.Exists(expectedSourceDirectoryPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 Arguments.DiagnosticCode,
