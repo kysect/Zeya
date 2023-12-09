@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
-    <ProjectReference Include="..\Kysect.Zeya\Kysect.Zeya.csproj" />
+    <ProjectReference Include="..\..\Application\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj" />
+    <ProjectReference Include="..\..\ConfigurationRoot\Kysect.Zeya\Kysect.Zeya.csproj" />
   </ItemGroup>
 
 </Project>

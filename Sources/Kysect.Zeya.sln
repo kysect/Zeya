@@ -3,25 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34310.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya", "Kysect.Zeya\Kysect.Zeya.csproj", "{CF936EEC-86BD-440C-808D-32568A516467}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{45FA974A-DDBE-44F5-AF75-BBB49BB437B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tui", "Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj", "{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConfigurationRoot", "ConfigurationRoot", "{C72FCAE7-7BC0-4633-893A-76B95E23FB14}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DataAccess.Abstractions", "Kysect.Zeya.DataAccess.Abstractions\Kysect.Zeya.DataAccess.Abstractions.csproj", "{D26AE0E3-344F-4B66-A46C-93979BCE897C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{06303EDB-8271-4E29-B7BF-8D362045C400}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Abstractions", "Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj", "{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{D9C54233-E761-4E9C-AB89-3FB055201E8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegration", "Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj", "{D4CBE8A6-C887-479A-B952-08DF938C6A1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Abstractions", "Application\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj", "{42A32CE9-CA66-421F-8703-E7A19DCC5A7E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ValidationRules", "Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj", "{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegration", "Application\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj", "{9B14B766-21A5-4597-A5D3-93055D2FF12D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tests", "Kysect.Zeya.Tests\Kysect.Zeya.Tests.csproj", "{1274C349-8B79-498C-88A7-F7D64D4650B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ManagedDotnetCli", "Application\Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj", "{30C07AC7-58C2-4D08-94C5-4378C23F3E32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ManagedDotnetCli", "Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj", "{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ProjectSystemIntegration", "Application\Kysect.Zeya.ProjectSystemIntegration\Kysect.Zeya.ProjectSystemIntegration.csproj", "{834C4121-0A9F-4C03-862A-48BD24BFD7C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ProjectSystemIntegration", "Kysect.Zeya.ProjectSystemIntegration\Kysect.Zeya.ProjectSystemIntegration.csproj", "{D3859EFE-D740-4800-8B56-EFE181DF7057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ValidationRules", "Application\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj", "{57CCA970-FF17-4D04-B3E8-C3AD88305A80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Demo", "Kysect.Zeya.Demo\Kysect.Zeya.Demo.csproj", "{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tui", "Presentation\Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj", "{863F0493-7798-4BB8-9600-9E32D564C157}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya", "ConfigurationRoot\Kysect.Zeya\Kysect.Zeya.csproj", "{4C2B0697-AA32-4D04-A7E0-3A224D801083}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Demo", "ConfigurationRoot\Kysect.Zeya.Demo\Kysect.Zeya.Demo.csproj", "{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tests", "Tests\Kysect.Zeya.Tests\Kysect.Zeya.Tests.csproj", "{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,49 +35,56 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CF936EEC-86BD-440C-808D-32568A516467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF936EEC-86BD-440C-808D-32568A516467}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF936EEC-86BD-440C-808D-32568A516467}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF936EEC-86BD-440C-808D-32568A516467}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D8FF41C-F2A8-4AF0-9872-C6B21BC73DF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D26AE0E3-344F-4B66-A46C-93979BCE897C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D26AE0E3-344F-4B66-A46C-93979BCE897C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D26AE0E3-344F-4B66-A46C-93979BCE897C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D26AE0E3-344F-4B66-A46C-93979BCE897C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFC4DF0C-D13C-4190-BDD4-F75D4EC68788}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4CBE8A6-C887-479A-B952-08DF938C6A1C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E880392C-69D6-49F0-A2E9-B892CBC9EC5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1274C349-8B79-498C-88A7-F7D64D4650B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA2D2CD1-7EB6-41BE-B5F9-31FFD7B9C0AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3859EFE-D740-4800-8B56-EFE181DF7057}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58F5B97B-D3DC-4407-81E6-ACE84ACA014E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42A32CE9-CA66-421F-8703-E7A19DCC5A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42A32CE9-CA66-421F-8703-E7A19DCC5A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42A32CE9-CA66-421F-8703-E7A19DCC5A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42A32CE9-CA66-421F-8703-E7A19DCC5A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C07AC7-58C2-4D08-94C5-4378C23F3E32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C07AC7-58C2-4D08-94C5-4378C23F3E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C07AC7-58C2-4D08-94C5-4378C23F3E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C07AC7-58C2-4D08-94C5-4378C23F3E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{834C4121-0A9F-4C03-862A-48BD24BFD7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{834C4121-0A9F-4C03-862A-48BD24BFD7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{834C4121-0A9F-4C03-862A-48BD24BFD7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{834C4121-0A9F-4C03-862A-48BD24BFD7C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57CCA970-FF17-4D04-B3E8-C3AD88305A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57CCA970-FF17-4D04-B3E8-C3AD88305A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57CCA970-FF17-4D04-B3E8-C3AD88305A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57CCA970-FF17-4D04-B3E8-C3AD88305A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{863F0493-7798-4BB8-9600-9E32D564C157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{863F0493-7798-4BB8-9600-9E32D564C157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{863F0493-7798-4BB8-9600-9E32D564C157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{863F0493-7798-4BB8-9600-9E32D564C157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{42A32CE9-CA66-421F-8703-E7A19DCC5A7E} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{9B14B766-21A5-4597-A5D3-93055D2FF12D} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{30C07AC7-58C2-4D08-94C5-4378C23F3E32} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{834C4121-0A9F-4C03-862A-48BD24BFD7C2} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{57CCA970-FF17-4D04-B3E8-C3AD88305A80} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{863F0493-7798-4BB8-9600-9E32D564C157} = {45FA974A-DDBE-44F5-AF75-BBB49BB437B5}
+		{4C2B0697-AA32-4D04-A7E0-3A224D801083} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
+		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
+		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8} = {06303EDB-8271-4E29-B7BF-8D362045C400}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}
