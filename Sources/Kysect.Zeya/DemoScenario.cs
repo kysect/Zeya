@@ -6,7 +6,7 @@ namespace Kysect.Zeya;
 
 public class DemoScenario
 {
-    private readonly IGithubIntegrationService _githubIntegrationService;
+    private readonly IGithubIntegrationService _githubIntegrationService;   
     private readonly IRepositoryValidationReporter _reporter;
     private readonly IGithubRepositoryProvider _githubRepositoryProvider;
     private readonly RepositoryValidator _repositoryValidator;
