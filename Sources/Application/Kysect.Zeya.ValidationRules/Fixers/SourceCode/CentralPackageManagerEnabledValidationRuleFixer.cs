@@ -9,8 +9,10 @@ using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer
+public class CentralPackageManagerEnabledValidationRuleFixer : IValidationRuleFixer
 {
+    public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
+
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 

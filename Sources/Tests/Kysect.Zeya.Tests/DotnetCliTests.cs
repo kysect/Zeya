@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Kysect.CommonLib.DependencyInjection;
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.Zeya.ManagedDotnetCli;
 
