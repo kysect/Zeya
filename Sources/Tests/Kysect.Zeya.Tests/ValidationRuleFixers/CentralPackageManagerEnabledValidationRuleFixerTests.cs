@@ -2,6 +2,9 @@
 using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnGenerator;
+using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -66,7 +69,8 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
             .AddProject(new DotnetProjectBuilder(projectName, originalProjectContent));
         solutionBuilder.Save(_fileSystem, currentPath);
 
-        _fixer.Fix(currentPath);
+        var repositoryAccessor = new GithubRepositoryAccessor(new GithubRepository("owner", "name"), new FakePathFormatStrategy(currentPath), _fileSystem);
+        _fixer.Fix(repositoryAccessor);
 
         _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, projectName, $"{projectName}.csproj")).Should().Be(expectedProjectContent);
         _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, ValidationConstants.DirectoryPackagePropsFileName)).Should().Be(expectedDotnetPackageContent);

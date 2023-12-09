@@ -27,6 +27,6 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
 
     private string GetFullPathToFile(string partialPath)
     {
-        return Path.Combine(GetFullPath(), partialPath);
+        return fileSystem.Path.Combine(GetFullPath(), partialPath);
     }
 }

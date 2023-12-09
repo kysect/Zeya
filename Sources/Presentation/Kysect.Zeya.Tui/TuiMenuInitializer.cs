@@ -12,7 +12,7 @@ public class TuiMenuInitializer
         _menuProvider = menuProvider;
     }
 
-    public TuiMenuNavigationItem Create()
+    public TuiMenuNavigationItem CreateMenu()
     {
         var builder = new TuiMenuNavigationBuilder(_menuProvider);
 

@@ -18,6 +18,9 @@ using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules.Fixers;
+using Kysect.TerminalUserInterface.DependencyInjection;
+using Kysect.TerminalUserInterface.Navigation;
+using Kysect.Zeya.Tui;
 
 namespace Kysect.Zeya.DependencyManager;
 
@@ -119,7 +122,28 @@ public static class ServiceCollectionExtensions
         };
 
         return serviceCollection
-            .AddAllImplementationOf<IValidationRuleFixer>()
+            .AddAllImplementationOf<IValidationRuleFixer>(validationRuleFixerAssembly)
             .AddSingleton<IValidationRuleFixerApplier>(sp => ValidationRuleFixerApplier.Create(sp, validationRuleFixerAssembly));
+    }
+
+    public static IServiceCollection AddZeyaTerminalUserInterface(this IServiceCollection serviceCollection)
+    {
+        Assembly[] consoleCommandAssemblies = new[] { typeof(TuiMenuInitializer).Assembly };
+
+        serviceCollection
+            .AddUserActionSelectionMenus(consoleCommandAssemblies);
+        serviceCollection.AddSingleton(CreateUserActionSelectionMenuNavigator);
+
+        return serviceCollection;
+    }
+
+    private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)
+    {
+        ILogger logger = serviceProvider.GetRequiredService<ILogger>();
+
+        var userActionSelectionMenuProvider = new TuiMenuProvider(serviceProvider);
+        var userActionSelectionMenuInitializer = new TuiMenuInitializer(userActionSelectionMenuProvider);
+        TuiMenuNavigationItem selectionMenuNavigatorItem = userActionSelectionMenuInitializer.CreateMenu();
+        return new TuiMenuNavigator(selectionMenuNavigatorItem, logger);
     }
 }
