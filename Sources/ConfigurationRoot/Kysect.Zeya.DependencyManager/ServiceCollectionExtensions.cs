@@ -17,6 +17,7 @@ using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.ValidationRules.Fixers;
 
 namespace Kysect.Zeya.DependencyManager;
 
@@ -73,7 +74,9 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<DirectoryPackagesParser>();
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<RepositoryValidator>();
-        serviceCollection = serviceCollection.AddZeyaScenarioExecution();
+        serviceCollection = serviceCollection
+            .AddZeyaValidationRules()
+            .AddZeyaValidationRuleFixers();
 
         return serviceCollection;
     }
@@ -91,22 +94,32 @@ public static class ServiceCollectionExtensions
             .Build();
     }
 
-    private static IServiceCollection AddZeyaScenarioExecution(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddZeyaValidationRules(this IServiceCollection serviceCollection)
     {
-        Assembly[] assemblies = new[]
+        Assembly[] validationRuleAssembly = new[]
         {
-            // Definition of assembly with IScenarioStep implementation
-            // Definition of assembly with IScenarioStepExecutor implementation
             typeof(RepositoryValidationContext).Assembly
         };
 
-        var dummyScenarioSourceProvider = new ScenarioSourceProvider("Samples");
+        // TODO: customize scenario directory path
 
         return serviceCollection
-            .AddSingleton<IScenarioSourceProvider>(sp => dummyScenarioSourceProvider)
+            .AddSingleton<IScenarioSourceProvider>(sp => new ScenarioSourceProvider("Samples"))
             .AddSingleton<IScenarioSourceCodeParser, YamlScenarioSourceCodeParser>()
-            .AddSingleton<IScenarioStepParser, ScenarioStepReflectionParser>(_ => ScenarioStepReflectionParser.Create(assemblies))
-            .AddAllImplementationOf<IScenarioStepExecutor>(assemblies)
-            .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, assemblies));
+            .AddSingleton<IScenarioStepParser, ScenarioStepReflectionParser>(_ => ScenarioStepReflectionParser.Create(validationRuleAssembly))
+            .AddAllImplementationOf<IScenarioStepExecutor>(validationRuleAssembly)
+            .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, validationRuleAssembly));
+    }
+
+    private static IServiceCollection AddZeyaValidationRuleFixers(this IServiceCollection serviceCollection)
+    {
+        Assembly[] validationRuleFixerAssembly = new[]
+        {
+            typeof(RepositoryValidationContext).Assembly
+        };
+
+        return serviceCollection
+            .AddAllImplementationOf<IValidationRuleFixer>()
+            .AddSingleton<IValidationRuleFixerApplier>(sp => ValidationRuleFixerApplier.Create(sp, validationRuleFixerAssembly));
     }
 }
