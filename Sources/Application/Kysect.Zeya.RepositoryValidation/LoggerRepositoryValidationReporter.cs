@@ -2,7 +2,7 @@
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class LoggerRepositoryValidationReporter : IRepositoryValidationReporter
 {

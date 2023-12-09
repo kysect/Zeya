@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj" />
-    <ProjectReference Include="..\..\ConfigurationRoot\Kysect.Zeya\Kysect.Zeya.csproj" />
+    <ProjectReference Include="..\..\Application\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
   </ItemGroup>
 
 </Project>

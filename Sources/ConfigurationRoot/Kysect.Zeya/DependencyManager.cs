@@ -10,6 +10,7 @@ using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
