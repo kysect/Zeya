@@ -15,10 +15,13 @@ public static class RuleDescription
     {
         public static string SourcesMustNotBeInRoot = "SRC00001";
         public static string TargetFrameworkVersionAllowed = "SRC00002";
-        public static string CentralPackageManagerEnabled = "SRC0003";
-        public static string CentralPackageManagerVersionSynchronized = "SRC0004";
         public static string RequiredPackagesAdded = "SRC0005";
         public static string ArtifactsOutputEnables = "SRC0006";
+
+        public static string CentralPackageManagerEnabled = "SRC0010";
+        public static string NugetVersionMustBeSpecifiedInMasterCentralPackageManager = "SRC0011";
+        public static string NugetVersionSynchronizedWithMasterCentralPackageManager = "SRC0012";
+
     }
 
     public static class Nuget
