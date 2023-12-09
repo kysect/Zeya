@@ -5,12 +5,12 @@ using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 
-public class NugetMetadataSpecifiedValidationRule : IScenarioStepExecutor<NugetMetadataSpecifiedValidationRule.Arguments>
+public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
-    [ScenarioStep("Nuget.MetadataSpecified")]
-    public record Arguments(IReadOnlyCollection<string> RequiredValues) : IScenarioStep
+    [ScenarioStep("Nuget.MetadataHaveCorrectValue")]
+    public record Arguments(Dictionary<string, string> RequiredKeyValues) : IScenarioStep
     {
-        public static string DiagnosticCode => RuleDescription.Nuget.MetadataSpecified;
+        public static string DiagnosticCode => RuleDescription.Nuget.MetadataHaveCorrectValue;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -31,20 +31,25 @@ public class NugetMetadataSpecifiedValidationRule : IScenarioStepExecutor<NugetM
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
-        List<string> missedValues = new List<string>();
-        foreach (var requiredField in request.RequiredValues)
+        var invalidValues = new List<string>();
+
+        foreach (var (key, value) in request.RequiredKeyValues)
         {
-            if (!buildPropsValues.ContainsKey(requiredField))
+            if (!buildPropsValues.TryGetValue(key, out var specifiedValue))
             {
-                missedValues.Add(requiredField);
+                invalidValues.Add(key);
+                continue;
             }
+
+            if (specifiedValue != value)
+                invalidValues.Add(key);
         }
 
-        if (missedValues.Any())
+        if (invalidValues.Any())
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 Arguments.DiagnosticCode,
-                $"Directory.Build.props file does not contains required option: " + missedValues.ToSingleString(),
+                $"Directory.Build.props options has incorrect value or value is missed: " + invalidValues.ToSingleString(),
                 Arguments.DefaultSeverity);
         }
     }
