@@ -1,8 +1,10 @@
-﻿namespace Kysect.Zeya.ValidationRules.Fixers;
+﻿using Kysect.Zeya.GithubIntegration;
+
+namespace Kysect.Zeya.ValidationRules.Fixers;
 
 public interface IValidationRuleFixer
 {
     string DiagnosticCode { get; }
 
-    void Fix(string repositoryPath);
+    void Fix(GithubRepositoryAccessor githubRepository);
 }

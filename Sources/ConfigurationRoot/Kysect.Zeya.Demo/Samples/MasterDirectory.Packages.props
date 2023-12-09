@@ -4,6 +4,5 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageVersion Include="Kysect.Editorconfig" Version="1.1.4" />
-
 	</ItemGroup>
 </Project>
