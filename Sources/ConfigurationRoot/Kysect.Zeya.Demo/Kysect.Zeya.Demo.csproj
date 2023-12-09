@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kysect.Zeya\Kysect.Zeya.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.DependencyManager\Kysect.Zeya.DependencyManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>
