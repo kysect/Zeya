@@ -30,9 +30,10 @@ public class DirectoryPackagePropsNugetVersionAppender : IXmlProjectFileModifySt
     {
         foreach (var (packageName, version) in _nugetVersions)
         {
-            var xmlEmptyElementSyntax = ExtendedSyntaxFactory.XmlEmptyElement(
-                "PackageVersion",
-                new[] { ExtendedSyntaxFactory.XmlAttribute("Include", packageName), ExtendedSyntaxFactory.XmlAttribute("Version", version) });
+            var xmlEmptyElementSyntax = ExtendedSyntaxFactory
+                .XmlEmptyElement("PackageVersion", 2)
+                .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Include", packageName))
+                .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Version", version));
 
             syntax = (XmlElementSyntax)syntax.AddChild(xmlEmptyElementSyntax);
         }
