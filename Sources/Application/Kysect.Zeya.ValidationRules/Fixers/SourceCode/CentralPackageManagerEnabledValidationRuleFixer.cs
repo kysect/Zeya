@@ -2,6 +2,7 @@
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Parsers;
 using Kysect.Zeya.Abstractions;
+using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Microsoft.Extensions.Logging;
@@ -9,8 +10,10 @@ using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer
+public class CentralPackageManagerEnabledValidationRuleFixer : IValidationRuleFixer
 {
+    public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
+
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 
@@ -20,8 +23,10 @@ public class CentralPackageManagerEnabledValidationRuleFixer
         _logger = logger;
     }
 
-    public void Fix(string repositoryPath)
+    public void Fix(GithubRepositoryAccessor githubRepository)
     {
+        var repositoryPath = githubRepository.GetFullPath();
+
         var solutions = _fileSystem.Directory.EnumerateFiles(repositoryPath, "*.sln", SearchOption.AllDirectories).ToList();
         if (solutions.Count == 0)
             throw new ZeyaException($"Repository {repositoryPath} does not contains .sln files");
@@ -33,11 +38,15 @@ public class CentralPackageManagerEnabledValidationRuleFixer
         var solutionModifier = DotnetSolutionModifier.Create(solutions.Single(), _fileSystem, _logger, new SolutionFileParser(_logger));
         IReadOnlyCollection<NugetVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
 
+        _logger.LogTrace("Apply changes to *.csproj files");
         foreach (var solutionModifierProject in solutionModifier.Projects)
             solutionModifierProject.Accessor.UpdateDocument(ProjectNugetVersionRemover.Instance);
 
+        _logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryPackagePropsFileName);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(CreateIfNull);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
+
+        _logger.LogTrace("Saving solution files");
         solutionModifier.Save();
     }
 
