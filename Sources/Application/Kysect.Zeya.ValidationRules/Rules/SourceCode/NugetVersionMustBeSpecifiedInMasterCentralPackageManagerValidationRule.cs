@@ -1,21 +1,22 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using System.IO.Abstractions;
+using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class CentralPackageManagerVersionSynchronizedValidationRule(
+public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule(
     IFileSystem fileSystem,
     DirectoryPackagesParser directoryPackagesParser,
     ILogger logger)
-    : IScenarioStepExecutor<CentralPackageManagerVersionSynchronizedValidationRule.Arguments>
+    : IScenarioStepExecutor<NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule.Arguments>
 {
-    [ScenarioStep("SourceCode.CentralPackageManagerVersionSynchronized")]
+    [ScenarioStep("SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager")]
     public record Arguments(string MasterFile) : IScenarioStep
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerVersionSynchronized;
+        public static string DiagnosticCode => RuleDescription.SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -25,14 +26,10 @@ public class CentralPackageManagerVersionSynchronizedValidationRule(
 
         if (!fileSystem.File.Exists(request.MasterFile))
         {
+            // TODO: after this error validation should finish as failed
             logger.LogError("Master file {File} for checking CPM was not found.", request.MasterFile);
             return;
         }
-
-        var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
-        var masterPackages = directoryPackagesParser
-            .Parse(masterFileContent)
-            .ToDictionary(p => p.PackageName, p => p.Version);
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
         {
@@ -43,27 +40,28 @@ public class CentralPackageManagerVersionSynchronizedValidationRule(
             return;
         }
 
+        var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
+        var masterPackages = directoryPackagesParser
+            .Parse(masterFileContent)
+            .ToDictionary(p => p.PackageName, p => p.Version);
+
         string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(request.MasterFile);
         IReadOnlyCollection<NugetVersion> currentProjectPackages = directoryPackagesParser.Parse(currentProjectDirectoryPackage);
 
+        List<string> notSpecifiedPackages = new List<string>();
+
         foreach (var nugetVersion in currentProjectPackages)
         {
-            if (!masterPackages.TryGetValue(nugetVersion.PackageName, out var masterVersion))
-            {
-                repositoryValidationContext.DiagnosticCollector.Add(
-                    Arguments.DiagnosticCode,
-                    $"Nuget {nugetVersion.PackageName} version is not specified in master Directory.Package.props",
-                    Arguments.DefaultSeverity);
-                continue;
-            }
+            if (!masterPackages.TryGetValue(nugetVersion.PackageName, out _))
+                notSpecifiedPackages.Add(nugetVersion.PackageName);
+        }
 
-            if (nugetVersion.Version != masterVersion)
-            {
-                repositoryValidationContext.DiagnosticCollector.Add(
-                    Arguments.DiagnosticCode,
-                    $"Nuget {nugetVersion.PackageName} should be {masterVersion} but was {nugetVersion.Version}",
-                    Arguments.DefaultSeverity);
-            }
+        if (notSpecifiedPackages.Any())
+        {
+            repositoryValidationContext.DiagnosticCollector.Add(
+                Arguments.DiagnosticCode,
+                $"Some Nuget packages is not specified in master Directory.Package.props: {notSpecifiedPackages.ToSingleString()}",
+                Arguments.DefaultSeverity);
         }
     }
 }

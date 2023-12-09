@@ -1,12 +1,10 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
-using System.IO.Abstractions;
-using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSystem, ILogger logger) : IScenarioStepExecutor<SourceCodeRequiredPackagesAddedValidationRule.Argument>
+public class SourceCodeRequiredPackagesAddedValidationRule() : IScenarioStepExecutor<SourceCodeRequiredPackagesAddedValidationRule.Argument>
 {
     [ScenarioStep("SourceCode.RequiredPackagesAdded")]
     public record Argument(IReadOnlyCollection<string> Packages) : IScenarioStep
@@ -38,7 +36,7 @@ public class SourceCodeRequiredPackagesAddedValidationRule(IFileSystem fileSyste
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
                     Argument.DiagnosticCode,
-                    $"Package {requestPackage} is not add to all solution.",
+                    $"Package {requestPackage} is not add to Directory.Build.props.",
                     Argument.DefaultSeverity);
             }
         }
