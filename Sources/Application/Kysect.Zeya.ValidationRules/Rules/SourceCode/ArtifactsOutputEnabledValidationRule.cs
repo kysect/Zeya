@@ -30,6 +30,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
+        // TODO: verify that value set to true?
         if (!buildPropsValues.ContainsKey("UseArtifactsOutput"))
         {
             repositoryValidationContext.DiagnosticCollector.Add(

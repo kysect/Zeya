@@ -52,13 +52,13 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                              </Project>
                              """;
 
-        var expectedDotnetPackageContent = """
+        var expectedDotnetPackageContent = $"""
                                            <Project>
                                              <PropertyGroup>
                                                <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
                                              </PropertyGroup>
                                              <ItemGroup>
-                                               <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+                                           {'\t'}{'\t'}<PackageVersion Include="FluentAssertions" Version="6.12.0" />
                                              </ItemGroup>
                                            </Project>
                                            """;
