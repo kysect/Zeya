@@ -22,10 +22,10 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
     [SetUp]
     public void Setup()
     {
-        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
 
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
         _fixer = new CentralPackageManagerEnabledValidationRuleFixer(dotnetSolutionModifierFactory, _logger);
     }
 
@@ -58,12 +58,12 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
 
         var expectedDotnetPackageContent = $"""
                                            <Project>
-                                             <PropertyGroup>
-                                               <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-                                             </PropertyGroup>
-                                             <ItemGroup>
+                                           {'\t'}<PropertyGroup>
+                                           {'\t'}{'\t'}<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+                                           {'\t'}</PropertyGroup>
+                                           {'\t'}<ItemGroup>
                                            {'\t'}{'\t'}<PackageVersion Include="FluentAssertions" Version="6.12.0" />
-                                             </ItemGroup>
+                                           {'\t'}</ItemGroup>
                                            </Project>
                                            """;
 

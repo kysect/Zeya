@@ -31,7 +31,7 @@ public class ProjectPropertyModifier
             return;
         }
         
-        _projectFileAccessor.UpdateDocument(AddPropertyGroupNodeIfNotExistsModificationStrategy.Instance);
+        _projectFileAccessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.PropertyGroup);
         _projectFileAccessor.UpdateDocument(new UpdateProjectPropertyValueModificationStrategy(key, value));
     }
 }

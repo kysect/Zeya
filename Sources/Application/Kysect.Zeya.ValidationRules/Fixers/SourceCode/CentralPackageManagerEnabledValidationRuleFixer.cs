@@ -1,10 +1,10 @@
 ﻿using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
-using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
@@ -21,7 +21,9 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
             solutionModifierProject.Accessor.UpdateDocument(ProjectNugetVersionRemover.Instance);
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryPackagePropsFileName);
-        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(CreateIfNull);
+        var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryPackagePropsModifier.Accessor, logger);
+        projectPropertyModifier.AddOrUpdateProperty("ManagePackageVersionsCentrally", "true");
+        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 
         logger.LogTrace("Saving solution files");
@@ -49,23 +51,5 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         }
 
         return nugetVersions;
-    }
-
-    public XmlDocumentSyntax CreateIfNull(XmlDocumentSyntax syntax)
-    {
-        if (syntax.RootSyntax is not null)
-            return syntax;
-
-        var contentTemplate = """
-                              <Project>
-                                <PropertyGroup>
-                                  <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-                                </PropertyGroup>
-                                <ItemGroup>
-                                </ItemGroup>
-                              </Project>
-                              """;
-
-        return Parser.ParseText(contentTemplate);
     }
 }
