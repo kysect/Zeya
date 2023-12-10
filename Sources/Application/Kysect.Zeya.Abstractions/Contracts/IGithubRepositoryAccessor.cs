@@ -9,4 +9,7 @@ public interface IGithubRepositoryAccessor
     string GetFullPath();
     bool Exists(string partialPath);
     string ReadFile(string partialPath);
+
+    string GetSolutionFilePath();
+    IReadOnlyCollection<string> GetProjectPaths();
 }
