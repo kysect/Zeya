@@ -4,7 +4,8 @@ using Kysect.Zeya.ManagedDotnetCli;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRule(DotnetCli dotnetCli) : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
+public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor)
+    : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
     public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IValidationRule
@@ -26,8 +27,7 @@ public class TargetFrameworkVersionAllowedValidationRule(DotnetCli dotnetCli) : 
 
         foreach (var projectFile in projectFiles)
         {
-            var projectPropertyAccessor = new DotnetProjectPropertyAccessor(projectFile, dotnetCli);
-            var targetFramework = projectPropertyAccessor.GetTargetFramework();
+            var targetFramework = projectPropertyAccessor.GetTargetFramework(projectFile);
 
             if (!allowedTargetFrameworks.Contains(targetFramework))
             {

@@ -4,7 +4,8 @@ using Kysect.Zeya.ManagedDotnetCli;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRule(DotnetCli dotnetCli) : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
+public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor)
+    : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.CentralPackageManagerEnabled")]
     public record Arguments : IValidationRule
@@ -26,8 +27,7 @@ public class CentralPackageManagerEnabledValidationRule(DotnetCli dotnetCli) : I
         if (selectedProjectDefault is null)
             return;
 
-        var projectPropertyAccessor = new DotnetProjectPropertyAccessor(selectedProjectDefault, dotnetCli);
-        var managePackageVersionsCentrally = projectPropertyAccessor.IsManagePackageVersionsCentrally();
+        var managePackageVersionsCentrally = projectPropertyAccessor.IsManagePackageVersionsCentrally(selectedProjectDefault);
         if (!managePackageVersionsCentrally)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
