@@ -7,9 +7,9 @@ namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 public class TargetFrameworkVersionAllowedValidationRule(DotnetCli dotnetCli) : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
-    public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IScenarioStep
+    public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
+        public string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -32,7 +32,7 @@ public class TargetFrameworkVersionAllowedValidationRule(DotnetCli dotnetCli) : 
             if (!allowedTargetFrameworks.Contains(targetFramework))
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
-                    Arguments.DiagnosticCode,
+                    request.DiagnosticCode,
                     $"Framework versions {targetFramework} is not allowed but used in {projectFile}.",
                     Arguments.DefaultSeverity);
             }

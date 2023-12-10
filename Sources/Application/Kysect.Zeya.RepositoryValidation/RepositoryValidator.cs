@@ -7,6 +7,7 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ValidationRules;
+using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation;
@@ -38,21 +39,32 @@ public class RepositoryValidator
         _pathFormatStrategy = pathFormatStrategy;
         _fileSystem = fileSystem;
     }
+
     public RepositoryValidationReport Validate(GithubRepository repository, string validationScenarioName)
     {
         _logger.LogInformation("Validate repository {Url}", repository.FullName);
+        IReadOnlyCollection<IValidationRule> steps = GetValidationRules(validationScenarioName);
+        return Validate(repository, steps);
+    }
+
+    public IReadOnlyCollection<IValidationRule> GetValidationRules(string validationScenarioName)
+    {
         _logger.LogTrace("Loading validation configuration");
         var scenarioSourceCode = _scenarioProvider.GetScenarioSourceCode(validationScenarioName);
         IReadOnlyCollection<ScenarioStepArguments> scenarioStepNodes = _scenarioSourceCodeParser.Parse(scenarioSourceCode);
-        IReadOnlyCollection<IScenarioStep> steps = scenarioStepNodes.Select(_scenarioStepParser.ParseScenarioStep).ToList();
+        IReadOnlyCollection<IValidationRule> steps = scenarioStepNodes.Select(_scenarioStepParser.ParseScenarioStep).Cast<IValidationRule>().ToList();
+        return steps;
+    }
 
+    public RepositoryValidationReport Validate(GithubRepository repository, IReadOnlyCollection<IValidationRule> rules)
+    {
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
         var githubRepositoryAccessor = new GithubRepositoryAccessor(repository, _pathFormatStrategy, _fileSystem);
         var repositoryValidationContext = new RepositoryValidationContext(githubRepositoryAccessor, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();
-        foreach (IScenarioStep scenarioStep in steps)
+        foreach (IValidationRule scenarioStep in rules)
         {
             var attributeFromType = reflectionAttributeFinder.GetAttributeFromInstance<ScenarioStepAttribute>(scenarioStep);
             _logger.LogDebug($"Validate via rule {attributeFromType.ScenarioName}");

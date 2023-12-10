@@ -8,9 +8,9 @@ namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 public class NugetMetadataSpecifiedValidationRule : IScenarioStepExecutor<NugetMetadataSpecifiedValidationRule.Arguments>
 {
     [ScenarioStep("Nuget.MetadataSpecified")]
-    public record Arguments(IReadOnlyCollection<string> RequiredValues) : IScenarioStep
+    public record Arguments(IReadOnlyCollection<string> RequiredValues) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.Nuget.MetadataSpecified;
+        public string DiagnosticCode => RuleDescription.Nuget.MetadataSpecified;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -21,7 +21,7 @@ public class NugetMetadataSpecifiedValidationRule : IScenarioStepExecutor<NugetM
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
+                request.DiagnosticCode,
                 "Directory.Build.props file is not exists.",
                 DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
             return;
@@ -43,7 +43,7 @@ public class NugetMetadataSpecifiedValidationRule : IScenarioStepExecutor<NugetM
         if (missedValues.Any())
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Directory.Build.props file does not contains required option: " + missedValues.ToSingleString(),
                 Arguments.DefaultSeverity);
         }

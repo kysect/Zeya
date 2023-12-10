@@ -1,15 +1,16 @@
 ﻿using System.IO.Abstractions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
+using Octokit.Internal;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
 
 public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<GithubWorkflowEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.BuildWorkflowEnabled")]
-    public record Arguments(string MasterFile) : IScenarioStep
+    public record Arguments(string MasterFile) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.Github.BuildWorkflowEnabled;
+        public string DiagnosticCode => RuleDescription.Github.BuildWorkflowEnabled;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -23,7 +24,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         if (!repositoryValidationContext.RepositoryAccessor.Exists(expectedPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                arguments.DiagnosticCode,
                 $"Workflow {masterFileInfo.Name} must be configured",
                 Arguments.DefaultSeverity);
             return;
@@ -35,7 +36,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         if (string.Equals(masterFileContent, originalFIleContent))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                arguments.DiagnosticCode,
                 $"Workflow {masterFileInfo.Name} has unexpected configuration",
                 Arguments.DefaultSeverity);
         }

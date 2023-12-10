@@ -7,9 +7,9 @@ namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<ArtifactsOutputEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.ArtifactsOutputEnabled")]
-    public record Arguments : IScenarioStep
+    public record Arguments : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.ArtifactsOutputEnables;
+        public string DiagnosticCode => RuleDescription.SourceCode.ArtifactsOutputEnables;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -20,7 +20,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 "Directory.Build.props file is not exists and does not contains UseArtifactsOutput option",
                 Arguments.DefaultSeverity);
             return;
@@ -34,7 +34,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
         if (!buildPropsValues.ContainsKey("UseArtifactsOutput"))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 "Directory.Build.props does not contains UseArtifactsOutput option.",
                 Arguments.DefaultSeverity);
         }

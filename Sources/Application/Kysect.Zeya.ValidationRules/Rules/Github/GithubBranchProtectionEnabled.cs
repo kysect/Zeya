@@ -10,9 +10,9 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
     [ScenarioStep("Github.BranchProtectionEnabled")]
     public record Arguments(
         bool PullRequestReviewRequired,
-        bool ConversationResolutionRequired) : IScenarioStep
+        bool ConversationResolutionRequired) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.Github.BranchProtectionEnabled;
+        public string DiagnosticCode => RuleDescription.Github.BranchProtectionEnabled;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -28,7 +28,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
         if (branchProtectionSettings is null)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Github branch protections for {branch} is non configured.",
                 Arguments.DefaultSeverity);
 
@@ -38,7 +38,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
         if (request.PullRequestReviewRequired && branchProtectionSettings.RequiredPullRequestReviews is null)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Pull request review must be enabled enabled for {branch}.",
                 Arguments.DefaultSeverity);
         }
@@ -46,7 +46,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
         if (request.ConversationResolutionRequired && (branchProtectionSettings.RequiredConversationResolution is null || !branchProtectionSettings.RequiredConversationResolution.Enabled))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Conversation resolution must be required for {branch}.",
                 Arguments.DefaultSeverity);
         }
