@@ -1,7 +1,7 @@
 ﻿using System.IO.Abstractions;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Parsers;
-using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ public class CentralPackageManagerEnabledValidationRuleFixer(IFileSystem fileSys
 {
     public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
 
-    public void Fix(GithubRepositoryAccessor githubRepository)
+    public void Fix(IGithubRepositoryAccessor githubRepository)
     {
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = DotnetSolutionModifier.Create(solutionPath, fileSystem, logger, new SolutionFileParser(logger));

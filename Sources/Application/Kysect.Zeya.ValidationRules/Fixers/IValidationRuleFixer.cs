@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.GithubIntegration;
+﻿using Kysect.Zeya.Abstractions.Contracts;
 
 namespace Kysect.Zeya.ValidationRules.Fixers;
 
@@ -6,5 +6,5 @@ public interface IValidationRuleFixer
 {
     string DiagnosticCode { get; }
 
-    void Fix(GithubRepositoryAccessor githubRepository);
+    void Fix(IGithubRepositoryAccessor githubRepository);
 }

@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.GithubIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Fixers;
 
@@ -32,7 +32,7 @@ public class ValidationRuleFixerApplier(Dictionary<string, IValidationRuleFixer>
         return fixers.ContainsKey(diagnosticCode);
     }
 
-    public void Apply(string diagnosticCode, GithubRepositoryAccessor githubRepository)
+    public void Apply(string diagnosticCode, IGithubRepositoryAccessor githubRepository)
     {
         if (!fixers.TryGetValue(diagnosticCode, out var fixer))
             throw new ArgumentException($"Fixer for {diagnosticCode} is not registered");
