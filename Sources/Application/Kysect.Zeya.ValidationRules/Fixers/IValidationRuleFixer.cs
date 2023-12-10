@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.Reflection;
-using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ValidationRules.Rules;
 using System.Reflection;
@@ -36,6 +35,6 @@ public class ValidationRuleFixerReflectionDecorator
 
     public void Execute(IValidationRule rule, IGithubRepositoryAccessor githubRepository)
     {
-        _executeMethod.Invoke(_fixer, [rule, githubRepository]);
+        _executeMethod.Invoke(_fixer, [ rule, githubRepository]);
     }
 }
