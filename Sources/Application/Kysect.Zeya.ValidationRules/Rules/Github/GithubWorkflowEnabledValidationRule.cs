@@ -1,7 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Octokit.Internal;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
 

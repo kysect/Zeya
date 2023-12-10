@@ -8,6 +8,7 @@ using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.CommonLib.DependencyInjection.Logging;
+using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers;
 
@@ -21,10 +22,12 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
     [SetUp]
     public void Setup()
     {
+
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
         _projectPropertyAccessor = new FakeDotnetProjectPropertyAccessor();
-        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(_fileSystem, _projectPropertyAccessor, _logger);
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
+        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(dotnetSolutionModifierFactory, _projectPropertyAccessor, _logger);
     }
 
     [Test]

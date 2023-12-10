@@ -12,8 +12,6 @@ public interface IValidationRuleFixer
 public interface IValidationRuleFixer<TRules> : IValidationRuleFixer
     where TRules : IValidationRule
 {
-    string DiagnosticCode { get; }
-
     void Fix(TRules rule, IGithubRepositoryAccessor githubRepository);
 }
 

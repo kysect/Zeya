@@ -4,6 +4,7 @@ using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnGenerator;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
@@ -21,9 +22,11 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
     [SetUp]
     public void Setup()
     {
+
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(_fileSystem, _logger);
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
+        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(dotnetSolutionModifierFactory, _logger);
     }
 
     [Test]
@@ -55,12 +58,12 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
 
         var expectedDotnetPackageContent = $"""
                                            <Project>
-                                             <PropertyGroup>
-                                               <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-                                             </PropertyGroup>
-                                             <ItemGroup>
+                                           {'\t'}<PropertyGroup>
+                                           {'\t'}{'\t'}<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+                                           {'\t'}</PropertyGroup>
+                                           {'\t'}<ItemGroup>
                                            {'\t'}{'\t'}<PackageVersion Include="FluentAssertions" Version="6.12.0" />
-                                             </ItemGroup>
+                                           {'\t'}</ItemGroup>
                                            </Project>
                                            """;
 

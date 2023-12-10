@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
-using Newtonsoft.Json.Linq;
 
 namespace Kysect.Zeya.Tests;
 

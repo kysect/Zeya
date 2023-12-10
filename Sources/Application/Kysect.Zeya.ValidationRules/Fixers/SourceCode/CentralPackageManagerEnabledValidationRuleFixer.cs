@@ -1,23 +1,19 @@
-﻿using System.IO.Abstractions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
-using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(IFileSystem fileSystem, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
+public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
-    public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
-
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = DotnetSolutionModifier.Create(solutionPath, fileSystem, logger, new SolutionFileParser(logger));
+        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         IReadOnlyCollection<NugetVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
 
         logger.LogTrace("Apply changes to *.csproj files");
@@ -25,7 +21,9 @@ public class CentralPackageManagerEnabledValidationRuleFixer(IFileSystem fileSys
             solutionModifierProject.Accessor.UpdateDocument(ProjectNugetVersionRemover.Instance);
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryPackagePropsFileName);
-        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(CreateIfNull);
+        var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryPackagePropsModifier.Accessor, logger);
+        projectPropertyModifier.AddOrUpdateProperty("ManagePackageVersionsCentrally", "true");
+        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 
         logger.LogTrace("Saving solution files");
@@ -53,23 +51,5 @@ public class CentralPackageManagerEnabledValidationRuleFixer(IFileSystem fileSys
         }
 
         return nugetVersions;
-    }
-
-    public XmlDocumentSyntax CreateIfNull(XmlDocumentSyntax syntax)
-    {
-        if (syntax.RootSyntax is not null)
-            return syntax;
-
-        var contentTemplate = """
-                              <Project>
-                                <PropertyGroup>
-                                  <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-                                </PropertyGroup>
-                                <ItemGroup>
-                                </ItemGroup>
-                              </Project>
-                              """;
-
-        return Parser.ParseText(contentTemplate);
     }
 }

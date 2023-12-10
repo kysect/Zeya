@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Xml;
 using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.Tools;
