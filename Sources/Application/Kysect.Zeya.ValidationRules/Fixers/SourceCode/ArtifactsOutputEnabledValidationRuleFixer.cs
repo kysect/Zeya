@@ -1,17 +1,17 @@
 ﻿using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Parsers;
-using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Microsoft.Extensions.Logging;
 using Microsoft.Language.Xml;
 using System.IO.Abstractions;
+using Kysect.Zeya.Abstractions.Contracts;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class ArtifactsOutputEnabledValidationRuleFixer(IFileSystem fileSystem, ILogger logger) : IValidationRuleFixer
 {
     public string DiagnosticCode => RuleDescription.SourceCode.ArtifactsOutputEnables;
-    public void Fix(GithubRepositoryAccessor githubRepository)
+    public void Fix(IGithubRepositoryAccessor githubRepository)
     {
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = DotnetSolutionModifier.Create(solutionPath, fileSystem, logger, new SolutionFileParser(logger));
