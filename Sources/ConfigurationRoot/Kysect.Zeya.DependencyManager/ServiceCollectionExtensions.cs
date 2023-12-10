@@ -73,8 +73,11 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddZeyaRepositoryValidation(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton<DotnetCli>();
-        serviceCollection.AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
+        serviceCollection
+            .AddSingleton<DotnetCli>()
+            .AddSingleton<DotnetSolutionModifierFactory>()
+            .AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
+
         serviceCollection.AddSingleton<DirectoryPackagesParser>();
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<RepositoryValidator>();

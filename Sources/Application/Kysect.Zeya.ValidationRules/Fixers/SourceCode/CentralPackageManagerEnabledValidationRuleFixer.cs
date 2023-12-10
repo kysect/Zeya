@@ -1,6 +1,4 @@
-﻿using System.IO.Abstractions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
@@ -10,14 +8,12 @@ using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(IFileSystem fileSystem, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
+public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
-    public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
-
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = DotnetSolutionModifier.Create(solutionPath, fileSystem, logger, new SolutionFileParser(logger));
+        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         IReadOnlyCollection<NugetVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
 
         logger.LogTrace("Apply changes to *.csproj files");
