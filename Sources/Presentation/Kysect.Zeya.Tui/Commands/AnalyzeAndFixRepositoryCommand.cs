@@ -6,6 +6,7 @@ using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules.Fixers;
+using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
@@ -44,14 +45,18 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
         _githubIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
-        var report = _repositoryValidator.Validate(githubRepository, @"Demo-validation.yaml");
+        var rules = _repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
+        var report = _repositoryValidator.Validate(githubRepository, rules);
 
         foreach (var diagnostic in report.Diagnostics)
         {
-            if (_validationRuleFixerApplier.IsFixerRegistered(diagnostic.Code))
+            // TODO: rework this hack
+            IValidationRule validationRule = rules.Single(r => r.DiagnosticCode == diagnostic.Code);
+
+            if (_validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
                 _logger.LogInformation("Apply code fixer for {Code} {Message}", diagnostic.Code, diagnostic.Message);
-                _validationRuleFixerApplier.Apply(diagnostic.Code, githubRepositoryAccessor);
+                _validationRuleFixerApplier.Apply(validationRule, githubRepositoryAccessor);
             }
         }
     }
