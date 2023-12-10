@@ -1,22 +1,18 @@
-﻿using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Parsers;
-using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Extensions.Logging;
-using System.IO.Abstractions;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
+using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRuleFixer(IFileSystem fileSystem, IDotnetProjectPropertyAccessor projectPropertyAccessor, ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
+public class TargetFrameworkVersionAllowedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, IDotnetProjectPropertyAccessor projectPropertyAccessor, ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
-    public string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
-
     public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = DotnetSolutionModifier.Create(solutionPath, fileSystem, logger, new SolutionFileParser(logger));
+        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         HashSet<string> allowedVersion = rule.AllowedVersions.ToHashSet();
         string? targetVersion = allowedVersion.Where(IsNetVersion).FirstOrDefault();
