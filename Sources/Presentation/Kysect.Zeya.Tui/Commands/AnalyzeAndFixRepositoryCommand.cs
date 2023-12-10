@@ -48,10 +48,11 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
         var rules = _repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
         var report = _repositoryValidator.Validate(githubRepository, rules);
 
-        foreach (var diagnostic in report.Diagnostics)
+        foreach (var grouping in report.Diagnostics.GroupBy(d => d.Code))
         {
+            var diagnostic = grouping.First();
             // TODO: rework this hack
-            IValidationRule validationRule = rules.Single(r => r.DiagnosticCode == diagnostic.Code);
+            IValidationRule validationRule = rules.First(r => r.DiagnosticCode == diagnostic.Code);
 
             if (_validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
