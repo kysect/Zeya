@@ -1,11 +1,10 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ManagedDotnetCli;
-using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRule(IFileSystem fileSystem, DotnetCli dotnetCli) : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
+public class TargetFrameworkVersionAllowedValidationRule(DotnetCli dotnetCli) : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
     public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IScenarioStep
@@ -20,9 +19,9 @@ public class TargetFrameworkVersionAllowedValidationRule(IFileSystem fileSystem,
 
         var allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
 
-        var projectFiles = fileSystem
-            .Directory
-            .EnumerateFiles(repositoryValidationContext.RepositoryAccessor.GetFullPath(), "*.csproj", SearchOption.AllDirectories)
+        var projectFiles = repositoryValidationContext
+            .RepositoryAccessor
+            .GetProjectPaths()
             .ToList();
 
         foreach (var projectFile in projectFiles)
