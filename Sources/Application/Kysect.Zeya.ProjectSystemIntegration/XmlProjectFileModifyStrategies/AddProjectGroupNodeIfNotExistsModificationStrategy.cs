@@ -9,9 +9,10 @@ using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 
-public class AddPropertyGroupNodeIfNotExistsModificationStrategy : IXmlProjectFileModifyStrategy<XmlElementSyntax>
+public class AddProjectGroupNodeIfNotExistsModificationStrategy(string groupName) : IXmlProjectFileModifyStrategy<XmlElementSyntax>
 {
-    public static AddPropertyGroupNodeIfNotExistsModificationStrategy Instance { get; } = new AddPropertyGroupNodeIfNotExistsModificationStrategy();
+    public static AddProjectGroupNodeIfNotExistsModificationStrategy PropertyGroup { get; } = new AddProjectGroupNodeIfNotExistsModificationStrategy("PropertyGroup");
+    public static AddProjectGroupNodeIfNotExistsModificationStrategy ItemGroup { get; } = new AddProjectGroupNodeIfNotExistsModificationStrategy("ItemGroup");
 
     public IReadOnlyCollection<XmlElementSyntax> SelectNodeForModify(XmlDocumentSyntax document)
     {
@@ -32,13 +33,13 @@ public class AddPropertyGroupNodeIfNotExistsModificationStrategy : IXmlProjectFi
             .AsSyntaxElement
             .Descendants()
             .OfType<XmlElementSyntax>()
-            .Any(c => c.Name == "PropertyGroup");
+            .Any(c => c.Name == groupName);
 
         if (propertyGroupExists)
             return syntax;
 
         return syntax
-            .AddChild(ExtendedSyntaxFactory.XmlElement("PropertyGroup", 1))
+            .AddChild(ExtendedSyntaxFactory.XmlElement(groupName, 1))
             .To<XmlElementSyntax>();
     }
 }

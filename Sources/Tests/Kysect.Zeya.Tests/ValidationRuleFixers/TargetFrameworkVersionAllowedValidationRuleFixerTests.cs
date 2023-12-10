@@ -22,11 +22,11 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
     [SetUp]
     public void Setup()
     {
-        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
 
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
         _projectPropertyAccessor = new FakeDotnetProjectPropertyAccessor();
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
         _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(dotnetSolutionModifierFactory, _projectPropertyAccessor, _logger);
     }
 
