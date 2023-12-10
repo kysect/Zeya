@@ -1,34 +1,26 @@
 ﻿namespace Kysect.Zeya.ManagedDotnetCli;
 
-public class DotnetProjectPropertyAccessor
+public class DotnetProjectPropertyAccessor(DotnetCli cli) : IDotnetProjectPropertyAccessor
 {
-    private readonly string _projectPath;
-    private readonly DotnetCli _cli;
-
-    public DotnetProjectPropertyAccessor(string projectPath, DotnetCli cli)
+    public bool IsManagePackageVersionsCentrally(string projectPath)
     {
-        _projectPath = projectPath;
-        _cli = cli;
+        return GetBoolValue(projectPath, "ManagePackageVersionsCentrally");
     }
 
-    public bool IsManagePackageVersionsCentrally()
+    public bool IsTestProject(string projectPath)
     {
-        return GetBoolValue("ManagePackageVersionsCentrally");
+        return GetBoolValue(projectPath, "IsTestProject");
     }
 
-    public bool IsTestProject()
+    public string GetTargetFramework(string projectPath)
     {
-        return GetBoolValue("IsTestProject");
+        // TODO: move to constants
+        return cli.GetProperty(projectPath, "TargetFramework");
     }
 
-    public string GetTargetFramework()
+    private bool GetBoolValue(string projectPath, string propertyName)
     {
-        return _cli.GetProperty(_projectPath, "TargetFramework");
-    }
-
-    private bool GetBoolValue(string propertyName)
-    {
-        var property = _cli.GetProperty(_projectPath, propertyName);
+        var property = cli.GetProperty(projectPath, propertyName);
 
         if (string.IsNullOrWhiteSpace(property))
             return false;

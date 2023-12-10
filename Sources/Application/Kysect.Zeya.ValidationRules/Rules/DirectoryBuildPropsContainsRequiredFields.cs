@@ -5,9 +5,10 @@ using Kysect.Zeya.ProjectSystemIntegration;
 namespace Kysect.Zeya.ValidationRules.Rules;
 
 [ScenarioStep("DirectoryBuildPropsContainsRequiredFields")]
-public record DirectoryBuildPropsContainsRequiredFields(IReadOnlyCollection<string> RequiredFields) : IScenarioStep
+public record DirectoryBuildPropsContainsRequiredFields(IReadOnlyCollection<string> RequiredFields) : IValidationRule
 {
-    public static string DiagnosticCode = "SRC00007";
+    public string DiagnosticCode => "SRC00007";
+
     public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
 
     public static string GetMessage(DirectoryBuildPropsContainsRequiredFields request, string field)
@@ -25,7 +26,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
+                request.DiagnosticCode,
                 "Directory.Build.props file is not exists.",
                 DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
             return;
@@ -40,7 +41,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
             if (!buildPropsValues.ContainsKey(requiredField))
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
-                    DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
+                    request.DiagnosticCode,
                     DirectoryBuildPropsContainsRequiredFields.GetMessage(request, requiredField),
                     DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
             }

@@ -3,7 +3,7 @@ using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya;
+namespace Kysect.Zeya.Demo;
 
 public class DemoScenario
 {

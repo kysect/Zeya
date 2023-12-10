@@ -1,9 +1,10 @@
-﻿using Kysect.Zeya.GithubIntegration;
+﻿using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.ValidationRules.Rules;
 
 namespace Kysect.Zeya.ValidationRules.Fixers;
 
 public interface IValidationRuleFixerApplier
 {
-    bool IsFixerRegistered(string diagnosticCode);
-    void Apply(string diagnosticCode, GithubRepositoryAccessor githubRepository);
+    bool IsFixerRegistered(IValidationRule rule);
+    void Apply(IValidationRule rule, IGithubRepositoryAccessor githubRepository);
 }

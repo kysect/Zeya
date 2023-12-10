@@ -29,7 +29,8 @@ public class AddPropertyGroupNodeIfNotExistsModificationStrategy : IXmlProjectFi
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
         var propertyGroupExists = syntax
-            .ChildNodes
+            .AsSyntaxElement
+            .Descendants()
             .OfType<XmlElementSyntax>()
             .Any(c => c.Name == "PropertyGroup");
 

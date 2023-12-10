@@ -5,9 +5,9 @@ using System.IO.Abstractions;
 namespace Kysect.Zeya.ValidationRules.Rules;
 
 [ScenarioStep("ContainsRequiredFile")]
-public record ContainsRequiredFile(string FilePath, string Sample) : IScenarioStep
+public record ContainsRequiredFile(string FilePath, string Sample) : IValidationRule
 {
-    public static string DiagnosticCode = "SRC00005";
+    public string DiagnosticCode => "SRC00005";
     public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
 
     public static string GetMessageOnFileMissed(ContainsRequiredFile request)
@@ -39,7 +39,7 @@ public class ContainsRequiredFileValidationRule : IScenarioStepExecutor<Contains
         if (!_fileSystem.File.Exists(targetPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                ContainsRequiredFile.DiagnosticCode,
+                request.DiagnosticCode,
                 ContainsRequiredFile.GetMessageOnFileMissed(request),
                 ContainsRequiredFile.DefaultSeverity);
 
@@ -52,7 +52,7 @@ public class ContainsRequiredFileValidationRule : IScenarioStepExecutor<Contains
         if (!string.Equals(originalFile, sample))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                ContainsRequiredFile.DiagnosticCode,
+                request.DiagnosticCode,
                 ContainsRequiredFile.GetMessageOnFileMismatch(request),
                 ContainsRequiredFile.DefaultSeverity);
         }

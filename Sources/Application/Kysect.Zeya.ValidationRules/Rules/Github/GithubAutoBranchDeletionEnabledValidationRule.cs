@@ -8,9 +8,9 @@ namespace Kysect.Zeya.ValidationRules.Rules.Github;
 public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubClient, ILogger logger) : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.AutoBranchDeletionEnabled")]
-    public record Arguments() : IScenarioStep
+    public record Arguments() : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.Github.AutoBranchDeletionEnabled;
+        public string DiagnosticCode => RuleDescription.Github.AutoBranchDeletionEnabled;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -25,7 +25,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubC
         if (repositoryInfo.DeleteBranchOnMerge is null or false)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 "Branch deletion on merge must be enabled.",
                 Arguments.DefaultSeverity);
         }

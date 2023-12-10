@@ -14,9 +14,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     : IScenarioStepExecutor<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager")]
-    public record Arguments(string MasterFile) : IScenarioStep
+    public record Arguments(string MasterFile) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager;
+        public string DiagnosticCode => RuleDescription.SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -34,7 +34,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 "Configuration file Directory.Package.props for Central Package Management is missed.",
                 Arguments.DefaultSeverity);
             return;
@@ -62,7 +62,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         if (packagesWithDifferentVersion.Any())
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Some Nuget packages versions is not synchronized with master Directory.Package.props: {packagesWithDifferentVersion.ToSingleString()}",
                 Arguments.DefaultSeverity);
         }

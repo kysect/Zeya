@@ -1,16 +1,16 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ManagedDotnetCli;
-using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRule(IFileSystem fileSystem, DotnetCli dotnetCli) : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
+public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor)
+    : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
-    public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IScenarioStep
+    public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
+        public string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -20,20 +20,19 @@ public class TargetFrameworkVersionAllowedValidationRule(IFileSystem fileSystem,
 
         var allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
 
-        var projectFiles = fileSystem
-            .Directory
-            .EnumerateFiles(repositoryValidationContext.RepositoryAccessor.GetFullPath(), "*.csproj", SearchOption.AllDirectories)
+        var projectFiles = repositoryValidationContext
+            .RepositoryAccessor
+            .GetProjectPaths()
             .ToList();
 
         foreach (var projectFile in projectFiles)
         {
-            var projectPropertyAccessor = new DotnetProjectPropertyAccessor(projectFile, dotnetCli);
-            var targetFramework = projectPropertyAccessor.GetTargetFramework();
+            var targetFramework = projectPropertyAccessor.GetTargetFramework(projectFile);
 
             if (!allowedTargetFrameworks.Contains(targetFramework))
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
-                    Arguments.DiagnosticCode,
+                    request.DiagnosticCode,
                     $"Framework versions {targetFramework} is not allowed but used in {projectFile}.",
                     Arguments.DefaultSeverity);
             }

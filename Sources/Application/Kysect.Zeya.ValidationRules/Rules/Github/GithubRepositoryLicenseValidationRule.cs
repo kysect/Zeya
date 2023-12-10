@@ -6,9 +6,9 @@ namespace Kysect.Zeya.ValidationRules.Rules.Github;
 public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<GithubRepositoryLicenseValidationRule.Arguments>
 {
     [ScenarioStep("Github.RepositoryLicense")]
-    public record Arguments(string OwnerName, string Year, string LicenseType) : IScenarioStep
+    public record Arguments(string OwnerName, string Year, string LicenseType) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.Github.RepositoryLicense;
+        public string DiagnosticCode => RuleDescription.Github.RepositoryLicense;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -19,7 +19,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.LicenseFileName))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                arguments.DiagnosticCode,
                 $"License file was not found by path {ValidationConstants.LicenseFileName}",
                 Arguments.DefaultSeverity);
             return;
@@ -29,7 +29,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
         if (!licenseContent.StartsWith(arguments.LicenseType))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                arguments.DiagnosticCode,
                 $"License must have header with type {arguments.LicenseType}",
                 Arguments.DefaultSeverity);
         }
@@ -38,7 +38,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
         if (!licenseContent.Contains(copyrightString))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                arguments.DiagnosticCode,
                 $"License must contains copyright string: {copyrightString}",
                 Arguments.DefaultSeverity);
         }

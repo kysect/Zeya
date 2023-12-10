@@ -1,16 +1,16 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using System.IO.Abstractions;
 using Kysect.Zeya.ManagedDotnetCli;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRule(IFileSystem fileSystem, DotnetCli dotnetCli) : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
+public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor)
+    : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.CentralPackageManagerEnabled")]
-    public record Arguments : IScenarioStep
+    public record Arguments : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
+        public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -19,20 +19,19 @@ public class CentralPackageManagerEnabledValidationRule(IFileSystem fileSystem, 
         var repositoryValidationContext = context.GetValidationContext();
 
         // TODO: use info from Directory.Package.props instead
-        var selectedProjectDefault = fileSystem
-            .Directory
-            .EnumerateFiles(repositoryValidationContext.RepositoryAccessor.GetFullPath(), "*.csproj", SearchOption.AllDirectories)
+        var selectedProjectDefault = repositoryValidationContext
+            .RepositoryAccessor
+            .GetProjectPaths()
             .FirstOrDefault();
 
         if (selectedProjectDefault is null)
             return;
 
-        var projectPropertyAccessor = new DotnetProjectPropertyAccessor(selectedProjectDefault, dotnetCli);
-        var managePackageVersionsCentrally = projectPropertyAccessor.IsManagePackageVersionsCentrally();
+        var managePackageVersionsCentrally = projectPropertyAccessor.IsManagePackageVersionsCentrally(selectedProjectDefault);
         if (!managePackageVersionsCentrally)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"The repository does not use Central Package Manager",
                 Arguments.DefaultSeverity);
         }
