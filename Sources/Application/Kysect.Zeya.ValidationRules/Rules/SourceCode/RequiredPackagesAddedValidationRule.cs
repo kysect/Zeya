@@ -4,7 +4,7 @@ using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class SourceCodeRequiredPackagesAddedValidationRule() : IScenarioStepExecutor<SourceCodeRequiredPackagesAddedValidationRule.Argument>
+public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<RequiredPackagesAddedValidationRule.Argument>
 {
     [ScenarioStep("SourceCode.RequiredPackagesAdded")]
     public record Argument(IReadOnlyCollection<string> Packages) : IValidationRule
