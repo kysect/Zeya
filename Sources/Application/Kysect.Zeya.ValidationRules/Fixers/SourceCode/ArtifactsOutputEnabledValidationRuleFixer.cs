@@ -17,7 +17,7 @@ public class ArtifactsOutputEnabledValidationRuleFixer(DotnetSolutionModifierFac
 
         var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryBuildPropsModifier.Accessor, logger);
         projectPropertyModifier.AddOrUpdateProperty("UseArtifactsOutput", "true");
-        
+
         // TODO: force somehow saving
         solutionModifier.Save();
     }
