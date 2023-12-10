@@ -14,9 +14,9 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
     : IScenarioStepExecutor<NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager")]
-    public record Arguments(string MasterFile) : IScenarioStep
+    public record Arguments(string MasterFile) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager;
+        public string DiagnosticCode => RuleDescription.SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -34,7 +34,7 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 "Configuration file Directory.Package.props for Central Package Management is missed.",
                 Arguments.DefaultSeverity);
             return;
@@ -59,7 +59,7 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
         if (notSpecifiedPackages.Any())
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Some Nuget packages is not specified in master Directory.Package.props: {notSpecifiedPackages.ToSingleString()}",
                 Arguments.DefaultSeverity);
         }

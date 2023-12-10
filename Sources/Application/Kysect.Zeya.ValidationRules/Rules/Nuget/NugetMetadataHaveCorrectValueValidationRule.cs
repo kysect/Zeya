@@ -8,9 +8,9 @@ namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
     [ScenarioStep("Nuget.MetadataHaveCorrectValue")]
-    public record Arguments(Dictionary<string, string> RequiredKeyValues) : IScenarioStep
+    public record Arguments(Dictionary<string, string> RequiredKeyValues) : IValidationRule
     {
-        public static string DiagnosticCode => RuleDescription.Nuget.MetadataHaveCorrectValue;
+        public string DiagnosticCode => RuleDescription.Nuget.MetadataHaveCorrectValue;
         public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -21,7 +21,7 @@ public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                DirectoryBuildPropsContainsRequiredFields.DiagnosticCode,
+                request.DiagnosticCode,
                 "Directory.Build.props file is not exists.",
                 DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
             return;
@@ -48,7 +48,7 @@ public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor
         if (invalidValues.Any())
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                Arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 $"Directory.Build.props options has incorrect value or value is missed: " + invalidValues.ToSingleString(),
                 Arguments.DefaultSeverity);
         }
