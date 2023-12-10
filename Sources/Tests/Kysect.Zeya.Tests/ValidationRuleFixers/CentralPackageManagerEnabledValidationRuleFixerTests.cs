@@ -7,6 +7,7 @@ using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
+using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers;
@@ -70,7 +71,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         solutionBuilder.Save(_fileSystem, currentPath);
 
         var repositoryAccessor = new GithubRepositoryAccessor(new GithubRepository("owner", "name"), new FakePathFormatStrategy(currentPath), _fileSystem);
-        _fixer.Fix(repositoryAccessor);
+        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), repositoryAccessor);
 
         _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, projectName, $"{projectName}.csproj")).Should().Be(expectedProjectContent);
         _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, ValidationConstants.DirectoryPackagePropsFileName)).Should().Be(expectedDotnetPackageContent);

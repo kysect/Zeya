@@ -2,41 +2,48 @@
 using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.ValidationRules.Rules;
 
 namespace Kysect.Zeya.ValidationRules.Fixers;
 
-public class ValidationRuleFixerApplier(Dictionary<string, IValidationRuleFixer> fixers) : IValidationRuleFixerApplier
+public class ValidationRuleFixerApplier(Dictionary<Type, ValidationRuleFixerReflectionDecorator> fixers) : IValidationRuleFixerApplier
 {
+    private static readonly Type FixerType = typeof(IValidationRuleFixer<>);
+
     public static ValidationRuleFixerApplier Create(IServiceProvider serviceProvider, params Assembly[] assemblies)
     {
         serviceProvider.ThrowIfNull(nameof(serviceProvider));
 
-        var fixers = new Dictionary<string, IValidationRuleFixer>();
+        var fixers = new Dictionary<Type, ValidationRuleFixerReflectionDecorator>();
 
-        foreach (var type in AssemblyReflectionTraverser.GetAllImplementationOf<IValidationRuleFixer>(assemblies))
+        // TODO: move this copy-paste part to reflection lib
+        foreach (Type type in AssemblyReflectionTraverser.GetAllImplementationOf(assemblies, FixerType))
         {
-            var service = serviceProvider.GetService(type);
-            if (service == null)
-                throw new ArgumentException($"Type {type.FullName} is not registered in DI");
+            Type? fixerImplementation = AssemblyReflectionTraverser.FindInterfaceImplementationByGenericTypeDefinition(type, FixerType);
+            if (fixerImplementation == null)
+                continue;
 
-            var validationRuleFixer = service.To<IValidationRuleFixer>();
-            fixers[validationRuleFixer.DiagnosticCode] = validationRuleFixer;
+            object? fixerInstance = serviceProvider.GetService(type);
+            if (fixerInstance is null)
+                throw new ArgumentException($"Fixer for type {type.FullName} is not registered in service provider.");
+
+            Type argumentType = fixerImplementation.GetGenericArguments().Single();
+            fixers.Add(argumentType, new ValidationRuleFixerReflectionDecorator(fixerInstance.To<IValidationRuleFixer>()));
         }
 
         return new ValidationRuleFixerApplier(fixers);
     }
 
-    public bool IsFixerRegistered(string diagnosticCode)
+    public bool IsFixerRegistered(IValidationRule rule)
     {
-        return fixers.ContainsKey(diagnosticCode);
+        return fixers.ContainsKey(rule.GetType());
     }
 
-    public void Apply(string diagnosticCode, IGithubRepositoryAccessor githubRepository)
+    public void Apply(IValidationRule rule, IGithubRepositoryAccessor githubRepository)
     {
-        if (!fixers.TryGetValue(diagnosticCode, out var fixer))
-            throw new ArgumentException($"Fixer for {diagnosticCode} is not registered");
+        if (!fixers.TryGetValue(rule.GetType(), out var fixer))
+            throw new ArgumentException($"Fixer for {rule.DiagnosticCode} is not registered");
 
-        fixer.Fix(githubRepository);
+        fixer.Execute(rule, githubRepository);
     }
 }
