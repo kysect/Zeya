@@ -20,6 +20,7 @@ public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFact
 
         foreach (var rulePackage in rule.Packages)
         {
+            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, ValidationConstants.DirectoryPackagePropsFileName);
             solutionModifier.DirectoryBuildPropsModifier.Accessor.UpdateDocument(new AddPackageReferenceModificationStrategy(rulePackage));
         }
 

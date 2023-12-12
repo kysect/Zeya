@@ -38,6 +38,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             .Parse(masterFileContent)
             .ToDictionary(p => p.PackageName, p => p.Version);
         
+        logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));
         solutionModifier.Save();
     }

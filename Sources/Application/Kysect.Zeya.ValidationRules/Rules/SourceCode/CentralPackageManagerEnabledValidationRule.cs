@@ -1,10 +1,11 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.DotnetSlnParser.Parsers;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ManagedDotnetCli;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor)
+public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor, SolutionFileParser solutionFileParser)
     : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.CentralPackageManagerEnabled")]
@@ -19,8 +20,9 @@ public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAc
         var repositoryValidationContext = context.GetValidationContext();
 
         // TODO: use info from Directory.Package.props instead
-        var selectedProjectDefault = repositoryValidationContext
-            .RepositoryAccessor
+        var repositorySolutionAccessor = new RepositorySolutionAccessor(repositoryValidationContext.RepositoryAccessor, solutionFileParser);
+
+        var selectedProjectDefault = repositorySolutionAccessor
             .GetProjectPaths()
             .FirstOrDefault();
 

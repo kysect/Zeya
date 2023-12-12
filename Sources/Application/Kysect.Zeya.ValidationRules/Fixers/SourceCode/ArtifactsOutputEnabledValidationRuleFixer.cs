@@ -16,6 +16,7 @@ public class ArtifactsOutputEnabledValidationRuleFixer(DotnetSolutionModifierFac
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
 
         var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryBuildPropsModifier.Accessor, logger);
+        logger.LogDebug("Set UseArtifactsOutput to true");
         projectPropertyModifier.AddOrUpdateProperty("UseArtifactsOutput", "true");
 
         // TODO: force somehow saving

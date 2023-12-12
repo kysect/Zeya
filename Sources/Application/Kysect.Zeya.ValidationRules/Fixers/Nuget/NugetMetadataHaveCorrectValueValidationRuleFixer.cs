@@ -17,8 +17,11 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(DotnetSolutionModi
 
         var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryBuildPropsModifier.Accessor, logger);
         foreach (var (key, value) in rule.RequiredKeyValues)
+        {
+            logger.LogDebug("Set {Key} to {Value}", key, value);
             projectPropertyModifier.AddOrUpdateProperty(key, value);
-        
+        }
+
         // TODO: force somehow saving
         solutionModifier.Save();
     }
