@@ -21,6 +21,7 @@ using Kysect.Zeya.ValidationRules.Fixers;
 using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Tui;
+using Kysect.DotnetSlnParser.Parsers;
 
 namespace Kysect.Zeya.DependencyManager;
 
@@ -76,6 +77,7 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddSingleton<DotnetCli>()
             .AddSingleton<DotnetSolutionModifierFactory>()
+            .AddSingleton<SolutionFileParser>()
             .AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
 
         serviceCollection.AddSingleton<DirectoryPackagesParser>();
@@ -95,6 +97,7 @@ public static class ServiceCollectionExtensions
 
         return logConfigurationBuilder
             .SetLevel(logLevel)
+            .SetRedirectToAppData("Kysect", "Zeya")
             .SetDefaultCategory("Zeya")
             .AddSpectreConsole()
             .AddSerilogToFile("Zeya.log")
