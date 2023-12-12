@@ -15,8 +15,8 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(DotnetSolutionModi
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         HashSet<string> allowedVersion = rule.AllowedVersions.ToHashSet();
-        string? targetVersion = allowedVersion.Where(IsNetVersion).FirstOrDefault();
-        if (targetVersion is null)
+        string? expectedTargetVersion = allowedVersion.Where(IsNetVersion).FirstOrDefault();
+        if (expectedTargetVersion is null)
         {
             logger.LogError("Cannot update target framework version because no suitable version specified in allowed");
             return;
@@ -24,19 +24,22 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(DotnetSolutionModi
 
         foreach (var projectModifier in solutionModifier.Projects)
         {
-            var targetFramework = projectPropertyAccessor.GetTargetFramework(projectModifier.Path);
+            var projectTargetFramework = projectPropertyAccessor.GetTargetFramework(projectModifier.Path);
 
-            if (!IsNetVersion(targetFramework))
+            if (!IsNetVersion(projectTargetFramework))
             {
-                logger.LogWarning("Version {Version} updating is not supported", targetFramework);
+                logger.LogWarning("Version {Version} updating is not supported", projectTargetFramework);
                 continue;
             }
 
+            if (string.Equals(projectTargetFramework, expectedTargetVersion))
+                continue;
+
+            logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, expectedTargetVersion, projectModifier.Path);
             var projectPropertyModifier = new ProjectPropertyModifier(projectModifier.Accessor, logger);
-            projectPropertyModifier.AddOrUpdateProperty("TargetFramework", targetVersion);
+            projectPropertyModifier.AddOrUpdateProperty("TargetFramework", expectedTargetVersion);
         }
         
-
         // TODO: force somehow saving
         solutionModifier.Save();
     }
