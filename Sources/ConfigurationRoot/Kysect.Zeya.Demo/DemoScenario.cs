@@ -1,6 +1,7 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Demo;
@@ -29,19 +30,20 @@ public class DemoScenario
 
     public void Process()
     {
+        _logger.LogInformation("Start Zeya demo");
         _logger.LogInformation("Loading github repositories for validation");
         IReadOnlyCollection<GithubRepository> repositories = _githubRepositoryProvider.GetAll();
 
-        _logger.LogInformation("Clone {Count} repositories", repositories.Count);
+        _logger.LogInformation("Get {Count} repositories for cloning", repositories.Count);
         foreach (var repository in repositories)
-        {
-            _logger.LogDebug($"Clone repository {repository.FullName}");
             _githubIntegrationService.CloneOrUpdate(repository);
-        }
+
+        IReadOnlyCollection<IValidationRule> validationRules = _repositoryValidator.GetValidationRules("Demo-validation.yaml");
 
         var report = RepositoryValidationReport.Empty;
+        _logger.LogInformation("Start repositories validation");
         foreach (var githubRepository in repositories)
-            report = report.Compose(_repositoryValidator.Validate(githubRepository, @"Demo-validation.yaml"));
+            report = report.Compose(_repositoryValidator.Validate(githubRepository, validationRules));
 
         _reporter.Report(report);
     }

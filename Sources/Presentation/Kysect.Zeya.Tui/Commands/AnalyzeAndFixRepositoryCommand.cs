@@ -48,6 +48,7 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
         var rules = _repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
         var report = _repositoryValidator.Validate(githubRepository, rules);
 
+        _logger.LogInformation("Repositories analyzed, run fixers");
         foreach (var grouping in report.Diagnostics.GroupBy(d => d.Code))
         {
             var diagnostic = grouping.First();
@@ -56,8 +57,12 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
 
             if (_validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
-                _logger.LogInformation("Apply code fixer for {Code} {Message}", diagnostic.Code, diagnostic.Message);
+                _logger.LogInformation("Apply code fixer for {Code}", diagnostic.Code);
                 _validationRuleFixerApplier.Apply(validationRule, githubRepositoryAccessor);
+            }
+            else
+            {
+                _logger.LogDebug("Fixer for {Code} is not available", diagnostic.Code);
             }
         }
     }
