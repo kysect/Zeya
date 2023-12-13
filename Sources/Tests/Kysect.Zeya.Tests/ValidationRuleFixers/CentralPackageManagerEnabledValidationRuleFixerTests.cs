@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnGenerator;
 using Kysect.Zeya.Abstractions.Models;
@@ -10,6 +9,7 @@ using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers;
 

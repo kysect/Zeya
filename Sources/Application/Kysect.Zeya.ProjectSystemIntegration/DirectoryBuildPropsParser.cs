@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Language.Xml;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ProjectSystemIntegration;
 

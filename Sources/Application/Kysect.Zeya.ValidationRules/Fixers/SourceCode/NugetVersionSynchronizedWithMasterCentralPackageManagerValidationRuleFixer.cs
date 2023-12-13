@@ -1,11 +1,11 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.ProjectSystemIntegration.Tools;
+using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
-using Kysect.Zeya.ProjectSystemIntegration.Tools;
-using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
