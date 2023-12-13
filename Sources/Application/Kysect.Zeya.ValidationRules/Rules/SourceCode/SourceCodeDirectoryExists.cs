@@ -1,8 +1,8 @@
-﻿using System.IO.Abstractions;
-using Kysect.CommonLib.BaseTypes.Extensions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 

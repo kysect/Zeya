@@ -1,10 +1,10 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using System.Collections.Generic;
-using System.Linq;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 

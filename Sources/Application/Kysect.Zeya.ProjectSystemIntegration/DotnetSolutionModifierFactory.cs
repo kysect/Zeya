@@ -1,7 +1,7 @@
-﻿using System.IO.Abstractions;
-using Kysect.DotnetSlnParser.Modifiers;
+﻿using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Parsers;
 using Microsoft.Extensions.Logging;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ProjectSystemIntegration;
 

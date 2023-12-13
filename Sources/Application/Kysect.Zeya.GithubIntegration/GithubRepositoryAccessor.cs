@@ -1,8 +1,8 @@
-﻿using System.IO.Abstractions;
-using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.GithubUtils.RepositorySync;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration;
 

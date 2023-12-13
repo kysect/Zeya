@@ -1,7 +1,4 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using System.Collections.Generic;
-using System.IO.Abstractions;
-using System.Linq;
 using Kysect.CommonLib.Reflection;
 using Kysect.GithubUtils.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
@@ -10,6 +7,9 @@ using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.IO.Abstractions;
+using System.Linq;
 
 namespace Kysect.Zeya.RepositoryValidation;
 

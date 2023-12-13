@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.GithubUtils.RepositorySync;
 using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
@@ -9,6 +8,7 @@ using Kysect.Zeya.ValidationRules.Fixers;
 using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tui.Commands;
 

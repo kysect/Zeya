@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Kysect.CommonLib.BaseTypes.Extensions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ValidationRules.Rules;
+using System.Reflection;
 
 namespace Kysect.Zeya.ValidationRules.Fixers;
 
