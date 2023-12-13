@@ -1,0 +1,5 @@
+<Project>
+	<ItemGroup>
+		<PackageReference Include="Kysect.Editorconfig" />
+	</ItemGroup>
+</Project>
