@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kysect.CommonLib.DependencyInjection" Version="0.1.13" />
-    <PackageReference Include="Kysect.ScenarioLib.YamlParser" Version="0.1.3" />
+    <PackageReference Include="Kysect.CommonLib.DependencyInjection" />
+    <PackageReference Include="Kysect.ScenarioLib.YamlParser" />
   </ItemGroup>
 
   <ItemGroup>

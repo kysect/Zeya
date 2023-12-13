@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GuiLabs.Language.Xml" Version="1.2.74" />
-    <PackageReference Include="IsExternalInit" Version="1.0.3">
+    <PackageReference Include="GuiLabs.Language.Xml" />
+    <PackageReference Include="IsExternalInit" >
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Kysect.DotnetSlnParser" Version="0.1.5" />
+    <PackageReference Include="Kysect.DotnetSlnParser" />
   </ItemGroup>
 
   <ItemGroup>
