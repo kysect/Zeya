@@ -1,4 +1,5 @@
-﻿using Kysect.CommonLib.Reflection;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ValidationRules.Rules;
 using System.Reflection;
@@ -24,6 +25,8 @@ public class ValidationRuleFixerReflectionDecorator
 
     public ValidationRuleFixerReflectionDecorator(IValidationRuleFixer fixer)
     {
+        fixer.ThrowIfNull();
+
         Type executorType = fixer.GetType();
         MethodInfo? executeMethod = executorType.GetMethod(FixMethodName);
 
@@ -33,6 +36,6 @@ public class ValidationRuleFixerReflectionDecorator
 
     public void Execute(IValidationRule rule, IGithubRepositoryAccessor githubRepository)
     {
-        _executeMethod.Invoke(_fixer, [ rule, githubRepository]);
+        _executeMethod.Invoke(_fixer, [rule, githubRepository]);
     }
 }

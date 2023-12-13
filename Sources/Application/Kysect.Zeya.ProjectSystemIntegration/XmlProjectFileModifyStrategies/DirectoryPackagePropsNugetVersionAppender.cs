@@ -41,7 +41,7 @@ public class DirectoryPackagePropsNugetVersionAppender : IXmlProjectFileModifySt
                 .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Include", packageName))
                 .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Version", version));
 
-            syntax = (XmlElementSyntax)syntax.AddChild(xmlEmptyElementSyntax);
+            syntax = (XmlElementSyntax) syntax.AddChild(xmlEmptyElementSyntax);
         }
 
         return syntax;

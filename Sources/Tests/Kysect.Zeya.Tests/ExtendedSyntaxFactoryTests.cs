@@ -31,7 +31,7 @@ public class ExtendedSyntaxFactoryTests
                         """;
 
         var result = ExtendedSyntaxFactory.XmlElement("Name", 1).AddChild(ExtendedSyntaxFactory.PropertyGroupParameter("Key", "Value"));
-        
+
         result.ToFullString().Should().Be(expected);
     }
 
@@ -39,9 +39,9 @@ public class ExtendedSyntaxFactoryTests
     public void XmlTextLiteralToken_ReturnSameValueAsArgument()
     {
         const string value = "Value";
-        
+
         var xmlTextLiteralToken = SyntaxFactory.XmlTextLiteralToken(value, null, null);
-        
+
         xmlTextLiteralToken.ToFullString().Should().Be(value);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 {
     public void Fix(NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
+        rule.ThrowIfNull();
+        githubRepository.ThrowIfNull();
+
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
@@ -37,7 +41,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         var masterPackages = directoryPackagesParser
             .Parse(masterFileContent)
             .ToDictionary(p => p.PackageName, p => p.Version);
-        
+
         logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));
         solutionModifier.Save();

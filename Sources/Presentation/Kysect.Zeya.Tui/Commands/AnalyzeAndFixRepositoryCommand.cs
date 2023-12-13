@@ -20,7 +20,7 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
     private readonly IPathFormatStrategy _pathFormatStrategy;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
-    
+
     public AnalyzeAndFixRepositoryCommand(IGithubIntegrationService githubIntegrationService, RepositoryValidator repositoryValidator, IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger, IFileSystem fileSystem, IPathFormatStrategy pathFormatStrategy)
     {
         _githubIntegrationService = githubIntegrationService;

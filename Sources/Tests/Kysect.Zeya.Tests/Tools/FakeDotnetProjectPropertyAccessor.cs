@@ -1,11 +1,12 @@
-﻿using Kysect.Zeya.ManagedDotnetCli;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.ManagedDotnetCli;
 
 namespace Kysect.Zeya.Tests.Tools;
 
 // TODO: rework design
 public class FakeDotnetProjectPropertyAccessor : IDotnetProjectPropertyAccessor
 {
-    public string TargetFramework { get; set; }
+    public string? TargetFramework { get; set; }
 
     public bool IsManagePackageVersionsCentrally(string projectPath)
     {
@@ -19,6 +20,6 @@ public class FakeDotnetProjectPropertyAccessor : IDotnetProjectPropertyAccessor
 
     public string GetTargetFramework(string projectPath)
     {
-        return TargetFramework;
+        return TargetFramework.ThrowIfNull();
     }
 }

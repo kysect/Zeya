@@ -1,4 +1,5 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
 
@@ -10,11 +11,14 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
     public record Arguments : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.ArtifactsOutputEnables;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
     public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))

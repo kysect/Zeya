@@ -1,4 +1,5 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
@@ -9,17 +10,20 @@ public class GithubReadmeExistsValidationRule : IScenarioStepExecutor<GithubRead
     public record Arguments : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Github.ReadmeExists;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
-    public void Execute(ScenarioContext context, Arguments arguments)
+    public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.ReadmeFileName))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
-                arguments.DiagnosticCode,
+                request.DiagnosticCode,
                 "Readme.md file was not found",
                 Arguments.DefaultSeverity);
         }

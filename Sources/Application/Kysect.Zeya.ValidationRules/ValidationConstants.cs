@@ -2,12 +2,14 @@
 
 public static class ValidationConstants
 {
-    public static string LicenseFileName = "LICENSE";
-    public static string ReadmeFileName = "Readme.md";
-    public static string DefaultBranch = "master";
-    public static string DefaultSourceCodeDirectory = "Sources";
-    public static string DirectoryPackagePropsFileName = "Directory.Packages.props";
-    public static string DirectoryBuildPropsFileName = "Directory.Build.props";
-    public static string DirectoryPackagePropsPath = Path.Combine(DefaultSourceCodeDirectory, DirectoryPackagePropsFileName);
-    public static string DirectoryBuildPropsPath = Path.Combine(DefaultSourceCodeDirectory, DirectoryBuildPropsFileName);
+    public const string LicenseFileName = "LICENSE";
+    public const string ReadmeFileName = "Readme.md";
+    public const string DefaultBranch = "master";
+    public const string DefaultSourceCodeDirectory = "Sources";
+    public const string DirectoryPackagePropsFileName = "Directory.Packages.props";
+    public const string DirectoryBuildPropsFileName = "Directory.Build.props";
+
+    // TODO: remove this
+    public static string DirectoryPackagePropsPath { get; } = Path.Combine(DefaultSourceCodeDirectory, DirectoryPackagePropsFileName);
+    public static string DirectoryBuildPropsPath { get; } = Path.Combine(DefaultSourceCodeDirectory, DirectoryBuildPropsFileName);
 }

@@ -1,4 +1,5 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ValidationRules.Rules.Nuget;
@@ -10,6 +11,9 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(DotnetSolutionModi
 {
     public void Fix(NugetMetadataHaveCorrectValueValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
+        rule.ThrowIfNull();
+        githubRepository.ThrowIfNull();
+
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 

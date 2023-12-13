@@ -1,4 +1,5 @@
-﻿using Microsoft.Language.Xml;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
 
@@ -8,6 +9,8 @@ public class CreateProjectDocumentIfEmptyModificationStrategy : IXmlDocumentModi
 
     public XmlDocumentSyntax Modify(XmlDocumentSyntax document)
     {
+        document.ThrowIfNull();
+
         if (document.RootSyntax is not null)
             return document;
 

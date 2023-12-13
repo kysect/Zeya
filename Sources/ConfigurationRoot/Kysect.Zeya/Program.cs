@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Kysect.Zeya;
 
-public class Program
+public static class Program
 {
-    public static void Main(string[] args)
+    public static void Main()
     {
         var serviceProvider = BuildServiceProvider();
         var tuiMenuNavigator = serviceProvider.GetRequiredService<TuiMenuNavigator>();

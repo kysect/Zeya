@@ -27,7 +27,7 @@ public class DirectoryBuildPropsParserTests
         var parser = new DirectoryBuildPropsParser();
 
         var result = parser.Parse(content);
-        
+
         result.Keys.Should().HaveCount(8);
         result.First().Should().Be(new KeyValuePair<string, string>("Authors", "Kysect"));
     }
