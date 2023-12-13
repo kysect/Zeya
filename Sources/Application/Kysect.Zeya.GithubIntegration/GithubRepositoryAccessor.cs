@@ -49,7 +49,7 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
             .EnumerateFiles(GetFullPath(), "*.csproj", SearchOption.AllDirectories)
             .ToList();
     }
-    
+
     private string GetFullPathToFile(string partialPath)
     {
         return fileSystem.Path.Combine(GetFullPath(), partialPath);

@@ -1,4 +1,5 @@
-﻿using Kysect.CommonLib.Collections.Extensions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.Collections.Extensions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
@@ -11,11 +12,14 @@ public class NugetMetadataSpecifiedValidationRule : IScenarioStepExecutor<NugetM
     public record Arguments(IReadOnlyCollection<string> RequiredValues) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Nuget.MetadataSpecified;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
     public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))

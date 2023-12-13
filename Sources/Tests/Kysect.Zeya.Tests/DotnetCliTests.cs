@@ -25,7 +25,7 @@ public class DotnetCliTests
         var logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         var dotnetCli = new DotnetCli(logger);
 
-        var targetFramework= dotnetCli.GetProperty(Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "TargetFramework");
+        var targetFramework = dotnetCli.GetProperty(Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "TargetFramework");
 
         targetFramework.Should().Be("net8.0");
     }

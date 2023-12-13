@@ -1,24 +1,26 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Microsoft.Extensions.Logging;
 using Octokit;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
 
-public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubClient, ILogger logger) : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
+public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubClient) : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.AutoBranchDeletionEnabled")]
     public record Arguments() : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Github.AutoBranchDeletionEnabled;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
     public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
-        string branch = ValidationConstants.DefaultBranch;
         GithubRepository repository = repositoryValidationContext.RepositoryAccessor.Repository;
 
         var repositoryInfo = githubClient.Repository.Get(repository.Owner, repository.Name).Result;

@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Microsoft.Extensions.Logging;
+using Kysect.CommonLib.BaseTypes.Extensions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -17,11 +18,14 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
     public record Arguments(string MasterFile) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
     public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         if (!fileSystem.File.Exists(request.MasterFile))

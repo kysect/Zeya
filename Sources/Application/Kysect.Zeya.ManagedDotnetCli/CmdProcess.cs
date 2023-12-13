@@ -27,9 +27,9 @@ public class CmdProcess
         process.StartInfo = startInfo;
         process.Start();
         // TODO: hack. Without it process will waiting for someone read the stream or write it to parent terminal
-        if (!process.WaitForExit((int)_timeout.TotalMilliseconds))
+        if (!process.WaitForExit((int) _timeout.TotalMilliseconds))
             throw new TimeoutException("Cannot finish cmd operation");
-        
+
         var standardOutput = process.StandardOutput.ReadToEnd();
 
         int exitCode = process.ExitCode;

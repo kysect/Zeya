@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using Kysect.CommonLib.Reflection;
@@ -42,6 +43,9 @@ public class RepositoryValidator
 
     public RepositoryValidationReport Validate(GithubRepository repository, string validationScenarioName)
     {
+        repository.ThrowIfNull();
+        validationScenarioName.ThrowIfNull();
+
         _logger.LogInformation("Validate repository {Url}", repository.FullName);
         IReadOnlyCollection<IValidationRule> steps = GetValidationRules(validationScenarioName);
         return Validate(repository, steps);
@@ -58,6 +62,9 @@ public class RepositoryValidator
 
     public RepositoryValidationReport Validate(GithubRepository repository, IReadOnlyCollection<IValidationRule> rules)
     {
+        repository.ThrowIfNull();
+        rules.ThrowIfNull();
+
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
         var githubRepositoryAccessor = new GithubRepositoryAccessor(repository, _pathFormatStrategy, _fileSystem);
         var repositoryValidationContext = new RepositoryValidationContext(githubRepositoryAccessor, repositoryDiagnosticCollector);

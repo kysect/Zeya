@@ -28,7 +28,7 @@ public class DirectoryBuildPropsParser
         return result;
     }
 
-    public List<string> GetListOfPackageReference(string content)
+    public IReadOnlyCollection<string> GetListOfPackageReference(string content)
     {
         var root = Parser.ParseText(content);
         var propertyNodes = root

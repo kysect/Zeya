@@ -30,7 +30,7 @@ public class ProjectPropertyModifier
             _projectFileAccessor.UpdateDocument(new AddProjectPropertyValueModificationStrategy(key, value));
             return;
         }
-        
+
         _projectFileAccessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.PropertyGroup);
         _projectFileAccessor.UpdateDocument(new UpdateProjectPropertyValueModificationStrategy(key, value));
     }

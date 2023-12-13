@@ -29,6 +29,8 @@ public class AddProjectGroupNodeIfNotExistsModificationStrategy(string groupName
 
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
+        syntax.ThrowIfNull();
+
         var propertyGroupExists = syntax
             .AsSyntaxElement
             .Descendants()

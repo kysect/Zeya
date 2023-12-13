@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using System.Collections.Generic;
 using System.Linq;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Tools;
@@ -16,6 +17,8 @@ public class AddProjectPropertyValueModificationStrategy(string key, string valu
 
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
+        syntax.ThrowIfNull();
+
         return syntax.WithContent(SyntaxFactory.List(ExtendedSyntaxFactory.XmlName(value)));
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using System.Collections.Generic;
 using System.Linq;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Tools;
@@ -24,6 +25,8 @@ public class SyncCentralPackageManagementVersionsModificationStrategy(Dictionary
 
     public SyntaxNode ApplyChanges(XmlEmptyElementSyntax syntax)
     {
+        syntax.ThrowIfNull();
+
         var packageName = syntax.GetAttribute("Include").Value;
 
         var oldVersionAttribute = syntax.GetAttribute("Version");

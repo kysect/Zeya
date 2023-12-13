@@ -1,4 +1,5 @@
-﻿using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.GithubUtils.RepositorySync;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
@@ -14,13 +15,17 @@ public class GithubIntegrationService : IGithubIntegrationService
 
     public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, IPathFormatStrategy pathFormatStrategy, ILogger logger)
     {
+        githubIntegrationOptions.ThrowIfNull();
+
         _githubIntegrationOptions = githubIntegrationOptions.Value;
-        _pathFormatStrategy = pathFormatStrategy;
-        _logger = logger;
+        _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
+        _logger = logger.ThrowIfNull();
     }
 
     public void CloneOrUpdate(GithubRepository repository)
     {
+        repository.ThrowIfNull();
+
         var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 

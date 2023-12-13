@@ -1,4 +1,5 @@
-﻿using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Parsers;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ManagedDotnetCli;
@@ -12,11 +13,14 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
     public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
     public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         var allowedTargetFrameworks = request.AllowedVersions.ToHashSet();

@@ -1,4 +1,5 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,8 @@ public class LoggerRepositoryValidationReporter : IRepositoryValidationReporter
 
     public void Report(RepositoryValidationReport repositoryValidationReport)
     {
+        repositoryValidationReport.ThrowIfNull();
+
         foreach (var diagnostic in repositoryValidationReport.Diagnostics)
         {
             // TODO: use severity
