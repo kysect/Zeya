@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kysect.CommonLib" Version="0.1.13" />
-    <PackageReference Include="Kysect.CommonLib.DependencyInjection" Version="0.1.13" />
-    <PackageReference Include="Kysect.ScenarioLib.YamlParser" Version="0.1.3" />
-    <PackageReference Include="System.IO.Abstractions" Version="20.0.4" />
+    <PackageReference Include="Kysect.CommonLib" />
+    <PackageReference Include="Kysect.CommonLib.DependencyInjection" />
+    <PackageReference Include="Kysect.ScenarioLib.YamlParser" />
+    <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>
