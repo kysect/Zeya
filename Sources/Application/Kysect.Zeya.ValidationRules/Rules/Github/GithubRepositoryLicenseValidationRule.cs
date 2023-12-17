@@ -29,7 +29,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
             return;
         }
 
-        var licenseContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.LicenseFileName);
+        var licenseContent = repositoryValidationContext.RepositoryAccessor.ReadAllText(ValidationConstants.LicenseFileName);
         if (!licenseContent.StartsWith(request.LicenseType))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
