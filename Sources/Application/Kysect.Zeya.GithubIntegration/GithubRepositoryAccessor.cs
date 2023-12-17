@@ -21,9 +21,20 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
         return fileSystem.File.Exists(GetFullPathToFile(partialPath));
     }
 
-    public string ReadFile(string partialPath)
+    public string ReadAllText(string partialPath)
     {
         return fileSystem.File.ReadAllText(GetFullPathToFile(partialPath));
+    }
+
+    public void WriteAllText(string partialPath, string content)
+    {
+        string fullPathToFile = GetFullPathToFile(partialPath);
+        fileSystem.File.WriteAllText(fullPathToFile, content);
+    }
+
+    public string GetWorkflowPath(string workflowName)
+    {
+        return fileSystem.Path.Combine(".github", "workflow", workflowName);
     }
 
     public string GetSolutionFilePath()

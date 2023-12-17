@@ -22,7 +22,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         var repositoryValidationContext = context.GetValidationContext();
 
         var masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
-        var expectedPath = fileSystem.Path.Combine(".github", "workflow", masterFileInfo.Name);
+        var expectedPath = repositoryValidationContext.RepositoryAccessor.GetWorkflowPath(masterFileInfo.Name);
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(expectedPath))
         {
@@ -34,7 +34,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         }
 
         var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
-        var originalFIleContent = repositoryValidationContext.RepositoryAccessor.ReadFile(expectedPath);
+        var originalFIleContent = repositoryValidationContext.RepositoryAccessor.ReadAllText(expectedPath);
 
         if (string.Equals(masterFileContent, originalFIleContent))
         {
