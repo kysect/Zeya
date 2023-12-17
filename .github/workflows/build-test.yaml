@@ -22,6 +22,8 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
     steps:
+    # Prevent issues with dotnet format and \r\n
+    - run: git config --global core.autocrlf true
     - uses: actions/checkout@v3
 
     - name: Setup .NET
