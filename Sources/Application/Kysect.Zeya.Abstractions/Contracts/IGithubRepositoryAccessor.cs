@@ -10,6 +10,6 @@ public interface IGithubRepositoryAccessor
     bool Exists(string partialPath);
     string ReadFile(string partialPath);
 
+    // TODO: remove this, replace with RepositorySolutionAccessor.GetSolutionFilePath
     string GetSolutionFilePath();
-    IReadOnlyCollection<string> GetProjectPaths();
 }

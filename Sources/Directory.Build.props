@@ -1,5 +1,6 @@
 <Project>
 	<ItemGroup>
-		<PackageReference Include="Kysect.Editorconfig" />
+        <PackageReference Include="Kysect.Editorconfig" />
+        <PackageReference Include="TestableIO.System.IO.Abstractions.Analyzers" />
 	</ItemGroup>
 </Project>

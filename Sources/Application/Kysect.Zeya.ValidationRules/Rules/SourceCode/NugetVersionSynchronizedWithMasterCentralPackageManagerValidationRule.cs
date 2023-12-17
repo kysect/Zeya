@@ -11,6 +11,7 @@ namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule(
     IFileSystem fileSystem,
     DirectoryPackagesParser directoryPackagesParser,
+    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     ILogger logger)
     : IScenarioStepExecutor<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
@@ -27,6 +28,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
 
         if (!fileSystem.File.Exists(request.MasterFile))
         {
@@ -35,7 +37,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             return;
         }
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryPackagePropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,

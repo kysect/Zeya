@@ -9,15 +9,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
+public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         rule.ThrowIfNull();
         githubRepository.ThrowIfNull();
 
-        var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        string solutionPath = githubRepository.GetSolutionFilePath();
+        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         // TODO: remove duplicate
         // TODO: investigate possible different versions
         IReadOnlyCollection<NugetVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
@@ -30,13 +31,14 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
             solutionModifierProject.Accessor.UpdateDocument(ProjectNugetVersionRemover.Instance);
         }
 
-        logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryPackagePropsFileName);
+        string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
+        logger.LogTrace("Apply changes to {DirectoryPackageFile} file", directoryPackagePropsPath);
         var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryPackagePropsModifier.Accessor, logger);
 
         logger.LogDebug("Set ManagePackageVersionsCentrally to true");
         projectPropertyModifier.AddOrUpdateProperty("ManagePackageVersionsCentrally", "true");
 
-        logger.LogDebug("Adding package versions to {DirectoryPackageFile}", ValidationConstants.DirectoryPackagePropsFileName);
+        logger.LogDebug("Adding package versions to {DirectoryPackageFile}", directoryPackagePropsPath);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
         solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 

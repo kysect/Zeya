@@ -78,6 +78,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<DotnetCli>()
             .AddSingleton<DotnetSolutionModifierFactory>()
             .AddSingleton<SolutionFileParser>()
+            .AddSingleton<RepositorySolutionAccessorFactory>()
             .AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
 
         serviceCollection.AddSingleton<DirectoryPackagesParser>();

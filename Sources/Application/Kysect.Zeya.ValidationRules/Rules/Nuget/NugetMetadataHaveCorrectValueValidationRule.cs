@@ -6,7 +6,8 @@ using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 
-public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor<NugetMetadataHaveCorrectValueValidationRule.Arguments>
+public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+    : IScenarioStepExecutor<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
     [ScenarioStep("Nuget.MetadataHaveCorrectValue")]
     public record Arguments(Dictionary<string, string> RequiredKeyValues) : IValidationRule
@@ -21,8 +22,9 @@ public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
@@ -31,7 +33,7 @@ public class NugetMetadataHaveCorrectValueValidationRule : IScenarioStepExecutor
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
