@@ -1,4 +1,5 @@
-﻿using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.GithubUtils.RepositorySync;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
@@ -29,7 +30,22 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
     public void WriteAllText(string partialPath, string content)
     {
         string fullPathToFile = GetFullPathToFile(partialPath);
+        var fileInfo = fileSystem.FileInfo.New(fullPathToFile);
+        EnsureContainingDirectoryExists(fileSystem, fileInfo);
         fileSystem.File.WriteAllText(fullPathToFile, content);
+    }
+
+    // TODO: move to common lib
+    private static void EnsureContainingDirectoryExists(IFileSystem fileSystem, IFileInfo fileInfo)
+    {
+        fileSystem.ThrowIfNull();
+        fileInfo.ThrowIfNull();
+
+        if (fileInfo.Directory == null)
+            throw new ArgumentException($"Cannot get directory for path {fileInfo.FullName}");
+
+        if (!fileSystem.Directory.Exists(fileInfo.Directory.FullName))
+            fileSystem.Directory.CreateDirectory(fileInfo.Directory.FullName);
     }
 
     public string GetWorkflowPath(string workflowName)
