@@ -1,18 +1,21 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.Zeya.ManagedDotnetCli;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests;
 
 public class DotnetCliTests
 {
+    private readonly IFileSystem _fileSystem = new FileSystem();
+
     [Test]
     public void GetProperty_IsTestProject_ReturnTrue()
     {
         var logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         var dotnetCli = new DotnetCli(logger);
 
-        var isTestProject = dotnetCli.GetProperty(Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "IsTestProject");
+        var isTestProject = dotnetCli.GetProperty(_fileSystem.Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "IsTestProject");
 
         var parsed = bool.TryParse(isTestProject, out var result);
         parsed.Should().BeTrue();
@@ -25,7 +28,7 @@ public class DotnetCliTests
         var logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         var dotnetCli = new DotnetCli(logger);
 
-        var targetFramework = dotnetCli.GetProperty(Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "TargetFramework");
+        var targetFramework = dotnetCli.GetProperty(_fileSystem.Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "TargetFramework");
 
         targetFramework.Should().Be("net8.0");
     }

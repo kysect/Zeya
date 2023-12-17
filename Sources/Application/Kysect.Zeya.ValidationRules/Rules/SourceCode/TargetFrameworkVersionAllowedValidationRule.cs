@@ -1,12 +1,11 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Parsers;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ManagedDotnetCli;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor, SolutionFileParser solutionFileParser)
+public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
     : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
@@ -24,7 +23,7 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
         var repositoryValidationContext = context.GetValidationContext();
 
         var allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
-        var repositorySolutionAccessor = new RepositorySolutionAccessor(repositoryValidationContext.RepositoryAccessor, solutionFileParser);
+        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
         var projectFiles = repositorySolutionAccessor
             .GetProjectPaths()
             .ToList();

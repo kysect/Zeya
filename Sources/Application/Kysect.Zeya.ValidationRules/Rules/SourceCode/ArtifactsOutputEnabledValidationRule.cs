@@ -5,7 +5,8 @@ using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<ArtifactsOutputEnabledValidationRule.Arguments>
+public class ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+    : IScenarioStepExecutor<ArtifactsOutputEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.ArtifactsOutputEnabled")]
     public record Arguments : IValidationRule
@@ -20,8 +21,9 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
@@ -30,7 +32,7 @@ public class ArtifactsOutputEnabledValidationRule : IScenarioStepExecutor<Artifa
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 

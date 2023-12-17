@@ -5,7 +5,8 @@ using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<RequiredPackagesAddedValidationRule.Arguments>
+public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+    : IScenarioStepExecutor<RequiredPackagesAddedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.RequiredPackagesAdded")]
     public record Arguments(IReadOnlyCollection<string> Packages) : IValidationRule
@@ -20,8 +21,9 @@ public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<Requi
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
@@ -30,7 +32,7 @@ public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<Requi
             return;
         }
 
-        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
+        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadFile(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var parser = new DirectoryBuildPropsParser();
         var addedPackages = parser.GetListOfPackageReference(directoryBuildProps).ToHashSet();
 
