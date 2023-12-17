@@ -33,7 +33,7 @@ public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAcces
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 

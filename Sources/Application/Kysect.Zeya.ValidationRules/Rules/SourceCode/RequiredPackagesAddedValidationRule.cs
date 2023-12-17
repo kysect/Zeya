@@ -32,7 +32,7 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
             return;
         }
 
-        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadFile(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
+        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var parser = new DirectoryBuildPropsParser();
         var addedPackages = parser.GetListOfPackageReference(directoryBuildProps).ToHashSet();
 

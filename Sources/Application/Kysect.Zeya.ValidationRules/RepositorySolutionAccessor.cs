@@ -25,7 +25,7 @@ public class RepositorySolutionAccessor(IGithubRepositoryAccessor repositoryAcce
     public IReadOnlyCollection<string> GetProjectPaths()
     {
         var solutionFilePath = repositoryAccessor.GetSolutionFilePath();
-        var solutionFileContent = repositoryAccessor.ReadFile(solutionFilePath);
+        var solutionFileContent = repositoryAccessor.ReadAllText(solutionFilePath);
         var projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
 
         // TODO: use IFileSystem
