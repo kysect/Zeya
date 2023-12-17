@@ -8,15 +8,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
+public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
     public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         rule.ThrowIfNull();
         githubRepository.ThrowIfNull();
 
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
         solutionModifier.DirectoryBuildPropsModifier.Accessor.UpdateDocument(CreateProjectDocumentIfEmptyModificationStrategy.Instance);
@@ -24,7 +26,7 @@ public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFact
 
         foreach (var rulePackage in rule.Packages)
         {
-            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, ValidationConstants.DirectoryPackagePropsFileName);
+            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, directoryPackagePropsPath);
             solutionModifier.DirectoryBuildPropsModifier.Accessor.UpdateDocument(new AddPackageReferenceModificationStrategy(rulePackage));
         }
 

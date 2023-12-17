@@ -41,15 +41,6 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
         return solutions.Single();
     }
 
-    // TODO: this is not correct. Need to get path from solution
-    public IReadOnlyCollection<string> GetProjectPaths()
-    {
-        return fileSystem
-            .Directory
-            .EnumerateFiles(GetFullPath(), "*.csproj", SearchOption.AllDirectories)
-            .ToList();
-    }
-
     private string GetFullPathToFile(string partialPath)
     {
         return fileSystem.Path.Combine(GetFullPath(), partialPath);

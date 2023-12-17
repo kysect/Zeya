@@ -13,7 +13,8 @@ public record DirectoryBuildPropsContainsRequiredFields(IReadOnlyCollection<stri
     public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
 }
 
-public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenarioStepExecutor<DirectoryBuildPropsContainsRequiredFields>
+public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+    : IScenarioStepExecutor<DirectoryBuildPropsContainsRequiredFields>
 {
     public void Execute(ScenarioContext context, DirectoryBuildPropsContainsRequiredFields request)
     {
@@ -21,8 +22,9 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
+        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
@@ -31,7 +33,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(ValidationConstants.DirectoryBuildPropsPath);
+        var directoryBuildPropsContent = repositoryValidationContext.RepositoryAccessor.ReadFile(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
