@@ -1,4 +1,5 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
 
@@ -9,18 +10,16 @@ public record DirectoryBuildPropsContainsRequiredFields(IReadOnlyCollection<stri
 {
     public string DiagnosticCode => "SRC00007";
 
-    public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
-
-    public static string GetMessage(DirectoryBuildPropsContainsRequiredFields request, string field)
-    {
-        return $"Directory.Build.props field {field} is missed.";
-    }
+    public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
 }
 
 public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenarioStepExecutor<DirectoryBuildPropsContainsRequiredFields>
 {
     public void Execute(ScenarioContext context, DirectoryBuildPropsContainsRequiredFields request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
@@ -42,7 +41,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule : IScenario
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
                     request.DiagnosticCode,
-                    DirectoryBuildPropsContainsRequiredFields.GetMessage(request, requiredField),
+                    $"Directory.Build.props field {requiredField} is missed.",
                     DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
             }
         }

@@ -1,4 +1,5 @@
-﻿using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Parsers;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ManagedDotnetCli;
@@ -12,11 +13,14 @@ public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAc
     public record Arguments : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
     public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         // TODO: use info from Directory.Package.props instead

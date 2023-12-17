@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Kysect.CommonLib.BaseTypes.Extensions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.DotnetSlnParser.Tools;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 
@@ -29,6 +29,8 @@ public class AddProjectGroupNodeIfNotExistsModificationStrategy(string groupName
 
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
+        syntax.ThrowIfNull();
+
         var propertyGroupExists = syntax
             .AsSyntaxElement
             .Descendants()

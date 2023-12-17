@@ -1,9 +1,10 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ManagedDotnetCli;
-using Kysect.Zeya.ProjectSystemIntegration.Tools;
-using Microsoft.Extensions.Logging;
-using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.ProjectSystemIntegration.Tools;
+using Kysect.Zeya.ValidationRules.Rules.SourceCode;
+using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
@@ -11,11 +12,14 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(DotnetSolutionModi
 {
     public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
+        rule.ThrowIfNull();
+        githubRepository.ThrowIfNull();
+
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         HashSet<string> allowedVersion = rule.AllowedVersions.ToHashSet();
-        string? expectedTargetVersion = allowedVersion.Where(IsNetVersion).FirstOrDefault();
+        string? expectedTargetVersion = allowedVersion.FirstOrDefault(IsNetVersion);
         if (expectedTargetVersion is null)
         {
             logger.LogError("Cannot update target framework version because no suitable version specified in allowed");
@@ -39,7 +43,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(DotnetSolutionModi
             var projectPropertyModifier = new ProjectPropertyModifier(projectModifier.Accessor, logger);
             projectPropertyModifier.AddOrUpdateProperty("TargetFramework", expectedTargetVersion);
         }
-        
+
         // TODO: force somehow saving
         solutionModifier.Save();
     }

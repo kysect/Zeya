@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.DotnetSlnParser.Parsers;
 using Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.Tools;
 
@@ -30,7 +30,7 @@ public class ProjectPropertyModifier
             _projectFileAccessor.UpdateDocument(new AddProjectPropertyValueModificationStrategy(key, value));
             return;
         }
-        
+
         _projectFileAccessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.PropertyGroup);
         _projectFileAccessor.UpdateDocument(new UpdateProjectPropertyValueModificationStrategy(key, value));
     }

@@ -60,7 +60,7 @@ public class DirectoryPackagesParserTests
             return modifiedNode.AsNode;
         });
 
-        
+
         var replaces = replaced.ToFullString();
         return;
     }

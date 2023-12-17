@@ -1,24 +1,23 @@
 ﻿using Kysect.Zeya.DependencyManager;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Kysect.Zeya.Demo
+namespace Kysect.Zeya.Demo;
+
+internal class Program
 {
-    internal class Program
+    public static void Main()
     {
-        static void Main()
-        {
-            var serviceProvider = BuildServiceProvider();
-            var demoScenario = serviceProvider.GetRequiredService<DemoScenario>();
+        var serviceProvider = BuildServiceProvider();
+        var demoScenario = serviceProvider.GetRequiredService<DemoScenario>();
 
-            demoScenario.Process();
-        }
+        demoScenario.Process();
+    }
 
-        public static IServiceProvider BuildServiceProvider()
-        {
-            IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddZeyaRequiredService();
-            serviceCollection.AddSingleton<DemoScenario>();
-            return serviceCollection.BuildServiceProvider();
-        }
+    public static IServiceProvider BuildServiceProvider()
+    {
+        IServiceCollection serviceCollection = new ServiceCollection();
+        serviceCollection.AddZeyaRequiredService();
+        serviceCollection.AddSingleton<DemoScenario>();
+        return serviceCollection.BuildServiceProvider();
     }
 }

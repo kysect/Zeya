@@ -1,16 +1,20 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
+using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
-using Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Argument>
+public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
-    public void Fix(RequiredPackagesAddedValidationRule.Argument rule, IGithubRepositoryAccessor githubRepository)
+    public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
+        rule.ThrowIfNull();
+        githubRepository.ThrowIfNull();
+
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 

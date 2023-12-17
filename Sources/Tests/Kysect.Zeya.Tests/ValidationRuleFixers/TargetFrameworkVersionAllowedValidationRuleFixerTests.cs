@@ -1,14 +1,14 @@
-﻿using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
-using System.IO.Abstractions.TestingHelpers;
-using Kysect.Zeya.ValidationRules.Rules.SourceCode;
-using Microsoft.Extensions.Logging;
-using FluentAssertions;
+﻿using FluentAssertions;
+using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnGenerator;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.Tests.Tools;
-using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.Zeya.ProjectSystemIntegration;
+using Kysect.Zeya.Tests.Tools;
+using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
+using Kysect.Zeya.ValidationRules.Rules.SourceCode;
+using Microsoft.Extensions.Logging;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers;
 

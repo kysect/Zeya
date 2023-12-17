@@ -1,20 +1,24 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<RequiredPackagesAddedValidationRule.Argument>
+public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<RequiredPackagesAddedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.RequiredPackagesAdded")]
-    public record Argument(IReadOnlyCollection<string> Packages) : IValidationRule
+    public record Arguments(IReadOnlyCollection<string> Packages) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.RequiredPackagesAdded;
-        public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
-    public void Execute(ScenarioContext context, Argument request)
+    public void Execute(ScenarioContext context, Arguments request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         if (!repositoryValidationContext.RepositoryAccessor.Exists(ValidationConstants.DirectoryBuildPropsPath))
@@ -37,7 +41,7 @@ public class RequiredPackagesAddedValidationRule() : IScenarioStepExecutor<Requi
                 repositoryValidationContext.DiagnosticCollector.Add(
                     request.DiagnosticCode,
                     $"Package {requestPackage} is not add to Directory.Build.props.",
-                    Argument.DefaultSeverity);
+                    Arguments.DefaultSeverity);
             }
         }
     }

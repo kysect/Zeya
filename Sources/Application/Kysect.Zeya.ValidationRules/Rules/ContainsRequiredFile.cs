@@ -1,4 +1,5 @@
-﻿using Kysect.ScenarioLib.Abstractions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using System.IO.Abstractions;
 
@@ -8,17 +9,7 @@ namespace Kysect.Zeya.ValidationRules.Rules;
 public record ContainsRequiredFile(string FilePath, string Sample) : IValidationRule
 {
     public string DiagnosticCode => "SRC00005";
-    public static RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
-
-    public static string GetMessageOnFileMissed(ContainsRequiredFile request)
-    {
-        return $"Required file {request.FilePath} was not found.";
-    }
-
-    public static string GetMessageOnFileMismatch(ContainsRequiredFile request)
-    {
-        return $"Required file {request.FilePath} is not equal to sample.";
-    }
+    public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
 }
 
 public class ContainsRequiredFileValidationRule : IScenarioStepExecutor<ContainsRequiredFile>
@@ -32,6 +23,9 @@ public class ContainsRequiredFileValidationRule : IScenarioStepExecutor<Contains
 
     public void Execute(ScenarioContext context, ContainsRequiredFile request)
     {
+        context.ThrowIfNull();
+        request.ThrowIfNull();
+
         var repositoryValidationContext = context.GetValidationContext();
 
         var targetPath = Path.Combine(repositoryValidationContext.RepositoryAccessor.GetFullPath(), request.FilePath);
@@ -40,7 +34,7 @@ public class ContainsRequiredFileValidationRule : IScenarioStepExecutor<Contains
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                ContainsRequiredFile.GetMessageOnFileMissed(request),
+                $"Required file {request.FilePath} was not found.",
                 ContainsRequiredFile.DefaultSeverity);
 
             return;
@@ -53,7 +47,7 @@ public class ContainsRequiredFileValidationRule : IScenarioStepExecutor<Contains
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                ContainsRequiredFile.GetMessageOnFileMismatch(request),
+                $"Required file {request.FilePath} is not equal to sample.",
                 ContainsRequiredFile.DefaultSeverity);
         }
     }

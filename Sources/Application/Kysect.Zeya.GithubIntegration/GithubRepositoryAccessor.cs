@@ -1,8 +1,8 @@
-﻿using System.IO.Abstractions;
-using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.GithubUtils.RepositorySync;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration;
 
@@ -49,7 +49,7 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
             .EnumerateFiles(GetFullPath(), "*.csproj", SearchOption.AllDirectories)
             .ToList();
     }
-    
+
     private string GetFullPathToFile(string partialPath)
     {
         return fileSystem.Path.Combine(GetFullPath(), partialPath);

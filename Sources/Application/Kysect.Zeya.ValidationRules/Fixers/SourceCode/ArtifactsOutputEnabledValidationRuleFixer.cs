@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
-using Kysect.Zeya.ProjectSystemIntegration;
+using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
@@ -10,6 +11,9 @@ public class ArtifactsOutputEnabledValidationRuleFixer(DotnetSolutionModifierFac
 {
     public void Fix(ArtifactsOutputEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
+        rule.ThrowIfNull();
+        githubRepository.ThrowIfNull();
+
         var solutionPath = githubRepository.GetSolutionFilePath();
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 

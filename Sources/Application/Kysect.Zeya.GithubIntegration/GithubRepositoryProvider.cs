@@ -1,4 +1,5 @@
-﻿using Kysect.GithubUtils.RepositoryDiscovering;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.GithubUtils.RepositoryDiscovering;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,8 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
 
     public GithubRepositoryProvider(IOptions<GithubIntegrationOptions> githubIntegrationOptions)
     {
+        githubIntegrationOptions.ThrowIfNull();
+
         _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 

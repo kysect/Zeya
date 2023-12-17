@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.GithubUtils.RepositorySync;
 using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
@@ -9,6 +8,7 @@ using Kysect.Zeya.ValidationRules.Fixers;
 using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tui.Commands;
 
@@ -20,7 +20,7 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
     private readonly IPathFormatStrategy _pathFormatStrategy;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
-    
+
     public AnalyzeAndFixRepositoryCommand(IGithubIntegrationService githubIntegrationService, RepositoryValidator repositoryValidator, IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger, IFileSystem fileSystem, IPathFormatStrategy pathFormatStrategy)
     {
         _githubIntegrationService = githubIntegrationService;
