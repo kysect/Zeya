@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj" />
   </ItemGroup>
 
 </Project>
