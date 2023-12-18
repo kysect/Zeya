@@ -1,17 +1,21 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.RepositoryDiscovering;
+using Kysect.GithubUtils.Models;
+using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Options;
+using Octokit;
+using GithubRepository = Kysect.Zeya.Abstractions.Models.GithubRepository;
 
 namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubRepositoryProvider : IGithubRepositoryProvider
 {
+    private readonly IGitHubClient _gitHub;
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
 
-    public GithubRepositoryProvider(IOptions<GithubIntegrationOptions> githubIntegrationOptions)
+    public GithubRepositoryProvider(IGitHubClient gitHub, IOptions<GithubIntegrationOptions> githubIntegrationOptions)
     {
+        _gitHub = gitHub;
         githubIntegrationOptions.ThrowIfNull();
 
         _githubIntegrationOptions = githubIntegrationOptions.Value;
@@ -26,9 +30,9 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
     {
         var result = new List<GithubRepository>();
 
-        var skipList = _githubIntegrationOptions.ExcludedRepositories.ToHashSet();
-        var discoveryService = new GitHubRepositoryDiscoveryService(_githubIntegrationOptions.GithubToken);
-        await foreach (var repository in discoveryService.TryDiscover(_githubIntegrationOptions.IncludedOrganization))
+        HashSet<string> skipList = _githubIntegrationOptions.ExcludedRepositories.ToHashSet();
+        var gitHubRepositoryDiscoveryService = new GitHubRepositoryDiscoveryService(_gitHub);
+        foreach (GithubRepositoryBranch repository in await gitHubRepositoryDiscoveryService.GetRepositories(_githubIntegrationOptions.IncludedOrganization))
         {
             if (!skipList.Contains(repository.Name))
             {

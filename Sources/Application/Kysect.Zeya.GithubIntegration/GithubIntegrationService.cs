@@ -1,19 +1,21 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.RepositorySync;
+using Kysect.GithubUtils.Models;
+using Kysect.GithubUtils.Replication.RepositorySync;
+using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using GithubRepository = Kysect.Zeya.Abstractions.Models.GithubRepository;
 
 namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
-    private readonly IPathFormatStrategy _pathFormatStrategy;
+    private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, IPathFormatStrategy pathFormatStrategy, ILogger logger)
+    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, ILocalStoragePathFactory pathFormatStrategy, ILogger logger)
     {
         githubIntegrationOptions.ThrowIfNull();
 
@@ -29,9 +31,7 @@ public class GithubIntegrationService : IGithubIntegrationService
         var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
-
-        repositoryFetcher.EnsureRepositoryUpdated(
-            _pathFormatStrategy,
-            new GithubUtils.RepositorySync.Models.GithubRepository(repository.Owner, repository.Name));
+        // TODO: use default branch from repository
+        repositoryFetcher.Checkout(_pathFormatStrategy, new GithubRepositoryBranch(repository.Owner, repository.Name, "master"));
     }
 }
