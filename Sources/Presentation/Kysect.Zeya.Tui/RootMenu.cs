@@ -4,12 +4,12 @@ using Kysect.Zeya.Tui.Commands;
 
 namespace Kysect.Zeya.Tui;
 
-public record RootMenu(AnalyzeRepositoryCommand AnalyzeRepositoryCommand, AnalyzeAndFixRepositoryCommand AnalyzeAndFixRepositoryCommand) : ITuiMenu
+public record RootMenu(AnalyzeRepositoryCommand AnalyzeRepositoryCommand, AnalyzeAndFixRepositoryCommand AnalyzeAndFixRepositoryCommand, AnalyzeAndFixAndCreatePullRequestRepositoryCommand AnalyzeAndFixAndCreatePullRequestRepositoryCommand) : ITuiMenu
 {
     public string Name => "Root menu";
 
     public IReadOnlyCollection<ITuiCommand> GetMenuItems()
     {
-        return [AnalyzeRepositoryCommand, AnalyzeAndFixRepositoryCommand];
+        return [AnalyzeRepositoryCommand, AnalyzeAndFixRepositoryCommand, AnalyzeAndFixAndCreatePullRequestRepositoryCommand];
     }
 }

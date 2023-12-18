@@ -11,7 +11,7 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tui.Commands;
 
-public class AnalyzeAndFixRepositoryCommand : ITuiCommand
+public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand : ITuiCommand
 {
     private readonly IGithubIntegrationService _githubIntegrationService;
     private readonly RepositoryValidator _repositoryValidator;
@@ -20,7 +20,7 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 
-    public AnalyzeAndFixRepositoryCommand(IGithubIntegrationService githubIntegrationService, RepositoryValidator repositoryValidator, IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger, IFileSystem fileSystem, ILocalStoragePathFactory pathFormatStrategy)
+    public AnalyzeAndFixAndCreatePullRequestRepositoryCommand(IGithubIntegrationService githubIntegrationService, RepositoryValidator repositoryValidator, IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger, IFileSystem fileSystem, ILocalStoragePathFactory pathFormatStrategy)
     {
         _githubIntegrationService = githubIntegrationService;
         _repositoryValidator = repositoryValidator;
@@ -30,10 +30,11 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
         _pathFormatStrategy = pathFormatStrategy;
     }
 
-    public string Name => "Analyze and fix repository";
+    public string Name => "Analyze, fix and create PR repository";
 
     public void Execute()
     {
+        // TODO: reduce copy-paste
         var repositoryFullName = AnsiConsole.Ask<string>("Repository (format: org/repo):");
         if (!repositoryFullName.Contains('/'))
             throw new ArgumentException("Incorrect repository format");
@@ -48,9 +49,12 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
         var report = _repositoryValidator.Validate(githubRepository, rules);
 
         _logger.LogInformation("Repositories analyzed, run fixers");
+        _githubIntegrationService.CreateFixBranch(githubRepository);
+        List<IValidationRule> fixedDiagnostics = new List<IValidationRule>();
+
         foreach (var grouping in report.Diagnostics.GroupBy(d => d.Code))
         {
-            var diagnostic = grouping.First();
+            RepositoryValidationDiagnostic diagnostic = grouping.First();
             // TODO: rework this hack
             IValidationRule validationRule = rules.First(r => r.DiagnosticCode == diagnostic.Code);
 
@@ -58,11 +62,22 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
             {
                 _logger.LogInformation("Apply code fixer for {Code}", diagnostic.Code);
                 _validationRuleFixerApplier.Apply(validationRule, githubRepositoryAccessor);
+                fixedDiagnostics.Add(validationRule);
             }
             else
             {
                 _logger.LogDebug("Fixer for {Code} is not available", diagnostic.Code);
             }
         }
+
+        _logger.LogInformation("Commit fixes");
+        _githubIntegrationService.CreateCommitWithFix(githubRepository);
+        _logger.LogInformation("Push changes to remote");
+        _githubIntegrationService.PushCommitToRemote(githubRepository);
+
+        _logger.LogInformation("Create PR");
+        var pullRequestMessageCreator = new PullRequestMessageCreator();
+        string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
+        _githubIntegrationService.CreatePullRequest(githubRepositoryAccessor, pullRequestMessage);
     }
 }
