@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.DependencyInjection;
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnParser.Parsers;
-using Kysect.GithubUtils.RepositorySync;
+using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
@@ -54,7 +54,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddZeyaGithubIntegration(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton<IPathFormatStrategy>(sp =>
+        serviceCollection.AddSingleton<ILocalStoragePathFactory>(sp =>
         {
             var githubIntegrationOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
             return new UseOwnerAndRepoForFolderNameStrategy(githubIntegrationOptions.Value.CacheDirectoryPath);

@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
-using Kysect.GithubUtils.RepositorySync;
+using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
@@ -19,7 +19,7 @@ public class RepositoryValidator
     private readonly IScenarioSourceCodeParser _scenarioSourceCodeParser;
     private readonly IScenarioStepParser _scenarioStepParser;
     private readonly IScenarioStepHandler _scenarioStepHandler;
-    private readonly IPathFormatStrategy _pathFormatStrategy;
+    private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 
@@ -29,7 +29,7 @@ public class RepositoryValidator
         IScenarioSourceCodeParser scenarioSourceCodeParser,
         IScenarioStepParser scenarioStepParser,
         IScenarioStepHandler scenarioStepHandler,
-        IPathFormatStrategy pathFormatStrategy,
+        ILocalStoragePathFactory pathFormatStrategy,
         IFileSystem fileSystem)
     {
         _logger = logger;

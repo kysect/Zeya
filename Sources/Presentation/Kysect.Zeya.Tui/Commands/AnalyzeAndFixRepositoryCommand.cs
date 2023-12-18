@@ -1,4 +1,4 @@
-﻿using Kysect.GithubUtils.RepositorySync;
+﻿using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
@@ -17,11 +17,11 @@ public class AnalyzeAndFixRepositoryCommand : ITuiCommand
     private readonly IGithubIntegrationService _githubIntegrationService;
     private readonly RepositoryValidator _repositoryValidator;
     private readonly IValidationRuleFixerApplier _validationRuleFixerApplier;
-    private readonly IPathFormatStrategy _pathFormatStrategy;
+    private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 
-    public AnalyzeAndFixRepositoryCommand(IGithubIntegrationService githubIntegrationService, RepositoryValidator repositoryValidator, IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger, IFileSystem fileSystem, IPathFormatStrategy pathFormatStrategy)
+    public AnalyzeAndFixRepositoryCommand(IGithubIntegrationService githubIntegrationService, RepositoryValidator repositoryValidator, IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger, IFileSystem fileSystem, ILocalStoragePathFactory pathFormatStrategy)
     {
         _githubIntegrationService = githubIntegrationService;
         _repositoryValidator = repositoryValidator;
