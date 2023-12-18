@@ -50,7 +50,7 @@ public class GithubRepositoryAccessor(GithubRepository repository, IPathFormatSt
 
     public string GetWorkflowPath(string workflowName)
     {
-        return fileSystem.Path.Combine(".github", "workflow", workflowName);
+        return fileSystem.Path.Combine(".github", "workflows", workflowName);
     }
 
     public string GetSolutionFilePath()
