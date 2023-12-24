@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Kysect.CommonLib.DependencyInjection" />
     <PackageReference Include="Kysect.ScenarioLib.YamlParser" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" />
     <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" />
   </ItemGroup>
 
