@@ -8,7 +8,7 @@ namespace Kysect.Zeya.ManagedDotnetCli;
 
 public class CmdProcess
 {
-    private static TimeSpan _timeout = TimeSpan.FromSeconds(20);
+    private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(20);
     private readonly ILogger _logger;
 
     public CmdProcess(ILogger logger)

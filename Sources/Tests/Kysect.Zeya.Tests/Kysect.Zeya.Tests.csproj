@@ -15,6 +15,7 @@
     <PackageReference Include="Kysect.CommonLib.DependencyInjection" />
     <PackageReference Include="Kysect.DotnetSlnGenerator" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="NUnit.Analyzers">
