@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
@@ -13,6 +14,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     IFileSystem fileSystem,
     DirectoryPackagesParser directoryPackagesParser,
+    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     ILogger logger)
     : IValidationRuleFixer<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
@@ -21,8 +23,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         rule.ThrowIfNull();
         githubRepository.ThrowIfNull();
 
-        var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
+        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         if (solutionModifier.DirectoryPackagePropsModifier.Accessor.IsEmpty())
         {

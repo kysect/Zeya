@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
@@ -7,15 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class ArtifactsOutputEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, ILogger logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
+public class ArtifactsOutputEnabledValidationRuleFixer(
+    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
+    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
+    ILogger logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
 {
     public void Fix(ArtifactsOutputEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         rule.ThrowIfNull();
         githubRepository.ThrowIfNull();
 
-        var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
+        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
 

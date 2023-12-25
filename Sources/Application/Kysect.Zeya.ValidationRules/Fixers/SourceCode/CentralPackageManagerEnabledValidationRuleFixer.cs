@@ -17,7 +17,7 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         githubRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
-        string solutionPath = githubRepository.GetSolutionFilePath();
+        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         // TODO: remove duplicate
         // TODO: investigate possible different versions
