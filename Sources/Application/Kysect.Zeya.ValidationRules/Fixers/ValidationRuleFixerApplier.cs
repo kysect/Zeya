@@ -41,13 +41,13 @@ public class ValidationRuleFixerApplier(Dictionary<Type, ValidationRuleFixerRefl
         return fixers.ContainsKey(rule.GetType());
     }
 
-    public void Apply(IValidationRule rule, IGithubRepositoryAccessor githubRepository)
+    public void Apply(IValidationRule rule, IClonedRepository clonedRepository)
     {
         rule.ThrowIfNull();
 
         if (!fixers.TryGetValue(rule.GetType(), out var fixer))
             throw new ArgumentException($"Fixer for {rule.DiagnosticCode} is not registered");
 
-        fixer.Execute(rule, githubRepository);
+        fixer.Execute(rule, clonedRepository);
     }
 }

@@ -6,11 +6,11 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules;
 
-public class RepositorySolutionAccessor(IGithubRepositoryAccessor repositoryAccessor, SolutionFileParser solutionFileParser, IFileSystem fileSystem)
+public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileParser solutionFileParser, IFileSystem fileSystem)
 {
     public string GetSolutionFilePath()
     {
-        var repositoryPath = repositoryAccessor.GetFullPath();
+        var repositoryPath = repository.GetFullPath();
 
         var solutions = fileSystem.Directory.EnumerateFiles(repositoryPath, "*.sln", SearchOption.AllDirectories).ToList();
         if (solutions.Count == 0)
@@ -26,7 +26,7 @@ public class RepositorySolutionAccessor(IGithubRepositoryAccessor repositoryAcce
     public IReadOnlyCollection<string> GetProjectPaths()
     {
         string solutionFilePath = GetSolutionFilePath();
-        string solutionFileContent = repositoryAccessor.ReadAllText(solutionFilePath);
+        string solutionFileContent = repository.ReadAllText(solutionFilePath);
         IReadOnlyCollection<DotnetProjectFileDescriptor> projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
 
         var solutionDirectory = fileSystem.FileInfo.New(solutionFilePath).Directory;
@@ -43,13 +43,13 @@ public class RepositorySolutionAccessor(IGithubRepositoryAccessor repositoryAcce
     {
         string solutionFilePath = GetSolutionFilePath();
         string fullPath = fileSystem.Path.Combine(solutionFilePath, ValidationConstants.DirectoryPackagePropsFileName);
-        return fileSystem.Path.GetRelativePath(repositoryAccessor.GetFullPath(), fullPath);
+        return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
     }
 
     public string GetDirectoryBuildPropsPath()
     {
         string solutionFilePath = GetSolutionFilePath();
         string fullPath = fileSystem.Path.Combine(solutionFilePath, ValidationConstants.DirectoryBuildPropsFileName);
-        return fileSystem.Path.GetRelativePath(repositoryAccessor.GetFullPath(), fullPath);
+        return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
     }
 }

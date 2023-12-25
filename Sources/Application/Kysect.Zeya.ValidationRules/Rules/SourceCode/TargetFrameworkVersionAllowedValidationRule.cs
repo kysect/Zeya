@@ -23,7 +23,7 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
         var repositoryValidationContext = context.GetValidationContext();
 
         var allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
-        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
+        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
         var projectFiles = repositorySolutionAccessor
             .GetProjectPaths()
             .ToList();

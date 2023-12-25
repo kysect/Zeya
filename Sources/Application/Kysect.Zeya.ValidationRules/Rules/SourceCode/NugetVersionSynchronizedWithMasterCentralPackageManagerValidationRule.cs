@@ -28,7 +28,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
         if (!fileSystem.File.Exists(request.MasterFile))
         {
@@ -37,7 +37,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             return;
         }
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
+        if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,

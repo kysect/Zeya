@@ -91,7 +91,7 @@ public class GithubIntegrationService : IGithubIntegrationService
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
-    public void CreatePullRequest(GithubRepositoryAccessor repository, string message)
+    public void CreatePullRequest(ClonedRepository repository, string message)
     {
         repository.ThrowIfNull();
         message.ThrowIfNull();

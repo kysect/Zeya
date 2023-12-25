@@ -25,9 +25,8 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
         var repositoryValidationContext = context.GetValidationContext();
 
         string branch = ValidationConstants.DefaultBranch;
-        GithubRepository repository = repositoryValidationContext.RepositoryAccessor.Repository;
 
-        BranchProtectionSettings? branchProtectionSettings = TryGetBranchProtection(repository, branch);
+        BranchProtectionSettings? branchProtectionSettings = TryGetBranchProtection(repositoryValidationContext.GithubMetadata, branch);
 
         if (branchProtectionSettings is null)
         {

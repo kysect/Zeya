@@ -8,5 +8,5 @@ public interface IGithubIntegrationService
     void CreateFixBranch(GithubRepository repository);
     void CreateCommitWithFix(GithubRepository repository);
     void PushCommitToRemote(GithubRepository repository);
-    void CreatePullRequest(GithubRepositoryAccessor repository, string message);
+    void CreatePullRequest(ClonedRepository repository, string message);
 }

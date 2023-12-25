@@ -14,12 +14,12 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
-    public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
+    public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
         rule.ThrowIfNull();
-        githubRepository.ThrowIfNull();
+        clonedRepository.ThrowIfNull();
 
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 

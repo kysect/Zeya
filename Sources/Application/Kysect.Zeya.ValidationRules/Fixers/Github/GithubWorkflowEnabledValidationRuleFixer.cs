@@ -8,16 +8,16 @@ namespace Kysect.Zeya.ValidationRules.Fixers.Github;
 
 public class GithubWorkflowEnabledValidationRuleFixer(IFileSystem fileSystem, ILogger logger) : IValidationRuleFixer<GithubWorkflowEnabledValidationRule.Arguments>
 {
-    public void Fix(GithubWorkflowEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
+    public void Fix(GithubWorkflowEnabledValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
         rule.ThrowIfNull();
-        githubRepository.ThrowIfNull();
+        clonedRepository.ThrowIfNull();
 
         IFileInfo masterFileInfo = fileSystem.FileInfo.New(rule.MasterFile);
-        string workflowPath = githubRepository.GetWorkflowPath(masterFileInfo.Name);
+        string workflowPath = clonedRepository.GetWorkflowPath(masterFileInfo.Name);
 
         logger.LogInformation("Copy workflow from {Source} to {Target}", rule.MasterFile, workflowPath);
         string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
-        githubRepository.WriteAllText(workflowPath, masterFileContent);
+        clonedRepository.WriteAllText(workflowPath, masterFileContent);
     }
 }

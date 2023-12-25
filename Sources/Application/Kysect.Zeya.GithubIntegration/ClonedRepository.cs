@@ -1,19 +1,14 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration;
 
-public class GithubRepositoryAccessor(GithubRepository repository, ILocalStoragePathFactory pathFormatStrategy, IFileSystem fileSystem)
-    : IGithubRepositoryAccessor
+public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {
-    public GithubRepository Repository { get; } = repository;
-
     public string GetFullPath()
     {
-        return pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(Repository.Owner, Repository.Name));
+        return repositoryRootPath;
     }
 
     public bool Exists(string partialPath)
