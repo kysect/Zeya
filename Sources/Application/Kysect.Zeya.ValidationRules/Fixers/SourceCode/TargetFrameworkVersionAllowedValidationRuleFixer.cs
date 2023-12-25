@@ -1,7 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;

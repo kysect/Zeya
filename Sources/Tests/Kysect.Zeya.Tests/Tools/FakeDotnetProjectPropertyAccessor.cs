@@ -1,5 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.Zeya.ManagedDotnetCli;
+using Kysect.Zeya.Abstractions.Contracts;
 
 namespace Kysect.Zeya.Tests.Tools;
 
