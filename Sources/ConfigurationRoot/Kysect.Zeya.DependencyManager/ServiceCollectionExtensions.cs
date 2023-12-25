@@ -2,6 +2,7 @@
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnParser.Parsers;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
+using Kysect.PowerShellRunner.Configuration;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
@@ -33,7 +34,8 @@ public static class ServiceCollectionExtensions
             .AddZeyaConfiguration()
             .AddZeyaLogging()
             .AddZeyaGithubIntegration()
-            .AddZeyaRepositoryValidation();
+            .AddZeyaRepositoryValidation()
+            .AddPowerShellWrappers();
     }
 
     public static IServiceCollection AddZeyaConfiguration(this IServiceCollection serviceCollection)
@@ -153,5 +155,20 @@ public static class ServiceCollectionExtensions
         var userActionSelectionMenuInitializer = new TuiMenuInitializer(userActionSelectionMenuProvider);
         TuiMenuNavigationItem selectionMenuNavigatorItem = userActionSelectionMenuInitializer.CreateMenu();
         return new TuiMenuNavigator(selectionMenuNavigatorItem, logger);
+    }
+
+    private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddPowerShellLogger(b =>
+            {
+                b
+                    .SetDefaultCategory("Cloudext")
+                    .SetRedirectToAppData("GreenCloud", "Cloudext")
+                    .SetLevel(LogLevel.Trace)
+                    .AddSerilogToFile("Cloudext.log");
+            })
+            .AddPowerShellAccessorFactory()
+            .AddPowerShellAccessor();
     }
 }

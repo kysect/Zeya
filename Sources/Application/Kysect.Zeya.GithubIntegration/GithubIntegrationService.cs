@@ -2,7 +2,10 @@
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
-using Kysect.Zeya.ManagedDotnetCli;
+using Kysect.PowerShellRunner.Abstractions.Accessors;
+using Kysect.PowerShellRunner.Abstractions.Queries;
+using Kysect.PowerShellRunner.Executions;
+using Kysect.PowerShellRunner.Tools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -14,12 +17,14 @@ namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
+    private readonly IPowerShellAccessor _powerShellAccessor;
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, ILocalStoragePathFactory pathFormatStrategy, ILogger logger)
+    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
     {
+        _powerShellAccessor = powerShellAccessor;
         githubIntegrationOptions.ThrowIfNull();
 
         _githubIntegrationOptions = githubIntegrationOptions.Value;
@@ -91,12 +96,9 @@ public class GithubIntegrationService : IGithubIntegrationService
         repository.ThrowIfNull();
         message.ThrowIfNull();
 
-        var cmdProcess = new CmdProcess(_logger);
-
-        CmdExecutionResult currentDirectoryResult = cmdProcess.ExecuteCommand("cd");
-        // TODO: rework all this
-        // Need to extract to separated projects
-        // TODO: recheck dependencies between projects
-        cmdProcess.ExecuteCommand($"cd {repository.GetFullPath()} && gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\" && cd {currentDirectoryResult.StandardOutput.Trim()}");
+        using (PowerShellPathChangeContext.TemporaryChangeCurrentDirectory(_powerShellAccessor, repository.GetFullPath()))
+        {
+            _powerShellAccessor.ExecuteAndGet(new PowerShellQuery($"gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\""));
+        }
     }
 }
