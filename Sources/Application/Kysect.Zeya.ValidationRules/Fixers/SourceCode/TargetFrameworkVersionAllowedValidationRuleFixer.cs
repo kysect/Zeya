@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.ProjectSystemIntegration;
@@ -8,15 +9,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, IDotnetProjectPropertyAccessor projectPropertyAccessor, ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
+public class TargetFrameworkVersionAllowedValidationRuleFixer(
+    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
+    IDotnetProjectPropertyAccessor projectPropertyAccessor,
+    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
+    ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
         rule.ThrowIfNull();
         githubRepository.ThrowIfNull();
 
-        var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
+        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         HashSet<string> allowedVersion = rule.AllowedVersions.ToHashSet();
         string? expectedTargetVersion = allowedVersion.FirstOrDefault(IsNetVersion);

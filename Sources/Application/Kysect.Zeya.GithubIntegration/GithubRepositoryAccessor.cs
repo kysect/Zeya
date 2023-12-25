@@ -1,6 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
-using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using System.IO.Abstractions;
@@ -51,21 +50,6 @@ public class GithubRepositoryAccessor(GithubRepository repository, ILocalStorage
     public string GetWorkflowPath(string workflowName)
     {
         return fileSystem.Path.Combine(".github", "workflows", workflowName);
-    }
-
-    public string GetSolutionFilePath()
-    {
-        var repositoryPath = GetFullPath();
-
-        var solutions = fileSystem.Directory.EnumerateFiles(repositoryPath, "*.sln", SearchOption.AllDirectories).ToList();
-        if (solutions.Count == 0)
-            throw new ZeyaException($"Repository {repositoryPath} does not contains .sln files");
-
-        // TODO: investigate this path
-        if (solutions.Count > 1)
-            throw new ZeyaException($"Repository {repositoryPath} has more than one solution file.");
-
-        return solutions.Single();
     }
 
     private string GetFullPathToFile(string partialPath)

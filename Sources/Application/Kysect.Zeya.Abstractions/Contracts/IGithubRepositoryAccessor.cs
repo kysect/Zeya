@@ -11,6 +11,4 @@ public interface IGithubRepositoryAccessor
     string ReadAllText(string partialPath);
     void WriteAllText(string partialPath, string content);
     string GetWorkflowPath(string workflowName);
-    // TODO: remove this, replace with RepositorySolutionAccessor.GetSolutionFilePath
-    string GetSolutionFilePath();
 }

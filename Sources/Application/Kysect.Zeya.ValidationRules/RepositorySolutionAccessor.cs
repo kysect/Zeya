@@ -1,4 +1,5 @@
-﻿using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.DotnetSlnParser.Models;
+using Kysect.DotnetSlnParser.Parsers;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using System.IO.Abstractions;
@@ -24,9 +25,9 @@ public class RepositorySolutionAccessor(IGithubRepositoryAccessor repositoryAcce
 
     public IReadOnlyCollection<string> GetProjectPaths()
     {
-        var solutionFilePath = repositoryAccessor.GetSolutionFilePath();
-        var solutionFileContent = repositoryAccessor.ReadAllText(solutionFilePath);
-        var projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
+        string solutionFilePath = GetSolutionFilePath();
+        string solutionFileContent = repositoryAccessor.ReadAllText(solutionFilePath);
+        IReadOnlyCollection<DotnetProjectFileDescriptor> projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
 
         // TODO: use IFileSystem
         var solutionDirectory = fileSystem.FileInfo.New(solutionFilePath).Directory;

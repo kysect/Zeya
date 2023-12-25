@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
@@ -8,7 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
+public class RequiredPackagesAddedValidationRuleFixer(
+    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
+    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
+    ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
     public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
     {
@@ -16,8 +20,8 @@ public class RequiredPackagesAddedValidationRuleFixer(DotnetSolutionModifierFact
         githubRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
-        var solutionPath = githubRepository.GetSolutionFilePath();
-        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
+        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
