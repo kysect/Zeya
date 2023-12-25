@@ -64,7 +64,8 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
             .AddProject(new DotnetProjectBuilder(projectName, originalProjectContent));
         solutionBuilder.Save(_fileSystem, currentPath);
 
-        var repositoryAccessor = new GithubRepositoryAccessor(new GithubRepository("owner", "name"), new FakePathFormatStrategy(currentPath), _fileSystem);
+        var githubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(currentPath), _fileSystem);
+        var repositoryAccessor = githubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));
         _fixer.Fix(new TargetFrameworkVersionAllowedValidationRule.Arguments(["net8.0"]), repositoryAccessor);
 
         _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, projectName, $"{projectName}.csproj")).Should().Be(expectedProjectContent);

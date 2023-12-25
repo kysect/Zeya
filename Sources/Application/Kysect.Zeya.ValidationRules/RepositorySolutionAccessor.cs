@@ -29,12 +29,10 @@ public class RepositorySolutionAccessor(IGithubRepositoryAccessor repositoryAcce
         string solutionFileContent = repositoryAccessor.ReadAllText(solutionFilePath);
         IReadOnlyCollection<DotnetProjectFileDescriptor> projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
 
-        // TODO: use IFileSystem
         var solutionDirectory = fileSystem.FileInfo.New(solutionFilePath).Directory;
         if (solutionDirectory is null)
             throw new ZeyaException($"Cannot get solution directory for {solutionFilePath}");
 
-        // TODO: use IFileSystem
         return projectFileDescriptors
             .Select(descriptor => descriptor.ProjectPath)
             .Select(partialPath => fileSystem.Path.Combine(solutionDirectory.FullName, partialPath))
