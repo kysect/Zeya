@@ -33,7 +33,6 @@
     <ProjectReference Include="..\..\Application\Kysect.Zeya.ProjectSystemIntegration\Kysect.Zeya.ProjectSystemIntegration.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj" />
-    <ProjectReference Include="..\..\Presentation\Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace Kysect.Zeya.ManagedDotnetCli;
+﻿using Kysect.Zeya.Abstractions.Contracts;
+
+namespace Kysect.Zeya.ManagedDotnetCli;
 
 public class DotnetProjectPropertyAccessor(DotnetCli cli) : IDotnetProjectPropertyAccessor
 {
