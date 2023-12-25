@@ -21,9 +21,9 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
-        if (!repositoryValidationContext.RepositoryAccessor.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
+        if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
@@ -32,7 +32,7 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
             return;
         }
 
-        var directoryBuildProps = repositoryValidationContext.RepositoryAccessor.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
+        var directoryBuildProps = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var parser = new DirectoryBuildPropsParser();
         var addedPackages = parser.GetListOfPackageReference(directoryBuildProps).ToHashSet();
 

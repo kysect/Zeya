@@ -11,12 +11,12 @@ namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
-    public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
+    public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
         rule.ThrowIfNull();
-        githubRepository.ThrowIfNull();
+        clonedRepository.ThrowIfNull();
 
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         // TODO: remove duplicate

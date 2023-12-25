@@ -21,7 +21,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubC
 
         var repositoryValidationContext = context.GetValidationContext();
 
-        GithubRepository repository = repositoryValidationContext.RepositoryAccessor.Repository;
+        GithubRepository repository = repositoryValidationContext.GithubMetadata;
 
         var repositoryInfo = githubClient.Repository.Get(repository.Owner, repository.Name).Result;
         if (repositoryInfo.DeleteBranchOnMerge is null or false)

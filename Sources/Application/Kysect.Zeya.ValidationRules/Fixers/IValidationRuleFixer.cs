@@ -13,7 +13,7 @@ public interface IValidationRuleFixer
 public interface IValidationRuleFixer<TRules> : IValidationRuleFixer
     where TRules : IValidationRule
 {
-    void Fix(TRules rule, IGithubRepositoryAccessor githubRepository);
+    void Fix(TRules rule, IClonedRepository clonedRepository);
 }
 
 public class ValidationRuleFixerReflectionDecorator
@@ -34,8 +34,8 @@ public class ValidationRuleFixerReflectionDecorator
         _executeMethod = executeMethod ?? throw new ReflectionException($"Cannot get method {executeMethod} from type {executorType}");
     }
 
-    public void Execute(IValidationRule rule, IGithubRepositoryAccessor githubRepository)
+    public void Execute(IValidationRule rule, IClonedRepository clonedRepository)
     {
-        _executeMethod.Invoke(_fixer, [rule, githubRepository]);
+        _executeMethod.Invoke(_fixer, [rule, clonedRepository]);
     }
 }

@@ -6,8 +6,8 @@ namespace Kysect.Zeya.ValidationRules;
 
 public class RepositorySolutionAccessorFactory(SolutionFileParser solutionFileParser, IFileSystem fileSystem)
 {
-    public RepositorySolutionAccessor Create(IGithubRepositoryAccessor repositoryAccessor)
+    public RepositorySolutionAccessor Create(IClonedRepository repository)
     {
-        return new RepositorySolutionAccessor(repositoryAccessor, solutionFileParser, fileSystem);
+        return new RepositorySolutionAccessor(repository, solutionFileParser, fileSystem);
     }
 }

@@ -1,11 +1,7 @@
-﻿using Kysect.Zeya.Abstractions.Models;
+﻿namespace Kysect.Zeya.Abstractions.Contracts;
 
-namespace Kysect.Zeya.Abstractions.Contracts;
-
-public interface IGithubRepositoryAccessor
+public interface IClonedRepository
 {
-    GithubRepository Repository { get; }
-
     string GetFullPath();
     bool Exists(string partialPath);
     string ReadAllText(string partialPath);

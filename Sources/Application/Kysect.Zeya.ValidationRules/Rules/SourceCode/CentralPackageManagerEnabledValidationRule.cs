@@ -23,7 +23,7 @@ public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAc
         var repositoryValidationContext = context.GetValidationContext();
 
         // TODO: use info from Directory.Package.props instead
-        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.RepositoryAccessor);
+        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
         var selectedProjectDefault = repositorySolutionAccessor
             .GetProjectPaths()

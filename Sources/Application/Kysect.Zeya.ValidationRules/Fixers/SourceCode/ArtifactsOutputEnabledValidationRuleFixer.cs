@@ -13,12 +13,12 @@ public class ArtifactsOutputEnabledValidationRuleFixer(
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     ILogger logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
 {
-    public void Fix(ArtifactsOutputEnabledValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
+    public void Fix(ArtifactsOutputEnabledValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
         rule.ThrowIfNull();
-        githubRepository.ThrowIfNull();
+        clonedRepository.ThrowIfNull();
 
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 

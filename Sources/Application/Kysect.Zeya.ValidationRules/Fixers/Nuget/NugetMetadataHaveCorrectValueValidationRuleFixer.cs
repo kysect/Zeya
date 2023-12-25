@@ -13,12 +13,12 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     ILogger logger) : IValidationRuleFixer<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
-    public void Fix(NugetMetadataHaveCorrectValueValidationRule.Arguments rule, IGithubRepositoryAccessor githubRepository)
+    public void Fix(NugetMetadataHaveCorrectValueValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
         rule.ThrowIfNull();
-        githubRepository.ThrowIfNull();
+        clonedRepository.ThrowIfNull();
 
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(githubRepository);
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
