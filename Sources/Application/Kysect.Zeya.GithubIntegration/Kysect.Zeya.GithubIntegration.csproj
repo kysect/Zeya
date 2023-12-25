@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kysect.GithubUtils" />
+    <PackageReference Include="Kysect.PowerShellRunner" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options" />
     <PackageReference Include="Octokit" />
@@ -15,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
-    <ProjectReference Include="..\Kysect.Zeya.ManagedDotnetCli\Kysect.Zeya.ManagedDotnetCli.csproj" />
   </ItemGroup>
 
 </Project>
