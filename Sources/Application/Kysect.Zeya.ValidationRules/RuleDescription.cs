@@ -30,5 +30,5 @@ public static class RuleDescription
         public const string MetadataSpecified = "NUP0001";
         public const string MetadataHaveCorrectValue = "NUP0002";
     }
-#pragma warning restore CA2211
+#pragma warning restore CA1724
 }
