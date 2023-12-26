@@ -6,6 +6,8 @@ namespace Kysect.Zeya.ProjectSystemIntegration.Tools;
 
 public static class ExtendedSyntaxFactory
 {
+    public const string DefaultIndention = "  ";
+
     public static XmlNameSyntax XmlName(string name)
     {
         return SyntaxFactory.XmlName(null, SyntaxFactory.XmlNameToken(name, null, null));
@@ -73,13 +75,12 @@ public static class ExtendedSyntaxFactory
         return SyntaxFactory.XmlElement(startTagSyntax, SyntaxFactory.List<SyntaxNode>(SyntaxFactory.XmlText(SyntaxFactory.XmlTextLiteralToken(value, null, null))), endTagSyntax);
     }
 
-    // TODO: specify indention
     public static SyntaxTrivia XmlWhiteIndention(int depth)
     {
         var sb = new StringBuilder(Environment.NewLine);
 
-        for (var i = 0; i < depth; i++)
-            sb = sb.Append('\t');
+        for (int i = 0; i < depth; i++)
+            sb = sb.Append(DefaultIndention);
 
         return SyntaxFactory.WhitespaceTrivia(sb.ToString());
     }

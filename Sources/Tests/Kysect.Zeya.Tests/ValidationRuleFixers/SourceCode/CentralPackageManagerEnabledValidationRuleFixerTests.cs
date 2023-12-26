@@ -59,12 +59,12 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
 
         var expectedDotnetPackageContent = $"""
                                            <Project>
-                                           {'\t'}<PropertyGroup>
-                                           {'\t'}{'\t'}<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-                                           {'\t'}</PropertyGroup>
-                                           {'\t'}<ItemGroup>
-                                           {'\t'}{'\t'}<PackageVersion Include="FluentAssertions" Version="6.12.0" />
-                                           {'\t'}</ItemGroup>
+                                             <PropertyGroup>
+                                               <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+                                             </PropertyGroup>
+                                             <ItemGroup>
+                                               <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+                                             </ItemGroup>
                                            </Project>
                                            """;
 
@@ -112,12 +112,12 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         // TODO: implement formatting rule
         var expectedDotnetPackageContent = $"""
                                            <Project>
-                                           {'\t'}<PropertyGroup>
-                                           {'\t'}{'\t'}<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-                                           {'\t'}</PropertyGroup>
-                                           {'\t'}<ItemGroup>
-                                           {'\t'}{'\t'}<PackageVersion Include="FluentAssertions" Version="6.12.0" />
-                                           {'\t'}</ItemGroup>
+                                             <PropertyGroup>
+                                               <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+                                             </PropertyGroup>
+                                             <ItemGroup>
+                                               <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+                                             </ItemGroup>
                                            </Project>
                                            """;
 
