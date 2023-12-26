@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetSlnGenerator;
+using Kysect.DotnetSlnGenerator.Builders;
 using Kysect.DotnetSlnParser.Parsers;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
