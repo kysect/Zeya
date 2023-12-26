@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetSlnGenerator;
+using Kysect.DotnetSlnGenerator.Builders;
+using Kysect.DotnetSlnGenerator.Models;
 using Kysect.DotnetSlnParser.Parsers;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
@@ -51,5 +52,22 @@ public class RequiredPackagesAddedValidationRuleTests
         diagnostics.Should().HaveCount(1);
         diagnostics.Single().Code.Should().Be(arguments.DiagnosticCode);
         diagnostics.Single().Message.Should().Be("Directory.Build.props file is not exists.");
+    }
+
+    [Test]
+    public void Validate_SolutionWithEmptyDirectoryBuildProps_ReturnDiagnosticAboutMissedPackage()
+    {
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
+        new DotnetSolutionBuilder("Solution")
+            .AddFile(new SolutionFileInfo([ValidationConstants.DirectoryBuildPropsFileName], string.Empty))
+            .Save(_fileSystem, _currentPath);
+
+        _requiredPackagesAddedValidationRule.Execute(_scenarioContext, arguments);
+        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
+
+        // TODO: remove message duplication
+        diagnostics.Should().HaveCount(1);
+        diagnostics.Single().Code.Should().Be(arguments.DiagnosticCode);
+        diagnostics.Single().Message.Should().Be("Package RequiredPackage is not add to Directory.Build.props.");
     }
 }
