@@ -12,7 +12,8 @@ namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 public class RequiredPackagesAddedValidationRuleFixer(
     DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
-    ILogger logger) : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
+    ILogger logger)
+    : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
     public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
@@ -21,6 +22,7 @@ public class RequiredPackagesAddedValidationRuleFixer(
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
+
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
         string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
 
@@ -32,6 +34,10 @@ public class RequiredPackagesAddedValidationRuleFixer(
         {
             logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, directoryPackagePropsPath);
             solutionModifier.DirectoryBuildPropsModifier.Accessor.UpdateDocument(new AddPackageReferenceModificationStrategy(rulePackage));
+
+            logger.LogDebug("Removing package {Package} from csproj files", rulePackage);
+            foreach (DotnetProjectModifier dotnetProjectModifier in solutionModifier.Projects)
+                dotnetProjectModifier.Accessor.UpdateDocument(new RemovePackageReferenceModificationStrategy(rulePackage));
         }
 
         logger.LogTrace("Saving solution files");
