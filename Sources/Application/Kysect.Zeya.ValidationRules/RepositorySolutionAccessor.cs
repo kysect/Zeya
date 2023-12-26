@@ -1,4 +1,5 @@
-﻿using Kysect.DotnetSlnParser.Models;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetSlnParser.Models;
 using Kysect.DotnetSlnParser.Parsers;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
@@ -23,33 +24,38 @@ public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFi
         return solutions.Single();
     }
 
+    public string GetSolutionDirectoryPath()
+    {
+        string solutionFilePath = GetSolutionFilePath();
+        IFileInfo fileInfo = fileSystem.FileInfo.New(solutionFilePath);
+        fileInfo.Directory.ThrowIfNull();
+        return fileInfo.Directory.FullName;
+    }
+
     public IReadOnlyCollection<string> GetProjectPaths()
     {
         string solutionFilePath = GetSolutionFilePath();
         string solutionFileContent = repository.ReadAllText(solutionFilePath);
         IReadOnlyCollection<DotnetProjectFileDescriptor> projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
-
-        var solutionDirectory = fileSystem.FileInfo.New(solutionFilePath).Directory;
-        if (solutionDirectory is null)
-            throw new ZeyaException($"Cannot get solution directory for {solutionFilePath}");
+        string solutionDirectoryPath = GetSolutionDirectoryPath();
 
         return projectFileDescriptors
             .Select(descriptor => descriptor.ProjectPath)
-            .Select(partialPath => fileSystem.Path.Combine(solutionDirectory.FullName, partialPath))
+            .Select(partialPath => fileSystem.Path.Combine(solutionDirectoryPath, partialPath))
             .ToList();
     }
 
     public string GetDirectoryPackagePropsPath()
     {
-        string solutionFilePath = GetSolutionFilePath();
-        string fullPath = fileSystem.Path.Combine(solutionFilePath, ValidationConstants.DirectoryPackagePropsFileName);
+        string solutionDirectoryPath = GetSolutionDirectoryPath();
+        string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, ValidationConstants.DirectoryPackagePropsFileName);
         return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
     }
 
     public string GetDirectoryBuildPropsPath()
     {
-        string solutionFilePath = GetSolutionFilePath();
-        string fullPath = fileSystem.Path.Combine(solutionFilePath, ValidationConstants.DirectoryBuildPropsFileName);
+        string solutionDirectoryPath = GetSolutionDirectoryPath();
+        string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, ValidationConstants.DirectoryBuildPropsFileName);
         return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
     }
 }
