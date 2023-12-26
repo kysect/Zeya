@@ -45,9 +45,9 @@ public class RequiredPackagesAddedValidationRuleFixerTests
     {
         const string expectedDirectoryBuildPropsFile = """
                                                        <Project>
-                                                       	<ItemGroup>
-                                                       		<PackageReference Include="RequiredPackage" />
-                                                       	</ItemGroup>
+                                                         <ItemGroup>
+                                                           <PackageReference Include="RequiredPackage" />
+                                                         </ItemGroup>
                                                        </Project>
                                                        """;
 
@@ -69,9 +69,9 @@ public class RequiredPackagesAddedValidationRuleFixerTests
 
         const string expectedDirectoryBuildPropsFile = """
                                                        <Project>
-                                                       	<ItemGroup>
-                                                       		<PackageReference Include="RequiredPackage" />
-                                                       	</ItemGroup>
+                                                         <ItemGroup>
+                                                           <PackageReference Include="RequiredPackage" />
+                                                         </ItemGroup>
                                                        </Project>
                                                        """;
 

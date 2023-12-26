@@ -11,8 +11,8 @@ public class ExtendedSyntaxFactoryTests
     {
         var expected = $"""
 
-                        {'\t'}<Name>
-                        {'\t'}</Name>
+                          <Name>
+                          </Name>
                         """;
         var result = ExtendedSyntaxFactory.XmlElement("Name", 1);
 
@@ -25,9 +25,9 @@ public class ExtendedSyntaxFactoryTests
     {
         var expected = $"""
 
-                        {'\t'}<Name>
-                        {'\t'}{'\t'}<Key>Value</Key>
-                        {'\t'}</Name>
+                          <Name>
+                            <Key>Value</Key>
+                          </Name>
                         """;
 
         var result = ExtendedSyntaxFactory.XmlElement("Name", 1).AddChild(ExtendedSyntaxFactory.PropertyGroupParameter("Key", "Value"));
