@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.Collections.Extensions;
 using Kysect.DotnetSlnParser.Modifiers;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
@@ -9,7 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger) : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
+public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger)
+    : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IClonedRepository clonedRepository)
     {
@@ -19,9 +21,9 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
-        // TODO: remove duplicate
-        // TODO: investigate possible different versions
         IReadOnlyCollection<NugetVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
+        nugetPackages = SelectDistinctPackages(nugetPackages);
+
         logger.LogDebug("Collect {Count} added Nuget packages to projects", nugetPackages.Count);
 
         logger.LogTrace("Apply changes to *.csproj files");
@@ -67,5 +69,34 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         }
 
         return nugetVersions;
+    }
+
+    private IReadOnlyCollection<NugetVersion> SelectDistinctPackages(IReadOnlyCollection<NugetVersion> packages)
+    {
+        List<NugetVersion> distinctPackages = new List<NugetVersion>();
+
+        foreach (IGrouping<string, NugetVersion> nugetVersions in packages.GroupBy(p => p.PackageName))
+        {
+            if (nugetVersions.Count() == 1)
+            {
+                distinctPackages.Add(nugetVersions.Single());
+                continue;
+            }
+
+            List<string> versions = nugetVersions.Select(n => n.Version).Distinct().ToList();
+            if (versions.Count == 1)
+            {
+                distinctPackages.Add(new NugetVersion(nugetVersions.Key, versions.Single()));
+                continue;
+            }
+
+            logger.LogWarning("Nuget {Package} added to projects with different versions: {Versions}", nugetVersions.Key, versions.ToSingleString());
+            string selectedVersion = versions.First();
+            distinctPackages.Add(new NugetVersion(nugetVersions.Key, selectedVersion));
+        }
+
+        return distinctPackages
+            .OrderBy(p => p.PackageName)
+            .ToList();
     }
 }
