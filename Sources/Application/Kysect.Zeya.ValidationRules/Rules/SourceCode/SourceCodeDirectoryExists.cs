@@ -9,7 +9,7 @@ namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<SourcesMustNotBeInRootValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.SourcesMustNotBeInRoot")]
-    public record Arguments() : IValidationRule
+    public record Arguments(string SourceDirectoryPath) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.SourcesMustNotBeInRoot;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
@@ -23,7 +23,7 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         var repositoryValidationContext = context.GetValidationContext();
         var repositoryRootPath = repositoryValidationContext.Repository.GetFullPath();
 
-        var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, ValidationConstants.DefaultSourceCodeDirectory);
+        var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, request.SourceDirectoryPath);
         if (!fileSystem.Directory.Exists(expectedSourceDirectoryPath))
         {
             repositoryValidationContext.DiagnosticCollector.Add(

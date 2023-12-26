@@ -18,7 +18,7 @@
                
 - Name: SourceCode.SourcesMustNotBeInRoot
   Parameters:
-    ExpectedSourceDirectoryName: Sources
+    SourceDirectoryPath: Sources
 - Name: SourceCode.TargetFrameworkVersionAllowed
   Parameters:
     AllowedVersions: [net8.0, netstandard2.0]
