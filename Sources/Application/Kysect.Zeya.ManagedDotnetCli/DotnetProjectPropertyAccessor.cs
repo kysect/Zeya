@@ -16,7 +16,6 @@ public class DotnetProjectPropertyAccessor(DotnetCli cli) : IDotnetProjectProper
 
     public string GetTargetFramework(string projectPath)
     {
-        // TODO: move to constants
         return cli.GetProperty(projectPath, "TargetFramework");
     }
 

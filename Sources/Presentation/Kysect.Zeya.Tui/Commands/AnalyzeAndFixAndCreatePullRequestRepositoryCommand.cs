@@ -36,7 +36,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
         var report = repositoryValidator.Validate(githubRepository, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
-        githubIntegrationService.CreateFixBranch(githubRepository);
+        githubIntegrationService.CreateFixBranch(githubRepository, "zeya/fixer");
         List<IValidationRule> fixedDiagnostics = new List<IValidationRule>();
 
         foreach (var grouping in report.Diagnostics.GroupBy(d => d.Code))
@@ -58,9 +58,9 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
         }
 
         logger.LogInformation("Commit fixes");
-        githubIntegrationService.CreateCommitWithFix(githubRepository);
+        githubIntegrationService.CreateCommitWithFix(githubRepository, "Apply Zeya fixes");
         logger.LogInformation("Push changes to remote");
-        githubIntegrationService.PushCommitToRemote(githubRepository);
+        githubIntegrationService.PushCommitToRemote(githubRepository, "zeya/fixer");
 
         logger.LogInformation("Create PR");
         var pullRequestMessageCreator = new PullRequestMessageCreator();
