@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
@@ -39,41 +38,37 @@ public class GithubIntegrationService : IGithubIntegrationService
         var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
-        // TODO: use default branch from repository
-        repositoryFetcher.Checkout(_pathFormatStrategy, new GithubRepositoryBranch(repository.Owner, repository.Name, "master"));
+        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
     }
 
-    public void CreateFixBranch(GithubRepository repository)
+    public void CreateFixBranch(GithubRepository repository, string branchName)
     {
         repository.ThrowIfNull();
 
         var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
-        var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
         repository.ThrowIfNull();
 
         string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
         using var repo = new Repository(targetPath);
-        // TODO: move constants
-
-        Branch branch = repo.CreateBranch("zeya/fixer");
+        // TODO: validate that branch is not exists
+        Branch branch = repo.CreateBranch(branchName);
         Branch currentBranch = Commands.Checkout(repo, branch);
     }
 
-    public void CreateCommitWithFix(GithubRepository repository)
+    public void CreateCommitWithFix(GithubRepository repository, string commitMessage)
     {
         repository.ThrowIfNull();
 
         string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
         using var repo = new Repository(targetPath);
         Commands.Stage(repo, "*");
-        // TODO: remove this hardcoded values
         Configuration config = repo.Config;
         Signature author = config.BuildSignature(DateTimeOffset.Now);
-        repo.Commit("Apply Zeya fixes", author, author);
+        repo.Commit(commitMessage, author, author);
     }
 
-    public void PushCommitToRemote(GithubRepository repository)
+    public void PushCommitToRemote(GithubRepository repository, string branchName)
     {
         repository.ThrowIfNull();
 
@@ -81,7 +76,7 @@ public class GithubIntegrationService : IGithubIntegrationService
         using var repo = new Repository(targetPath);
 
         Remote? remote = repo.Network.Remotes["origin"];
-        string pushRefSpec = @"refs/heads/zeya/fixer";
+        string pushRefSpec = $"refs/heads/{branchName}";
 
         var pushOptions = new PushOptions
         {
