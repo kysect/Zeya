@@ -9,6 +9,7 @@ public static class RepositoryValidationContextExtensions
     {
         context.ThrowIfNull();
         context.Data.ThrowIfNull();
+
         return context.Data.To<RepositoryValidationContext>();
     }
 

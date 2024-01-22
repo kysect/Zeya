@@ -1,5 +1,7 @@
 # Kysect.Zeya
 
+[![codecov](https://codecov.io/github/kysect/Zeya/graph/badge.svg?token=3UGRWLL7JF)](https://codecov.io/github/kysect/Zeya)
+
 > Это Proof of Concept. Поведение и API могут меняться.
 
 Zeya - приложение для мониторинга за GitHub репозиториями, которые содержат исходный код NuGet пакетов. Zeya позволяет валидировать репозитории по заранее описанным правилам и находить проблемы в репозиториях. Это позволяет проверить Healthcheck репозиториев.
