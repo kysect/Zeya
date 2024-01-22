@@ -5,31 +5,31 @@ using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules;
 
-[ScenarioStep("DirectoryBuildPropsContainsRequiredFields")]
-public record DirectoryBuildPropsContainsRequiredFields(IReadOnlyCollection<string> RequiredFields) : IValidationRule
-{
-    public string DiagnosticCode => "SRC00007";
-
-    public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
-}
-
 public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
-    : IScenarioStepExecutor<DirectoryBuildPropsContainsRequiredFields>
+    : IScenarioStepExecutor<DirectoryBuildPropsContainsRequiredFieldsValidationRule.Arguments>
 {
-    public void Execute(ScenarioContext context, DirectoryBuildPropsContainsRequiredFields request)
+    [ScenarioStep("DirectoryBuildPropsContainsRequiredFields")]
+    public record Arguments(IReadOnlyCollection<string> RequiredFields) : IValidationRule
+    {
+        public string DiagnosticCode => "SRC00007";
+
+        public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+    }
+
+    public void Execute(ScenarioContext context, Arguments request)
     {
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                "Directory.Build.props file is not exists.",
-                DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
+                ValidationRuleMessages.DirectoryBuildPropsFileMissed,
+                Arguments.DefaultSeverity);
             return;
         }
 
@@ -44,7 +44,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositoryS
                 repositoryValidationContext.DiagnosticCollector.Add(
                     request.DiagnosticCode,
                     $"Directory.Build.props field {requiredField} is missed.",
-                    DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
+                    Arguments.DefaultSeverity);
             }
         }
     }

@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
-using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetSlnGenerator.Builders;
 using Kysect.DotnetSlnGenerator.Models;
 using Kysect.DotnetSlnParser.Parsers;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using System.IO.Abstractions.TestingHelpers;
@@ -28,7 +28,7 @@ public class RequiredPackagesAddedValidationRuleTests
 
         _requiredPackagesAddedValidationRule = new RequiredPackagesAddedValidationRule(
             new RepositorySolutionAccessorFactory(
-                new SolutionFileParser(DefaultLoggerConfiguration.CreateConsoleLogger()),
+                new SolutionFileParser(TestLoggerProvider.GetLogger()),
                 _fileSystem));
 
         _repositoryDiagnosticCollector = new RepositoryDiagnosticCollector("MockRepository");
@@ -48,10 +48,9 @@ public class RequiredPackagesAddedValidationRuleTests
         _requiredPackagesAddedValidationRule.Execute(_scenarioContext, arguments);
         IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
 
-        // TODO: remove message duplication
         diagnostics.Should().HaveCount(1);
         diagnostics.Single().Code.Should().Be(arguments.DiagnosticCode);
-        diagnostics.Single().Message.Should().Be("Directory.Build.props file is not exists.");
+        diagnostics.Single().Message.Should().Be(ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
 
     [Test]

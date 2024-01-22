@@ -13,6 +13,8 @@ public class ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFact
     {
         public string DiagnosticCode => RuleDescription.SourceCode.ArtifactsOutputEnables;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const string UseArtifactsOutputOptionMissed = "Directory.Build.props does not contains UseArtifactsOutput option";
+        public const string UseArtifactsOutputOptionMustBeTrue = "Directory.Build.props option UseArtifactsOutput must be true";
     }
 
     public void Execute(ScenarioContext context, Arguments request)
@@ -20,28 +22,37 @@ public class ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFact
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                "Directory.Build.props file is not exists and does not contains UseArtifactsOutput option",
+                ValidationRuleMessages.DirectoryBuildPropsFileMissed,
                 Arguments.DefaultSeverity);
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
+        string directoryBuildPropsContent = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
         var directoryBuildPropsParser = new DirectoryBuildPropsParser();
         Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
 
         // TODO: verify that value set to true?
-        if (!buildPropsValues.ContainsKey("UseArtifactsOutput"))
+        if (!buildPropsValues.TryGetValue("UseArtifactsOutput", out string? value))
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                "Directory.Build.props does not contains UseArtifactsOutput option.",
+                Arguments.UseArtifactsOutputOptionMissed,
+                Arguments.DefaultSeverity);
+            return;
+        }
+
+        if (!string.Equals(value, "true", StringComparison.InvariantCultureIgnoreCase))
+        {
+            repositoryValidationContext.DiagnosticCollector.Add(
+                request.DiagnosticCode,
+                Arguments.UseArtifactsOutputOptionMustBeTrue,
                 Arguments.DefaultSeverity);
         }
     }

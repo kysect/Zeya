@@ -27,8 +27,8 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                "Directory.Build.props file is not exists.",
-                DirectoryBuildPropsContainsRequiredFields.DefaultSeverity);
+                ValidationRuleMessages.DirectoryBuildPropsFileMissed,
+                Arguments.DefaultSeverity);
             return;
         }
 
