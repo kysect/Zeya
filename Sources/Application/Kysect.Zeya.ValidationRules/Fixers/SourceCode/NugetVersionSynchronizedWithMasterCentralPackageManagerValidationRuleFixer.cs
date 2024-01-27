@@ -3,7 +3,6 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,6 @@ namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(
     DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     IFileSystem fileSystem,
-    DirectoryPackagesParser directoryPackagesParser,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
     ILogger logger)
