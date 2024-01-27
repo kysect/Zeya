@@ -29,7 +29,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
         var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser());
         _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(dotnetSolutionModifierFactory, new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem), _xmlDocumentSyntaxFormatter, _logger);
+        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem), _xmlDocumentSyntaxFormatter, _logger);
     }
 
     [Test]
