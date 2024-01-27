@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
@@ -47,19 +48,21 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
         }
 
         var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
-        var masterPackages = directoryPackagesParser
-            .Parse(masterFileContent)
-            .ToDictionary(p => p.PackageName, p => p.Version);
+        var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
+        var masterPackages = masterPropsFile
+            .GetPackageVersions()
+            .ToDictionary(p => p.Name, p => p.Version);
 
-        string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(request.MasterFile);
-        IReadOnlyCollection<NugetVersion> currentProjectPackages = directoryPackagesParser.Parse(currentProjectDirectoryPackage);
+        string currentPackagesPropsContent = fileSystem.File.ReadAllText(repositorySolutionAccessor.GetDirectoryPackagePropsPath());
+        var currentPackagesPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(currentPackagesPropsContent));
+        IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = currentPackagesPropsFile.GetPackageVersions();
 
         List<string> notSpecifiedPackages = new List<string>();
 
         foreach (var nugetVersion in currentProjectPackages)
         {
-            if (!masterPackages.TryGetValue(nugetVersion.PackageName, out _))
-                notSpecifiedPackages.Add(nugetVersion.PackageName);
+            if (!masterPackages.TryGetValue(nugetVersion.Name, out _))
+                notSpecifiedPackages.Add(nugetVersion.Name);
         }
 
         if (notSpecifiedPackages.Any())

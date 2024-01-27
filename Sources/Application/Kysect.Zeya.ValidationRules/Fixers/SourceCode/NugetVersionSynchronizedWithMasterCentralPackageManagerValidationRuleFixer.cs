@@ -45,10 +45,11 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             return;
         }
 
-        var masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
-        var masterPackages = directoryPackagesParser
-            .Parse(masterFileContent)
-            .ToDictionary(p => p.PackageName, p => p.Version);
+        string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
+        var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
+        Dictionary<string, string> masterPackages = masterPropsFile
+            .GetPackageVersions()
+            .ToDictionary(p => p.Name, p => p.Version);
 
         logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
         directoryPackagesPropsFile.File.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));

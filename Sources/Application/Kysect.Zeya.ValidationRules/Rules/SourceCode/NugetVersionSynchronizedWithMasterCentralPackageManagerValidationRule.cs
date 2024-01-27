@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ProjectSystemIntegration;
@@ -47,22 +48,24 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         }
 
         var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
-        var masterPackages = directoryPackagesParser
-            .Parse(masterFileContent)
-            .ToDictionary(p => p.PackageName, p => p.Version);
+        var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
+        var masterPackages = masterPropsFile
+            .GetPackageVersions()
+            .ToDictionary(p => p.Name, p => p.Version);
 
-        string currentProjectDirectoryPackage = fileSystem.File.ReadAllText(request.MasterFile);
-        IReadOnlyCollection<NugetVersion> currentProjectPackages = directoryPackagesParser.Parse(currentProjectDirectoryPackage);
+        string directoryPackagesFileContent = fileSystem.File.ReadAllText(repositorySolutionAccessor.GetDirectoryPackagePropsPath());
+        var directoryPackagesFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(directoryPackagesFileContent));
+        IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = directoryPackagesFile.GetPackageVersions();
 
         List<string> packagesWithDifferentVersion = new List<string>();
 
         foreach (var nugetVersion in currentProjectPackages)
         {
-            if (!masterPackages.TryGetValue(nugetVersion.PackageName, out var masterVersion))
+            if (!masterPackages.TryGetValue(nugetVersion.Name, out var masterVersion))
                 continue;
 
             if (nugetVersion.Version != masterVersion)
-                packagesWithDifferentVersion.Add(nugetVersion.PackageName);
+                packagesWithDifferentVersion.Add(nugetVersion.Name);
         }
 
         if (packagesWithDifferentVersion.Any())

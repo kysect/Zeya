@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.Collections.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions;
@@ -11,9 +12,9 @@ namespace Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 
 public class DirectoryPackagePropsNugetVersionAppender : IXmlProjectFileModifyStrategy<XmlElementSyntax>
 {
-    private readonly IReadOnlyCollection<NugetVersion> _nugetVersions;
+    private readonly IReadOnlyCollection<ProjectPackageVersion> _nugetVersions;
 
-    public DirectoryPackagePropsNugetVersionAppender(IReadOnlyCollection<NugetVersion> nugetVersions)
+    public DirectoryPackagePropsNugetVersionAppender(IReadOnlyCollection<ProjectPackageVersion> nugetVersions)
     {
         _nugetVersions = nugetVersions;
     }

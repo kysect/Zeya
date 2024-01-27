@@ -1,9 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
@@ -22,7 +22,7 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
-        IReadOnlyCollection<NugetVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
+        IReadOnlyCollection<ProjectPackageVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
         nugetPackages = SelectDistinctPackages(nugetPackages);
 
         logger.LogDebug("Collect {Count} added Nuget packages to projects", nugetPackages.Count);
@@ -48,9 +48,9 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         solutionModifier.Save(formatter);
     }
 
-    private IReadOnlyCollection<NugetVersion> CollectNugetIncludes(DotnetSolutionModifier modifier)
+    private IReadOnlyCollection<ProjectPackageVersion> CollectNugetIncludes(DotnetSolutionModifier modifier)
     {
-        var nugetVersions = new List<NugetVersion>();
+        var nugetVersions = new List<ProjectPackageVersion>();
 
         foreach (var dotnetProjectModifier in modifier.Projects)
         {
@@ -59,18 +59,18 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
                 if (packageReferences.Version is null)
                     continue;
 
-                nugetVersions.Add(new NugetVersion(packageReferences.Name, packageReferences.Version));
+                nugetVersions.Add(new ProjectPackageVersion(packageReferences.Name, packageReferences.Version));
             }
         }
 
         return nugetVersions;
     }
 
-    private IReadOnlyCollection<NugetVersion> SelectDistinctPackages(IReadOnlyCollection<NugetVersion> packages)
+    private IReadOnlyCollection<ProjectPackageVersion> SelectDistinctPackages(IReadOnlyCollection<ProjectPackageVersion> packages)
     {
-        List<NugetVersion> distinctPackages = new List<NugetVersion>();
+        List<ProjectPackageVersion> distinctPackages = new List<ProjectPackageVersion>();
 
-        foreach (IGrouping<string, NugetVersion> nugetVersions in packages.GroupBy(p => p.PackageName))
+        foreach (IGrouping<string, ProjectPackageVersion> nugetVersions in packages.GroupBy(p => p.Name))
         {
             if (nugetVersions.Count() == 1)
             {
@@ -81,17 +81,17 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
             List<string> versions = nugetVersions.Select(n => n.Version).Distinct().ToList();
             if (versions.Count == 1)
             {
-                distinctPackages.Add(new NugetVersion(nugetVersions.Key, versions.Single()));
+                distinctPackages.Add(new ProjectPackageVersion(nugetVersions.Key, versions.Single()));
                 continue;
             }
 
             logger.LogWarning("Nuget {Package} added to projects with different versions: {Versions}", nugetVersions.Key, versions.ToSingleString());
             string selectedVersion = versions.First();
-            distinctPackages.Add(new NugetVersion(nugetVersions.Key, selectedVersion));
+            distinctPackages.Add(new ProjectPackageVersion(nugetVersions.Key, selectedVersion));
         }
 
         return distinctPackages
-            .OrderBy(p => p.PackageName)
+            .OrderBy(p => p.Name)
             .ToList();
     }
 }
