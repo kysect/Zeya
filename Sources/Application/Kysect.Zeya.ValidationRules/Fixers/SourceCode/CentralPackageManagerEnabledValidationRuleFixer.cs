@@ -4,7 +4,6 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -35,14 +34,15 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
 
         string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
         logger.LogTrace("Apply changes to {DirectoryPackageFile} file", directoryPackagePropsPath);
-        var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.GetOrCreateDirectoryPackagePropsModifier().File, logger);
+        DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
 
         logger.LogDebug("Set ManagePackageVersionsCentrally to true");
-        projectPropertyModifier.AddOrUpdateProperty("ManagePackageVersionsCentrally", "true");
+        // TODO: replace with SetCentralPackageManagement 
+        directoryPackagesPropsFile.File.AddOrUpdateProperty(DotnetProjectFileConstant.ManagePackageVersionsCentrally, true.ToString().ToLower());
 
         logger.LogDebug("Adding package versions to {DirectoryPackageFile}", directoryPackagePropsPath);
-        solutionModifier.GetOrCreateDirectoryPackagePropsModifier().File.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
-        solutionModifier.GetOrCreateDirectoryPackagePropsModifier().File.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
+        directoryPackagesPropsFile.File.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
+        directoryPackagesPropsFile.File.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 
         logger.LogTrace("Saving solution files");
         solutionModifier.Save(formatter);
