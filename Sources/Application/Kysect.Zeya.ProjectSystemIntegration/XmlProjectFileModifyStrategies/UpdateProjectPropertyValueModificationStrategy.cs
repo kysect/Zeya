@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
@@ -24,7 +24,7 @@ public class UpdateProjectPropertyValueModificationStrategy(string key, string v
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
         return syntax
-            .AddChild(ExtendedSyntaxFactory.PropertyGroupParameter(key, value))
+            .AddChild(ExtendedSyntaxFactory2.PropertyGroupParameter(key, value))
             .To<XmlElementSyntax>();
     }
 }

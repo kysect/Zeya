@@ -1,4 +1,4 @@
-﻿using Kysect.DotnetSlnParser.Tools;
+﻿using Kysect.DotnetProjectSystem.Xml;
 using Microsoft.Language.Xml;
 using System.Linq;
 

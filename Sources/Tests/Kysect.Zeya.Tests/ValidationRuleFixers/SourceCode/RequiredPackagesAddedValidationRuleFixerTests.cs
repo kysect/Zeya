@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetSlnGenerator.Builders;
-using Kysect.DotnetSlnParser.Parsers;
+using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
@@ -19,6 +20,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests
     private MockFileSystem _fileSystem;
     private ClonedRepository _clonedRepository;
     private RepositorySolutionAccessor _repositorySolutionAccessor;
+    private XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
     [SetUp]
     public void Setup()
@@ -27,13 +29,15 @@ public class RequiredPackagesAddedValidationRuleFixerTests
         _fileSystem = new MockFileSystem();
         _currentPath = _fileSystem.Path.GetFullPath(".");
 
-        var repositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(new SolutionFileParser(logger), _fileSystem);
+        var repositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem);
+        _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
         _requiredPackagesAddedValidationRuleFixer
             = new RequiredPackagesAddedValidationRuleFixer(
                 new DotnetSolutionModifierFactory(
                     _fileSystem,
-                    logger),
+                    new SolutionFileContentParser()),
                 repositorySolutionAccessorFactory,
+                _xmlDocumentSyntaxFormatter,
                 logger);
 
         _clonedRepository = new ClonedRepository(_currentPath, _fileSystem);
@@ -52,8 +56,8 @@ public class RequiredPackagesAddedValidationRuleFixerTests
                                                        """;
 
         var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
-        new DotnetSolutionBuilder("Solution")
-            .Save(_fileSystem, _currentPath);
+        new SolutionFileStructureBuilder("Solution")
+            .Save(_fileSystem, _currentPath, _xmlDocumentSyntaxFormatter);
 
         _requiredPackagesAddedValidationRuleFixer.Fix(
             arguments,
@@ -98,9 +102,9 @@ public class RequiredPackagesAddedValidationRuleFixerTests
 
         var projectPath = _fileSystem.Path.Combine(_currentPath, projectName, $"{projectName}.csproj");
         var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
-        new DotnetSolutionBuilder("Solution")
-            .AddProject(new DotnetProjectBuilder(projectName, projectFileContent))
-            .Save(_fileSystem, _currentPath);
+        new SolutionFileStructureBuilder("Solution")
+            .AddProject(new ProjectFileStructureBuilder(projectName, projectFileContent))
+            .Save(_fileSystem, _currentPath, _xmlDocumentSyntaxFormatter);
 
         _requiredPackagesAddedValidationRuleFixer.Fix(
             arguments,

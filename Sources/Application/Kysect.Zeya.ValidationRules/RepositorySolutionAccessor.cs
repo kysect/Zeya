@@ -1,13 +1,12 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Models;
-using Kysect.DotnetSlnParser.Parsers;
+using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules;
 
-public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileParser solutionFileParser, IFileSystem fileSystem)
+public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileContentParser solutionFileParser, IFileSystem fileSystem)
 {
     public string GetSolutionFilePath()
     {

@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
@@ -41,7 +41,7 @@ public class AddProjectGroupNodeIfNotExistsModificationStrategy(string groupName
             return syntax;
 
         return syntax
-            .AddChild(ExtendedSyntaxFactory.XmlElement(groupName, 1))
+            .AddChild(ExtendedSyntaxFactory2.XmlElement(groupName, 1))
             .To<XmlElementSyntax>();
     }
 }

@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetSlnGenerator.Builders;
-using Kysect.DotnetSlnParser.Parsers;
+using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
@@ -19,15 +20,16 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
     private CentralPackageManagerEnabledValidationRuleFixer _fixer;
     private MockFileSystem _fileSystem;
     private ILogger _logger;
+    private XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
     [SetUp]
     public void Setup()
     {
-
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(dotnetSolutionModifierFactory, new RepositorySolutionAccessorFactory(new SolutionFileParser(_logger), _fileSystem), _logger);
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser());
+        _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
+        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(dotnetSolutionModifierFactory, new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem), _xmlDocumentSyntaxFormatter, _logger);
     }
 
     [Test]
@@ -38,7 +40,6 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                <PropertyGroup>
                                  <TargetFramework>net8.0</TargetFramework>
                                </PropertyGroup>
-                             
                                <ItemGroup>
                                  <PackageReference Include="FluentAssertions" Version="6.12.0" />
                                </ItemGroup>
@@ -50,7 +51,6 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                <PropertyGroup>
                                  <TargetFramework>net8.0</TargetFramework>
                                </PropertyGroup>
-                             
                                <ItemGroup>
                                  <PackageReference Include="FluentAssertions" />
                                </ItemGroup>
@@ -70,9 +70,9 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
 
         string currentPath = _fileSystem.Path.GetFullPath(".");
         const string projectName = "SampleProject";
-        var solutionBuilder = new DotnetSolutionBuilder("Solution")
-            .AddProject(new DotnetProjectBuilder(projectName, originalProjectContent));
-        solutionBuilder.Save(_fileSystem, currentPath);
+        var solutionBuilder = new SolutionFileStructureBuilder("Solution")
+            .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent));
+        solutionBuilder.Save(_fileSystem, currentPath, _xmlDocumentSyntaxFormatter);
 
         var githubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(currentPath), _fileSystem);
         var repositoryAccessor = githubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));
@@ -90,7 +90,6 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                <PropertyGroup>
                                  <TargetFramework>net8.0</TargetFramework>
                                </PropertyGroup>
-                             
                                <ItemGroup>
                                  <PackageReference Include="FluentAssertions" Version="6.12.0" />
                                </ItemGroup>
@@ -102,7 +101,6 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                <PropertyGroup>
                                  <TargetFramework>net8.0</TargetFramework>
                                </PropertyGroup>
-                             
                                <ItemGroup>
                                  <PackageReference Include="FluentAssertions" />
                                </ItemGroup>
@@ -125,10 +123,10 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         const string projectName = "SampleProject";
         const string projectName2 = "SampleProject2";
 
-        new DotnetSolutionBuilder("Solution")
-            .AddProject(new DotnetProjectBuilder(projectName, originalProjectContent))
-            .AddProject(new DotnetProjectBuilder(projectName2, originalProjectContent))
-            .Save(_fileSystem, currentPath);
+        new SolutionFileStructureBuilder("Solution")
+            .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
+            .AddProject(new ProjectFileStructureBuilder(projectName2, originalProjectContent))
+            .Save(_fileSystem, currentPath, _xmlDocumentSyntaxFormatter);
 
         var githubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(currentPath), _fileSystem);
         var repositoryAccessor = githubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));

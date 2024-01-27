@@ -1,7 +1,8 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
+using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
     DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     IDotnetProjectPropertyAccessor projectPropertyAccessor,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
+    XmlDocumentSyntaxFormatter formatter,
     ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, IClonedRepository clonedRepository)
@@ -31,9 +33,12 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
             return;
         }
 
-        foreach (var projectModifier in solutionModifier.Projects)
+        foreach (DotnetProjectModifier projectModifier in solutionModifier.Projects)
         {
-            var projectTargetFramework = projectPropertyAccessor.GetTargetFramework(projectModifier.Path);
+            // TODO: must get value from projectPropertyAccessor?
+            projectPropertyAccessor.ThrowIfNull();
+            DotnetProjectProperty dotnetProjectProperty = projectModifier.File.GetProperty("TargetFramework");
+            var projectTargetFramework = dotnetProjectProperty.Value;
 
             if (!IsNetVersion(projectTargetFramework))
             {
@@ -44,13 +49,14 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
             if (string.Equals(projectTargetFramework, expectedTargetVersion))
                 continue;
 
-            logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, expectedTargetVersion, projectModifier.Path);
-            var projectPropertyModifier = new ProjectPropertyModifier(projectModifier.Accessor, logger);
+            // TODO: return logging
+            //logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, expectedTargetVersion, projectModifier.Path);
+            var projectPropertyModifier = new ProjectPropertyModifier(projectModifier.File, logger);
             projectPropertyModifier.AddOrUpdateProperty("TargetFramework", expectedTargetVersion);
         }
 
         // TODO: force somehow saving
-        solutionModifier.Save();
+        solutionModifier.Save(formatter);
     }
 
     // TODO: rework this behavior after changing rule arguments

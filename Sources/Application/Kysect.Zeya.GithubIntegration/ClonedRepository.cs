@@ -1,4 +1,4 @@
-﻿using Kysect.CommonLib.FileSystem.Extensions;
+﻿using Kysect.CommonLib.FileSystem;
 using Kysect.Zeya.Abstractions.Contracts;
 using System.IO.Abstractions;
 

@@ -1,5 +1,5 @@
-﻿using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+﻿using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Microsoft.Language.Xml;
 using System.Collections.Generic;
 using System.Linq;

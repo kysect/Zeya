@@ -1,17 +1,18 @@
-﻿using Kysect.DotnetSlnParser.Parsers;
+﻿using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.Tools;
 
 public class ProjectPropertyModifier
 {
-    private readonly XmlProjectFileAccessor _projectFileAccessor;
+    private readonly DotnetProjectFile _projectFileAccessor;
     private readonly ILogger _logger;
 
-    public ProjectPropertyModifier(XmlProjectFileAccessor projectFileAccessor, ILogger logger)
+    public ProjectPropertyModifier(DotnetProjectFile projectFileAccessor, ILogger logger)
     {
         _projectFileAccessor = projectFileAccessor;
         _logger = logger;
@@ -21,10 +22,10 @@ public class ProjectPropertyModifier
 
     public void AddOrUpdateProperty(string key, string value)
     {
-        var propertyNodes = _projectFileAccessor.GetNodesByName(key);
-        if (propertyNodes.Any())
+        IReadOnlyCollection<DotnetProjectProperty> properties = _projectFileAccessor.GetProperties(key);
+        if (properties.Any())
         {
-            if (propertyNodes.Count > 1)
+            if (properties.Count > 1)
                 _logger.LogWarning("Found multiple nodes with name {Name}", key);
 
             _projectFileAccessor.UpdateDocument(new AddProjectPropertyValueModificationStrategy(key, value));

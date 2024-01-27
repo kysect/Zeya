@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
@@ -28,7 +28,7 @@ public class AddPackageReferenceModificationStrategy(string packageName) : IXmlP
 
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
-        var packageAttribute = ExtendedSyntaxFactory
+        var packageAttribute = ExtendedSyntaxFactory2
                 .XmlEmptyElement("PackageReference", 2)
                 .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Include", packageName));
 
