@@ -8,7 +8,6 @@ using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
-using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
@@ -55,19 +54,12 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
 
         foreach (var dotnetProjectModifier in modifier.Projects)
         {
-            // TODO: must ensure that return all items in case when more that one ItemGroup exists
-            IXmlElementSyntax itemGroup = dotnetProjectModifier.File.GetOrAddItemGroup();
-            foreach (var xmlElementSyntax in itemGroup.AsNode.GetNodesByName("PackageReference"))
+            foreach (var packageReferences in dotnetProjectModifier.File.GetPackageReferences())
             {
-                var includeAttribute = xmlElementSyntax.GetAttribute("Include");
-                if (includeAttribute is null)
+                if (packageReferences.Version is null)
                     continue;
 
-                var versionAttribute = xmlElementSyntax.GetAttribute("Version");
-                if (versionAttribute is null)
-                    continue;
-
-                nugetVersions.Add(new NugetVersion(includeAttribute.Value, versionAttribute.Value));
+                nugetVersions.Add(new NugetVersion(packageReferences.Name, packageReferences.Version));
             }
         }
 
