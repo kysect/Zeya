@@ -1,8 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
+using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
-using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     IFileSystem fileSystem,
     DirectoryPackagesParser directoryPackagesParser,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
+    XmlDocumentSyntaxFormatter formatter,
     ILogger logger)
     : IValidationRuleFixer<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
@@ -27,7 +29,10 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
-        if (solutionModifier.DirectoryPackagePropsModifier.Accessor.IsEmpty())
+        DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
+        // TODO: move inside DirectoryPackagesPropsFile
+        bool? cpmEnabled = directoryPackagesPropsFile.File.FindBooleanProperty("ManagePackageVersionsCentrally");
+        if (cpmEnabled is null or false)
         {
             logger.LogWarning("Project is not use CPM, skip version fixer");
             return;
@@ -46,7 +51,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             .ToDictionary(p => p.PackageName, p => p.Version);
 
         logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
-        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));
-        solutionModifier.Save();
+        directoryPackagesPropsFile.File.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));
+        solutionModifier.Save(formatter);
     }
 }

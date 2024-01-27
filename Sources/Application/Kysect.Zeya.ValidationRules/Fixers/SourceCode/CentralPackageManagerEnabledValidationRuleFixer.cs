@@ -1,16 +1,18 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
+using Microsoft.Language.Xml;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, ILogger logger)
+public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, XmlDocumentSyntaxFormatter formatter, ILogger logger)
     : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IClonedRepository clonedRepository)
@@ -27,25 +29,24 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         logger.LogDebug("Collect {Count} added Nuget packages to projects", nugetPackages.Count);
 
         logger.LogTrace("Apply changes to *.csproj files");
-        foreach (var solutionModifierProject in solutionModifier.Projects)
+        foreach (DotnetProjectModifier solutionModifierProject in solutionModifier.Projects)
         {
-            logger.LogTrace("Remove nuget versions from {Project}", solutionModifierProject.Path);
-            solutionModifierProject.Accessor.UpdateDocument(ProjectNugetVersionRemover.Instance);
+            solutionModifierProject.File.UpdateDocument(ProjectNugetVersionRemover.Instance);
         }
 
         string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
         logger.LogTrace("Apply changes to {DirectoryPackageFile} file", directoryPackagePropsPath);
-        var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.DirectoryPackagePropsModifier.Accessor, logger);
+        var projectPropertyModifier = new ProjectPropertyModifier(solutionModifier.GetOrCreateDirectoryPackagePropsModifier().File, logger);
 
         logger.LogDebug("Set ManagePackageVersionsCentrally to true");
         projectPropertyModifier.AddOrUpdateProperty("ManagePackageVersionsCentrally", "true");
 
         logger.LogDebug("Adding package versions to {DirectoryPackageFile}", directoryPackagePropsPath);
-        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
-        solutionModifier.DirectoryPackagePropsModifier.Accessor.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
+        solutionModifier.GetOrCreateDirectoryPackagePropsModifier().File.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
+        solutionModifier.GetOrCreateDirectoryPackagePropsModifier().File.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 
         logger.LogTrace("Saving solution files");
-        solutionModifier.Save();
+        solutionModifier.Save(formatter);
     }
 
     private IReadOnlyCollection<NugetVersion> CollectNugetIncludes(DotnetSolutionModifier modifier)
@@ -54,7 +55,9 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
 
         foreach (var dotnetProjectModifier in modifier.Projects)
         {
-            foreach (var xmlElementSyntax in dotnetProjectModifier.Accessor.GetNodesByName("PackageReference"))
+            // TODO: must ensure that return all items in case when more that one ItemGroup exists
+            IXmlElementSyntax itemGroup = dotnetProjectModifier.File.GetOrAddItemGroup();
+            foreach (var xmlElementSyntax in itemGroup.AsNode.GetNodesByName("PackageReference"))
             {
                 var includeAttribute = xmlElementSyntax.GetAttribute("Include");
                 if (includeAttribute is null)

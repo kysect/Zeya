@@ -1,11 +1,10 @@
 ﻿using FluentAssertions;
-using Kysect.DotnetSlnGenerator.Builders;
-using Kysect.DotnetSlnGenerator.Models;
-using Kysect.DotnetSlnParser.Parsers;
+using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using System.IO.Abstractions.TestingHelpers;
@@ -20,6 +19,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
     private MockFileSystem _fileSystem;
     private RepositoryDiagnosticCollector _repositoryDiagnosticCollector;
     private ScenarioContext _scenarioContext;
+    private XmlDocumentSyntaxFormatter _formatter;
 
     private string _currentPath;
     private string _repositoryName;
@@ -27,12 +27,13 @@ public class ArtifactsOutputEnabledValidationRuleTests
     [SetUp]
     public void Setup()
     {
+        _formatter = new XmlDocumentSyntaxFormatter();
         _fileSystem = new MockFileSystem();
         _currentPath = _fileSystem.Path.GetFullPath(".");
 
         _validationRule = new ArtifactsOutputEnabledValidationRule(
             new RepositorySolutionAccessorFactory(
-                new SolutionFileParser(TestLoggerProvider.GetLogger()),
+                new SolutionFileContentParser(),
                 _fileSystem));
 
         _repositoryName = "MockRepository";
@@ -49,9 +50,9 @@ public class ArtifactsOutputEnabledValidationRuleTests
     {
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
         var diagnostic = new RepositoryValidationDiagnostic(arguments.DiagnosticCode, _repositoryName, ValidationRuleMessages.DirectoryBuildPropsFileMissed, ArtifactsOutputEnabledValidationRule.Arguments.DefaultSeverity);
-        new DotnetSolutionBuilder("Solution")
+        new SolutionFileStructureBuilder("Solution")
             //.AddFile(new SolutionFileInfo([ValidationConstants.DirectoryBuildPropsFileName], string.Empty))
-            .Save(_fileSystem, _currentPath);
+            .Save(_fileSystem, _currentPath, _formatter);
 
         _validationRule.Execute(_scenarioContext, arguments);
         IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
@@ -69,9 +70,9 @@ public class ArtifactsOutputEnabledValidationRuleTests
             ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMissed,
             ArtifactsOutputEnabledValidationRule.Arguments.DefaultSeverity);
 
-        new DotnetSolutionBuilder("Solution")
-            .AddFile(new SolutionFileInfo([ValidationConstants.DirectoryBuildPropsFileName], string.Empty))
-            .Save(_fileSystem, _currentPath);
+        new SolutionFileStructureBuilder("Solution")
+            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], string.Empty)
+            .Save(_fileSystem, _currentPath, _formatter);
 
         _validationRule.Execute(_scenarioContext, arguments);
         IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
@@ -96,9 +97,9 @@ public class ArtifactsOutputEnabledValidationRuleTests
             ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue,
             ArtifactsOutputEnabledValidationRule.Arguments.DefaultSeverity);
 
-        new DotnetSolutionBuilder("Solution")
-            .AddFile(new SolutionFileInfo([ValidationConstants.DirectoryBuildPropsFileName], directoryBuildPropsContent))
-            .Save(_fileSystem, _currentPath);
+        new SolutionFileStructureBuilder("Solution")
+            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], directoryBuildPropsContent)
+            .Save(_fileSystem, _currentPath, _formatter);
 
         _validationRule.Execute(_scenarioContext, arguments);
         IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
@@ -123,9 +124,9 @@ public class ArtifactsOutputEnabledValidationRuleTests
             ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue,
             ArtifactsOutputEnabledValidationRule.Arguments.DefaultSeverity);
 
-        new DotnetSolutionBuilder("Solution")
-            .AddFile(new SolutionFileInfo([ValidationConstants.DirectoryBuildPropsFileName], directoryBuildPropsContent))
-            .Save(_fileSystem, _currentPath);
+        new SolutionFileStructureBuilder("Solution")
+            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], directoryBuildPropsContent)
+            .Save(_fileSystem, _currentPath, _formatter);
 
         _validationRule.Execute(_scenarioContext, arguments);
         IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();

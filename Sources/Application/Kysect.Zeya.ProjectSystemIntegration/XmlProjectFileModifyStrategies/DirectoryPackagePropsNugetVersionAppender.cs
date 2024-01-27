@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.Collections.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
@@ -36,10 +36,10 @@ public class DirectoryPackagePropsNugetVersionAppender : IXmlProjectFileModifySt
     {
         foreach (var (packageName, version) in _nugetVersions)
         {
-            var xmlEmptyElementSyntax = ExtendedSyntaxFactory
+            var xmlEmptyElementSyntax = ExtendedSyntaxFactory2
                 .XmlEmptyElement("PackageVersion", 2)
-                .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Include", packageName))
-                .AddAttribute(ExtendedSyntaxFactory.XmlAttribute("Version", version));
+                .AddAttribute(ExtendedSyntaxFactory2.XmlAttribute("Include", packageName))
+                .AddAttribute(ExtendedSyntaxFactory2.XmlAttribute("Version", version));
 
             syntax = (XmlElementSyntax) syntax.AddChild(xmlEmptyElementSyntax);
         }

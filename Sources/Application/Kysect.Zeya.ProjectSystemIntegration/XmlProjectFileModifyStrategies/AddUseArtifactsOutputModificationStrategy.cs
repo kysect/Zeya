@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
 using System.Collections.Generic;
@@ -24,6 +24,6 @@ public class AddUseArtifactsOutputModificationStrategy : IXmlProjectFileModifySt
 
     public SyntaxNode ApplyChanges(XmlElementSyntax syntax)
     {
-        return syntax.AddChild(ExtendedSyntaxFactory.PropertyGroupParameter("UseArtifactsOutput", "true")).To<XmlElementSyntax>();
+        return syntax.AddChild(ExtendedSyntaxFactory2.PropertyGroupParameter("UseArtifactsOutput", "true")).To<XmlElementSyntax>();
     }
 }

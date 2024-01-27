@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetSlnGenerator.Builders;
-using Kysect.DotnetSlnParser.Parsers;
+using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
@@ -20,19 +21,21 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
     private TargetFrameworkVersionAllowedValidationRuleFixer _fixer;
     private MockFileSystem _fileSystem;
     private ILogger _logger;
+    private XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
     [SetUp]
     public void Setup()
     {
-
+        _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
         _projectPropertyAccessor = new FakeDotnetProjectPropertyAccessor();
-        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, _logger);
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser());
         _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(
             dotnetSolutionModifierFactory,
             _projectPropertyAccessor,
-            new RepositorySolutionAccessorFactory(new SolutionFileParser(_logger), _fileSystem),
+            new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem),
+            _xmlDocumentSyntaxFormatter,
             _logger);
     }
 
@@ -60,9 +63,9 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
 
         string currentPath = _fileSystem.Path.GetFullPath(".");
         const string projectName = "SampleProject";
-        var solutionBuilder = new DotnetSolutionBuilder("Solution")
-            .AddProject(new DotnetProjectBuilder(projectName, originalProjectContent));
-        solutionBuilder.Save(_fileSystem, currentPath);
+        var solutionBuilder = new SolutionFileStructureBuilder("Solution")
+            .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent));
+        solutionBuilder.Save(_fileSystem, currentPath, _xmlDocumentSyntaxFormatter);
 
         var githubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(currentPath), _fileSystem);
         var repositoryAccessor = githubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));

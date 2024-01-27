@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetSlnParser.Modifiers;
-using Kysect.DotnetSlnParser.Tools;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Microsoft.Language.Xml;
 using System.Collections.Generic;
@@ -19,6 +19,6 @@ public class AddProjectPropertyValueModificationStrategy(string key, string valu
     {
         syntax.ThrowIfNull();
 
-        return syntax.WithContent(SyntaxFactory.List(ExtendedSyntaxFactory.XmlName(value)));
+        return syntax.WithContent(SyntaxFactory.List(ExtendedSyntaxFactory2.XmlName(value)));
     }
 }

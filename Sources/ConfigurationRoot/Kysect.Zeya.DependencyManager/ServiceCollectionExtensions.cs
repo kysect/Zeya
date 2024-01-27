@@ -1,6 +1,8 @@
 ﻿using Kysect.CommonLib.DependencyInjection;
 using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetSlnParser.Parsers;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.PowerShellRunner.Configuration;
 using Kysect.ScenarioLib;
@@ -80,8 +82,9 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection
             .AddSingleton<DotnetCli>()
+            .AddSingleton<XmlDocumentSyntaxFormatter>()
             .AddSingleton<DotnetSolutionModifierFactory>()
-            .AddSingleton<SolutionFileParser>()
+            .AddSingleton<SolutionFileContentParser>()
             .AddSingleton<RepositorySolutionAccessorFactory>()
             .AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
 

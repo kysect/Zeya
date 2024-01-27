@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Kysect.Zeya.ProjectSystemIntegration.Tools;
 
-public static class ExtendedSyntaxFactory
+// TODO: move all this code to lib
+public static class ExtendedSyntaxFactory2
 {
     public const string DefaultIndention = "  ";
 
