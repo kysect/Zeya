@@ -41,7 +41,7 @@ public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAcces
 
         foreach (var (key, value) in request.RequiredKeyValues)
         {
-            DotnetProjectProperty? property = directoryBuildPropsFile.File.FindProperty(key);
+            DotnetProjectProperty? property = directoryBuildPropsFile.File.Properties.FindProperty(key);
             if (property is null)
             {
                 invalidValues.Add(key);

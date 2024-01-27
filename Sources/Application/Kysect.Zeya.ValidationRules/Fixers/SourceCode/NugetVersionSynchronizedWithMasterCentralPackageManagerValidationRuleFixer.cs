@@ -28,9 +28,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
         DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
-        // TODO: move inside DirectoryPackagesPropsFile
-        bool? cpmEnabled = directoryPackagesPropsFile.File.FindBooleanProperty("ManagePackageVersionsCentrally");
-        if (cpmEnabled is null or false)
+        if (!directoryPackagesPropsFile.GetCentralPackageManagement())
         {
             logger.LogWarning("Project is not use CPM, skip version fixer");
             return;
@@ -45,11 +43,11 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 
         string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
         var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
+        logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
         Dictionary<string, string> masterPackages = masterPropsFile
             .GetPackageVersions()
             .ToDictionary(p => p.Name, p => p.Version);
 
-        logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
         directoryPackagesPropsFile.File.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));
         solutionModifier.Save(formatter);
     }
