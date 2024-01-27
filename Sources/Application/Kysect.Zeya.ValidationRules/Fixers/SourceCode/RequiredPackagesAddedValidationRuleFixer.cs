@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
@@ -25,16 +26,17 @@ public class RequiredPackagesAddedValidationRuleFixer(
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
 
         var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
+
         string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
-        solutionModifier.GetOrCreateDirectoryBuildPropsModifier().File.UpdateDocument(CreateProjectDocumentIfEmptyModificationStrategy.Instance);
-        solutionModifier.GetOrCreateDirectoryBuildPropsModifier().File.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
+        directoryBuildPropsFile.File.GetOrAddItemGroup();
 
         foreach (var rulePackage in rule.Packages)
         {
             logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, directoryPackagePropsPath);
-            solutionModifier.GetOrCreateDirectoryBuildPropsModifier().File.UpdateDocument(new AddPackageReferenceModificationStrategy(rulePackage));
+            directoryBuildPropsFile.File.UpdateDocument(new AddPackageReferenceModificationStrategy(rulePackage));
 
             logger.LogDebug("Removing package {Package} from csproj files", rulePackage);
             foreach (DotnetProjectModifier dotnetProjectModifier in solutionModifier.Projects)

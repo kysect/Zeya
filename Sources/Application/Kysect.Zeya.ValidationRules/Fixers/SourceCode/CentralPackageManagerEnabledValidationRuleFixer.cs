@@ -41,7 +41,7 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         directoryPackagesPropsFile.File.AddOrUpdateProperty(DotnetProjectFileConstant.ManagePackageVersionsCentrally, true.ToString().ToLower());
 
         logger.LogDebug("Adding package versions to {DirectoryPackageFile}", directoryPackagePropsPath);
-        directoryPackagesPropsFile.File.UpdateDocument(AddProjectGroupNodeIfNotExistsModificationStrategy.ItemGroup);
+        directoryPackagesPropsFile.File.GetOrAddItemGroup();
         directoryPackagesPropsFile.File.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 
         logger.LogTrace("Saving solution files");
