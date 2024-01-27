@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -33,8 +33,13 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
         }
 
         var directoryBuildProps = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
-        var parser = new DirectoryBuildPropsParser();
-        var addedPackages = parser.GetListOfPackageReference(directoryBuildProps).ToHashSet();
+        var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.Create(directoryBuildProps));
+
+        var addedPackages = directoryBuildPropsFile
+            .File
+            .GetItems("PackageReference")
+            .Select(r => r.Include)
+            .ToHashSet();
 
         foreach (var requestPackage in request.Packages)
         {

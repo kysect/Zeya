@@ -3,7 +3,6 @@ using Kysect.CommonLib.Collections.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 
@@ -11,7 +10,6 @@ namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
 public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule(
     IFileSystem fileSystem,
-    DirectoryPackagesParser directoryPackagesParser,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     ILogger logger)
     : IScenarioStepExecutor<NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule.Arguments>

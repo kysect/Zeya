@@ -13,7 +13,6 @@ using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ManagedDotnetCli;
-using Kysect.Zeya.ProjectSystemIntegration;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.ValidationRules;
@@ -88,7 +87,6 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositorySolutionAccessorFactory>()
             .AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
 
-        serviceCollection.AddSingleton<DirectoryPackagesParser>();
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<RepositoryValidator>();
         serviceCollection = serviceCollection

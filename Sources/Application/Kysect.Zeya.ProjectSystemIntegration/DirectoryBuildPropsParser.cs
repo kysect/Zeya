@@ -27,22 +27,4 @@ public class DirectoryBuildPropsParser
 
         return result;
     }
-
-    public IReadOnlyCollection<string> GetListOfPackageReference(string content)
-    {
-        var root = Parser.ParseText(content);
-        var propertyNodes = root
-            .Descendants()
-            .Where(n => n.Name == "PackageReference")
-            .ToList();
-
-        var result = new List<string>();
-        foreach (var xmlElementSyntax in propertyNodes)
-        {
-            var packageName = xmlElementSyntax.GetAttribute("Include");
-            result.Add(packageName.Value);
-        }
-
-        return result;
-    }
 }
