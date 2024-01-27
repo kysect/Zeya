@@ -67,7 +67,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
         var diagnostic = new RepositoryValidationDiagnostic(
             arguments.DiagnosticCode,
             _repositoryName,
-            ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMissed,
+            ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue,
             ArtifactsOutputEnabledValidationRule.Arguments.DefaultSeverity);
 
         new SolutionFileStructureBuilder("Solution")

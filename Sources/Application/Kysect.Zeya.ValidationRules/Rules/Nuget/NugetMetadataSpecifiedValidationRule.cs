@@ -1,8 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 
@@ -33,16 +34,16 @@ public class NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFact
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
-        var directoryBuildPropsParser = new DirectoryBuildPropsParser();
-        Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
+        DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
 
         List<string> missedValues = new List<string>();
         foreach (var requiredField in request.RequiredValues)
         {
-            if (!buildPropsValues.ContainsKey(requiredField))
+            if (directoryBuildPropsFile.File.FindProperty(requiredField) is null)
             {
                 missedValues.Add(requiredField);
+
             }
         }
 

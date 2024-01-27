@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 
@@ -32,8 +33,8 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
             return;
         }
 
-        var directoryBuildProps = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
-        var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.Create(directoryBuildProps));
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
+        DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
 
         var addedPackages = directoryBuildPropsFile
             .File

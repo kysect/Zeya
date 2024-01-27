@@ -1,7 +1,8 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules;
 
@@ -33,13 +34,12 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositoryS
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
-        var directoryBuildPropsParser = new DirectoryBuildPropsParser();
-        Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
+        DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
 
         foreach (var requiredField in request.RequiredFields)
         {
-            if (!buildPropsValues.ContainsKey(requiredField))
+            if (directoryBuildPropsFile.File.FindProperty(requiredField) is null)
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
                     request.DiagnosticCode,
