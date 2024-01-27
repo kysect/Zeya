@@ -3,7 +3,6 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration.Tools;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 
@@ -51,8 +50,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
 
             // TODO: return logging
             //logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, expectedTargetVersion, projectModifier.Path);
-            var projectPropertyModifier = new ProjectPropertyModifier(projectModifier.File, logger);
-            projectPropertyModifier.AddOrUpdateProperty("TargetFramework", expectedTargetVersion);
+            projectModifier.File.AddOrUpdateProperty("TargetFramework", expectedTargetVersion);
         }
 
         // TODO: force somehow saving
