@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -34,21 +34,12 @@ public class ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFact
             return;
         }
 
-        string directoryBuildPropsContent = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
-        var directoryBuildPropsParser = new DirectoryBuildPropsParser();
-        Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
+        bool useArtifactsOutput = solutionModifier
+            .GetOrCreateDirectoryBuildPropsModifier()
+            .ArtifactsOutputEnabled();
 
-        // TODO: verify that value set to true?
-        if (!buildPropsValues.TryGetValue("UseArtifactsOutput", out string? value))
-        {
-            repositoryValidationContext.DiagnosticCollector.Add(
-                request.DiagnosticCode,
-                Arguments.UseArtifactsOutputOptionMissed,
-                Arguments.DefaultSeverity);
-            return;
-        }
-
-        if (!string.Equals(value, "true", StringComparison.InvariantCultureIgnoreCase))
+        if (!useArtifactsOutput)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,

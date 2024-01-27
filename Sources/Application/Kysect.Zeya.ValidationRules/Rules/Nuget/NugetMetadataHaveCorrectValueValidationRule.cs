@@ -1,8 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.ProjectSystemIntegration;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 
@@ -33,21 +34,21 @@ public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAcces
             return;
         }
 
-        var directoryBuildPropsContent = repositoryValidationContext.Repository.ReadAllText(repositorySolutionAccessor.GetDirectoryBuildPropsPath());
-        var directoryBuildPropsParser = new DirectoryBuildPropsParser();
-        Dictionary<string, string> buildPropsValues = directoryBuildPropsParser.Parse(directoryBuildPropsContent);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
+        DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
 
         var invalidValues = new List<string>();
 
         foreach (var (key, value) in request.RequiredKeyValues)
         {
-            if (!buildPropsValues.TryGetValue(key, out var specifiedValue))
+            DotnetProjectProperty? property = directoryBuildPropsFile.File.FindProperty(key);
+            if (property is null)
             {
                 invalidValues.Add(key);
                 continue;
             }
 
-            if (specifiedValue != value)
+            if (property.Value.Value != value)
                 invalidValues.Add(key);
         }
 

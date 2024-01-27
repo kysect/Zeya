@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using System.IO.Abstractions;
@@ -8,6 +9,12 @@ namespace Kysect.Zeya.ValidationRules;
 
 public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileContentParser solutionFileParser, IFileSystem fileSystem)
 {
+    public DotnetSolutionModifier GetSolutionModifier()
+    {
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(fileSystem, solutionFileParser);
+        return dotnetSolutionModifierFactory.Create(GetSolutionFilePath());
+    }
+
     public string GetSolutionFilePath()
     {
         var repositoryPath = repository.GetFullPath();
