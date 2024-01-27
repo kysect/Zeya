@@ -40,7 +40,7 @@ public class RequiredPackagesAddedValidationRuleFixer(
             directoryBuildPropsFile.File.PackageReferences.AddPackageReference(rulePackage);
 
             logger.LogDebug("Removing package {Package} from csproj files", rulePackage);
-            foreach (DotnetProjectModifier dotnetProjectModifier in solutionModifier.Projects)
+            foreach (var dotnetProjectModifier in solutionModifier.Projects)
                 dotnetProjectModifier.File.PackageReferences.RemovePackageReference(rulePackage);
         }
 

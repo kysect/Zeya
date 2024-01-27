@@ -32,11 +32,11 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
             return;
         }
 
-        foreach (DotnetProjectModifier projectModifier in solutionModifier.Projects)
+        foreach (var projectModifier in solutionModifier.Projects)
         {
             // TODO: must get value from projectPropertyAccessor?
             projectPropertyAccessor.ThrowIfNull();
-            DotnetProjectProperty dotnetProjectProperty = projectModifier.File.GetProperty("TargetFramework");
+            DotnetProjectProperty dotnetProjectProperty = projectModifier.File.Properties.GetProperty("TargetFramework");
             var projectTargetFramework = dotnetProjectProperty.Value;
 
             if (!IsNetVersion(projectTargetFramework))
@@ -50,7 +50,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
 
             // TODO: return logging
             //logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, expectedTargetVersion, projectModifier.Path);
-            projectModifier.File.AddOrUpdateProperty("TargetFramework", expectedTargetVersion);
+            projectModifier.File.Properties.SetProperty("TargetFramework", expectedTargetVersion);
         }
 
         // TODO: force somehow saving

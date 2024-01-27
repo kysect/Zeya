@@ -39,7 +39,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositoryS
 
         foreach (var requiredField in request.RequiredFields)
         {
-            if (directoryBuildPropsFile.File.FindProperty(requiredField) is null)
+            if (directoryBuildPropsFile.File.Properties.FindProperty(requiredField) is null)
             {
                 repositoryValidationContext.DiagnosticCollector.Add(
                     request.DiagnosticCode,

@@ -27,7 +27,7 @@ public class ArtifactsOutputEnabledValidationRuleFixer(
 
         DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
         logger.LogDebug("Set UseArtifactsOutput to true");
-        directoryBuildPropsFile.File.AddOrUpdateProperty("UseArtifactsOutput", "true");
+        directoryBuildPropsFile.File.Properties.SetProperty("UseArtifactsOutput", "true");
 
         // TODO: force somehow saving
         solutionModifier.Save(formatter);

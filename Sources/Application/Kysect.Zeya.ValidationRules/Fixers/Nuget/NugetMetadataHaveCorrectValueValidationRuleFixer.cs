@@ -29,7 +29,7 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(
         foreach ((string key, string value) in rule.RequiredKeyValues)
         {
             logger.LogDebug("Set {Key} to {Value}", key, value);
-            directoryBuildPropsFile.File.AddOrUpdateProperty(key, value);
+            directoryBuildPropsFile.File.Properties.SetProperty(key, value);
         }
 
         // TODO: force somehow saving
