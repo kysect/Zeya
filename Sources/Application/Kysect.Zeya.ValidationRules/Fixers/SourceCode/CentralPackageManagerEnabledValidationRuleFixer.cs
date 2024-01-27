@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModifierFactory dotnetSolutionModifierFactory, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, XmlDocumentSyntaxFormatter formatter, ILogger logger)
+public class CentralPackageManagerEnabledValidationRuleFixer(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory, XmlDocumentSyntaxFormatter formatter, ILogger logger)
     : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, IClonedRepository clonedRepository)
@@ -19,8 +19,7 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
         clonedRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
-        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
-        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
         IReadOnlyCollection<ProjectPackageVersion> nugetPackages = CollectNugetIncludes(solutionModifier);
         nugetPackages = SelectDistinctPackages(nugetPackages);
 
@@ -28,19 +27,16 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
 
         logger.LogTrace("Apply changes to *.csproj files");
         foreach (DotnetProjectModifier solutionModifierProject in solutionModifier.Projects)
-        {
             solutionModifierProject.File.UpdateDocument(ProjectNugetVersionRemover.Instance);
-        }
 
-        string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
-        logger.LogTrace("Apply changes to {DirectoryPackageFile} file", directoryPackagePropsPath);
+        logger.LogTrace("Apply changes to {DirectoryPackageFile} file", ValidationConstants.DirectoryPackagePropsFileName);
         DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
 
         logger.LogDebug("Set ManagePackageVersionsCentrally to true");
         // TODO: replace with SetCentralPackageManagement 
         directoryPackagesPropsFile.File.AddOrUpdateProperty(DotnetProjectFileConstant.ManagePackageVersionsCentrally, true.ToString().ToLower());
 
-        logger.LogDebug("Adding package versions to {DirectoryPackageFile}", directoryPackagePropsPath);
+        logger.LogDebug("Adding package versions to {DirectoryPackageFile}", ValidationConstants.DirectoryPackagePropsFileName);
         directoryPackagesPropsFile.File.GetOrAddItemGroup();
         directoryPackagesPropsFile.File.UpdateDocument(new DirectoryPackagePropsNugetVersionAppender(nugetPackages));
 
@@ -54,7 +50,7 @@ public class CentralPackageManagerEnabledValidationRuleFixer(DotnetSolutionModif
 
         foreach (var dotnetProjectModifier in modifier.Projects)
         {
-            foreach (var packageReferences in dotnetProjectModifier.File.GetPackageReferences())
+            foreach (var packageReferences in dotnetProjectModifier.File.PackageReferences.GetPackageReferences())
             {
                 if (packageReferences.Version is null)
                     continue;

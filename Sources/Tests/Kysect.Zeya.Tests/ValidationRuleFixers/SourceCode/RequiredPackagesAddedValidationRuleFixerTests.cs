@@ -2,7 +2,6 @@
 using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Parsing;
-using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ValidationRules;
@@ -32,11 +31,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests
         var repositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem);
         _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
         _requiredPackagesAddedValidationRuleFixer
-            = new RequiredPackagesAddedValidationRuleFixer(
-                new DotnetSolutionModifierFactory(
-                    _fileSystem,
-                    new SolutionFileContentParser()),
-                repositorySolutionAccessorFactory,
+            = new RequiredPackagesAddedValidationRuleFixer(repositorySolutionAccessorFactory,
                 _xmlDocumentSyntaxFormatter,
                 logger);
 

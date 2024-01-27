@@ -3,15 +3,12 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration.XmlDocumentModificationStrategies;
-using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class RequiredPackagesAddedValidationRuleFixer(
-    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
     ILogger logger)
@@ -23,24 +20,28 @@ public class RequiredPackagesAddedValidationRuleFixer(
         clonedRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
-        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
-
-        var solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
         DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
 
-        string directoryPackagePropsPath = repositorySolutionAccessor.GetDirectoryPackagePropsPath();
-
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
-        directoryBuildPropsFile.File.GetOrAddItemGroup();
+        HashSet<string> addedPackage = directoryBuildPropsFile
+            .File
+            .PackageReferences
+            .GetPackageReferences()
+            .Select(p => p.Name)
+            .ToHashSet();
 
         foreach (var rulePackage in rule.Packages)
         {
-            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, directoryPackagePropsPath);
-            directoryBuildPropsFile.File.UpdateDocument(new AddPackageReferenceModificationStrategy(rulePackage));
+            if (addedPackage.Contains(rulePackage))
+                continue;
+
+            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, ValidationConstants.DirectoryBuildPropsFileName);
+            directoryBuildPropsFile.File.PackageReferences.AddPackageReference(rulePackage);
 
             logger.LogDebug("Removing package {Package} from csproj files", rulePackage);
             foreach (DotnetProjectModifier dotnetProjectModifier in solutionModifier.Projects)
-                dotnetProjectModifier.File.UpdateDocument(new RemovePackageReferenceModificationStrategy(rulePackage));
+                dotnetProjectModifier.File.PackageReferences.RemovePackageReference(rulePackage);
         }
 
         logger.LogTrace("Saving solution files");
