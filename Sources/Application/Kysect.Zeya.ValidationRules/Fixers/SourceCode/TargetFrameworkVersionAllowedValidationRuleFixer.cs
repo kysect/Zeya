@@ -24,8 +24,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
         string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
         DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
 
-        HashSet<string> allowedVersion = rule.AllowedVersions.ToHashSet();
-        string? expectedTargetVersion = allowedVersion.FirstOrDefault(IsNetVersion);
+        string? expectedTargetVersion = rule.AllowedCoreVersion;
         if (expectedTargetVersion is null)
         {
             logger.LogError("Cannot update target framework version because no suitable version specified in allowed");

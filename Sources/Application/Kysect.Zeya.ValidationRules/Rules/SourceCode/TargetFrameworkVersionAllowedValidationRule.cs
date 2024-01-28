@@ -9,7 +9,7 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
     : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
-    public record Arguments(IReadOnlyCollection<string> AllowedVersions) : IValidationRule
+    public record Arguments(string? AllowedCoreVersion, string? AllowedStandardVersion, string? AllowedFrameworkVersion) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
@@ -20,7 +20,18 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        HashSet<string> allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
+        HashSet<string> allowedTargetFrameworks = new HashSet<string>();
+
+        if (request.AllowedCoreVersion is not null)
+            allowedTargetFrameworks.Add(request.AllowedCoreVersion);
+
+        if (request.AllowedStandardVersion is not null)
+            allowedTargetFrameworks.Add(request.AllowedStandardVersion);
+
+        if (request.AllowedFrameworkVersion is not null)
+            allowedTargetFrameworks.Add(request.AllowedFrameworkVersion);
+
+
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
