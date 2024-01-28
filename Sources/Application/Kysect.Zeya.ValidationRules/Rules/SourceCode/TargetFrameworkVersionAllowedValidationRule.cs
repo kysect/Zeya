@@ -20,11 +20,11 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        HashSet<string> allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
-        var allowedTargetFrameworks = request.AllowedVersions.ToHashSet();
-        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
-        var projectFiles = repositorySolutionAccessor
+        List<string> projectFiles = repositorySolutionAccessor
             .GetProjectPaths()
             .ToList();
 
