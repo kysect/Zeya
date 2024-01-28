@@ -1,11 +1,11 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+public class CentralPackageManagerEnabledValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
     : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.CentralPackageManagerEnabled")]
@@ -13,6 +13,7 @@ public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAc
     {
         public string DiagnosticCode => RuleDescription.SourceCode.CentralPackageManagerEnabled;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const string CentralPackageManagementDisabledMessage = "The repository does not use Central Package Manager";
     }
 
     public void Execute(ScenarioContext context, Arguments request)
@@ -20,24 +21,16 @@ public class CentralPackageManagerEnabledValidationRule(IDotnetProjectPropertyAc
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
+        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
-        // TODO: use info from Directory.Package.props instead
-        var repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
-
-        var selectedProjectDefault = repositorySolutionAccessor
-            .GetProjectPaths()
-            .FirstOrDefault();
-
-        if (selectedProjectDefault is null)
-            return;
-
-        var managePackageVersionsCentrally = projectPropertyAccessor.IsManagePackageVersionsCentrally(selectedProjectDefault);
-        if (!managePackageVersionsCentrally)
+        bool artifactsOutputEnabled = solutionModifier.GetOrCreateDirectoryBuildPropsModifier().ArtifactsOutputEnabled();
+        if (!artifactsOutputEnabled)
         {
             repositoryValidationContext.DiagnosticCollector.Add(
                 request.DiagnosticCode,
-                $"The repository does not use Central Package Manager",
+                Arguments.CentralPackageManagementDisabledMessage,
                 Arguments.DefaultSeverity);
         }
     }

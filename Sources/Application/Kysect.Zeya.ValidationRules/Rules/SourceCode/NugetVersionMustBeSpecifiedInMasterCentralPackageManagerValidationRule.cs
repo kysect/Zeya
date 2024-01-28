@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
@@ -26,8 +27,9 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         if (!fileSystem.File.Exists(request.MasterFile))
         {
@@ -52,13 +54,12 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
             .GetPackageVersions()
             .ToDictionary(p => p.Name, p => p.Version);
 
-        string currentPackagesPropsContent = fileSystem.File.ReadAllText(repositorySolutionAccessor.GetDirectoryPackagePropsPath());
-        var currentPackagesPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(currentPackagesPropsContent));
+        DirectoryPackagesPropsFile currentPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
         IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = currentPackagesPropsFile.Versions.GetPackageVersions();
 
-        List<string> notSpecifiedPackages = new List<string>();
+        var notSpecifiedPackages = new List<string>();
 
-        foreach (var nugetVersion in currentProjectPackages)
+        foreach (ProjectPackageVersion nugetVersion in currentProjectPackages)
         {
             if (!masterPackages.TryGetValue(nugetVersion.Name, out _))
                 notSpecifiedPackages.Add(nugetVersion.Name);
