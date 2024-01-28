@@ -1,10 +1,9 @@
-﻿using FluentAssertions;
-using Kysect.DotnetProjectSystem.FileStructureBuilding;
+﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.Tests.Asserts;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using System.IO.Abstractions.TestingHelpers;
@@ -16,9 +15,9 @@ public class RequiredPackagesAddedValidationRuleTests
     private readonly MockFileSystem _fileSystem;
     private readonly RequiredPackagesAddedValidationRule _requiredPackagesAddedValidationRule;
     private readonly string _currentPath;
-    private readonly RepositoryDiagnosticCollector _repositoryDiagnosticCollector;
     private readonly ScenarioContext _scenarioContext;
     private readonly XmlDocumentSyntaxFormatter _formatter;
+    private readonly RepositoryDiagnosticCollectorAsserts _diagnosticCollectorAsserts;
 
     public RequiredPackagesAddedValidationRuleTests()
     {
@@ -31,11 +30,11 @@ public class RequiredPackagesAddedValidationRuleTests
                 new SolutionFileContentParser(),
                 _fileSystem));
 
-        _repositoryDiagnosticCollector = new RepositoryDiagnosticCollector("MockRepository");
+        _diagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
         _scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(
             RepositoryValidationContext.Create(
                 new ClonedRepository(_currentPath, _fileSystem),
-                _repositoryDiagnosticCollector));
+                _diagnosticCollectorAsserts.GetCollector()));
     }
 
     [Fact]
@@ -46,11 +45,10 @@ public class RequiredPackagesAddedValidationRuleTests
             .Save(_fileSystem, _currentPath, _formatter);
 
         _requiredPackagesAddedValidationRule.Execute(_scenarioContext, arguments);
-        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
 
-        diagnostics.Should().HaveCount(1);
-        diagnostics.Single().Code.Should().Be(arguments.DiagnosticCode);
-        diagnostics.Single().Message.Should().Be(ValidationRuleMessages.DirectoryBuildPropsFileMissed);
+        _diagnosticCollectorAsserts
+            .ShouldHaveCount(1)
+            .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
 
     [Fact]
@@ -62,11 +60,9 @@ public class RequiredPackagesAddedValidationRuleTests
             .Save(_fileSystem, _currentPath, _formatter);
 
         _requiredPackagesAddedValidationRule.Execute(_scenarioContext, arguments);
-        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _repositoryDiagnosticCollector.GetDiagnostics();
 
-        // TODO: remove message duplication
-        diagnostics.Should().HaveCount(1);
-        diagnostics.Single().Code.Should().Be(arguments.DiagnosticCode);
-        diagnostics.Single().Message.Should().Be("Package RequiredPackage is not add to Directory.Build.props.");
+        _diagnosticCollectorAsserts
+            .ShouldHaveCount(1)
+            .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Package RequiredPackage is not add to Directory.Build.props.");
     }
 }
