@@ -14,15 +14,14 @@ namespace Kysect.Zeya.Tests.ValidationRuleFixers.SourceCode;
 
 public class RequiredPackagesAddedValidationRuleFixerTests
 {
-    private RequiredPackagesAddedValidationRuleFixer _requiredPackagesAddedValidationRuleFixer;
-    private string _currentPath;
-    private MockFileSystem _fileSystem;
-    private ClonedRepository _clonedRepository;
-    private RepositorySolutionAccessor _repositorySolutionAccessor;
-    private XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
+    private readonly RequiredPackagesAddedValidationRuleFixer _requiredPackagesAddedValidationRuleFixer;
+    private readonly string _currentPath;
+    private readonly MockFileSystem _fileSystem;
+    private readonly ClonedRepository _clonedRepository;
+    private readonly RepositorySolutionAccessor _repositorySolutionAccessor;
+    private readonly XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
-    [SetUp]
-    public void Setup()
+    public RequiredPackagesAddedValidationRuleFixerTests()
     {
         ILogger logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem();
@@ -39,7 +38,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests
         _repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(_clonedRepository);
     }
 
-    [Test]
+    [Fact]
     public void Fix_OnEmptyDirectoryBuildProps_CreateExpectedContent()
     {
         const string expectedDirectoryBuildPropsFile = """
@@ -61,7 +60,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests
         _fileSystem.File.ReadAllText(_repositorySolutionAccessor.GetDirectoryBuildPropsPath()).Should().Be(expectedDirectoryBuildPropsFile);
     }
 
-    [Test]
+    [Fact]
     public void Fix_ProjectWithManuallyAddedPackage_MustBeWithoutReferenceAfterFix()
     {
         string projectName = "Project";

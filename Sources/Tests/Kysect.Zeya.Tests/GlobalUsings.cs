@@ -1,1 +1,3 @@
-global using NUnit.Framework;
+// Global using directives
+
+global using Xunit;

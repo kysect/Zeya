@@ -17,13 +17,12 @@ namespace Kysect.Zeya.Tests.ValidationRuleFixers.SourceCode;
 
 public class CentralPackageManagerEnabledValidationRuleFixerTests
 {
-    private CentralPackageManagerEnabledValidationRuleFixer _fixer;
-    private MockFileSystem _fileSystem;
-    private ILogger _logger;
-    private XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
+    private readonly CentralPackageManagerEnabledValidationRuleFixer _fixer;
+    private readonly MockFileSystem _fileSystem;
+    private readonly ILogger _logger;
+    private readonly XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
-    [SetUp]
-    public void Setup()
+    public CentralPackageManagerEnabledValidationRuleFixerTests()
     {
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
         _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
@@ -32,7 +31,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         _fixer = new CentralPackageManagerEnabledValidationRuleFixer(new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem), _xmlDocumentSyntaxFormatter, _logger);
     }
 
-    [Test]
+    [Fact]
     public void Fix_ProjectWithoutCpm_RemoveVersionsAndEnableCpm()
     {
         var originalProjectContent = """
@@ -82,7 +81,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, ValidationConstants.DirectoryPackagePropsFileName)).Should().Be(expectedDotnetPackageContent);
     }
 
-    [Test]
+    [Fact]
     public void Fix_BothProjectHaveReferenceToPackage_GeneratedDirectoryPackagePropsContainsDistinctPackages()
     {
         var originalProjectContent = """
