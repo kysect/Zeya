@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ValidationRules;
 
@@ -19,7 +20,8 @@ public class RepositoryDiagnosticCollectorAsserts
 
     public RepositoryDiagnosticCollectorAsserts ShouldHaveDiagnosticCount(int count)
     {
-        _collector.GetDiagnostics().Count.Should().Be(count);
+        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _collector.GetDiagnostics();
+        diagnostics.Count.Should().Be(count, "Founded diagnostics: " + diagnostics.ToSingleString(d => d.Message));
         return this;
     }
 

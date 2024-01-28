@@ -21,9 +21,18 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
 
         var repositoryValidationContext = context.GetValidationContext();
 
-        var masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
-        var expectedPath = repositoryValidationContext.Repository.GetWorkflowPath(masterFileInfo.Name);
+        if (!fileSystem.File.Exists(request.MasterFile))
+        {
+            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
+                request.DiagnosticCode,
+                $"Master file {request.MasterFile} missed",
+                Arguments.DefaultSeverity);
+            return;
+        }
+        IFileInfo masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
+        string masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
 
+        var expectedPath = repositoryValidationContext.Repository.GetWorkflowPath(masterFileInfo.Name);
         if (!repositoryValidationContext.Repository.Exists(expectedPath))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
@@ -33,14 +42,12 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
             return;
         }
 
-        var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
-        var originalFIleContent = repositoryValidationContext.Repository.ReadAllText(expectedPath);
-
-        if (string.Equals(masterFileContent, originalFIleContent))
+        string repositoryWorkflowFileContent = repositoryValidationContext.Repository.ReadAllText(expectedPath);
+        if (!string.Equals(masterFileContent, repositoryWorkflowFileContent))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
-                $"Workflow {masterFileInfo.Name} has unexpected configuration",
+                $"Workflow {masterFileInfo.Name} configuration do not match with master file",
                 Arguments.DefaultSeverity);
         }
     }
