@@ -41,10 +41,7 @@ public class NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFact
         foreach (var requiredField in request.RequiredValues)
         {
             if (directoryBuildPropsFile.File.Properties.FindProperty(requiredField) is null)
-            {
                 missedValues.Add(requiredField);
-
-            }
         }
 
         if (missedValues.Any())

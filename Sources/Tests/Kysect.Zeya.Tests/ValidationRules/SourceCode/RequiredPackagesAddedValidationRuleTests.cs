@@ -10,7 +10,7 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
 
     public RequiredPackagesAddedValidationRuleTests()
     {
-        _requiredPackagesAddedValidationRule = new RequiredPackagesAddedValidationRule(SolutionAccessorFactory);
+        _requiredPackagesAddedValidationRule = new RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFactory);
     }
 
     [Fact]

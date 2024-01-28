@@ -13,7 +13,7 @@ public class TargetFrameworkVersionAllowedValidationRuleTests : ValidationRuleTe
     public TargetFrameworkVersionAllowedValidationRuleTests()
     {
         _projectPropertyAccessor = new FakeDotnetProjectPropertyAccessor();
-        _validationRule = new TargetFrameworkVersionAllowedValidationRule(_projectPropertyAccessor, SolutionAccessorFactory);
+        _validationRule = new TargetFrameworkVersionAllowedValidationRule(_projectPropertyAccessor, RepositorySolutionAccessorFactory);
     }
 
     [Theory]

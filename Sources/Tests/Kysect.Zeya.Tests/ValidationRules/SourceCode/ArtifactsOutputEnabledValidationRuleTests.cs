@@ -10,7 +10,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
 
     public ArtifactsOutputEnabledValidationRuleTests()
     {
-        _validationRule = new ArtifactsOutputEnabledValidationRule(SolutionAccessorFactory);
+        _validationRule = new ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFactory);
     }
 
     [Fact]
