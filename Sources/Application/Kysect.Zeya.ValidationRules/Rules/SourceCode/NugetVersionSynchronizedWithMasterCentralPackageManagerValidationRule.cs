@@ -48,12 +48,13 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
         var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
         var masterPackages = masterPropsFile
+            .Versions
             .GetPackageVersions()
             .ToDictionary(p => p.Name, p => p.Version);
 
         string directoryPackagesFileContent = fileSystem.File.ReadAllText(repositorySolutionAccessor.GetDirectoryPackagePropsPath());
         var directoryPackagesFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(directoryPackagesFileContent));
-        IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = directoryPackagesFile.GetPackageVersions();
+        IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = directoryPackagesFile.Versions.GetPackageVersions();
 
         List<string> packagesWithDifferentVersion = new List<string>();
 
