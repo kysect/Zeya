@@ -22,7 +22,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
 
         if (!repositoryValidationContext.Repository.Exists(ValidationConstants.LicenseFileName))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"License file was not found by path {ValidationConstants.LicenseFileName}",
                 Arguments.DefaultSeverity);
@@ -32,7 +32,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
         var licenseContent = repositoryValidationContext.Repository.ReadAllText(ValidationConstants.LicenseFileName);
         if (!licenseContent.StartsWith(request.LicenseType))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"License must have header with type {request.LicenseType}",
                 Arguments.DefaultSeverity);
@@ -41,7 +41,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
         var copyrightString = $"Copyright (c) {request.Year} {request.OwnerName}";
         if (!licenseContent.Contains(copyrightString))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"License must contains copyright string: {copyrightString}",
                 Arguments.DefaultSeverity);

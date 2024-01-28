@@ -34,7 +34,7 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
 
             if (!allowedTargetFrameworks.Contains(targetFramework))
             {
-                repositoryValidationContext.DiagnosticCollector.Add(
+                repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                     request.DiagnosticCode,
                     $"Framework versions {targetFramework} is not allowed but used in {projectFile}.",
                     Arguments.DefaultSeverity);

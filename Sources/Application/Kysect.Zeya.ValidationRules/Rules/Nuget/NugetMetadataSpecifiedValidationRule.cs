@@ -27,7 +27,7 @@ public class NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFact
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 ValidationRuleMessages.DirectoryBuildPropsFileMissed,
                 Arguments.DefaultSeverity);
@@ -49,7 +49,7 @@ public class NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFact
 
         if (missedValues.Any())
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Directory.Build.props file does not contains required option: " + missedValues.ToSingleString(),
                 Arguments.DefaultSeverity);

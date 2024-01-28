@@ -26,7 +26,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
 
         if (!repositoryValidationContext.Repository.Exists(expectedPath))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Workflow {masterFileInfo.Name} must be configured",
                 Arguments.DefaultSeverity);
@@ -38,7 +38,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
 
         if (string.Equals(masterFileContent, originalFIleContent))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Workflow {masterFileInfo.Name} has unexpected configuration",
                 Arguments.DefaultSeverity);

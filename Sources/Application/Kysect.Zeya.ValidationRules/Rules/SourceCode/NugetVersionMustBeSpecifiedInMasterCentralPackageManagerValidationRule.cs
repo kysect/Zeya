@@ -4,15 +4,13 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
-using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
 public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule(
     IFileSystem fileSystem,
-    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
-    ILogger logger)
+    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
     : IScenarioStepExecutor<NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager")]
@@ -20,6 +18,7 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
     {
         public string DiagnosticCode => RuleDescription.SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const string DirectoryPackagePropsFileMissed = "Configuration file Directory.Package.props for Central Package Management is missed.";
     }
 
     public void Execute(ScenarioContext context, Arguments request)
@@ -33,16 +32,17 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
 
         if (!fileSystem.File.Exists(request.MasterFile))
         {
-            // TODO: after this error validation should finish as failed
-            logger.LogError("Master file {File} for checking CPM was not found.", request.MasterFile);
+            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
+                request.DiagnosticCode,
+                $"Master file {request.MasterFile} for checking CPM was not found.");
             return;
         }
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
-                "Configuration file Directory.Package.props for Central Package Management is missed.",
+                Arguments.DirectoryPackagePropsFileMissed,
                 Arguments.DefaultSeverity);
             return;
         }
@@ -67,7 +67,7 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
 
         if (notSpecifiedPackages.Any())
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Some Nuget packages is not specified in master Directory.Package.props: {notSpecifiedPackages.ToSingleString()}",
                 Arguments.DefaultSeverity);

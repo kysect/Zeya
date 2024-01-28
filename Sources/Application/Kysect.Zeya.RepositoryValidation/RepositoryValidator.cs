@@ -56,6 +56,6 @@ public class RepositoryValidator(
             scenarioStepHandler.Handle(scenarioContext, scenarioStep);
         }
 
-        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
+        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics(), repositoryDiagnosticCollector.GetRuntimeErrors());
     }
 }

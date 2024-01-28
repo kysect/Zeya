@@ -26,7 +26,7 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, request.SourceDirectoryPath);
         if (!fileSystem.Directory.Exists(expectedSourceDirectoryPath))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Directory for sources was not found in repository",
                 Arguments.DefaultSeverity);
@@ -36,7 +36,7 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         var solutionsInRoot = fileSystem.Directory.EnumerateFiles(repositoryRootPath, "*.sln", SearchOption.TopDirectoryOnly).ToList();
         if (solutionsInRoot.Any())
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Sources must not located in root of repository. Founded solution files: {solutionsInRoot.ToSingleString()}",
                 Arguments.DefaultSeverity);

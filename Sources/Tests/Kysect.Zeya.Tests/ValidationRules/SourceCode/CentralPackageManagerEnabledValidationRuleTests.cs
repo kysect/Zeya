@@ -24,7 +24,7 @@ public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTes
         _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(1)
+            .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, CentralPackageManagerEnabledValidationRule.Arguments.CentralPackageManagementDisabledMessage);
     }
 
@@ -42,6 +42,6 @@ public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTes
         _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(0);
+            .ShouldHaveDiagnosticCount(0);
     }
 }

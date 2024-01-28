@@ -36,7 +36,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
 
         if (branchProtectionSettings is null)
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Github branch protections for {branch} is non configured.",
                 Arguments.DefaultSeverity);
@@ -46,7 +46,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
 
         if (request.PullRequestReviewRequired && branchProtectionSettings.RequiredPullRequestReviews is null)
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Pull request review must be enabled enabled for {branch}.",
                 Arguments.DefaultSeverity);
@@ -54,7 +54,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
 
         if (request.ConversationResolutionRequired && (branchProtectionSettings.RequiredConversationResolution is null || !branchProtectionSettings.RequiredConversationResolution.Enabled))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Conversation resolution must be required for {branch}.",
                 Arguments.DefaultSeverity);

@@ -24,7 +24,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(1)
+            .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
 
@@ -40,7 +40,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(1)
+            .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue);
     }
 
@@ -63,7 +63,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(1)
+            .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue);
     }
 
@@ -86,6 +86,6 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(0);
+            .ShouldHaveDiagnosticCount(0);
     }
 }

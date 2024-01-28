@@ -27,7 +27,7 @@ public class ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFact
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 ValidationRuleMessages.DirectoryBuildPropsFileMissed,
                 Arguments.DefaultSeverity);
@@ -41,7 +41,7 @@ public class ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFact
 
         if (!useArtifactsOutput)
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 Arguments.UseArtifactsOutputOptionMustBeTrue,
                 Arguments.DefaultSeverity);

@@ -28,7 +28,7 @@ public class CentralPackageManagerEnabledValidationRule(RepositorySolutionAccess
         bool artifactsOutputEnabled = solutionModifier.GetOrCreateDirectoryBuildPropsModifier().ArtifactsOutputEnabled();
         if (!artifactsOutputEnabled)
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 Arguments.CentralPackageManagementDisabledMessage,
                 Arguments.DefaultSeverity);
