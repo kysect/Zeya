@@ -22,7 +22,7 @@ public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAcces
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))

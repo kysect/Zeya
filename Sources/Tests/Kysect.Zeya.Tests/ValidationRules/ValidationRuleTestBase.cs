@@ -21,7 +21,7 @@ public abstract class ValidationRuleTestBase
     protected RepositoryDiagnosticCollectorAsserts DiagnosticCollectorAsserts { get; }
     protected string CurrentPath { get; }
     protected SolutionFileContentParser SolutionFileContentParser { get; }
-    protected RepositorySolutionAccessorFactory SolutionAccessorFactory { get; }
+    protected RepositorySolutionAccessorFactory RepositorySolutionAccessorFactory { get; }
     protected FileSystemAsserts FileSystemAsserts { get; }
 
     protected ValidationRuleTestBase()
@@ -40,7 +40,7 @@ public abstract class ValidationRuleTestBase
                 DiagnosticCollectorAsserts.GetCollector()));
 
         SolutionFileContentParser = new SolutionFileContentParser();
-        SolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);
+        RepositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);
 
         FileSystemAsserts = new FileSystemAsserts(FileSystem);
     }
