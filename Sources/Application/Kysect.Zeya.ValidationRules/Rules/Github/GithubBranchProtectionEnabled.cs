@@ -22,13 +22,16 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
 
         string branch = ValidationConstants.DefaultBranch;
         GithubRepository? githubRepository = repositoryValidationContext.TryGetGithubMetadata();
         if (githubRepository is null)
         {
-            logger.LogInformation("Skip {Rule} because repository do not have GitHub metadata", request.DiagnosticCode);
+            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
+                request.DiagnosticCode,
+                $"Skip {request.DiagnosticCode} because repository do not have GitHub metadata.");
+
             return;
         }
 
