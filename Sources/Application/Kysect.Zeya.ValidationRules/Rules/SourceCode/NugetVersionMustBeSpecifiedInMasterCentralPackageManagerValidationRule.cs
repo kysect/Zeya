@@ -48,12 +48,13 @@ public class NugetVersionMustBeSpecifiedInMasterCentralPackageManagerValidationR
         var masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
         var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
         var masterPackages = masterPropsFile
+            .Versions
             .GetPackageVersions()
             .ToDictionary(p => p.Name, p => p.Version);
 
         string currentPackagesPropsContent = fileSystem.File.ReadAllText(repositorySolutionAccessor.GetDirectoryPackagePropsPath());
         var currentPackagesPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(currentPackagesPropsContent));
-        IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = currentPackagesPropsFile.GetPackageVersions();
+        IReadOnlyCollection<ProjectPackageVersion> currentProjectPackages = currentPackagesPropsFile.Versions.GetPackageVersions();
 
         List<string> notSpecifiedPackages = new List<string>();
 

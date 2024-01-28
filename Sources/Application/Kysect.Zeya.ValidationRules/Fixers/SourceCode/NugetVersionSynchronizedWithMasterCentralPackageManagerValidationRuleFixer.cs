@@ -3,7 +3,6 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ProjectSystemIntegration.XmlProjectFileModifyStrategies;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
@@ -44,11 +43,13 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
         var masterPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.Create(masterFileContent));
         logger.LogDebug("Setting package versions same as in {MasterFile}", rule.MasterFile);
-        Dictionary<string, string> masterPackages = masterPropsFile
-            .GetPackageVersions()
-            .ToDictionary(p => p.Name, p => p.Version);
+        foreach (ProjectPackageVersion projectPackageVersion in masterPropsFile.Versions.GetPackageVersions())
+        {
+            directoryPackagesPropsFile
+                .Versions
+                .SetPackageVersion(projectPackageVersion.Name, projectPackageVersion.Name);
+        }
 
-        directoryPackagesPropsFile.File.UpdateDocument(new SyncCentralPackageManagementVersionsModificationStrategy(masterPackages));
         solutionModifier.Save(formatter);
     }
 }
