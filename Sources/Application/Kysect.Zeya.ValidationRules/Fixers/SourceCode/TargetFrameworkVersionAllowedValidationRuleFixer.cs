@@ -9,8 +9,6 @@ using Microsoft.Extensions.Logging;
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class TargetFrameworkVersionAllowedValidationRuleFixer(
-    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
-    IDotnetProjectPropertyAccessor projectPropertyAccessor,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
     ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
@@ -21,53 +19,36 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
         clonedRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
-        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
-        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
-
-        string? expectedTargetVersion = rule.AllowedCoreVersion;
-        if (expectedTargetVersion is null)
-        {
-            logger.LogError("Cannot update target framework version because no suitable version specified in allowed");
-            return;
-        }
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         foreach (KeyValuePair<string, DotnetCsprojFile> projectModifier in solutionModifier.Projects)
         {
-            // TODO: must get value from projectPropertyAccessor?
-            projectPropertyAccessor.ThrowIfNull();
             DotnetProjectProperty dotnetProjectProperty = projectModifier.Value.File.Properties.GetProperty("TargetFramework");
-            var projectTargetFramework = dotnetProjectProperty.Value;
+            string projectTargetFramework = dotnetProjectProperty.Value;
+            string? allowedTargetFrameworkVersion = GetCorrectVersion(rule, projectTargetFramework);
 
-            if (!IsNetVersion(projectTargetFramework))
-            {
-                logger.LogWarning("Version {Version} updating is not supported", projectTargetFramework);
-                continue;
-            }
-
-            if (string.Equals(projectTargetFramework, expectedTargetVersion))
+            if (allowedTargetFrameworkVersion is null)
                 continue;
 
-            // TODO: return logging
-            logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, expectedTargetVersion, projectModifier.Key);
-            projectModifier.Value.File.Properties.SetProperty("TargetFramework", expectedTargetVersion);
+            if (string.Equals(projectTargetFramework, allowedTargetFrameworkVersion))
+                continue;
+
+            logger.LogDebug("Change framework versions from {Current} to {Expected} for project {Project}", projectTargetFramework, allowedTargetFrameworkVersion, projectModifier.Key);
+            projectModifier.Value.File.Properties.SetProperty("TargetFramework", allowedTargetFrameworkVersion);
         }
 
         // TODO: force somehow saving
         solutionModifier.Save(formatter);
     }
 
-    // TODO: rework this behavior after changing rule arguments
-    private bool IsNetVersion(string value)
+    private string? GetCorrectVersion(TargetFrameworkVersionAllowedValidationRule.Arguments rule, string version)
     {
-        // TODO: do it better
-        HashSet<string> supportedVersions = new HashSet<string>()
-        {
-            "net8.0",
-            "net7.0",
-            "net6.0",
-            "net5.0"
-        };
+        if (version.StartsWith("netstandard"))
+            return rule.AllowedStandardVersion;
 
-        return supportedVersions.Contains(value);
+        if (version.StartsWith("net4"))
+            return rule.AllowedFrameworkVersion;
+
+        return rule.AllowedCoreVersion;
     }
 }
