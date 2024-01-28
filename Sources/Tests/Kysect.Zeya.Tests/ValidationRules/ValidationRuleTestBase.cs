@@ -1,6 +1,7 @@
 ﻿using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Asserts;
 using Kysect.Zeya.Tests.Tools;
@@ -13,13 +14,15 @@ namespace Kysect.Zeya.Tests.ValidationRules;
 public abstract class ValidationRuleTestBase
 {
     protected ILogger Logger { get; }
+    public IClonedRepository Repository { get; }
     protected MockFileSystem FileSystem { get; }
     protected ScenarioContext Context { get; }
     protected XmlDocumentSyntaxFormatter Formatter { get; }
     protected RepositoryDiagnosticCollectorAsserts DiagnosticCollectorAsserts { get; }
     protected string CurrentPath { get; }
-    protected SolutionFileContentParser FileContentParser { get; }
+    protected SolutionFileContentParser SolutionFileContentParser { get; }
     protected RepositorySolutionAccessorFactory SolutionAccessorFactory { get; }
+    protected FileSystemAsserts FileSystemAsserts { get; }
 
     protected ValidationRuleTestBase()
     {
@@ -29,12 +32,16 @@ public abstract class ValidationRuleTestBase
         CurrentPath = FileSystem.Path.GetFullPath(".");
 
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
+        Repository = new ClonedRepository(CurrentPath, FileSystem);
+
         Context = RepositoryValidationContextExtensions.CreateScenarioContext(
             RepositoryValidationContext.Create(
-                new ClonedRepository(CurrentPath, FileSystem),
+                Repository,
                 DiagnosticCollectorAsserts.GetCollector()));
 
-        FileContentParser = new SolutionFileContentParser();
-        SolutionAccessorFactory = new RepositorySolutionAccessorFactory(FileContentParser, FileSystem);
+        SolutionFileContentParser = new SolutionFileContentParser();
+        SolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);
+
+        FileSystemAsserts = new FileSystemAsserts(FileSystem);
     }
 }
