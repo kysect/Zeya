@@ -27,7 +27,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositoryS
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 ValidationRuleMessages.DirectoryBuildPropsFileMissed,
                 Arguments.DefaultSeverity);
@@ -41,7 +41,7 @@ public class DirectoryBuildPropsContainsRequiredFieldsValidationRule(RepositoryS
         {
             if (directoryBuildPropsFile.File.Properties.FindProperty(requiredField) is null)
             {
-                repositoryValidationContext.DiagnosticCollector.Add(
+                repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                     request.DiagnosticCode,
                     $"Directory.Build.props field {requiredField} is missed.",
                     Arguments.DefaultSeverity);

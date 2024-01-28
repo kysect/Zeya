@@ -26,7 +26,7 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 ValidationRuleMessages.DirectoryBuildPropsFileMissed,
                 Arguments.DefaultSeverity);
@@ -46,7 +46,7 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
         {
             if (!addedPackages.Contains(requestPackage))
             {
-                repositoryValidationContext.DiagnosticCollector.Add(
+                repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                     request.DiagnosticCode,
                     $"Package {requestPackage} is not add to Directory.Build.props.",
                     Arguments.DefaultSeverity);

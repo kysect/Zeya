@@ -23,7 +23,7 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
         _requiredPackagesAddedValidationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(1)
+            .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
 
@@ -38,7 +38,7 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
         _requiredPackagesAddedValidationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
-            .ShouldHaveCount(1)
+            .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Package RequiredPackage is not add to Directory.Build.props.");
     }
 }

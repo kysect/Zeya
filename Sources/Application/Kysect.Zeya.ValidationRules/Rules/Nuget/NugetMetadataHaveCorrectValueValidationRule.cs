@@ -27,7 +27,7 @@ public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAcces
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 ValidationRuleMessages.DirectoryBuildPropsFileMissed,
                 Arguments.DefaultSeverity);
@@ -54,7 +54,7 @@ public class NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAcces
 
         if (invalidValues.Any())
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Directory.Build.props options has incorrect value or value is missed: " + invalidValues.ToSingleString(),
                 Arguments.DefaultSeverity);

@@ -31,7 +31,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubC
         Repository? repositoryInfo = githubClient.Repository.Get(githubRepository.Owner, githubRepository.Name).Result;
         if (repositoryInfo.DeleteBranchOnMerge is null or false)
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 "Branch deletion on merge must be enabled.",
                 Arguments.DefaultSeverity);

@@ -38,7 +38,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 
         if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 "Configuration file Directory.Package.props for Central Package Management is missed.",
                 Arguments.DefaultSeverity);
@@ -69,7 +69,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 
         if (packagesWithDifferentVersion.Any())
         {
-            repositoryValidationContext.DiagnosticCollector.Add(
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Some Nuget packages versions is not synchronized with master Directory.Package.props: {packagesWithDifferentVersion.ToSingleString()}",
                 Arguments.DefaultSeverity);

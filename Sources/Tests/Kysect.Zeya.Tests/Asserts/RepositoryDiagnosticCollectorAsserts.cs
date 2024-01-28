@@ -17,7 +17,7 @@ public class RepositoryDiagnosticCollectorAsserts
         return _collector;
     }
 
-    public RepositoryDiagnosticCollectorAsserts ShouldHaveCount(int count)
+    public RepositoryDiagnosticCollectorAsserts ShouldHaveDiagnosticCount(int count)
     {
         _collector.GetDiagnostics().Count.Should().Be(count);
         return this;
@@ -26,6 +26,20 @@ public class RepositoryDiagnosticCollectorAsserts
     public RepositoryDiagnosticCollectorAsserts ShouldHaveDiagnostic(int index, string diagnosticCode, string message)
     {
         RepositoryValidationDiagnostic diagnostic = _collector.GetDiagnostics().ElementAt(index - 1);
+        diagnostic.Code.Should().Be(diagnosticCode);
+        diagnostic.Message.Should().Be(message);
+        return this;
+    }
+
+    public RepositoryDiagnosticCollectorAsserts ShouldHaveErrorCount(int count)
+    {
+        _collector.GetRuntimeErrors().Count.Should().Be(count);
+        return this;
+    }
+
+    public RepositoryDiagnosticCollectorAsserts ShouldHaveError(int index, string diagnosticCode, string message)
+    {
+        RepositoryValidationDiagnostic diagnostic = _collector.GetRuntimeErrors().ElementAt(index - 1);
         diagnostic.Code.Should().Be(diagnosticCode);
         diagnostic.Message.Should().Be(message);
         return this;
