@@ -13,15 +13,14 @@ namespace Kysect.Zeya.Tests.ValidationRules.SourceCode;
 
 public class RequiredPackagesAddedValidationRuleTests
 {
-    private MockFileSystem _fileSystem;
-    private RequiredPackagesAddedValidationRule _requiredPackagesAddedValidationRule;
-    private string _currentPath;
-    private RepositoryDiagnosticCollector _repositoryDiagnosticCollector;
-    private ScenarioContext _scenarioContext;
-    private XmlDocumentSyntaxFormatter _formatter;
+    private readonly MockFileSystem _fileSystem;
+    private readonly RequiredPackagesAddedValidationRule _requiredPackagesAddedValidationRule;
+    private readonly string _currentPath;
+    private readonly RepositoryDiagnosticCollector _repositoryDiagnosticCollector;
+    private readonly ScenarioContext _scenarioContext;
+    private readonly XmlDocumentSyntaxFormatter _formatter;
 
-    [SetUp]
-    public void Setup()
+    public RequiredPackagesAddedValidationRuleTests()
     {
         _formatter = new XmlDocumentSyntaxFormatter();
         _fileSystem = new MockFileSystem();
@@ -39,7 +38,7 @@ public class RequiredPackagesAddedValidationRuleTests
                 _repositoryDiagnosticCollector));
     }
 
-    [Test]
+    [Fact]
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectoryBuildProps()
     {
         var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
@@ -54,7 +53,7 @@ public class RequiredPackagesAddedValidationRuleTests
         diagnostics.Single().Message.Should().Be(ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
 
-    [Test]
+    [Fact]
     public void Validate_SolutionWithEmptyDirectoryBuildProps_ReturnDiagnosticAboutMissedPackage()
     {
         var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);

@@ -11,21 +11,19 @@ using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRules.SourceCode;
 
-[TestFixture]
 public class ArtifactsOutputEnabledValidationRuleTests
 {
-    private ArtifactsOutputEnabledValidationRule _validationRule;
+    private readonly ArtifactsOutputEnabledValidationRule _validationRule;
 
-    private MockFileSystem _fileSystem;
-    private RepositoryDiagnosticCollector _repositoryDiagnosticCollector;
-    private ScenarioContext _scenarioContext;
-    private XmlDocumentSyntaxFormatter _formatter;
+    private readonly MockFileSystem _fileSystem;
+    private readonly RepositoryDiagnosticCollector _repositoryDiagnosticCollector;
+    private readonly ScenarioContext _scenarioContext;
+    private readonly XmlDocumentSyntaxFormatter _formatter;
 
-    private string _currentPath;
-    private string _repositoryName;
+    private readonly string _currentPath;
+    private readonly string _repositoryName;
 
-    [SetUp]
-    public void Setup()
+    public ArtifactsOutputEnabledValidationRuleTests()
     {
         _formatter = new XmlDocumentSyntaxFormatter();
         _fileSystem = new MockFileSystem();
@@ -42,10 +40,9 @@ public class ArtifactsOutputEnabledValidationRuleTests
             RepositoryValidationContext.Create(
                 new ClonedRepository(_currentPath, _fileSystem),
                 _repositoryDiagnosticCollector));
-
     }
 
-    [Test]
+    [Fact]
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectoryBuildProps()
     {
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
@@ -60,7 +57,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
         diagnostics.Should().BeEquivalentTo(new[] { diagnostic });
     }
 
-    [Test]
+    [Fact]
     public void Validate_EmptyDirectoryBuildProps_ReturnDiagnosticAboutMissedUseArtifactsOutput()
     {
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
@@ -80,7 +77,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
         diagnostics.Should().BeEquivalentTo(new[] { diagnostic });
     }
 
-    [Test]
+    [Fact]
     public void Validate_UseArtifactsOutputSetToFalse_ReturnDiagnosticAboutMissedUseArtifactsOutput()
     {
         var directoryBuildPropsContent = """
@@ -107,7 +104,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
         diagnostics.Should().BeEquivalentTo(new[] { diagnostic });
     }
 
-    [Test]
+    [Fact]
     public void Validate_UseArtifactsOutputSetToTrue_NoDiagnostic()
     {
         var directoryBuildPropsContent = """

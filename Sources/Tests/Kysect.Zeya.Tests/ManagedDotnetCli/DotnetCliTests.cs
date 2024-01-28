@@ -6,9 +6,9 @@ using Kysect.PowerShellRunner.Abstractions.Accessors;
 using Kysect.PowerShellRunner.Accessors;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.Tests;
+namespace Kysect.Zeya.Tests.ManagedDotnetCli;
 
-public class DotnetCliTests
+public class DotnetCliTests : IDisposable
 {
     private readonly IFileSystem _fileSystem = new FileSystem();
     private readonly IPowerShellAccessor _powerShellAccessor;
@@ -26,7 +26,7 @@ public class DotnetCliTests
         _dotnetCli = new DotnetCli(_logger, _powerShellAccessor);
     }
 
-    [Test]
+    [Fact]
     public void GetProperty_IsTestProject_ReturnTrue()
     {
         var isTestProject = _dotnetCli.GetProperty(_fileSystem.Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "IsTestProject");
@@ -36,7 +36,7 @@ public class DotnetCliTests
         result.Should().BeTrue();
     }
 
-    [Test]
+    [Fact]
     public void GetProperty_TargetFramework_Return80()
     {
         var targetFramework = _dotnetCli.GetProperty(_fileSystem.Path.Combine("..", "..", "..", "Kysect.Zeya.Tests.csproj"), "TargetFramework");
@@ -44,7 +44,6 @@ public class DotnetCliTests
         targetFramework.Should().Be("net8.0");
     }
 
-    [OneTimeTearDown]
     public void Dispose()
     {
         _powerShellAccessor.Dispose();

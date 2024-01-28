@@ -17,14 +17,13 @@ namespace Kysect.Zeya.Tests.ValidationRuleFixers;
 
 public class TargetFrameworkVersionAllowedValidationRuleFixerTests
 {
-    private FakeDotnetProjectPropertyAccessor _projectPropertyAccessor;
-    private TargetFrameworkVersionAllowedValidationRuleFixer _fixer;
-    private MockFileSystem _fileSystem;
-    private ILogger _logger;
-    private XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
+    private readonly FakeDotnetProjectPropertyAccessor _projectPropertyAccessor;
+    private readonly TargetFrameworkVersionAllowedValidationRuleFixer _fixer;
+    private readonly MockFileSystem _fileSystem;
+    private readonly ILogger _logger;
+    private readonly XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
-    [SetUp]
-    public void Setup()
+    public TargetFrameworkVersionAllowedValidationRuleFixerTests()
     {
         _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
         _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
@@ -39,7 +38,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
             _logger);
     }
 
-    [Test]
+    [Fact]
     public void Fix_Net6_ChangedToNet8()
     {
         var originalProjectContent = """
