@@ -13,6 +13,7 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
     {
         public string DiagnosticCode => RuleDescription.SourceCode.SourcesMustNotBeInRoot;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
+        public const string DirectoryMissedMessage = "Directory for sources was not found in repository";
     }
 
     public void Execute(ScenarioContext context, Arguments request)
@@ -20,25 +21,29 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
-        var repositoryRootPath = repositoryValidationContext.Repository.GetFullPath();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
+        string repositoryRootPath = repositoryValidationContext.Repository.GetFullPath();
 
         var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, request.SourceDirectoryPath);
         if (!fileSystem.Directory.Exists(expectedSourceDirectoryPath))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
-                $"Directory for sources was not found in repository",
+                Arguments.DirectoryMissedMessage,
                 Arguments.DefaultSeverity);
             return;
         }
 
-        var solutionsInRoot = fileSystem.Directory.EnumerateFiles(repositoryRootPath, "*.sln", SearchOption.TopDirectoryOnly).ToList();
+        List<string> solutionsInRoot = fileSystem.Directory
+            .EnumerateFiles(repositoryRootPath, "*.sln", SearchOption.TopDirectoryOnly)
+            .Where(p => !p.StartsWith(expectedSourceDirectoryPath))
+            .ToList();
+
         if (solutionsInRoot.Any())
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
-                $"Sources must not located in root of repository. Founded solution files: {solutionsInRoot.ToSingleString()}",
+                $"Sources must be located in {expectedSourceDirectoryPath}. Founded solution files: {solutionsInRoot.ToSingleString()}",
                 Arguments.DefaultSeverity);
         }
     }
