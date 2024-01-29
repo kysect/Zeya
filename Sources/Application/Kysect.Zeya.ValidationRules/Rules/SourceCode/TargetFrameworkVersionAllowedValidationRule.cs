@@ -1,11 +1,12 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyAccessor projectPropertyAccessor, RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+public class TargetFrameworkVersionAllowedValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
     : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
@@ -34,20 +35,21 @@ public class TargetFrameworkVersionAllowedValidationRule(IDotnetProjectPropertyA
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         List<string> projectFiles = repositorySolutionAccessor
             .GetProjectPaths()
             .ToList();
 
-        foreach (var projectFile in projectFiles)
+        foreach ((string key, DotnetCsprojFile value) in solutionModifier.Projects)
         {
-            var targetFramework = projectPropertyAccessor.GetTargetFramework(projectFile);
+            var targetFramework = value.File.Properties.GetProperty("TargetFramework");
 
-            if (!allowedTargetFrameworks.Contains(targetFramework))
+            if (!allowedTargetFrameworks.Contains(targetFramework.Value))
             {
                 repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                     request.DiagnosticCode,
-                    $"Framework versions {targetFramework} is not allowed but used in {projectFile}.",
+                    $"Framework versions {targetFramework} is not allowed but used in {key}.",
                     Arguments.DefaultSeverity);
             }
         }
