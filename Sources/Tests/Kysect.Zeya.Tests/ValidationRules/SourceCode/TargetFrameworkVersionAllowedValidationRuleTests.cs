@@ -1,6 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Projects;
-using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
 namespace Kysect.Zeya.Tests.ValidationRules.SourceCode;
@@ -8,12 +7,10 @@ namespace Kysect.Zeya.Tests.ValidationRules.SourceCode;
 public class TargetFrameworkVersionAllowedValidationRuleTests : ValidationRuleTestBase
 {
     private readonly TargetFrameworkVersionAllowedValidationRule _validationRule;
-    private readonly FakeDotnetProjectPropertyAccessor _projectPropertyAccessor;
 
     public TargetFrameworkVersionAllowedValidationRuleTests()
     {
-        _projectPropertyAccessor = new FakeDotnetProjectPropertyAccessor();
-        _validationRule = new TargetFrameworkVersionAllowedValidationRule(_projectPropertyAccessor, RepositorySolutionAccessorFactory);
+        _validationRule = new TargetFrameworkVersionAllowedValidationRule(RepositorySolutionAccessorFactory);
     }
 
     [Theory]
@@ -31,7 +28,6 @@ public class TargetFrameworkVersionAllowedValidationRuleTests : ValidationRuleTe
 
         var projectFileContent = DotnetProjectFile.CreateEmpty();
         projectFileContent.Properties.SetProperty("TargetFramework", projectTarget);
-        _projectPropertyAccessor.TargetFramework = projectTarget;
 
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder("Project")

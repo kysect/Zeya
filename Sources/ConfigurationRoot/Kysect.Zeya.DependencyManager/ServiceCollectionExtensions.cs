@@ -84,8 +84,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<XmlDocumentSyntaxFormatter>()
             .AddSingleton<DotnetSolutionModifierFactory>()
             .AddSingleton<SolutionFileContentParser>()
-            .AddSingleton<RepositorySolutionAccessorFactory>()
-            .AddSingleton<IDotnetProjectPropertyAccessor, DotnetProjectPropertyAccessor>();
+            .AddSingleton<RepositorySolutionAccessorFactory>();
 
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection.AddSingleton<RepositoryValidator>();
