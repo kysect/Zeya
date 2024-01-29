@@ -36,7 +36,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
 
         RepositoryBranchProtection repositoryBranchProtection = githubIntegrationService.GetRepositoryBranchProtection(githubRepository, branch);
 
-        if (request.PullRequestReviewRequired && repositoryBranchProtection.PullRequestReviewsRequired)
+        if (request.PullRequestReviewRequired && !repositoryBranchProtection.PullRequestReviewsRequired)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -44,7 +44,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
                 Arguments.DefaultSeverity);
         }
 
-        if (request.ConversationResolutionRequired && repositoryBranchProtection.ConversationResolutionRequired)
+        if (request.ConversationResolutionRequired && !repositoryBranchProtection.ConversationResolutionRequired)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,

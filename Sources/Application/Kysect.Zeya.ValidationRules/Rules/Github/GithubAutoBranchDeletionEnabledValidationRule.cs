@@ -2,11 +2,10 @@
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
 
-public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationService githubIntegrationService, ILogger logger)
+public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationService githubIntegrationService)
     : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.AutoBranchDeletionEnabled")]
@@ -25,7 +24,10 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
         GithubRepository? githubRepository = repositoryValidationContext.TryGetGithubMetadata();
         if (githubRepository is null)
         {
-            logger.LogInformation("Skip {Rule} because repository do not have GitHub metadata", request.DiagnosticCode);
+            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
+                request.DiagnosticCode,
+                $"Skip {request.DiagnosticCode} because repository do not have GitHub metadata.");
+
             return;
         }
 
