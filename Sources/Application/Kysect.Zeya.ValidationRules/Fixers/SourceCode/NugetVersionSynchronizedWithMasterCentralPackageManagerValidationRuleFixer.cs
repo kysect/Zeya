@@ -10,7 +10,6 @@ using System.IO.Abstractions;
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(
-    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     IFileSystem fileSystem,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
@@ -23,16 +22,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         clonedRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
-        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
-        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
-        if (!directoryPackagesPropsFile.GetCentralPackageManagement())
-        {
-            logger.LogWarning("Project is not use CPM, skip version fixer");
-            return;
-        }
-
         if (!fileSystem.File.Exists(rule.MasterFile))
         {
             // TODO: after this error validation should finish as failed
@@ -47,7 +39,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         {
             directoryPackagesPropsFile
                 .Versions
-                .SetPackageVersion(projectPackageVersion.Name, projectPackageVersion.Name);
+                .SetPackageVersion(projectPackageVersion.Name, projectPackageVersion.Version);
         }
 
         solutionModifier.Save(formatter);

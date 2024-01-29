@@ -1,34 +1,18 @@
-﻿using FluentAssertions;
-using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Parsing;
-using Kysect.DotnetProjectSystem.SolutionModification;
-using Kysect.DotnetProjectSystem.Xml;
-using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.Tests.Tools;
+﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.Zeya.Tests.ValidationRules;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
-using Microsoft.Extensions.Logging;
-using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixerTests
+public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRuleTestBase
 {
     private readonly CentralPackageManagerEnabledValidationRuleFixer _fixer;
-    private readonly MockFileSystem _fileSystem;
-    private readonly ILogger _logger;
-    private readonly XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
 
     public CentralPackageManagerEnabledValidationRuleFixerTests()
     {
-        _logger = DefaultLoggerConfiguration.CreateConsoleLogger();
-        _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser());
-        _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem), _xmlDocumentSyntaxFormatter, _logger);
+        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(RepositorySolutionAccessorFactory, Formatter, Logger);
     }
 
     [Fact]
@@ -67,18 +51,22 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                            </Project>
                                            """;
 
-        string currentPath = _fileSystem.Path.GetFullPath(".");
         const string projectName = "SampleProject";
-        var solutionBuilder = new SolutionFileStructureBuilder("Solution")
-            .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent));
-        solutionBuilder.Save(_fileSystem, currentPath, _xmlDocumentSyntaxFormatter);
+        new SolutionFileStructureBuilder("Solution")
+            .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
+            .Save(FileSystem, CurrentPath, Formatter);
 
-        var githubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(currentPath), _fileSystem);
-        var repositoryAccessor = githubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));
-        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), repositoryAccessor);
+        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), Repository);
 
-        _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, projectName, $"{projectName}.csproj")).Should().Be(expectedProjectContent);
-        _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, ValidationConstants.DirectoryPackagePropsFileName)).Should().Be(expectedDotnetPackageContent);
+        FileSystemAsserts
+            .File(CurrentPath, ValidationConstants.DirectoryPackagePropsFileName)
+            .ShouldExists()
+            .ShouldHaveContent(expectedDotnetPackageContent);
+
+        FileSystemAsserts
+            .File(CurrentPath, projectName, $"{projectName}.csproj")
+            .ShouldExists()
+            .ShouldHaveContent(expectedProjectContent);
     }
 
     [Fact]
@@ -106,8 +94,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                              </Project>
                              """;
 
-        // TODO: implement formatting rule
-        var expectedDotnetPackageContent = $"""
+        var expectedDotnetPackageContent = """
                                            <Project>
                                              <PropertyGroup>
                                                <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
@@ -118,21 +105,29 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                            </Project>
                                            """;
 
-        string currentPath = _fileSystem.Path.GetFullPath(".");
         const string projectName = "SampleProject";
         const string projectName2 = "SampleProject2";
 
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
             .AddProject(new ProjectFileStructureBuilder(projectName2, originalProjectContent))
-            .Save(_fileSystem, currentPath, _xmlDocumentSyntaxFormatter);
+            .Save(FileSystem, CurrentPath, Formatter);
 
-        var githubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(currentPath), _fileSystem);
-        var repositoryAccessor = githubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));
-        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), repositoryAccessor);
+        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), Repository);
 
-        _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, projectName, $"{projectName}.csproj")).Should().Be(expectedProjectContent);
-        _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, projectName2, $"{projectName2}.csproj")).Should().Be(expectedProjectContent);
-        _fileSystem.File.ReadAllText(_fileSystem.Path.Combine(currentPath, ValidationConstants.DirectoryPackagePropsFileName)).Should().Be(expectedDotnetPackageContent);
+        FileSystemAsserts
+            .File(CurrentPath, ValidationConstants.DirectoryPackagePropsFileName)
+            .ShouldExists()
+            .ShouldHaveContent(expectedDotnetPackageContent);
+
+        FileSystemAsserts
+            .File(CurrentPath, projectName, $"{projectName}.csproj")
+            .ShouldExists()
+            .ShouldHaveContent(expectedProjectContent);
+
+        FileSystemAsserts
+            .File(CurrentPath, projectName2, $"{projectName2}.csproj")
+            .ShouldExists()
+            .ShouldHaveContent(expectedProjectContent);
     }
 }

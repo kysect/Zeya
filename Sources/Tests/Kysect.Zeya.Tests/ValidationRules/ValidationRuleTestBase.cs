@@ -14,7 +14,7 @@ namespace Kysect.Zeya.Tests.ValidationRules;
 public abstract class ValidationRuleTestBase
 {
     protected ILogger Logger { get; }
-    public IClonedRepository Repository { get; }
+    protected IClonedRepository Repository { get; }
     protected MockFileSystem FileSystem { get; }
     protected ScenarioContext Context { get; }
     protected XmlDocumentSyntaxFormatter Formatter { get; }
