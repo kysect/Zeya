@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 namespace Kysect.Zeya.ValidationRules.Fixers.Nuget;
 
 public class NugetMetadataHaveCorrectValueValidationRuleFixer(
-    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
     ILogger logger) : IValidationRuleFixer<NugetMetadataHaveCorrectValueValidationRule.Arguments>
@@ -20,8 +19,7 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(
         clonedRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
-        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
-        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
 
