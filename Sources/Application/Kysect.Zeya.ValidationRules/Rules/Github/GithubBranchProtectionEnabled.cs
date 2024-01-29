@@ -1,12 +1,11 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Microsoft.Extensions.Logging;
-using Octokit;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
 
-public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubClient, ILogger logger) : IScenarioStepExecutor<GithubBranchProtectionEnabledValidationRule.Arguments>
+public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationService githubIntegrationService) : IScenarioStepExecutor<GithubBranchProtectionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.BranchProtectionEnabled")]
     public record Arguments(
@@ -35,19 +34,9 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
             return;
         }
 
-        BranchProtectionSettings? branchProtectionSettings = TryGetBranchProtection(githubRepository, branch);
+        RepositoryBranchProtection repositoryBranchProtection = githubIntegrationService.GetRepositoryBranchProtection(githubRepository, branch);
 
-        if (branchProtectionSettings is null)
-        {
-            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
-                request.DiagnosticCode,
-                $"Github branch protections for {branch} is non configured.",
-                Arguments.DefaultSeverity);
-
-            return;
-        }
-
-        if (request.PullRequestReviewRequired && branchProtectionSettings.RequiredPullRequestReviews is null)
+        if (request.PullRequestReviewRequired && repositoryBranchProtection.PullRequestReviewsRequired)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -55,26 +44,12 @@ public class GithubBranchProtectionEnabledValidationRule(IGitHubClient githubCli
                 Arguments.DefaultSeverity);
         }
 
-        if (request.ConversationResolutionRequired && (branchProtectionSettings.RequiredConversationResolution is null || !branchProtectionSettings.RequiredConversationResolution.Enabled))
+        if (request.ConversationResolutionRequired && repositoryBranchProtection.ConversationResolutionRequired)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
                 $"Conversation resolution must be required for {branch}.",
                 Arguments.DefaultSeverity);
-        }
-    }
-
-    private BranchProtectionSettings? TryGetBranchProtection(GithubRepository repository, string defaultBranch)
-    {
-        try
-        {
-            return githubClient.Repository.Branch.GetBranchProtection(repository.Owner, repository.Name, defaultBranch).Result;
-        }
-        catch (Exception e)
-        {
-            // TODO: rework this. Possible exception: NotFound, Forbidden (for private repo)
-            logger.LogWarning("Failed to get branch protection info for {Repository}: {Message}", repository.FullName, e.Message);
-            return null;
         }
     }
 }

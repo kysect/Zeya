@@ -10,7 +10,6 @@
     <PackageReference Include="Kysect.DotnetProjectSystem" />
     <PackageReference Include="Kysect.ScenarioLib" />
     <PackageReference Include="Kysect.ScenarioLib.Abstractions" />
-    <PackageReference Include="Octokit" />
     <PackageReference Include="TestableIO.System.IO.Abstractions" />
   </ItemGroup>
 

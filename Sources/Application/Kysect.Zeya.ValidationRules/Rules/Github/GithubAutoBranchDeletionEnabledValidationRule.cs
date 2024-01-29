@@ -1,12 +1,13 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Microsoft.Extensions.Logging;
-using Octokit;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
 
-public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubClient, ILogger logger) : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
+public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationService githubIntegrationService, ILogger logger)
+    : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.AutoBranchDeletionEnabled")]
     public record Arguments() : IValidationRule
@@ -28,8 +29,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGitHubClient githubC
             return;
         }
 
-        Repository? repositoryInfo = githubClient.Repository.Get(githubRepository.Owner, githubRepository.Name).Result;
-        if (repositoryInfo.DeleteBranchOnMerge is null or false)
+        if (!githubIntegrationService.DeleteBranchOnMerge(githubRepository))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,

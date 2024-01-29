@@ -1,6 +1,6 @@
 ﻿using Kysect.Zeya.Abstractions.Models;
 
-namespace Kysect.Zeya.GithubIntegration;
+namespace Kysect.Zeya.Abstractions.Contracts;
 
 public interface IGithubIntegrationService
 {
@@ -8,5 +8,8 @@ public interface IGithubIntegrationService
     void CreateFixBranch(GithubRepository repository, string branchName);
     void CreateCommitWithFix(GithubRepository repository, string commitMessage);
     void PushCommitToRemote(GithubRepository repository, string branchName);
-    void CreatePullRequest(ClonedRepository repository, string message);
+    void CreatePullRequest(GithubRepository repository, string message);
+
+    bool DeleteBranchOnMerge(GithubRepository githubRepository);
+    RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepository githubRepository, string branch);
 }

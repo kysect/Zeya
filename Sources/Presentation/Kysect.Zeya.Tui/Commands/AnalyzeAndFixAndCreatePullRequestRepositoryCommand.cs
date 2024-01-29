@@ -1,4 +1,5 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryValidation;
@@ -65,6 +66,6 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
         logger.LogInformation("Create PR");
         var pullRequestMessageCreator = new PullRequestMessageCreator();
         string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
-        githubIntegrationService.CreatePullRequest(githubRepositoryAccessor, pullRequestMessage);
+        githubIntegrationService.CreatePullRequest(githubRepository, pullRequestMessage);
     }
 }
