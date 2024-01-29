@@ -63,4 +63,22 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
         else
             DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(0);
     }
+
+    [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, true)]
+    [InlineData(true, true, false)]
+    public void Execute_ConversationResolutionRequired(bool enabled, bool required, bool reportDiagnostic)
+    {
+        var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, required);
+        _fakeGithubIntegrationService.RepositoryBranchProtection = new RepositoryBranchProtection(false, enabled);
+
+        _validationRule.Execute(_githubContext, arguments);
+
+        if (reportDiagnostic)
+            DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
+        else
+            DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(0);
+    }
 }
