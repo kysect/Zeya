@@ -1,13 +1,16 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 
 namespace Kysect.Zeya.ValidationRules;
 
 public class RepositoryValidationContext
 {
-    public static RepositoryValidationContext CreateForGitHub(GithubRepository githubMetadata, IClonedRepository repository, RepositoryDiagnosticCollector diagnosticCollector)
+    public static RepositoryValidationContext CreateForGitHub(GithubRepository githubMetadata, IClonedRepository repository)
     {
-        return new RepositoryValidationContext(githubMetadata, repository, diagnosticCollector);
+        githubMetadata.ThrowIfNull();
+
+        return new RepositoryValidationContext(githubMetadata, repository, new RepositoryDiagnosticCollector(githubMetadata.FullName));
     }
 
     public static RepositoryValidationContext Create(IClonedRepository repository, RepositoryDiagnosticCollector diagnosticCollector)

@@ -5,9 +5,13 @@ using Kysect.PowerShellRunner.Abstractions.Accessors;
 using Kysect.PowerShellRunner.Abstractions.Queries;
 using Kysect.PowerShellRunner.Executions;
 using Kysect.PowerShellRunner.Tools;
+using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.Abstractions.Models;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Octokit;
+using Branch = LibGit2Sharp.Branch;
 using GithubRepository = Kysect.Zeya.Abstractions.Models.GithubRepository;
 using Repository = LibGit2Sharp.Repository;
 using Signature = LibGit2Sharp.Signature;
@@ -16,18 +20,20 @@ namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
+    private readonly IGitHubClient _gitHubClient;
     private readonly IPowerShellAccessor _powerShellAccessor;
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
+    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
     {
-        _powerShellAccessor = powerShellAccessor;
         githubIntegrationOptions.ThrowIfNull();
 
         _githubIntegrationOptions = githubIntegrationOptions.Value;
+        _powerShellAccessor = powerShellAccessor.ThrowIfNull();
         _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
+        _gitHubClient = gitHubClient.ThrowIfNull();
         _logger = logger.ThrowIfNull();
     }
 
@@ -86,14 +92,40 @@ public class GithubIntegrationService : IGithubIntegrationService
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
-    public void CreatePullRequest(ClonedRepository repository, string message)
+    public void CreatePullRequest(GithubRepository repository, string message)
     {
         repository.ThrowIfNull();
         message.ThrowIfNull();
 
-        using (PowerShellPathChangeContext.TemporaryChangeCurrentDirectory(_powerShellAccessor, repository.GetFullPath()))
+        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        using (PowerShellPathChangeContext.TemporaryChangeCurrentDirectory(_powerShellAccessor, targetPath))
         {
             _powerShellAccessor.ExecuteAndGet(new PowerShellQuery($"gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\""));
+        }
+    }
+
+    public bool DeleteBranchOnMerge(GithubRepository githubRepository)
+    {
+        githubRepository.ThrowIfNull();
+
+        var repositoryInfo = _gitHubClient.Repository.Get(githubRepository.Owner, githubRepository.Name).Result;
+        return repositoryInfo.DeleteBranchOnMerge ?? false;
+    }
+
+    public RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepository githubRepository, string branch)
+    {
+        githubRepository.ThrowIfNull();
+
+        try
+        {
+            BranchProtectionSettings repositoryBranchProtection = _gitHubClient.Repository.Branch.GetBranchProtection(githubRepository.Owner, githubRepository.Name, branch).Result;
+            return new RepositoryBranchProtection(repositoryBranchProtection.RequiredPullRequestReviews is not null, repositoryBranchProtection.RequiredConversationResolution?.Enabled ?? false);
+        }
+        catch (Exception e)
+        {
+            // TODO: rework this. Possible exception: NotFound, Forbidden (for private repo)
+            _logger.LogWarning("Failed to get branch protection info for {Repository}: {Message}", githubRepository.FullName, e.Message);
+            return new RepositoryBranchProtection(false, false);
         }
     }
 }

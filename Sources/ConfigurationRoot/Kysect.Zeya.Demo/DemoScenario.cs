@@ -1,6 +1,5 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;

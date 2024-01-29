@@ -43,9 +43,8 @@ public class RepositoryValidator(
         repository.ThrowIfNull();
         rules.ThrowIfNull();
 
-        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
         var githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(repository);
-        var repositoryValidationContext = RepositoryValidationContext.CreateForGitHub(repository, githubRepositoryAccessor, repositoryDiagnosticCollector);
+        var repositoryValidationContext = RepositoryValidationContext.CreateForGitHub(repository, githubRepositoryAccessor);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();
@@ -56,6 +55,6 @@ public class RepositoryValidator(
             scenarioStepHandler.Handle(scenarioContext, scenarioStep);
         }
 
-        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics(), repositoryDiagnosticCollector.GetRuntimeErrors());
+        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics(), repositoryValidationContext.DiagnosticCollector.GetRuntimeErrors());
     }
 }
