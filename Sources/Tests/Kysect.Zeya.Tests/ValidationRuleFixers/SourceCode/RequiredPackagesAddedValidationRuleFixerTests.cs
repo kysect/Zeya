@@ -1,41 +1,18 @@
-﻿using FluentAssertions;
-using Kysect.CommonLib.DependencyInjection.Logging;
-using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Parsing;
-using Kysect.DotnetProjectSystem.Xml;
-using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.ValidationRules;
+﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.Tests.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
-using Microsoft.Extensions.Logging;
-using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleFixerTests
+public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestBase
 {
-    private readonly RequiredPackagesAddedValidationRuleFixer _requiredPackagesAddedValidationRuleFixer;
-    private readonly string _currentPath;
-    private readonly MockFileSystem _fileSystem;
-    private readonly ClonedRepository _clonedRepository;
-    private readonly RepositorySolutionAccessor _repositorySolutionAccessor;
-    private readonly XmlDocumentSyntaxFormatter _xmlDocumentSyntaxFormatter;
+    private readonly RequiredPackagesAddedValidationRuleFixer _fixer;
 
     public RequiredPackagesAddedValidationRuleFixerTests()
     {
-        ILogger logger = DefaultLoggerConfiguration.CreateConsoleLogger();
-        _fileSystem = new MockFileSystem();
-        _currentPath = _fileSystem.Path.GetFullPath(".");
-
-        var repositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(new SolutionFileContentParser(), _fileSystem);
-        _xmlDocumentSyntaxFormatter = new XmlDocumentSyntaxFormatter();
-        _requiredPackagesAddedValidationRuleFixer
-            = new RequiredPackagesAddedValidationRuleFixer(repositorySolutionAccessorFactory,
-                _xmlDocumentSyntaxFormatter,
-                logger);
-
-        _clonedRepository = new ClonedRepository(_currentPath, _fileSystem);
-        _repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(_clonedRepository);
+        _fixer = new RequiredPackagesAddedValidationRuleFixer(RepositorySolutionAccessorFactory, Formatter, Logger);
     }
 
     [Fact]
@@ -45,19 +22,21 @@ public class RequiredPackagesAddedValidationRuleFixerTests
                                                        <Project>
                                                          <ItemGroup>
                                                            <PackageReference Include="RequiredPackage" />
+                                                           <PackageReference Include="Package2" />
                                                          </ItemGroup>
                                                        </Project>
                                                        """;
 
-        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage", "Package2"]);
         new SolutionFileStructureBuilder("Solution")
-            .Save(_fileSystem, _currentPath, _xmlDocumentSyntaxFormatter);
+            .Save(FileSystem, CurrentPath, Formatter);
 
-        _requiredPackagesAddedValidationRuleFixer.Fix(
-            arguments,
-            _clonedRepository);
+        _fixer.Fix(arguments, Repository);
 
-        _fileSystem.File.ReadAllText(_repositorySolutionAccessor.GetDirectoryBuildPropsPath()).Should().Be(expectedDirectoryBuildPropsFile);
+        FileSystemAsserts
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+            .ShouldExists()
+            .ShouldHaveContent(expectedDirectoryBuildPropsFile);
     }
 
     [Fact]
@@ -94,17 +73,54 @@ public class RequiredPackagesAddedValidationRuleFixerTests
                                  </Project>
                                  """;
 
-        var projectPath = _fileSystem.Path.Combine(_currentPath, projectName, $"{projectName}.csproj");
+        var projectPath = FileSystem.Path.Combine(CurrentPath, projectName, $"{projectName}.csproj");
         var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, projectFileContent))
-            .Save(_fileSystem, _currentPath, _xmlDocumentSyntaxFormatter);
+            .Save(FileSystem, CurrentPath, Formatter);
 
-        _requiredPackagesAddedValidationRuleFixer.Fix(
-            arguments,
-            _clonedRepository);
+        _fixer.Fix(arguments, Repository);
 
-        _fileSystem.File.ReadAllText(_repositorySolutionAccessor.GetDirectoryBuildPropsPath()).Should().Be(expectedDirectoryBuildPropsFile);
-        _fileSystem.File.ReadAllText(projectPath).Should().Be(expectedProjectFileContent);
+        FileSystemAsserts
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+            .ShouldExists()
+            .ShouldHaveContent(expectedDirectoryBuildPropsFile);
+
+        FileSystemAsserts
+            .File(projectPath)
+            .ShouldExists()
+            .ShouldHaveContent(expectedProjectFileContent);
+    }
+
+    [Fact]
+    public void Fix_OnePackageAlreadyAdded_AddOnlyMissedPackage()
+    {
+        const string expectedDirectoryBuildPropsFile = """
+                                                       <Project>
+                                                         <ItemGroup>
+                                                           <PackageReference Include="RequiredPackage" />
+                                                           <PackageReference Include="Package2" />
+                                                         </ItemGroup>
+                                                       </Project>
+                                                       """;
+        const string sourceDirectoryBuildPropsFile = """
+                                                     <Project>
+                                                       <ItemGroup>
+                                                         <PackageReference Include="RequiredPackage" />
+                                                       </ItemGroup>
+                                                     </Project>
+                                                     """;
+
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage", "Package2"]);
+        new SolutionFileStructureBuilder("Solution")
+            .AddDirectoryBuildProps(sourceDirectoryBuildPropsFile)
+            .Save(FileSystem, CurrentPath, Formatter);
+
+        _fixer.Fix(arguments, Repository);
+
+        FileSystemAsserts
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+            .ShouldExists()
+            .ShouldHaveContent(expectedDirectoryBuildPropsFile);
     }
 }

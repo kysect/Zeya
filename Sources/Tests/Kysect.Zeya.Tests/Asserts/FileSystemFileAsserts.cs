@@ -20,6 +20,12 @@ public class FileSystemFileAsserts
         return this;
     }
 
+    public FileSystemFileAsserts ShouldNotExists()
+    {
+        _fileSystem.File.Exists(_path).Should().BeFalse();
+        return this;
+    }
+
     public FileSystemFileAsserts ShouldHaveContent(string content)
     {
         _fileSystem.File.ReadAllText(_path).Should().BeEquivalentTo(content);

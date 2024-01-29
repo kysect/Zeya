@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class ArtifactsOutputEnabledValidationRuleFixer(
-    DotnetSolutionModifierFactory dotnetSolutionModifierFactory,
     RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
     ILogger logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
@@ -20,8 +19,7 @@ public class ArtifactsOutputEnabledValidationRuleFixer(
         clonedRepository.ThrowIfNull();
 
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
-        string solutionPath = repositorySolutionAccessor.GetSolutionFilePath();
-        DotnetSolutionModifier solutionModifier = dotnetSolutionModifierFactory.Create(solutionPath);
+        DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
 
