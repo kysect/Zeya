@@ -13,9 +13,9 @@ namespace Kysect.Zeya.Tui.Commands;
 public class AnalyzeAndFixRepositoryCommand(
     IGithubIntegrationService githubIntegrationService,
     RepositoryValidator repositoryValidator,
-    IValidationRuleFixerApplier validationRuleFixerApplier,
     ILogger logger,
-    GithubRepositoryAccessorFactory githubRepositoryAccessorFactory)
+    GithubRepositoryAccessorFactory githubRepositoryAccessorFactory,
+    RepositoryDiagnosticFixer repositoryDiagnosticFixer)
     : ITuiCommand
 {
     public string Name => "Analyze and fix repository";
@@ -33,24 +33,8 @@ public class AnalyzeAndFixRepositoryCommand(
 
         // TODO: remove hardcoded value
         var rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
-        var report = repositoryValidator.Validate(githubRepository, rules);
-
+        RepositoryValidationReport report = repositoryValidator.Validate(githubRepository, rules);
         logger.LogInformation("Repositories analyzed, run fixers");
-        foreach (var grouping in report.Diagnostics.GroupBy(d => d.Code))
-        {
-            var diagnostic = grouping.First();
-            // TODO: rework this hack
-            IValidationRule validationRule = rules.First(r => r.DiagnosticCode == diagnostic.Code);
-
-            if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
-            {
-                logger.LogInformation("Apply code fixer for {Code}", diagnostic.Code);
-                validationRuleFixerApplier.Apply(validationRule, githubRepositoryAccessor);
-            }
-            else
-            {
-                logger.LogDebug("Fixer for {Code} is not available", diagnostic.Code);
-            }
-        }
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
     }
 }
