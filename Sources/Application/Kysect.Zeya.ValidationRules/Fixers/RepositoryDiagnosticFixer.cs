@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Rules;
@@ -20,7 +21,9 @@ public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRul
         {
             RepositoryValidationDiagnostic diagnostic = grouping.First();
             // TODO: rework this hack
-            IValidationRule validationRule = rules.First(r => r.DiagnosticCode == diagnostic.Code);
+            IValidationRule? validationRule = rules.FirstOrDefault(r => r.DiagnosticCode == diagnostic.Code);
+            if (validationRule is null)
+                throw new DotnetProjectSystemException($"Rule {diagnostic.Code} was not found");
 
             if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
