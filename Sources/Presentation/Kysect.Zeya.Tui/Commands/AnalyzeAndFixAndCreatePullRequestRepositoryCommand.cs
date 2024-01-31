@@ -13,9 +13,9 @@ namespace Kysect.Zeya.Tui.Commands;
 public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     IGithubIntegrationService githubIntegrationService,
     RepositoryValidator repositoryValidator,
-    IValidationRuleFixerApplier validationRuleFixerApplier,
     ILogger logger,
-    GithubRepositoryAccessorFactory githubRepositoryAccessorFactory)
+    GithubRepositoryAccessorFactory githubRepositoryAccessorFactory,
+    RepositoryDiagnosticFixer repositoryDiagnosticFixer)
     : ITuiCommand
 {
     public string Name => "Analyze, fix and create PR repository";
@@ -29,34 +29,16 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
 
         var parts = repositoryFullName.Split('/', 2);
         var githubRepository = new GithubRepository(parts[0], parts[1]);
-        var githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(githubRepository);
+        ClonedRepository githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(githubRepository);
         githubIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
-        var rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
-        var report = repositoryValidator.Validate(githubRepository, rules);
+        IReadOnlyCollection<IValidationRule> rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
+        RepositoryValidationReport report = repositoryValidator.Validate(githubRepository, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
         githubIntegrationService.CreateFixBranch(githubRepository, "zeya/fixer");
-        List<IValidationRule> fixedDiagnostics = new List<IValidationRule>();
-
-        foreach (var grouping in report.Diagnostics.GroupBy(d => d.Code))
-        {
-            RepositoryValidationDiagnostic diagnostic = grouping.First();
-            // TODO: rework this hack
-            IValidationRule validationRule = rules.First(r => r.DiagnosticCode == diagnostic.Code);
-
-            if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
-            {
-                logger.LogInformation("Apply code fixer for {Code}", diagnostic.Code);
-                validationRuleFixerApplier.Apply(validationRule, githubRepositoryAccessor);
-                fixedDiagnostics.Add(validationRule);
-            }
-            else
-            {
-                logger.LogDebug("Fixer for {Code} is not available", diagnostic.Code);
-            }
-        }
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
 
         logger.LogInformation("Commit fixes");
         githubIntegrationService.CreateCommitWithFix(githubRepository, "Apply Zeya fixes");
