@@ -9,7 +9,7 @@ using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions.TestingHelpers;
 
-namespace Kysect.Zeya.Tests.ValidationRuleFixers;
+namespace Kysect.Zeya.Tests.RepositoryValidation;
 
 public class RepositoryDiagnosticFixerTests
 {

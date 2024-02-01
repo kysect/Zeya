@@ -15,7 +15,7 @@ public class RepositoryValidator(
     IScenarioSourceCodeParser scenarioSourceCodeParser,
     IScenarioStepParser scenarioStepParser,
     IScenarioStepHandler scenarioStepHandler,
-    IClonedRepositoryFactory githubRepositoryAccessorFactory)
+    IClonedRepositoryFactory clonedRepositoryFactory)
 {
     public RepositoryValidationReport Validate(GithubRepository repository, string validationScenarioName)
     {
@@ -41,7 +41,7 @@ public class RepositoryValidator(
         repository.ThrowIfNull();
         rules.ThrowIfNull();
 
-        var clonedRepository = githubRepositoryAccessorFactory.Create(repository);
+        var clonedRepository = clonedRepositoryFactory.Create(repository);
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
         var repositoryValidationContext = new RepositoryValidationContext(repository, clonedRepository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
