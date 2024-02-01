@@ -27,7 +27,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
 
         var parts = repositoryFullName.Split('/', 2);
         var githubRepository = new GithubRepository(parts[0], parts[1]);
-        ClonedRepository githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(githubRepository);
+        IClonedRepository githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(githubRepository);
         githubIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value

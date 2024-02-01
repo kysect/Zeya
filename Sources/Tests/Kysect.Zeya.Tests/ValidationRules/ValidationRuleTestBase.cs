@@ -3,9 +3,9 @@ using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Asserts;
 using Kysect.Zeya.Tests.Tools;
-using Kysect.Zeya.ValidationRules;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions.TestingHelpers;
 

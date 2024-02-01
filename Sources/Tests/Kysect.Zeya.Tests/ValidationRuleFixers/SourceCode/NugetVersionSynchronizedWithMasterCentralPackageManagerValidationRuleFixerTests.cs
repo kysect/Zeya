@@ -1,6 +1,6 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Tests.ValidationRules;
-using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using System.IO.Abstractions.TestingHelpers;
@@ -27,7 +27,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         _fixer.Fix(arguments, Repository);
 
         FileSystemAsserts
-            .File(CurrentPath, ValidationConstants.DirectoryPackagePropsFileName)
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldNotExists();
     }
 
@@ -77,7 +77,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         _fixer.Fix(arguments, Repository);
 
         FileSystemAsserts
-            .File(CurrentPath, ValidationConstants.DirectoryPackagePropsFileName)
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expected);
     }

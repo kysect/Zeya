@@ -1,4 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -32,7 +33,7 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
     {
         var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
         new SolutionFileStructureBuilder("Solution")
-            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], string.Empty)
+            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
             .Save(FileSystem, CurrentPath, Formatter);
 
         _requiredPackagesAddedValidationRule.Execute(Context, arguments);

@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
 using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Fakes;
 using Kysect.Zeya.Tests.Tools;
-using Kysect.Zeya.ValidationRules.Fixers;
-using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions.TestingHelpers;
 

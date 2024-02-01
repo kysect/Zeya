@@ -1,4 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -34,7 +35,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
         new SolutionFileStructureBuilder("Solution")
-            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], string.Empty)
+            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
             .Save(FileSystem, CurrentPath, Formatter);
 
         _validationRule.Execute(Context, arguments);
@@ -57,7 +58,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
         new SolutionFileStructureBuilder("Solution")
-            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], directoryBuildPropsContent)
+            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
             .Save(FileSystem, CurrentPath, Formatter);
 
         _validationRule.Execute(Context, arguments);
@@ -80,7 +81,7 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
         new SolutionFileStructureBuilder("Solution")
-            .AddFile([ValidationConstants.DirectoryBuildPropsFileName], directoryBuildPropsContent)
+            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
             .Save(FileSystem, CurrentPath, Formatter);
 
         _validationRule.Execute(Context, arguments);

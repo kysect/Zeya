@@ -1,6 +1,6 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Tests.ValidationRules;
-using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -32,7 +32,7 @@ public class ArtifactsOutputEnabledValidationRuleFixerTests : ValidationRuleTest
         _fixer.Fix(new ArtifactsOutputEnabledValidationRule.Arguments(), Repository);
 
         FileSystemAsserts
-            .File(CurrentPath, ValidationConstants.DirectoryBuildPropsFileName)
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryBuildProps);
     }

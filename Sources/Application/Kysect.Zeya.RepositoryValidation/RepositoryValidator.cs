@@ -3,7 +3,6 @@ using Kysect.CommonLib.Reflection;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.GithubIntegration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ public class RepositoryValidator(
     IScenarioSourceCodeParser scenarioSourceCodeParser,
     IScenarioStepParser scenarioStepParser,
     IScenarioStepHandler scenarioStepHandler,
-    GithubRepositoryAccessorFactory githubRepositoryAccessorFactory)
+    IClonedRepositoryFactory githubRepositoryAccessorFactory)
 {
     public RepositoryValidationReport Validate(GithubRepository repository, string validationScenarioName)
     {
@@ -42,9 +41,9 @@ public class RepositoryValidator(
         repository.ThrowIfNull();
         rules.ThrowIfNull();
 
-        var githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(repository);
+        var clonedRepository = githubRepositoryAccessorFactory.Create(repository);
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
-        var repositoryValidationContext = new RepositoryValidationContext(repository, githubRepositoryAccessor, repositoryDiagnosticCollector);
+        var repositoryValidationContext = new RepositoryValidationContext(repository, clonedRepository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();
