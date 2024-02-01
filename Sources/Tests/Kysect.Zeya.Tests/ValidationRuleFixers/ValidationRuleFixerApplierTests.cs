@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Fakes;
-using Kysect.Zeya.ValidationRules.Fixers;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

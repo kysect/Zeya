@@ -4,8 +4,10 @@ using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Kysect.Zeya.ValidationRules.Fixers;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger)
 {
