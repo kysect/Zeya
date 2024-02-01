@@ -1,7 +1,6 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Demo;

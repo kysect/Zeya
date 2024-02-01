@@ -1,11 +1,15 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 
-namespace Kysect.Zeya.ValidationRules;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileContentParser solutionFileParser, IFileSystem fileSystem)
 {
@@ -54,14 +58,14 @@ public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFi
     public string GetDirectoryPackagePropsPath()
     {
         string solutionDirectoryPath = GetSolutionDirectoryPath();
-        string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, ValidationConstants.DirectoryPackagePropsFileName);
+        string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, SolutionItemNameConstants.DirectoryPackagesProps);
         return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
     }
 
     public string GetDirectoryBuildPropsPath()
     {
         string solutionDirectoryPath = GetSolutionDirectoryPath();
-        string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, ValidationConstants.DirectoryBuildPropsFileName);
+        string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, SolutionItemNameConstants.DirectoryBuildProps);
         return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
     }
 }

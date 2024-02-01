@@ -1,6 +1,7 @@
 ﻿using Kysect.Zeya.Abstractions.Models;
+using System.Collections.Generic;
 
-namespace Kysect.Zeya.ValidationRules;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryDiagnosticCollector
 {
