@@ -1,6 +1,6 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Tests.ValidationRules;
-using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
@@ -59,7 +59,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRu
         _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), Repository);
 
         FileSystemAsserts
-            .File(CurrentPath, ValidationConstants.DirectoryPackagePropsFileName)
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDotnetPackageContent);
 
@@ -116,7 +116,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRu
         _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), Repository);
 
         FileSystemAsserts
-            .File(CurrentPath, ValidationConstants.DirectoryPackagePropsFileName)
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDotnetPackageContent);
 

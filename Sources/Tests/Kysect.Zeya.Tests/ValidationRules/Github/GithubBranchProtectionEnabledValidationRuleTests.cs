@@ -1,7 +1,7 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Fakes;
-using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.Github;
 
 namespace Kysect.Zeya.Tests.ValidationRules.Github;
