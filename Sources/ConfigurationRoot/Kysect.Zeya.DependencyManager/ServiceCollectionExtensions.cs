@@ -15,6 +15,7 @@ using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui;
+using Kysect.Zeya.ValidationRules;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,16 +28,6 @@ namespace Kysect.Zeya.DependencyManager;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddZeyaRequiredService(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddZeyaConfiguration()
-            .AddZeyaLogging()
-            .AddZeyaGithubIntegration()
-            .AddZeyaRepositoryValidation()
-            .AddPowerShellWrappers();
-    }
-
     public static IServiceCollection AddZeyaConfiguration(this IServiceCollection serviceCollection)
     {
         IConfiguration config = new ConfigurationBuilder()
@@ -46,6 +37,15 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddSingleton(config)
             .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
+    }
+
+    public static IServiceCollection AddZeyaRequiredService(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddZeyaLogging()
+            .AddZeyaGithubIntegration()
+            .AddZeyaRepositoryValidation()
+            .AddPowerShellWrappers();
     }
 
     public static IServiceCollection AddZeyaLogging(this IServiceCollection serviceCollection)
@@ -84,7 +84,9 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositorySolutionAccessorFactory>();
 
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
-        serviceCollection.AddSingleton<RepositoryValidator>();
+        serviceCollection
+            .AddSingleton<RepositoryValidator>()
+            .AddSingleton<RepositoryDiagnosticFixer>();
         serviceCollection = serviceCollection
             .AddZeyaValidationRules()
             .AddZeyaValidationRuleFixers();
@@ -110,7 +112,7 @@ public static class ServiceCollectionExtensions
     {
         Assembly[] validationRuleAssembly = new[]
         {
-            typeof(RepositoryValidationContext).Assembly
+            typeof(RuleDescription).Assembly
         };
 
         // TODO: customize scenario directory path
@@ -127,7 +129,7 @@ public static class ServiceCollectionExtensions
     {
         Assembly[] validationRuleFixerAssembly = new[]
         {
-            typeof(RepositoryValidationContext).Assembly
+            typeof(RuleDescription).Assembly
         };
 
         return serviceCollection
