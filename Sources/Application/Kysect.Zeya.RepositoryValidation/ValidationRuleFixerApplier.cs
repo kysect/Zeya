@@ -1,10 +1,14 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.ValidationRules.Fixers;
 using Kysect.Zeya.ValidationRules.Rules;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
-namespace Kysect.Zeya.ValidationRules.Fixers;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class ValidationRuleFixerApplier(Dictionary<Type, ValidationRuleFixerReflectionDecorator> fixers) : IValidationRuleFixerApplier
 {

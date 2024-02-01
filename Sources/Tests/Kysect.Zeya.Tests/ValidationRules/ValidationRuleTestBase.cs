@@ -34,10 +34,9 @@ public abstract class ValidationRuleTestBase
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
         Repository = new ClonedRepository(CurrentPath, FileSystem);
 
+        RepositoryDiagnosticCollector diagnosticCollector = DiagnosticCollectorAsserts.GetCollector();
         Context = RepositoryValidationContextExtensions.CreateScenarioContext(
-            RepositoryValidationContext.Create(
-                Repository,
-                DiagnosticCollectorAsserts.GetCollector()));
+            new RepositoryValidationContext(null, Repository, diagnosticCollector));
 
         SolutionFileContentParser = new SolutionFileContentParser();
         RepositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);

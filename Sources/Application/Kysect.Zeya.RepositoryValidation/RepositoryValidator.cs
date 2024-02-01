@@ -44,7 +44,8 @@ public class RepositoryValidator(
         rules.ThrowIfNull();
 
         var githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(repository);
-        var repositoryValidationContext = RepositoryValidationContext.CreateForGitHub(repository, githubRepositoryAccessor);
+        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
+        var repositoryValidationContext = new RepositoryValidationContext(repository, githubRepositoryAccessor, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();

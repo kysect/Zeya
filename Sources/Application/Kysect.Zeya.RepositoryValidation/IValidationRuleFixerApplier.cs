@@ -1,7 +1,7 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.ValidationRules.Rules;
 
-namespace Kysect.Zeya.ValidationRules.Fixers;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public interface IValidationRuleFixerApplier
 {
