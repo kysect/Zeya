@@ -2,7 +2,7 @@
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryValidation;
-using Spectre.Console;
+using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;
 
@@ -23,17 +23,10 @@ public class AnalyzeRepositoryCommand : ITuiCommand
 
     public void Execute()
     {
-        var repositoryFullName = AnsiConsole.Ask<string>("Repository (format: org/repo):");
-        if (!repositoryFullName.Contains('/'))
-            throw new ArgumentException("Incorrect repository format");
-
-        var parts = repositoryFullName.Split('/', 2);
-        var githubRepository = new GithubRepository(parts[0], parts[1]);
-
+        GithubRepository githubRepository = RepositoryInputControl.Ask();
         _githubIntegrationService.CloneOrUpdate(githubRepository);
         // TODO: remove hardcoded value
-        var report = _repositoryValidator.Validate(githubRepository, @"Demo-validation.yaml");
-
+        RepositoryValidationReport report = _repositoryValidator.Validate(githubRepository, @"Demo-validation.yaml");
         _reporter.Report(report);
     }
 }

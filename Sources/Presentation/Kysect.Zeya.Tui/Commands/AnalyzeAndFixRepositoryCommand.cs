@@ -2,8 +2,8 @@
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.Tui.Controls;
 using Microsoft.Extensions.Logging;
-using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Commands;
 
@@ -19,19 +19,15 @@ public class AnalyzeAndFixRepositoryCommand(
 
     public void Execute()
     {
-        var repositoryFullName = AnsiConsole.Ask<string>("Repository (format: org/repo):");
-        if (!repositoryFullName.Contains('/'))
-            throw new ArgumentException("Incorrect repository format");
-
-        var parts = repositoryFullName.Split('/', 2);
-        var githubRepository = new GithubRepository(parts[0], parts[1]);
-        var githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
+        GithubRepository githubRepository = RepositoryInputControl.Ask();
         githubIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
-        var rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
+        IReadOnlyCollection<IValidationRule> rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
         RepositoryValidationReport report = repositoryValidator.Validate(githubRepository, rules);
+
         logger.LogInformation("Repositories analyzed, run fixers");
+        IClonedRepository githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
     }
 }

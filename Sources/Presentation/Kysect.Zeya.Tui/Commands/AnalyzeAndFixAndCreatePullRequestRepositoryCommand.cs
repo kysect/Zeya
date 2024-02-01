@@ -2,8 +2,8 @@
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.Tui.Controls;
 using Microsoft.Extensions.Logging;
-using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Commands;
 
@@ -20,13 +20,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     public void Execute()
     {
         // TODO: reduce copy-paste
-        var repositoryFullName = AnsiConsole.Ask<string>("Repository (format: org/repo):");
-        if (!repositoryFullName.Contains('/'))
-            throw new ArgumentException("Incorrect repository format");
-
-        var parts = repositoryFullName.Split('/', 2);
-        var githubRepository = new GithubRepository(parts[0], parts[1]);
-        IClonedRepository githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
+        GithubRepository githubRepository = RepositoryInputControl.Ask();
         githubIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
@@ -35,10 +29,12 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
 
         logger.LogInformation("Repositories analyzed, run fixers");
         githubIntegrationService.CreateFixBranch(githubRepository, "zeya/fixer");
+        IClonedRepository githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
 
         logger.LogInformation("Commit fixes");
         githubIntegrationService.CreateCommitWithFix(githubRepository, "Apply Zeya fixes");
+
         logger.LogInformation("Push changes to remote");
         githubIntegrationService.PushCommitToRemote(githubRepository, "zeya/fixer");
 
