@@ -2,7 +2,7 @@
 using Kysect.Zeya.Abstractions.Contracts;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.ValidationRules;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositorySolutionAccessorFactory(SolutionFileContentParser solutionFileParser, IFileSystem fileSystem)
 {

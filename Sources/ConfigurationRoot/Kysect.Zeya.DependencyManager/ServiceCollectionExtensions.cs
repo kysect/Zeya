@@ -15,8 +15,6 @@ using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui;
-using Kysect.Zeya.ValidationRules;
-using Kysect.Zeya.ValidationRules.Fixers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

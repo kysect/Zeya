@@ -1,8 +1,10 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +23,7 @@ public class ArtifactsOutputEnabledValidationRuleFixer(
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
-        logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
+        logger.LogTrace("Apply changes to {FileName} file", SolutionItemNameConstants.DirectoryBuildProps);
 
         DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
         logger.LogDebug("Set UseArtifactsOutput to true");

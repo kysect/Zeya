@@ -1,20 +1,10 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ValidationRules.Rules;
+using System;
 using System.Reflection;
 
-namespace Kysect.Zeya.ValidationRules.Fixers;
-
-public interface IValidationRuleFixer
-{
-}
-
-public interface IValidationRuleFixer<TRules> : IValidationRuleFixer
-    where TRules : IValidationRule
-{
-    void Fix(TRules rule, IClonedRepository clonedRepository);
-}
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class ValidationRuleFixerReflectionDecorator
 {

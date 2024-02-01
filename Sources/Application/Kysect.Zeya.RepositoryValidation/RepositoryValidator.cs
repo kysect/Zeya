@@ -1,10 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.ScenarioLib.Abstractions;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.ValidationRules;
-using Kysect.Zeya.ValidationRules.Rules;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;

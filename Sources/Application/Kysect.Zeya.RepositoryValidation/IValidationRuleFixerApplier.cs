@@ -1,5 +1,4 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.ValidationRules.Rules;
 
 namespace Kysect.Zeya.RepositoryValidation;
 

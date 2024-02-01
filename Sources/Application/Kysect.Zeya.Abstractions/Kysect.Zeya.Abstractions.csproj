@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kysect.CommonLib" />
+    <PackageReference Include="Kysect.ScenarioLib.Abstractions" />
     <PackageReference Include="TestableIO.System.IO.Abstractions" />
   </ItemGroup>
 

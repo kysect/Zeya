@@ -1,8 +1,10 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +25,7 @@ public class RequiredPackagesAddedValidationRuleFixer(
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
         DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
 
-        logger.LogTrace("Apply changes to {FileName} file", ValidationConstants.DirectoryBuildPropsFileName);
+        logger.LogTrace("Apply changes to {FileName} file", SolutionItemNameConstants.DirectoryBuildProps);
         HashSet<string> addedPackage = directoryBuildPropsFile
             .File
             .PackageReferences
@@ -36,7 +38,7 @@ public class RequiredPackagesAddedValidationRuleFixer(
             if (addedPackage.Contains(rulePackage))
                 continue;
 
-            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, ValidationConstants.DirectoryBuildPropsFileName);
+            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, SolutionItemNameConstants.DirectoryBuildProps);
             directoryBuildPropsFile.File.PackageReferences.AddPackageReference(rulePackage);
 
             logger.LogDebug("Removing package {Package} from csproj files", rulePackage);

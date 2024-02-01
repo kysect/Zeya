@@ -1,6 +1,6 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 
-namespace Kysect.Zeya.ValidationRules.Rules;
+namespace Kysect.Zeya.Abstractions.Contracts;
 
 public interface IValidationRule : IScenarioStep
 {
