@@ -15,8 +15,9 @@ internal class Program
 
     public static IServiceProvider BuildServiceProvider()
     {
-        IServiceCollection serviceCollection = new ServiceCollection();
-        serviceCollection.AddZeyaRequiredService();
+        IServiceCollection serviceCollection = new ServiceCollection()
+            .AddZeyaConfiguration()
+            .AddZeyaRequiredService();
         serviceCollection.AddSingleton<DemoScenario>();
         return serviceCollection.BuildServiceProvider();
     }

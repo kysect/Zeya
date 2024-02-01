@@ -17,6 +17,7 @@ public static class Program
     {
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection
+            .AddZeyaConfiguration()
             .AddZeyaRequiredService()
             .AddZeyaTerminalUserInterface();
 

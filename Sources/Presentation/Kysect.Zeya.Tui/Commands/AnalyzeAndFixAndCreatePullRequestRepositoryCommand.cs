@@ -1,7 +1,6 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -12,7 +11,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     IGithubIntegrationService githubIntegrationService,
     RepositoryValidator repositoryValidator,
     ILogger logger,
-    GithubRepositoryAccessorFactory githubRepositoryAccessorFactory,
+    IClonedRepositoryFactory clonedRepositoryFactory,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer)
     : ITuiCommand
 {
@@ -27,7 +26,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
 
         var parts = repositoryFullName.Split('/', 2);
         var githubRepository = new GithubRepository(parts[0], parts[1]);
-        IClonedRepository githubRepositoryAccessor = githubRepositoryAccessorFactory.Create(githubRepository);
+        IClonedRepository githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         githubIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value

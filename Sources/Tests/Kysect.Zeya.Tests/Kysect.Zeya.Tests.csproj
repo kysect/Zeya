@@ -17,6 +17,8 @@
     </PackageReference>
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Kysect.CommonLib.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Microsoft.PowerShell.SDK" />
     <PackageReference Include="coverlet.collector" />
@@ -36,6 +38,12 @@
     <ProjectReference Include="..\..\Application\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj" />
     <ProjectReference Include="..\..\ConfigurationRoot\Kysect.Zeya.DependencyManager\Kysect.Zeya.DependencyManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DependencyManager\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
