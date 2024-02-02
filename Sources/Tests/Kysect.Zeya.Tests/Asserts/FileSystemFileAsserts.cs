@@ -1,14 +1,14 @@
 ﻿using FluentAssertions;
-using System.IO.Abstractions.TestingHelpers;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests.Asserts;
 
 public class FileSystemFileAsserts
 {
-    private readonly MockFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem;
     private readonly string _path;
 
-    public FileSystemFileAsserts(MockFileSystem fileSystem, string path)
+    public FileSystemFileAsserts(IFileSystem fileSystem, string path)
     {
         _fileSystem = fileSystem;
         _path = path;
