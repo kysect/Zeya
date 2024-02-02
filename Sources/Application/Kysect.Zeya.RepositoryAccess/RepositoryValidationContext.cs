@@ -1,7 +1,7 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryAccess;
 
 public class RepositoryValidationContext
 {

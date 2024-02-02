@@ -4,12 +4,9 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryAccess;
 
 public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileContentParser solutionFileParser, IFileSystem fileSystem)
 {

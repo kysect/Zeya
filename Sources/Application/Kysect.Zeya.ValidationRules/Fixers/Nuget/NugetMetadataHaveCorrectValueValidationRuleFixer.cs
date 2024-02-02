@@ -4,7 +4,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.ValidationRules.Rules.Nuget;
 using Microsoft.Extensions.Logging;
 
