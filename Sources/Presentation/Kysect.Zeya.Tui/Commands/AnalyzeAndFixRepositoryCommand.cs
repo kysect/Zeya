@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndFixRepositoryCommand(
-    IGithubIntegrationService githubIntegrationService,
+    IGitIntegrationService gitIntegrationService,
     RepositoryValidator repositoryValidator,
     ILogger logger,
     IClonedRepositoryFactory clonedRepositoryFactory,
@@ -20,7 +20,7 @@ public class AnalyzeAndFixRepositoryCommand(
     public void Execute()
     {
         GithubRepository githubRepository = RepositoryInputControl.Ask();
-        githubIntegrationService.CloneOrUpdate(githubRepository);
+        gitIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
         IReadOnlyCollection<IValidationRule> rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");

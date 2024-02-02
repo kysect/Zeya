@@ -1,26 +1,23 @@
 ﻿using FluentAssertions;
-using Kysect.PowerShellRunner.Abstractions.Accessors;
-using Kysect.PowerShellRunner.Accessors;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Octokit;
 using System.IO.Abstractions;
 using Repository = LibGit2Sharp.Repository;
 
 namespace Kysect.Zeya.Tests.GithubIntegration;
 
-public class GithubIntegrationServiceTests : IDisposable
+public class GitIntegrationServiceTests : IDisposable
 {
     private readonly TestTemporaryDirectory _temporaryDirectory;
-    private readonly GithubIntegrationService _githubIntegrationService;
+    private readonly GitIntegrationService _githubIntegrationService;
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
     private readonly GithubRepository _githubRepository;
 
-    public GithubIntegrationServiceTests()
+    public GitIntegrationServiceTests()
     {
         ILogger logger = TestLoggerProvider.GetLogger();
         _fileSystem = new FileSystem();
@@ -29,14 +26,8 @@ public class GithubIntegrationServiceTests : IDisposable
 
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem, testDirectory);
         var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions());
-        var gitHubClient = new GitHubClient(new ProductHeaderValue("Zeya-test"));
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
-        var powerShellAccessorFactory = new PowerShellAccessorFactory();
-        IPowerShellAccessor powerShellAccessor = new PowerShellAccessorDecoratorBuilder(powerShellAccessorFactory)
-            .WithLogging(logger)
-            .Build();
-
-        _githubIntegrationService = new GithubIntegrationService(githubIntegrationOptions, gitHubClient, localStoragePathFactory, powerShellAccessor, logger);
+        _githubIntegrationService = new GitIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepository = new GithubRepository("Kysect", "Zeya");
     }
 
