@@ -7,23 +7,23 @@ namespace Kysect.Zeya.Demo;
 
 public class DemoScenario
 {
-    private readonly IGithubIntegrationService _githubIntegrationService;
+    private readonly IGitIntegrationService _gitIntegrationService;
     private readonly IRepositoryValidationReporter _reporter;
     private readonly IGithubRepositoryProvider _githubRepositoryProvider;
     private readonly RepositoryValidator _repositoryValidator;
     private readonly ILogger _logger;
 
     public DemoScenario(
-        IGithubIntegrationService githubIntegrationService,
         IRepositoryValidationReporter reporter,
         IGithubRepositoryProvider githubRepositoryProvider,
         ILogger logger,
-        RepositoryValidator repositoryValidator)
+        RepositoryValidator repositoryValidator,
+        IGitIntegrationService gitIntegrationService)
     {
-        _githubIntegrationService = githubIntegrationService;
         _reporter = reporter;
         _logger = logger;
         _repositoryValidator = repositoryValidator;
+        _gitIntegrationService = gitIntegrationService;
         _githubRepositoryProvider = githubRepositoryProvider;
     }
 
@@ -35,7 +35,7 @@ public class DemoScenario
 
         _logger.LogInformation("Get {Count} repositories for cloning", repositories.Count);
         foreach (var repository in repositories)
-            _githubIntegrationService.CloneOrUpdate(repository);
+            _gitIntegrationService.CloneOrUpdate(repository);
 
         IReadOnlyCollection<IValidationRule> validationRules = _repositoryValidator.GetValidationRules("Demo-validation.yaml");
 
