@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
-    <ProjectReference Include="..\Kysect.Zeya.RepositoryAccess\Kysect.Zeya.RepositoryAccess.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryAccess;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;
