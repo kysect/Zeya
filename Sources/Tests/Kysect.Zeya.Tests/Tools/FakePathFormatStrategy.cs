@@ -7,7 +7,6 @@ public class FakePathFormatStrategy(string branch) : ILocalStoragePathFactory
 {
     private readonly string _branch = branch;
 
-
     public string GetPathToRepository(GithubRepository repository)
     {
         return _branch;

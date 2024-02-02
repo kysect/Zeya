@@ -1,12 +1,12 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests.Asserts;
 
 public class FileSystemAsserts
 {
-    private readonly MockFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem;
 
-    public FileSystemAsserts(MockFileSystem fileSystem)
+    public FileSystemAsserts(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
     }
