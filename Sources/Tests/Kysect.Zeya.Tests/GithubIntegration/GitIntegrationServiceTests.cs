@@ -25,7 +25,11 @@ public class GitIntegrationServiceTests : IDisposable
         _repositoriesDirectory = _fileSystem.Path.Combine(".", testDirectory, "Repositories");
 
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem, testDirectory);
-        var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions());
+        var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()
+        {
+            GithubUsername = "Name",
+            GithubMail = "Name@null.com",
+        });
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
         _githubIntegrationService = new GitIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepository = new GithubRepository("Kysect", "Zeya");

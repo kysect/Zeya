@@ -59,8 +59,7 @@ public class GitIntegrationService : IGitIntegrationService
         string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
         using var repo = new Repository(targetPath);
         Commands.Stage(repo, "*");
-        Configuration config = repo.Config;
-        Signature author = config.BuildSignature(DateTimeOffset.Now);
+        var author = new Signature(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubMail, DateTimeOffset.Now);
         repo.Commit(commitMessage, author, author);
     }
 
