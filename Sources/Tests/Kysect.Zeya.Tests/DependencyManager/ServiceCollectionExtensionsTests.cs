@@ -32,7 +32,7 @@ public class ServiceCollectionExtensionsTests
         var tuiMenuNavigator = serviceProvider.GetRequiredService<TuiMenuNavigator>();
     }
 
-    public static IServiceCollection AddTestZeyaConfiguration(IServiceCollection serviceCollection)
+    private static IServiceCollection AddTestZeyaConfiguration(IServiceCollection serviceCollection)
     {
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile(FileSystem.Path.Combine("DependencyManager", "appsettings.json"))
