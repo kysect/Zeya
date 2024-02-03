@@ -4,10 +4,10 @@ namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationOptions
 {
+    public GithubCommitAuthor? CommitAuthor { get; init; }
+
     [Required]
     public string GithubUsername { get; init; } = null!;
-    [Required]
-    public string GithubMail { get; init; } = null!;
     [Required]
     public string GithubToken { get; init; } = null!;
     [Required]
