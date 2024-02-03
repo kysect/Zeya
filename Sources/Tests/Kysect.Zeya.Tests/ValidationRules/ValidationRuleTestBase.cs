@@ -1,7 +1,8 @@
 ﻿using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.Tests.Asserts;
 using Kysect.Zeya.Tests.Tools;
@@ -13,7 +14,8 @@ namespace Kysect.Zeya.Tests.ValidationRules;
 public abstract class ValidationRuleTestBase
 {
     protected ILogger Logger { get; }
-    protected IClonedRepository Repository { get; }
+    protected ClonedGithubRepositoryAccessor Repository { get; }
+    protected GithubRepositoryAccessorFactory GithubRepositoryAccessorFactory { get; }
     protected MockFileSystem FileSystem { get; }
     protected ScenarioContext Context { get; }
     protected XmlDocumentSyntaxFormatter Formatter { get; }
@@ -31,11 +33,11 @@ public abstract class ValidationRuleTestBase
         CurrentPath = FileSystem.Path.GetFullPath(".");
 
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
-        Repository = new ClonedRepositoryAccessor(CurrentPath, FileSystem);
+        GithubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(CurrentPath), FileSystem);
+        Repository = GithubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));
 
         RepositoryDiagnosticCollector diagnosticCollector = DiagnosticCollectorAsserts.GetCollector();
-        Context = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(Repository, diagnosticCollector));
+        Context = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(Repository, diagnosticCollector));
 
         SolutionFileContentParser = new SolutionFileContentParser();
         RepositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);

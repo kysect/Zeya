@@ -9,24 +9,22 @@ namespace Kysect.Zeya.Tests.ValidationRules.Github;
 public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTestBase
 {
     private readonly GithubBranchProtectionEnabledValidationRule _validationRule;
-    private readonly ScenarioContext _githubContext;
     private readonly FakeGithubIntegrationService _fakeGithubIntegrationService;
 
     public GithubBranchProtectionEnabledValidationRuleTests()
     {
         _fakeGithubIntegrationService = new FakeGithubIntegrationService();
         _validationRule = new GithubBranchProtectionEnabledValidationRule(_fakeGithubIntegrationService);
-        _githubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new ClonedGithubRepositoryAccessor(new GithubRepository("owner", "name"), CurrentPath, FileSystem),
-                DiagnosticCollectorAsserts.GetCollector()));
     }
 
     [Fact]
     public void Execute_NoGithubRepositoryMetadata_ReturnDiagnosticAboutMissedMetadata()
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
+        ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
+            new RepositoryValidationContext(new ClonedRepositoryAccessor(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(nonGithubContext, arguments);
 
         DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
@@ -38,7 +36,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
 
-        _validationRule.Execute(_githubContext, arguments);
+        _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0);
@@ -54,7 +52,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(required, false);
         _fakeGithubIntegrationService.RepositoryBranchProtection = new RepositoryBranchProtection(enabled, false);
 
-        _validationRule.Execute(_githubContext, arguments);
+        _validationRule.Execute(Context, arguments);
 
         if (reportDiagnostic)
             DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
@@ -72,7 +70,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, required);
         _fakeGithubIntegrationService.RepositoryBranchProtection = new RepositoryBranchProtection(false, enabled);
 
-        _validationRule.Execute(_githubContext, arguments);
+        _validationRule.Execute(Context, arguments);
 
         if (reportDiagnostic)
             DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
