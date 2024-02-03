@@ -1,4 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.Collections.Extensions;
+using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +12,9 @@ public class PullRequestMessageCreator
     public string Create(IReadOnlyCollection<IValidationRule> fixedDiagnostics)
     {
         fixedDiagnostics.ThrowIfNull();
+
+        if (fixedDiagnostics.IsEmpty())
+            throw new ZeyaException("Cannot create message for pull request. No fixed rules.");
 
         var sb = new StringBuilder();
 
