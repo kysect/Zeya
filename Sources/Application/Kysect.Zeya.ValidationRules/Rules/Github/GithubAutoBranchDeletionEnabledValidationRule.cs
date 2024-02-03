@@ -22,8 +22,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
         request.ThrowIfNull();
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
-        GithubRepository? githubRepository = repositoryValidationContext.TryGetGithubMetadata();
-        if (githubRepository is null)
+        if (repositoryValidationContext.Repository is not ClonedGithubRepositoryAccessor clonedGithubRepository)
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
                 request.DiagnosticCode,
@@ -32,7 +31,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
             return;
         }
 
-        if (!githubIntegrationService.DeleteBranchOnMerge(githubRepository))
+        if (!githubIntegrationService.DeleteBranchOnMerge(clonedGithubRepository.GithubMetadata))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,

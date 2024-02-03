@@ -25,8 +25,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
 
         string branch = ValidationConstants.DefaultBranch;
-        GithubRepository? githubRepository = repositoryValidationContext.TryGetGithubMetadata();
-        if (githubRepository is null)
+        if (repositoryValidationContext.Repository is not ClonedGithubRepositoryAccessor clonedGithubRepository)
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
                 request.DiagnosticCode,
@@ -35,7 +34,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
             return;
         }
 
-        RepositoryBranchProtection repositoryBranchProtection = githubIntegrationService.GetRepositoryBranchProtection(githubRepository, branch);
+        RepositoryBranchProtection repositoryBranchProtection = githubIntegrationService.GetRepositoryBranchProtection(clonedGithubRepository.GithubMetadata, branch);
 
         if (request.PullRequestReviewRequired && !repositoryBranchProtection.PullRequestReviewsRequired)
         {
