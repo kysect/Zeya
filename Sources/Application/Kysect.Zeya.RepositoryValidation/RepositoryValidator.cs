@@ -15,15 +15,14 @@ public class RepositoryValidator(
     IScenarioSourceProvider scenarioProvider,
     IScenarioSourceCodeParser scenarioSourceCodeParser,
     IScenarioStepParser scenarioStepParser,
-    IScenarioStepHandler scenarioStepHandler,
-    IClonedRepositoryFactory clonedRepositoryFactory)
+    IScenarioStepHandler scenarioStepHandler)
 {
-    public RepositoryValidationReport Validate(GithubRepository repository, string validationScenarioName)
+    public RepositoryValidationReport Validate(ClonedGithubRepositoryAccessor repository, string validationScenarioName)
     {
         repository.ThrowIfNull();
         validationScenarioName.ThrowIfNull();
 
-        logger.LogInformation("Validate repository {Url}", repository.FullName);
+        logger.LogInformation("Validate repository {Url}", repository.GithubMetadata.FullName);
         IReadOnlyCollection<IValidationRule> steps = GetValidationRules(validationScenarioName);
         return Validate(repository, steps);
     }
@@ -37,14 +36,13 @@ public class RepositoryValidator(
         return steps;
     }
 
-    public RepositoryValidationReport Validate(GithubRepository repository, IReadOnlyCollection<IValidationRule> rules)
+    public RepositoryValidationReport Validate(ClonedGithubRepositoryAccessor repository, IReadOnlyCollection<IValidationRule> rules)
     {
         repository.ThrowIfNull();
         rules.ThrowIfNull();
 
-        IClonedRepository clonedRepository = clonedRepositoryFactory.Create(repository);
-        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
-        var repositoryValidationContext = new RepositoryValidationContext(clonedRepository, repositoryDiagnosticCollector);
+        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.GithubMetadata.FullName);
+        var repositoryValidationContext = new RepositoryValidationContext(repository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();

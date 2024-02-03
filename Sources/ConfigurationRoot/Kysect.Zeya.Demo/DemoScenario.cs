@@ -1,5 +1,6 @@
 ﻿using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
@@ -11,6 +12,7 @@ public class DemoScenario
     private readonly IRepositoryValidationReporter _reporter;
     private readonly IGithubRepositoryProvider _githubRepositoryProvider;
     private readonly RepositoryValidator _repositoryValidator;
+    private readonly IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> _clonedRepositoryFactory;
     private readonly ILogger _logger;
 
     public DemoScenario(
@@ -18,12 +20,14 @@ public class DemoScenario
         IGithubRepositoryProvider githubRepositoryProvider,
         ILogger logger,
         RepositoryValidator repositoryValidator,
-        IGitIntegrationService gitIntegrationService)
+        IGitIntegrationService gitIntegrationService,
+        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory)
     {
         _reporter = reporter;
         _logger = logger;
         _repositoryValidator = repositoryValidator;
         _gitIntegrationService = gitIntegrationService;
+        _clonedRepositoryFactory = clonedRepositoryFactory;
         _githubRepositoryProvider = githubRepositoryProvider;
     }
 
@@ -34,15 +38,18 @@ public class DemoScenario
         IReadOnlyCollection<GithubRepository> repositories = _githubRepositoryProvider.GetAll();
 
         _logger.LogInformation("Get {Count} repositories for cloning", repositories.Count);
-        foreach (var repository in repositories)
+        foreach (GithubRepository repository in repositories)
             _gitIntegrationService.CloneOrUpdate(repository);
 
         IReadOnlyCollection<IValidationRule> validationRules = _repositoryValidator.GetValidationRules("Demo-validation.yaml");
 
         var report = RepositoryValidationReport.Empty;
         _logger.LogInformation("Start repositories validation");
-        foreach (var githubRepository in repositories)
-            report = report.Compose(_repositoryValidator.Validate(githubRepository, validationRules));
+        foreach (GithubRepository githubRepository in repositories)
+        {
+            ClonedGithubRepositoryAccessor clonedGithubRepositoryAccessor = _clonedRepositoryFactory.Create(githubRepository);
+            report = report.Compose(_repositoryValidator.Validate(clonedGithubRepositoryAccessor, validationRules));
+        }
 
         _reporter.Report(report);
     }
