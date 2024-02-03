@@ -16,7 +16,7 @@ public class LoggerRepositoryValidationReporter(ILogger logger) : IRepositoryVal
         if (repositoryValidationReport.RuntimeErrors.Any())
         {
             logger.LogError("Some analyzers finished with errors");
-            foreach (RepositoryValidationDiagnostic diagnostic in repositoryValidationReport.Diagnostics)
+            foreach (RepositoryValidationDiagnostic diagnostic in repositoryValidationReport.RuntimeErrors)
                 logger.LogTabError(1, $"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
         }
 
