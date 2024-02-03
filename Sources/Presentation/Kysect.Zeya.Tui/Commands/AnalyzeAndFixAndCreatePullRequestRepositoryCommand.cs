@@ -14,7 +14,8 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     RepositoryValidator repositoryValidator,
     ILogger logger,
     IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
-    RepositoryDiagnosticFixer repositoryDiagnosticFixer)
+    RepositoryDiagnosticFixer repositoryDiagnosticFixer,
+    RepositoryValidationRuleProvider validationRuleProvider)
     : ITuiCommand
 {
     public string Name => "Analyze, fix and create PR repository";
@@ -27,7 +28,8 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
         gitIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
-        IReadOnlyCollection<IValidationRule> rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
+        logger.LogTrace("Loading validation configuration");
+        IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(@"Demo-validation.yaml");
         RepositoryValidationReport report = repositoryValidator.Validate(githubRepositoryAccessor, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
