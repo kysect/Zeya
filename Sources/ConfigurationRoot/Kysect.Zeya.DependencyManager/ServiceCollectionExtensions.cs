@@ -87,6 +87,7 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
         serviceCollection
+            .AddSingleton<RepositoryValidationRuleProvider>()
             .AddSingleton<RepositoryValidator>()
             .AddSingleton<RepositoryDiagnosticFixer>();
         serviceCollection = serviceCollection

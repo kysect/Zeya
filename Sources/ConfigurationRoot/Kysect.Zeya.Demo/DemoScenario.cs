@@ -13,6 +13,7 @@ public class DemoScenario
     private readonly IGithubRepositoryProvider _githubRepositoryProvider;
     private readonly RepositoryValidator _repositoryValidator;
     private readonly IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> _clonedRepositoryFactory;
+    private readonly RepositoryValidationRuleProvider _validationRuleProvider;
     private readonly ILogger _logger;
 
     public DemoScenario(
@@ -21,13 +22,15 @@ public class DemoScenario
         ILogger logger,
         RepositoryValidator repositoryValidator,
         IGitIntegrationService gitIntegrationService,
-        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory)
+        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
+        RepositoryValidationRuleProvider validationRuleProvider)
     {
         _reporter = reporter;
         _logger = logger;
         _repositoryValidator = repositoryValidator;
         _gitIntegrationService = gitIntegrationService;
         _clonedRepositoryFactory = clonedRepositoryFactory;
+        _validationRuleProvider = validationRuleProvider;
         _githubRepositoryProvider = githubRepositoryProvider;
     }
 
@@ -41,7 +44,8 @@ public class DemoScenario
         foreach (GithubRepository repository in repositories)
             _gitIntegrationService.CloneOrUpdate(repository);
 
-        IReadOnlyCollection<IValidationRule> validationRules = _repositoryValidator.GetValidationRules("Demo-validation.yaml");
+        _logger.LogTrace("Loading validation configuration");
+        IReadOnlyCollection<IValidationRule> validationRules = _validationRuleProvider.GetValidationRules("Demo-validation.yaml");
 
         var report = RepositoryValidationReport.Empty;
         _logger.LogInformation("Start repositories validation");
