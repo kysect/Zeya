@@ -17,9 +17,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
         _fakeGithubIntegrationService = new FakeGithubIntegrationService();
         _validationRule = new GithubBranchProtectionEnabledValidationRule(_fakeGithubIntegrationService);
         _githubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(
-                new GithubRepository("owner", "name"),
-                Repository,
+            new RepositoryValidationContext(new ClonedGithubRepositoryAccessor(new GithubRepository("owner", "name"), CurrentPath, FileSystem),
                 DiagnosticCollectorAsserts.GetCollector()));
     }
 

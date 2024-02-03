@@ -2,7 +2,6 @@
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.Tests.Asserts;
 using Kysect.Zeya.Tests.Tools;
@@ -32,11 +31,11 @@ public abstract class ValidationRuleTestBase
         CurrentPath = FileSystem.Path.GetFullPath(".");
 
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
-        Repository = new ClonedRepository(CurrentPath, FileSystem);
+        Repository = new ClonedRepositoryAccessor(CurrentPath, FileSystem);
 
         RepositoryDiagnosticCollector diagnosticCollector = DiagnosticCollectorAsserts.GetCollector();
         Context = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(null, Repository, diagnosticCollector));
+            new RepositoryValidationContext(Repository, diagnosticCollector));
 
         SolutionFileContentParser = new SolutionFileContentParser();
         RepositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);

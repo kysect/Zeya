@@ -42,9 +42,9 @@ public class RepositoryValidator(
         repository.ThrowIfNull();
         rules.ThrowIfNull();
 
-        var clonedRepository = clonedRepositoryFactory.Create(repository);
+        IClonedRepository clonedRepository = clonedRepositoryFactory.Create(repository);
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.FullName);
-        var repositoryValidationContext = new RepositoryValidationContext(repository, clonedRepository, repositoryDiagnosticCollector);
+        var repositoryValidationContext = new RepositoryValidationContext(clonedRepository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();

@@ -2,6 +2,7 @@
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.RepositoryAccess;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration;
@@ -13,6 +14,6 @@ public class GithubRepositoryAccessorFactory(ILocalStoragePathFactory pathFormat
         repository.ThrowIfNull();
 
         string repositoryRootPath = pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
-        return new ClonedRepository(repositoryRootPath, fileSystem);
+        return new ClonedGithubRepositoryAccessor(repository, repositoryRootPath, fileSystem);
     }
 }
