@@ -3,7 +3,6 @@ using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.ScenarioLib;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.ValidationRules;
@@ -14,7 +13,6 @@ namespace Kysect.Zeya.Tests.RepositoryValidation;
 public class RepositoryValidatorTests : ValidationRuleTestBase
 {
     private readonly RepositoryValidator _repositoryValidator;
-    private readonly ClonedGithubRepositoryAccessor _clonedGithubRepositoryAccessor;
 
     public RepositoryValidatorTests()
     {
@@ -24,7 +22,6 @@ public class RepositoryValidatorTests : ValidationRuleTestBase
             {typeof(CentralPackageManagerEnabledValidationRule.Arguments), new ScenarioStepExecutorReflectionDecorator(new CentralPackageManagerEnabledValidationRule(RepositorySolutionAccessorFactory))}
         });
         _repositoryValidator = new RepositoryValidator(TestLoggerProvider.GetLogger(), scenarioStepReflectionHandler);
-        _clonedGithubRepositoryAccessor = new ClonedGithubRepositoryAccessor(new GithubRepository("owner", "name"), CurrentPath, FileSystem);
     }
 
     [Fact]
@@ -39,7 +36,7 @@ public class RepositoryValidatorTests : ValidationRuleTestBase
         new SolutionFileStructureBuilder("Solution")
             .Save(FileSystem, CurrentPath, Formatter);
 
-        RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(_clonedGithubRepositoryAccessor, rules);
+        RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(Repository, rules);
 
         repositoryValidationReport
             .Diagnostics

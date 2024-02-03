@@ -1,5 +1,4 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.Tests.Fakes;
 using Kysect.Zeya.ValidationRules.Rules.Github;
@@ -9,24 +8,22 @@ namespace Kysect.Zeya.Tests.ValidationRules.Github;
 public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRuleTestBase
 {
     private readonly GithubAutoBranchDeletionEnabledValidationRule _validationRule;
-    private readonly ScenarioContext _githubContext;
     private readonly FakeGithubIntegrationService _fakeGithubIntegrationService;
 
     public GithubAutoBranchDeletionEnabledValidationRuleTests()
     {
         _fakeGithubIntegrationService = new FakeGithubIntegrationService();
         _validationRule = new GithubAutoBranchDeletionEnabledValidationRule(_fakeGithubIntegrationService);
-        _githubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new ClonedGithubRepositoryAccessor(new GithubRepository("owner", "name"), CurrentPath, FileSystem),
-                DiagnosticCollectorAsserts.GetCollector()));
     }
 
     [Fact]
     public void Execute_NoGithubRepositoryMetadata_ReturnDiagnosticAboutMissedMetadata()
     {
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
+        ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
+            new RepositoryValidationContext(new ClonedRepositoryAccessor(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(nonGithubContext, arguments);
 
         DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
@@ -39,7 +36,7 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
         _fakeGithubIntegrationService.BranchProtectionEnabled = false;
 
-        _validationRule.Execute(_githubContext, arguments);
+        _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -52,7 +49,7 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
         _fakeGithubIntegrationService.BranchProtectionEnabled = true;
 
-        _validationRule.Execute(_githubContext, arguments);
+        _validationRule.Execute(Context, arguments);
 
         DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);

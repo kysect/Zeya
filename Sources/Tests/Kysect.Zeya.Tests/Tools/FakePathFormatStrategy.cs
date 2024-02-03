@@ -3,17 +3,17 @@ using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 
 namespace Kysect.Zeya.Tests.Tools;
 
-public class FakePathFormatStrategy(string branch) : ILocalStoragePathFactory
+public class FakePathFormatStrategy(string path) : ILocalStoragePathFactory
 {
-    private readonly string _branch = branch;
+    private readonly string _path = path;
 
     public string GetPathToRepository(GithubRepository repository)
     {
-        return _branch;
+        return _path;
     }
 
     public string GetPathToRepositoryWithBranch(GithubRepositoryBranch repositoryBranch)
     {
-        return _branch;
+        return _path;
     }
 }
