@@ -23,9 +23,6 @@
   Parameters:
     AllowedVersions: [net8.0, netstandard2.0]
 - Name: SourceCode.CentralPackageManagerEnabled
-- Name: SourceCode.NugetVersionMustBeSpecifiedInMasterCentralPackageManager
-  Parameters:
-    MasterFile: Samples\MasterDirectory.Packages.props
 - Name: SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager
   Parameters:
     MasterFile: Samples\MasterDirectory.Packages.props
@@ -33,9 +30,6 @@
   Parameters:
     Packages: ["Kysect.Editorconfig"]
 - Name: SourceCode.ArtifactsOutputEnabled
-- Name: DirectoryBuildPropsContainsRequiredFields
-  Parameters:
-    RequiredFields: ["Nullable", "LangVersion", "ImplicitUsings"]
 
 - Name: Nuget.MetadataSpecified
   Parameters:

@@ -41,6 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\ValidationScenario.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="DependencyManager\appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
