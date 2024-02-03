@@ -41,8 +41,6 @@ public class GitIntegrationService : IGitIntegrationService
     {
         repository.ThrowIfNull();
 
-        var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
-
         repository.ThrowIfNull();
 
         string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
@@ -59,7 +57,11 @@ public class GitIntegrationService : IGitIntegrationService
         string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
         using var repo = new Repository(targetPath);
         Commands.Stage(repo, "*");
-        var author = new Signature(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubMail, DateTimeOffset.Now);
+
+        Signature author = _githubIntegrationOptions.CommitAuthor is not null
+            ? new Signature(_githubIntegrationOptions.CommitAuthor.GithubUsername, _githubIntegrationOptions.CommitAuthor.GithubMail, DateTimeOffset.Now)
+            : repo.Config.BuildSignature(DateTimeOffset.UtcNow);
+
         repo.Commit(commitMessage, author, author);
     }
 
