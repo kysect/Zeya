@@ -1,12 +1,13 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.TerminalUserInterface.Commands;
+using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.Demo;
+namespace Kysect.Zeya.Tui.Commands;
 
-public class DemoScenario
+public class AnalyzerGithubOrganization : ITuiCommand
 {
     private readonly IGitIntegrationService _gitIntegrationService;
     private readonly IRepositoryValidationReporter _reporter;
@@ -16,25 +17,20 @@ public class DemoScenario
     private readonly RepositoryValidationRuleProvider _validationRuleProvider;
     private readonly ILogger _logger;
 
-    public DemoScenario(
-        IRepositoryValidationReporter reporter,
-        IGithubRepositoryProvider githubRepositoryProvider,
-        ILogger logger,
-        RepositoryValidator repositoryValidator,
-        IGitIntegrationService gitIntegrationService,
-        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
-        RepositoryValidationRuleProvider validationRuleProvider)
+    public AnalyzerGithubOrganization(IGitIntegrationService gitIntegrationService, IRepositoryValidationReporter reporter, IGithubRepositoryProvider githubRepositoryProvider, RepositoryValidator repositoryValidator, IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory, RepositoryValidationRuleProvider validationRuleProvider, ILogger logger)
     {
-        _reporter = reporter;
-        _logger = logger;
-        _repositoryValidator = repositoryValidator;
         _gitIntegrationService = gitIntegrationService;
+        _reporter = reporter;
+        _githubRepositoryProvider = githubRepositoryProvider;
+        _repositoryValidator = repositoryValidator;
         _clonedRepositoryFactory = clonedRepositoryFactory;
         _validationRuleProvider = validationRuleProvider;
-        _githubRepositoryProvider = githubRepositoryProvider;
+        _logger = logger;
     }
 
-    public void Process()
+    public string Name => "Analyze Kysect Github organization";
+
+    public void Execute()
     {
         _logger.LogInformation("Start Zeya demo");
         _logger.LogInformation("Loading github repositories for validation");

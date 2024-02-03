@@ -23,15 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tui", "Presenta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya", "ConfigurationRoot\Kysect.Zeya\Kysect.Zeya.csproj", "{4C2B0697-AA32-4D04-A7E0-3A224D801083}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Demo", "ConfigurationRoot\Kysect.Zeya.Demo\Kysect.Zeya.Demo.csproj", "{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tests", "Tests\Kysect.Zeya.Tests\Kysect.Zeya.Tests.csproj", "{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.RepositoryValidation", "Application\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj", "{63CB1115-26A1-4EE7-8D3F-64E4ABA53AD4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DependencyManager", "ConfigurationRoot\Kysect.Zeya.DependencyManager\Kysect.Zeya.DependencyManager.csproj", "{9284441D-F4F3-4D27-849B-98826720A49E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.RepositoryAccess", "Application\Kysect.Zeya.RepositoryAccess\Kysect.Zeya.RepositoryAccess.csproj", "{F9E4AE27-D14E-405A-9C08-D398DA278711}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.RepositoryAccess", "Application\Kysect.Zeya.RepositoryAccess\Kysect.Zeya.RepositoryAccess.csproj", "{F9E4AE27-D14E-405A-9C08-D398DA278711}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +61,6 @@ Global
 		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C2B0697-AA32-4D04-A7E0-3A224D801083}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -94,7 +88,6 @@ Global
 		{57CCA970-FF17-4D04-B3E8-C3AD88305A80} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{863F0493-7798-4BB8-9600-9E32D564C157} = {45FA974A-DDBE-44F5-AF75-BBB49BB437B5}
 		{4C2B0697-AA32-4D04-A7E0-3A224D801083} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
-		{E1EF47E4-5C9A-41FD-A64F-1B8C33690D12} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
 		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8} = {06303EDB-8271-4E29-B7BF-8D362045C400}
 		{63CB1115-26A1-4EE7-8D3F-64E4ABA53AD4} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{9284441D-F4F3-4D27-849B-98826720A49E} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
