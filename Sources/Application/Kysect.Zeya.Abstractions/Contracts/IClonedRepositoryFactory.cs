@@ -2,7 +2,7 @@
 
 namespace Kysect.Zeya.Abstractions.Contracts;
 
-public interface IClonedRepositoryFactory
+public interface IClonedRepositoryFactory<T> where T : IClonedRepository
 {
-    IClonedRepository Create(GithubRepository repository);
+    T Create(GithubRepository repository);
 }

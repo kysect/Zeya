@@ -1,6 +1,7 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui.Controls;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     IGithubIntegrationService githubIntegrationService,
     RepositoryValidator repositoryValidator,
     ILogger logger,
-    IClonedRepositoryFactory clonedRepositoryFactory,
+    IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer)
     : ITuiCommand
 {
@@ -22,15 +23,15 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     {
         // TODO: reduce copy-paste
         GithubRepository githubRepository = RepositoryInputControl.Ask();
+        ClonedGithubRepositoryAccessor githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         gitIntegrationService.CloneOrUpdate(githubRepository);
 
         // TODO: remove hardcoded value
         IReadOnlyCollection<IValidationRule> rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
-        RepositoryValidationReport report = repositoryValidator.Validate(githubRepository, rules);
+        RepositoryValidationReport report = repositoryValidator.Validate(githubRepositoryAccessor, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
         gitIntegrationService.CreateFixBranch(githubRepository, "zeya/fixer");
-        IClonedRepository githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
 
         logger.LogInformation("Commit fixes");

@@ -71,7 +71,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddSingleton<IFileSystem, FileSystem>()
             .AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>()
-            .AddSingleton<IClonedRepositoryFactory, GithubRepositoryAccessorFactory>()
+            .AddSingleton<IClonedRepositoryFactory<ClonedGithubRepositoryAccessor>, GithubRepositoryAccessorFactory>()
             .AddSingleton<IGitIntegrationService, GitIntegrationService>()
             .AddSingleton<IGithubIntegrationService, GithubIntegrationService>();
     }

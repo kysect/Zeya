@@ -1,6 +1,7 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui.Controls;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ public class AnalyzeAndFixRepositoryCommand(
     IGitIntegrationService gitIntegrationService,
     RepositoryValidator repositoryValidator,
     ILogger logger,
-    IClonedRepositoryFactory clonedRepositoryFactory,
+    IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer)
     : ITuiCommand
 {
@@ -24,10 +25,10 @@ public class AnalyzeAndFixRepositoryCommand(
 
         // TODO: remove hardcoded value
         IReadOnlyCollection<IValidationRule> rules = repositoryValidator.GetValidationRules(@"Demo-validation.yaml");
-        RepositoryValidationReport report = repositoryValidator.Validate(githubRepository, rules);
+        ClonedGithubRepositoryAccessor githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
+        RepositoryValidationReport report = repositoryValidator.Validate(githubRepositoryAccessor, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
-        IClonedRepository githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
     }
 }
