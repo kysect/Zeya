@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kysect.Zeya.RepositoryAccess\Kysect.Zeya.RepositoryAccess.csproj" />
+    <PackageReference Include="Kysect.CommonLib" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kysect.Zeya.GitIntegration.Abstraction\Kysect.Zeya.GitIntegration.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>
