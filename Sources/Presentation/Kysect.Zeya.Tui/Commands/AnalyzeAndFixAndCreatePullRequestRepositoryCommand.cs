@@ -35,14 +35,14 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
         RepositoryValidationReport report = repositoryValidator.Validate(githubRepositoryAccessor, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
-        gitIntegrationService.CreateFixBranch(githubRepository, "zeya/fixer");
+        gitIntegrationService.CreateFixBranch(githubRepositoryAccessor, "zeya/fixer");
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Fix(report, rules, githubRepositoryAccessor);
 
         logger.LogInformation("Commit fixes");
-        gitIntegrationService.CreateCommitWithFix(githubRepository, "Apply Zeya fixes");
+        gitIntegrationService.CreateCommitWithFix(githubRepositoryAccessor, "Apply Zeya fixes");
 
         logger.LogInformation("Push changes to remote");
-        gitIntegrationService.PushCommitToRemote(githubRepository, "zeya/fixer");
+        gitIntegrationService.PushCommitToRemote(githubRepositoryAccessor, "zeya/fixer");
 
         logger.LogInformation("Create PR");
         var pullRequestMessageCreator = new PullRequestMessageCreator();

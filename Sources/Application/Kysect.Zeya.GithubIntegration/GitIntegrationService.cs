@@ -37,24 +37,24 @@ public class GitIntegrationService : IGitIntegrationService
         repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
     }
 
-    public void CreateFixBranch(GithubRepository repository, string branchName)
+    public void CreateFixBranch(IClonedRepository repository, string branchName)
     {
         repository.ThrowIfNull();
 
         repository.ThrowIfNull();
 
-        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        string targetPath = repository.GetFullPath();
         using var repo = new Repository(targetPath);
         // TODO: validate that branch is not exists
         Branch branch = repo.CreateBranch(branchName);
         Branch currentBranch = Commands.Checkout(repo, branch);
     }
 
-    public void CreateCommitWithFix(GithubRepository repository, string commitMessage)
+    public void CreateCommitWithFix(IClonedRepository repository, string commitMessage)
     {
         repository.ThrowIfNull();
 
-        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        string targetPath = repository.GetFullPath();
         using var repo = new Repository(targetPath);
         Commands.Stage(repo, "*");
 
@@ -65,11 +65,11 @@ public class GitIntegrationService : IGitIntegrationService
         repo.Commit(commitMessage, author, author);
     }
 
-    public void PushCommitToRemote(GithubRepository repository, string branchName)
+    public void PushCommitToRemote(IClonedRepository repository, string branchName)
     {
         repository.ThrowIfNull();
 
-        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        string targetPath = repository.GetFullPath();
         using var repo = new Repository(targetPath);
 
         Remote? remote = repo.Network.Remotes["origin"];
