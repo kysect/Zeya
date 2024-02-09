@@ -1,5 +1,4 @@
-﻿using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 
 namespace Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 

@@ -10,7 +10,7 @@ using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
-using GithubRepository = Kysect.Zeya.Abstractions.Models.GithubRepository;
+using GithubRepository = Kysect.Zeya.GithubIntegration.Abstraction.Models.GithubRepository;
 
 namespace Kysect.Zeya.GithubIntegration;
 
