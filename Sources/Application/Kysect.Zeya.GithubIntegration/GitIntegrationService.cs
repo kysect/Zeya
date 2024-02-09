@@ -1,8 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,26 +13,14 @@ namespace Kysect.Zeya.GithubIntegration;
 public class GitIntegrationService : IGitIntegrationService
 {
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
-    private readonly ILocalStoragePathFactory _pathFormatStrategy;
-    private readonly ILogger _logger;
 
     public GitIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, ILocalStoragePathFactory pathFormatStrategy, ILogger logger)
     {
         githubIntegrationOptions.ThrowIfNull();
 
         _githubIntegrationOptions = githubIntegrationOptions.Value;
-        _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
-        _logger = logger.ThrowIfNull();
-    }
-
-    public void CloneOrUpdate(GithubRepository repository)
-    {
-        repository.ThrowIfNull();
-
-        var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
-        var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
-
-        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        pathFormatStrategy.ThrowIfNull();
+        logger.ThrowIfNull();
     }
 
     public void CreateFixBranch(IClonedRepository repository, string branchName)

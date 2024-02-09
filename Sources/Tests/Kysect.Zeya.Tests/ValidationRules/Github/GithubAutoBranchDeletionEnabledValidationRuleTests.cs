@@ -1,7 +1,10 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
+using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.Tests.Fakes;
+using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.ValidationRules.Rules.Github;
+using Microsoft.Extensions.Options;
 
 namespace Kysect.Zeya.Tests.ValidationRules.Github;
 
@@ -12,7 +15,10 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
 
     public GithubAutoBranchDeletionEnabledValidationRuleTests()
     {
-        _fakeGithubIntegrationService = new FakeGithubIntegrationService();
+        _fakeGithubIntegrationService = new FakeGithubIntegrationService(
+            new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()),
+            new FakePathFormatStrategy(string.Empty),
+            TestLoggerProvider.GetLogger());
         _validationRule = new GithubAutoBranchDeletionEnabledValidationRule(_fakeGithubIntegrationService);
     }
 

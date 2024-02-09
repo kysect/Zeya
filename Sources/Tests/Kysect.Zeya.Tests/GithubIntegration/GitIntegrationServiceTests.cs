@@ -2,6 +2,7 @@
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.RepositoryAccess;
+using Kysect.Zeya.Tests.Fakes;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,11 +14,12 @@ namespace Kysect.Zeya.Tests.GithubIntegration;
 public class GitIntegrationServiceTests : IDisposable
 {
     private readonly TestTemporaryDirectory _temporaryDirectory;
-    private readonly GitIntegrationService _githubIntegrationService;
+    private readonly GitIntegrationService _gitIntegrationService;
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
     private readonly GithubRepository _githubRepository;
     private readonly ClonedRepositoryAccessor _clonedRepositoryAccessor;
+    private readonly FakeGithubIntegrationService _githubIntegrationService;
 
     public GitIntegrationServiceTests()
     {
@@ -36,7 +38,8 @@ public class GitIntegrationServiceTests : IDisposable
             }
         });
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
-        _githubIntegrationService = new GitIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
+        _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
+        _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepository = new GithubRepository("Kysect", "Zeya");
         _clonedRepositoryAccessor = new ClonedRepositoryAccessor(_repositoriesDirectory, _fileSystem);
     }
@@ -69,7 +72,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         gitRepository.Head.FriendlyName.Should().Be("master");
-        _githubIntegrationService.CreateFixBranch(_clonedRepositoryAccessor, "new-branch");
+        _gitIntegrationService.CreateFixBranch(_clonedRepositoryAccessor, "new-branch");
 
         gitRepository.Head.FriendlyName.Should().Be("new-branch");
     }
@@ -81,7 +84,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.Create(_fileSystem.Path.Combine(_repositoriesDirectory, "file.txt")).Dispose();
-        _githubIntegrationService.CreateCommitWithFix(_clonedRepositoryAccessor, "Commit message");
+        _gitIntegrationService.CreateCommitWithFix(_clonedRepositoryAccessor, "Commit message");
 
         gitRepository.Head.Commits.First().Message.Trim().Should().Be("Commit message");
     }
