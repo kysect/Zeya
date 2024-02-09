@@ -2,44 +2,83 @@
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
 using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.RepositoryAccess;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
+using System.IO.Abstractions;
 using GithubRepository = Kysect.Zeya.Abstractions.Models.GithubRepository;
 
 namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubRepositoryProvider : IGithubRepositoryProvider
 {
+    private readonly IFileSystem _fileSystem;
     private readonly IGitHubClient _gitHub;
+    private readonly IGitIntegrationService _gitIntegrationService;
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
+    private readonly IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> _repositoryFactory;
+    private readonly ILogger _logger;
 
-    public GithubRepositoryProvider(IGitHubClient gitHub, IOptions<GithubIntegrationOptions> githubIntegrationOptions)
+    public GithubRepositoryProvider(
+        IGitHubClient gitHub,
+        IFileSystem fileSystem,
+        IOptions<GithubIntegrationOptions> githubIntegrationOptions,
+        IGitIntegrationService gitIntegrationService,
+        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> repositoryFactory, ILogger logger)
     {
-        _gitHub = gitHub;
+        _fileSystem = fileSystem;
+        _logger = logger;
+        _gitHub = gitHub.ThrowIfNull();
+        _gitIntegrationService = gitIntegrationService.ThrowIfNull();
+        _repositoryFactory = repositoryFactory.ThrowIfNull();
         githubIntegrationOptions.ThrowIfNull();
 
         _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 
-    public IReadOnlyCollection<GithubRepository> GetAll()
+    public IReadOnlyCollection<IClonedRepository> GetGithubOrganizationRepositories(string organization)
     {
-        return GetAllInner().Result;
+        IReadOnlyCollection<GithubRepository> githubRepositories = GetAllInner(organization).Result;
+
+        var result = githubRepositories
+            .Select(CreateGithubRepositoryAccessor)
+            .ToList();
+
+        return result;
     }
 
-    private async Task<IReadOnlyCollection<GithubRepository>> GetAllInner()
+    public IClonedRepository GetGithubRepository(string owner, string repository)
+    {
+        return CreateGithubRepositoryAccessor(new GithubRepository(owner, repository));
+    }
+
+    public IClonedRepository GetLocalRepository(string path)
+    {
+        return new ClonedRepositoryAccessor(path, _fileSystem);
+    }
+
+    private async Task<IReadOnlyCollection<GithubRepository>> GetAllInner(string organization)
     {
         var result = new List<GithubRepository>();
 
         HashSet<string> skipList = _githubIntegrationOptions.ExcludedRepositories.ToHashSet();
         var gitHubRepositoryDiscoveryService = new GitHubRepositoryDiscoveryService(_gitHub);
-        foreach (GithubRepositoryBranch repository in await gitHubRepositoryDiscoveryService.GetRepositories(_githubIntegrationOptions.IncludedOrganization))
+        foreach (GithubRepositoryBranch repository in await gitHubRepositoryDiscoveryService.GetRepositories(organization))
         {
             if (!skipList.Contains(repository.Name))
             {
-                result.Add(new GithubRepository(_githubIntegrationOptions.IncludedOrganization, repository.Name));
+                result.Add(new GithubRepository(organization, repository.Name));
             }
         }
 
         return result;
+    }
+
+    private ClonedGithubRepositoryAccessor CreateGithubRepositoryAccessor(GithubRepository githubRepository)
+    {
+        _logger.LogInformation("Loading repository {Repository}", githubRepository.FullName);
+        _gitIntegrationService.CloneOrUpdate(githubRepository);
+        return _repositoryFactory.Create(githubRepository);
     }
 }

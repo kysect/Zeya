@@ -1,8 +1,8 @@
-﻿using Kysect.Zeya.Abstractions.Models;
-
-namespace Kysect.Zeya.Abstractions.Contracts;
+﻿namespace Kysect.Zeya.Abstractions.Contracts;
 
 public interface IGithubRepositoryProvider
 {
-    IReadOnlyCollection<GithubRepository> GetAll();
+    IReadOnlyCollection<IClonedRepository> GetGithubOrganizationRepositories(string organization);
+    IClonedRepository GetGithubRepository(string owner, string repository);
+    IClonedRepository GetLocalRepository(string path);
 }

@@ -1,4 +1,5 @@
-﻿using Kysect.TerminalUserInterface.Commands;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryAccess;
@@ -13,9 +14,9 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     IGithubIntegrationService githubIntegrationService,
     RepositoryValidator repositoryValidator,
     ILogger logger,
-    IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer,
-    RepositoryValidationRuleProvider validationRuleProvider)
+    RepositoryValidationRuleProvider validationRuleProvider,
+    IGithubRepositoryProvider githubRepositoryProvider)
     : ITuiCommand
 {
     public string Name => "Analyze, fix and create PR repository";
@@ -24,8 +25,8 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     {
         // TODO: reduce copy-paste
         GithubRepository githubRepository = RepositoryInputControl.Ask();
-        ClonedGithubRepositoryAccessor githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
-        gitIntegrationService.CloneOrUpdate(githubRepository);
+        IClonedRepository repository = githubRepositoryProvider.GetGithubRepository(githubRepository.Owner, githubRepository.Name);
+        ClonedGithubRepositoryAccessor githubRepositoryAccessor = repository.To<ClonedGithubRepositoryAccessor>();
 
         // TODO: remove hardcoded value
         logger.LogTrace("Loading validation configuration");

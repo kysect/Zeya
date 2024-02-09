@@ -1,4 +1,5 @@
-﻿using Kysect.TerminalUserInterface.Commands;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryAccess;
@@ -9,12 +10,11 @@ using Microsoft.Extensions.Logging;
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndFixRepositoryCommand(
-    IGitIntegrationService gitIntegrationService,
     RepositoryValidator repositoryValidator,
     ILogger logger,
-    IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> clonedRepositoryFactory,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer,
-    RepositoryValidationRuleProvider validationRuleProvider)
+    RepositoryValidationRuleProvider validationRuleProvider,
+    IGithubRepositoryProvider githubRepositoryProvider)
     : ITuiCommand
 {
     public string Name => "Analyze and fix repository";
@@ -22,12 +22,12 @@ public class AnalyzeAndFixRepositoryCommand(
     public void Execute()
     {
         GithubRepository githubRepository = RepositoryInputControl.Ask();
-        gitIntegrationService.CloneOrUpdate(githubRepository);
+        IClonedRepository repository = githubRepositoryProvider.GetGithubRepository(githubRepository.Owner, githubRepository.Name);
+        ClonedGithubRepositoryAccessor githubRepositoryAccessor = repository.To<ClonedGithubRepositoryAccessor>();
 
         // TODO: remove hardcoded value
         logger.LogTrace("Loading validation configuration");
         IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(@"Demo-validation.yaml");
-        ClonedGithubRepositoryAccessor githubRepositoryAccessor = clonedRepositoryFactory.Create(githubRepository);
         RepositoryValidationReport report = repositoryValidator.Validate(githubRepositoryAccessor, rules);
 
         logger.LogInformation("Repositories analyzed, run fixers");
