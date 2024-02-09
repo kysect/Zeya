@@ -1,7 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
-using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GithubIntegration.Abstraction.Models;

@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Abstractions.Models;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 using Kysect.Zeya.RepositoryAccess;
 using System.IO.Abstractions;
 
