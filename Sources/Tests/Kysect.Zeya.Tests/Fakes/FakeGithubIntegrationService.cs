@@ -1,5 +1,6 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
+﻿using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
+using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 
 namespace Kysect.Zeya.Tests.Fakes;
 

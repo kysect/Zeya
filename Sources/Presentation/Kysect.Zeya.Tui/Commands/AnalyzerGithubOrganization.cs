@@ -2,7 +2,7 @@
 using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.RepositoryAccess;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
