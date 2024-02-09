@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegrati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.ValidationRules.Abstractions", "Application\Kysect.Zeya.ValidationRules.Abstractions\Kysect.Zeya.ValidationRules.Abstractions.csproj", "{A9A39457-1210-4B58-BD72-E217F103194F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.GitIntegration.Abstraction", "Application\Kysect.Zeya.GitIntegration.Abstraction\Kysect.Zeya.GitIntegration.Abstraction.csproj", "{20D54072-79BE-4A85-80D2-01789147934B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,10 @@ Global
 		{A9A39457-1210-4B58-BD72-E217F103194F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9A39457-1210-4B58-BD72-E217F103194F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9A39457-1210-4B58-BD72-E217F103194F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20D54072-79BE-4A85-80D2-01789147934B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D54072-79BE-4A85-80D2-01789147934B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D54072-79BE-4A85-80D2-01789147934B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D54072-79BE-4A85-80D2-01789147934B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{F9E4AE27-D14E-405A-9C08-D398DA278711} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{A9FD721B-D555-4961-A4CF-546426821423} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{A9A39457-1210-4B58-BD72-E217F103194F} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{20D54072-79BE-4A85-80D2-01789147934B} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}

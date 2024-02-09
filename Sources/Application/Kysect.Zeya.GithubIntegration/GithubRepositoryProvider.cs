@@ -1,9 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
-using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryAccess;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
