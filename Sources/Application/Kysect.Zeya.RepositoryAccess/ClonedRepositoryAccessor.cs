@@ -1,14 +1,8 @@
 ﻿using Kysect.CommonLib.FileSystem;
 using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryAccess;
-
-public class ClonedGithubRepositoryAccessor(GithubRepository githubMetadata, string repositoryRootPath, IFileSystem fileSystem) : ClonedRepositoryAccessor(repositoryRootPath, fileSystem)
-{
-    public GithubRepository GithubMetadata { get; } = githubMetadata;
-}
 
 public class ClonedRepositoryAccessor(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {

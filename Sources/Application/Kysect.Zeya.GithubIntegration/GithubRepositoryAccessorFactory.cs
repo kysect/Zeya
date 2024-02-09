@@ -2,7 +2,7 @@
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
-using Kysect.Zeya.RepositoryAccess;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration;

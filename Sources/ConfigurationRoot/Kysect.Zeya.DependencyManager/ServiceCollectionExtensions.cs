@@ -12,6 +12,8 @@ using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
