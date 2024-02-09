@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
 using Kysect.PowerShellRunner.Abstractions.Queries;
@@ -18,6 +19,7 @@ public class GithubIntegrationService : IGithubIntegrationService
     private readonly IGitHubClient _gitHubClient;
     private readonly IPowerShellAccessor _powerShellAccessor;
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
+    private readonly GithubIntegrationOptions _githubIntegrationOptions;
     private readonly ILogger _logger;
 
     public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
@@ -28,6 +30,18 @@ public class GithubIntegrationService : IGithubIntegrationService
         _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
         _gitHubClient = gitHubClient.ThrowIfNull();
         _logger = logger.ThrowIfNull();
+
+        _githubIntegrationOptions = githubIntegrationOptions.Value;
+    }
+
+    public void CloneOrUpdate(GithubRepository repository)
+    {
+        repository.ThrowIfNull();
+
+        var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
+        var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
+
+        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
     }
 
     public void CreatePullRequest(GithubRepository repository, string message)

@@ -17,7 +17,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
 {
     private readonly IFileSystem _fileSystem;
     private readonly IGitHubClient _gitHub;
-    private readonly IGitIntegrationService _gitIntegrationService;
+    private readonly IGithubIntegrationService _githubIntegrationService;
     private readonly GithubIntegrationOptions _githubIntegrationOptions;
     private readonly IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> _repositoryFactory;
     private readonly ILogger _logger;
@@ -27,12 +27,13 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         IFileSystem fileSystem,
         IOptions<GithubIntegrationOptions> githubIntegrationOptions,
         IGitIntegrationService gitIntegrationService,
-        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> repositoryFactory, ILogger logger)
+        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> repositoryFactory, ILogger logger, IGithubIntegrationService githubIntegrationService)
     {
         _fileSystem = fileSystem;
         _logger = logger;
+        _githubIntegrationService = githubIntegrationService;
         _gitHub = gitHub.ThrowIfNull();
-        _gitIntegrationService = gitIntegrationService.ThrowIfNull();
+        gitIntegrationService.ThrowIfNull();
         _repositoryFactory = repositoryFactory.ThrowIfNull();
         githubIntegrationOptions.ThrowIfNull();
 
@@ -80,7 +81,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
     private ClonedGithubRepositoryAccessor CreateGithubRepositoryAccessor(GithubRepository githubRepository)
     {
         _logger.LogInformation("Loading repository {Repository}", githubRepository.FullName);
-        _gitIntegrationService.CloneOrUpdate(githubRepository);
+        _githubIntegrationService.CloneOrUpdate(githubRepository);
         return _repositoryFactory.Create(githubRepository);
     }
 }
