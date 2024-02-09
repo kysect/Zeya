@@ -2,9 +2,9 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.RepositoryAccess;
+using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 

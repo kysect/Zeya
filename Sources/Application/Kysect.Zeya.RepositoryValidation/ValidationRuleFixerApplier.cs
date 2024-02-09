@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

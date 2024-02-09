@@ -2,6 +2,7 @@
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;

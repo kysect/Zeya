@@ -1,4 +1,6 @@
-﻿namespace Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.Zeya.Abstractions.Contracts;
+
+namespace Kysect.Zeya.ValidationRules.Abstractions;
 
 public interface IValidationRuleFixer
 {

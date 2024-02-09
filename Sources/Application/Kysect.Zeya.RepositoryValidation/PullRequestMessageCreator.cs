@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.Abstractions;
-using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using System.Collections.Generic;
 using System.Text;
 

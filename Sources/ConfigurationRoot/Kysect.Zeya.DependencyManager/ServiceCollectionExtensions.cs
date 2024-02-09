@@ -19,6 +19,7 @@ using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.ValidationRules;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

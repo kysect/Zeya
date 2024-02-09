@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DependencyManag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.RepositoryAccess", "Application\Kysect.Zeya.RepositoryAccess\Kysect.Zeya.RepositoryAccess.csproj", "{F9E4AE27-D14E-405A-9C08-D398DA278711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.GithubIntegration.Abstraction", "Application\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj", "{A9FD721B-D555-4961-A4CF-546426821423}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegration.Abstraction", "Application\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj", "{A9FD721B-D555-4961-A4CF-546426821423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.ValidationRules.Abstractions", "Application\Kysect.Zeya.ValidationRules.Abstractions\Kysect.Zeya.ValidationRules.Abstractions.csproj", "{A9A39457-1210-4B58-BD72-E217F103194F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{A9FD721B-D555-4961-A4CF-546426821423}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9FD721B-D555-4961-A4CF-546426821423}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9FD721B-D555-4961-A4CF-546426821423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9A39457-1210-4B58-BD72-E217F103194F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9A39457-1210-4B58-BD72-E217F103194F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9A39457-1210-4B58-BD72-E217F103194F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9A39457-1210-4B58-BD72-E217F103194F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{9284441D-F4F3-4D27-849B-98826720A49E} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
 		{F9E4AE27-D14E-405A-9C08-D398DA278711} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{A9FD721B-D555-4961-A4CF-546426821423} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{A9A39457-1210-4B58-BD72-E217F103194F} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}

@@ -7,6 +7,7 @@ using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui.Controls;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Tui.Commands;
