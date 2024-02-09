@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.YamlParser;
-using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules;
+using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.Tests.RepositoryValidation;
 

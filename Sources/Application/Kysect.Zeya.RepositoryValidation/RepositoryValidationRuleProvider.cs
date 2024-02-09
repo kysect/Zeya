@@ -1,5 +1,5 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
 

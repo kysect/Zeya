@@ -5,6 +5,7 @@ using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 

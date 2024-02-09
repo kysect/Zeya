@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.Tests.Fakes;
 
