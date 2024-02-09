@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Abstractions.Contracts;
+﻿using Kysect.Zeya.GitIntegration.Abstraction;
 
 namespace Kysect.Zeya.ValidationRules.Abstractions;
 

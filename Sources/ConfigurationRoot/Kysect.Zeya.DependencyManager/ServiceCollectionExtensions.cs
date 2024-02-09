@@ -14,6 +14,7 @@ using Kysect.Zeya.Abstractions.Contracts;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;

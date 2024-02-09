@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
-using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

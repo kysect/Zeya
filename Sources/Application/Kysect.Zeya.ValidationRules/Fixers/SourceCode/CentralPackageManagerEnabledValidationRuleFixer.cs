@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
-using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;

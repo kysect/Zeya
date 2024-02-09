@@ -1,4 +1,4 @@
-﻿namespace Kysect.Zeya.Abstractions.Contracts;
+﻿namespace Kysect.Zeya.GitIntegration.Abstraction;
 
 public interface IClonedRepository
 {

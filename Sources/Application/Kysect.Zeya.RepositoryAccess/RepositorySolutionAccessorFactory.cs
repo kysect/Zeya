@@ -1,5 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.Parsing;
-using Kysect.Zeya.Abstractions.Contracts;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryAccess;
