@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.RepositoryAccess;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,7 @@ public class GitIntegrationServiceTests : IDisposable
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
     private readonly GithubRepository _githubRepository;
+    private readonly ClonedRepositoryAccessor _clonedRepositoryAccessor;
 
     public GitIntegrationServiceTests()
     {
@@ -36,6 +38,7 @@ public class GitIntegrationServiceTests : IDisposable
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
         _githubIntegrationService = new GitIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepository = new GithubRepository("Kysect", "Zeya");
+        _clonedRepositoryAccessor = new ClonedRepositoryAccessor(_repositoriesDirectory, _fileSystem);
     }
 
     [Fact]
@@ -66,7 +69,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         gitRepository.Head.FriendlyName.Should().Be("master");
-        _githubIntegrationService.CreateFixBranch(_githubRepository, "new-branch");
+        _githubIntegrationService.CreateFixBranch(_clonedRepositoryAccessor, "new-branch");
 
         gitRepository.Head.FriendlyName.Should().Be("new-branch");
     }
@@ -78,7 +81,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.Create(_fileSystem.Path.Combine(_repositoriesDirectory, "file.txt")).Dispose();
-        _githubIntegrationService.CreateCommitWithFix(_githubRepository, "Commit message");
+        _githubIntegrationService.CreateCommitWithFix(_clonedRepositoryAccessor, "Commit message");
 
         gitRepository.Head.Commits.First().Message.Trim().Should().Be("Commit message");
     }
