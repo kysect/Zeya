@@ -2,7 +2,7 @@
 using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.ScenarioLib;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Models;
+using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.ValidationRules;
 using Kysect.Zeya.ValidationRules.Abstractions;

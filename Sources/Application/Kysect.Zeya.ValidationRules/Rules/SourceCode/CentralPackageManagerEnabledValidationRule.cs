@@ -2,8 +2,8 @@
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GitIntegration;
-using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Models;
+using Kysect.Zeya.RepositoryValidation.Abstractions;
+using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
