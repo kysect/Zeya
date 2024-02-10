@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Kysect.Zeya.GithubIntegration;
+namespace Kysect.Zeya.GitIntegration;
 
-public class GithubCommitAuthor
+public class GitCommitAuthor
 {
     [Required]
     public string GithubUsername { get; init; } = null!;

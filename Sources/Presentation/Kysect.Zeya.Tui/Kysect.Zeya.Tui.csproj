@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\Kysect.Zeya.IntegrationManager\Kysect.Zeya.IntegrationManager.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
   </ItemGroup>
 
