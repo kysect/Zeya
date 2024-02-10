@@ -1,4 +1,4 @@
-﻿namespace Kysect.Zeya.Abstractions.Models;
+﻿namespace Kysect.Zeya.RepositoryValidation.Models;
 
 public enum RepositoryValidationSeverity
 {

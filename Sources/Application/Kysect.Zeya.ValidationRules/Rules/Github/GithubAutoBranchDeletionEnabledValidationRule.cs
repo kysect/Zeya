@@ -1,9 +1,9 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
-using Kysect.Zeya.RepositoryAccess;
+using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Github;

@@ -16,7 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj" />
-    <ProjectReference Include="..\Kysect.Zeya.RepositoryAccess\Kysect.Zeya.RepositoryAccess.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.GitIntegration\Kysect.Zeya.GitIntegration.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.ValidationRules.Abstractions\Kysect.Zeya.ValidationRules.Abstractions.csproj" />
   </ItemGroup>
 

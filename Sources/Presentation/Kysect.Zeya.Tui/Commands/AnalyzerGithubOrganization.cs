@@ -1,11 +1,10 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
