@@ -34,17 +34,18 @@ public class RequiredPackagesAddedValidationRuleFixer(
             .Select(p => p.Name)
             .ToHashSet();
 
-        foreach (var rulePackage in rule.Packages)
+        // TODO: set version to Packages.props
+        foreach (ProjectPackageVersion rulePackage in rule.Packages)
         {
-            if (addedPackage.Contains(rulePackage))
+            if (addedPackage.Contains(rulePackage.Name))
                 continue;
 
             logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, SolutionItemNameConstants.DirectoryBuildProps);
-            directoryBuildPropsFile.File.PackageReferences.AddPackageReference(rulePackage);
+            directoryBuildPropsFile.File.PackageReferences.AddPackageReference(rulePackage.Name);
 
             logger.LogDebug("Removing package {Package} from csproj files", rulePackage);
             foreach (var dotnetProjectModifier in solutionModifier.Projects)
-                dotnetProjectModifier.Value.File.PackageReferences.RemovePackageReference(rulePackage);
+                dotnetProjectModifier.Value.File.PackageReferences.RemovePackageReference(rulePackage.Name);
         }
 
         logger.LogTrace("Saving solution files");

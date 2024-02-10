@@ -39,7 +39,9 @@
 
 - Name: SourceCode.RequiredPackagesAdded
   Parameters:
-    Packages: ["Kysect.Editorconfig"]
+    Packages:
+    - Name: Kysect.Editorconfig
+      Version: "1.1.8"
 
 - Name: SourceCode.ArtifactsOutputEnabled
 

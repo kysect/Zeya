@@ -13,7 +13,7 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
     : IScenarioStepExecutor<RequiredPackagesAddedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.RequiredPackagesAdded")]
-    public record Arguments(IReadOnlyCollection<string> Packages) : IValidationRule
+    public record Arguments(IReadOnlyCollection<ProjectPackageVersion> Packages) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.RequiredPackagesAdded;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
@@ -45,13 +45,13 @@ public class RequiredPackagesAddedValidationRule(RepositorySolutionAccessorFacto
             .Select(r => r.Include)
             .ToHashSet();
 
-        foreach (var requestPackage in request.Packages)
+        foreach (ProjectPackageVersion requestPackage in request.Packages)
         {
-            if (!addedPackages.Contains(requestPackage))
+            if (!addedPackages.Contains(requestPackage.Name))
             {
                 repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                     request.DiagnosticCode,
-                    $"Package {requestPackage} is not add to Directory.Build.props.",
+                    $"Package {requestPackage.Name} is not add to Directory.Build.props.",
                     Arguments.DefaultSeverity);
             }
         }

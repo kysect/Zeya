@@ -1,4 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.Tests.ValidationRules;
 using Kysect.Zeya.ValidationRules.Fixers.SourceCode;
@@ -27,7 +28,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
                                                        </Project>
                                                        """;
 
-        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage", "Package2"]);
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.2")]);
         new SolutionFileStructureBuilder("Solution")
             .Save(FileSystem, CurrentPath, Formatter);
 
@@ -74,7 +75,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
                                  """;
 
         var projectPath = FileSystem.Path.Combine(CurrentPath, projectName, $"{projectName}.csproj");
-        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, projectFileContent))
             .Save(FileSystem, CurrentPath, Formatter);
@@ -111,7 +112,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
                                                      </Project>
                                                      """;
 
-        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage", "Package2"]);
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .AddDirectoryBuildProps(sourceDirectoryBuildPropsFile)
             .Save(FileSystem, CurrentPath, Formatter);
