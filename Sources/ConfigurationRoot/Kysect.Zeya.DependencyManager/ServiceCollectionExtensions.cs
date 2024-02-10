@@ -18,6 +18,7 @@ using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tui;
+using Kysect.Zeya.Tui.Controls;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Configuration;
@@ -90,7 +91,10 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddSingleton<RepositoryValidationRuleProvider>()
             .AddSingleton<RepositoryValidator>()
-            .AddSingleton<RepositoryDiagnosticFixer>();
+            .AddSingleton<RepositoryDiagnosticFixer>()
+            .AddSingleton<PullRequestMessageCreator>()
+            .AddSingleton<RepositoryValidationService>();
+
         serviceCollection = serviceCollection
             .AddZeyaValidationRules()
             .AddZeyaValidationRuleFixers();
@@ -146,6 +150,7 @@ public static class ServiceCollectionExtensions
         Assembly[] consoleCommandAssemblies = new[] { typeof(TuiMenuInitializer).Assembly };
 
         serviceCollection
+            .AddSingleton<RepositorySelectorControl>()
             .AddUserActionSelectionMenus(consoleCommandAssemblies);
         serviceCollection.AddSingleton(CreateUserActionSelectionMenuNavigator);
 
