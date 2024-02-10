@@ -21,7 +21,7 @@ public class AnalyzeAndFixRepositoryCommand(
 
     public void Execute()
     {
-        GithubRepositoryName githubRepositoryName = RepositoryInputControl.Ask();
+        GithubRepositoryName githubRepositoryName = RepositoryNameInputControl.Ask();
         ClonedGithubRepository repository = githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
 
         // TODO: remove hardcoded value
