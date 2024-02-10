@@ -32,11 +32,11 @@ public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTes
     public void Validate_ArtifactOutputEnabled_NoDiagnostics()
     {
         var arguments = new CentralPackageManagerEnabledValidationRule.Arguments();
-        var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty());
-        directoryBuildPropsFile.File.Properties.AddProperty("UseArtifactsOutput", "true");
+        var directoryBuildPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.CreateEmpty());
+        directoryBuildPropsFile.SetCentralPackageManagement(true);
 
         new SolutionFileStructureBuilder("Solution")
-            .AddDirectoryBuildProps(directoryBuildPropsFile.File.ToXmlString(Formatter))
+            .AddDirectoryPackagesProps(directoryBuildPropsFile.File.ToXmlString(Formatter))
             .Save(FileSystem, CurrentPath, Formatter);
 
         _validationRule.Execute(Context, arguments);

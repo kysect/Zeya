@@ -28,8 +28,8 @@ public class CentralPackageManagerEnabledValidationRule(RepositorySolutionAccess
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
-        bool artifactsOutputEnabled = solutionModifier.GetOrCreateDirectoryBuildPropsModifier().ArtifactsOutputEnabled();
-        if (!artifactsOutputEnabled)
+        bool cpmEnabled = solutionModifier.GetOrCreateDirectoryPackagePropsModifier().GetCentralPackageManagement();
+        if (!cpmEnabled)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
