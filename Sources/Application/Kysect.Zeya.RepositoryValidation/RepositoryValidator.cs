@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
@@ -12,12 +12,12 @@ namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryValidator(ILogger logger, IScenarioStepHandler scenarioStepHandler)
 {
-    public RepositoryValidationReport Validate(ClonedGithubRepository repository, IReadOnlyCollection<IValidationRule> rules)
+    public RepositoryValidationReport Validate(IClonedRepository repository, IReadOnlyCollection<IValidationRule> rules)
     {
         repository.ThrowIfNull();
         rules.ThrowIfNull();
 
-        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.GithubMetadata.FullName);
+        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.GetRepositoryName());
         var repositoryValidationContext = new RepositoryValidationContext(repository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 

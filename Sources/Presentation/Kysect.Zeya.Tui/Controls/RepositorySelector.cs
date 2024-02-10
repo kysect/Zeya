@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.Exceptions;
 using Kysect.TerminalUserInterface.Controls.Selection;
 using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
 using Spectre.Console;
 
@@ -15,7 +16,7 @@ public class RepositorySelector
         _githubRepositoryProvider = githubRepositoryProvider;
     }
 
-    public IReadOnlyCollection<ClonedGithubRepository> SelectRepositories()
+    public IReadOnlyCollection<IClonedRepository> SelectRepositories()
     {
         string? selectionType = new SelectionPrompt<string>()
             .AddChoices("Local git repository", "Github repository", "Github organization")
@@ -26,11 +27,9 @@ public class RepositorySelector
 
         if (selectionType == "Local git repository")
         {
-            // TODO: support local repository
-            throw new NotImplementedException();
-            //string repositoryFullName = AnsiConsole.Ask<string>("Local repository path:");
-            //IClonedRepository clonedRepository = _githubRepositoryProvider.GetLocalRepository(repositoryFullName);
-            //return [];
+            string repositoryFullName = AnsiConsole.Ask<string>("Local repository path:");
+            IClonedRepository clonedRepository = _githubRepositoryProvider.GetLocalRepository(repositoryFullName);
+            return [clonedRepository];
         }
 
         if (selectionType == "Github repository")

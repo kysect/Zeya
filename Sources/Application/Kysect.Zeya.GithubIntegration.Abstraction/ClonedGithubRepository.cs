@@ -7,4 +7,9 @@ public class ClonedGithubRepository(GithubRepositoryName githubMetadata, string 
     : ClonedRepository(repositoryRootPath, fileSystem)
 {
     public GithubRepositoryName GithubMetadata { get; } = githubMetadata;
+
+    public override string GetRepositoryName()
+    {
+        return GithubMetadata.FullName;
+    }
 }
