@@ -1,8 +1,7 @@
 ﻿using Kysect.CommonLib.FileSystem;
-using Kysect.Zeya.GitIntegration.Abstraction;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.GitIntegration;
+namespace Kysect.Zeya.GitIntegration.Abstraction;
 
 public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {

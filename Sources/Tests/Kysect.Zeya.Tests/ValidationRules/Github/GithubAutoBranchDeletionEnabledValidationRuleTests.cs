@@ -1,6 +1,6 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;

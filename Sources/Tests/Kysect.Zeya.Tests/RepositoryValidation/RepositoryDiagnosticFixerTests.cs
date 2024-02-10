@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Models;
 using Kysect.Zeya.Tests.Tools;
