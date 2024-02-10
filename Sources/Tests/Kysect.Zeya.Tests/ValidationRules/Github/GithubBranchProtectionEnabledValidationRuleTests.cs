@@ -6,7 +6,6 @@ using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.ValidationRules.Rules.Github;
-using Microsoft.Extensions.Options;
 
 namespace Kysect.Zeya.Tests.ValidationRules.Github;
 
@@ -18,7 +17,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     public GithubBranchProtectionEnabledValidationRuleTests()
     {
         _fakeGithubIntegrationService = new FakeGithubIntegrationService(
-            new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()),
+            new GithubIntegrationOptions(),
             new FakePathFormatStrategy(string.Empty),
             TestLoggerProvider.GetLogger());
         _validationRule = new GithubBranchProtectionEnabledValidationRule(_fakeGithubIntegrationService);
