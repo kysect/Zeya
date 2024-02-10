@@ -52,7 +52,6 @@ public class GithubIntegrationServiceTests : IDisposable
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
 
-        _logger.LogInformation("Clone repository to directory {Directory}", _repositoriesDirectory);
         _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
 
         _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
@@ -63,12 +62,28 @@ public class GithubIntegrationServiceTests : IDisposable
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
 
-        _logger.LogInformation("Clone repository to directory {Directory}", _repositoriesDirectory);
         _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
-        _logger.LogInformation("Clone repository to directory {Directory}", _repositoriesDirectory);
         _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
 
         _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
+    }
+
+    [Fact]
+    public void DeleteBranchOnMerge_ReturnExpectedResult()
+    {
+        bool deleteBranchOnMerge = _githubIntegrationService.DeleteBranchOnMerge(_githubRepositoryName);
+
+        deleteBranchOnMerge.Should().BeFalse();
+    }
+
+    [Fact(Skip = "Token is required")]
+    public void GetRepositoryBranchProtection_ReturnExpectedResult()
+    {
+        var expected = new RepositoryBranchProtection(false, false);
+
+        RepositoryBranchProtection repositoryBranchProtection = _githubIntegrationService.GetRepositoryBranchProtection(_githubRepositoryName, "master");
+
+        repositoryBranchProtection.Should().Be(expected);
     }
 
     public void Dispose()
