@@ -1,7 +1,7 @@
 ﻿using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.ValidationRules.Abstractions;
 
-namespace Kysect.Zeya.Tests.Fakes;
+namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class FakeValidationRuleFixer : IValidationRuleFixer<FakeValidationRule>
 {

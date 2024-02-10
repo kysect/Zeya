@@ -7,7 +7,7 @@ using Kysect.Zeya.GitIntegration.Abstraction;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Kysect.Zeya.Tests.Fakes;
+namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class FakeGithubIntegrationService : IGithubIntegrationService
 {

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.Tests.Asserts;
+namespace Kysect.Zeya.Tests.Tools.Asserts;
 
 public class FileSystemFileAsserts
 {

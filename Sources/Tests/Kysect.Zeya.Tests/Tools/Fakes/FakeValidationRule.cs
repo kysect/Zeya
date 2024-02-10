@@ -1,6 +1,6 @@
 ﻿using Kysect.Zeya.ValidationRules.Abstractions;
 
-namespace Kysect.Zeya.Tests.Fakes;
+namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class FakeValidationRule : IValidationRule
 {

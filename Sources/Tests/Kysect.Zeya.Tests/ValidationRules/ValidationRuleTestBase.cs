@@ -4,8 +4,8 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.Tests.Asserts;
 using Kysect.Zeya.Tests.Tools;
+using Kysect.Zeya.Tests.Tools.Asserts;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions.TestingHelpers;
 
