@@ -7,13 +7,13 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration;
 
-public class GithubRepositoryAccessorFactory(ILocalStoragePathFactory pathFormatStrategy, IFileSystem fileSystem) : IClonedRepositoryFactory<ClonedGithubRepositoryAccessor>
+public class GithubRepositoryAccessorFactory(ILocalStoragePathFactory pathFormatStrategy, IFileSystem fileSystem) : IClonedRepositoryFactory<ClonedGithubRepository>
 {
-    public ClonedGithubRepositoryAccessor Create(GithubRepository repository)
+    public ClonedGithubRepository Create(GithubRepositoryName repositoryName)
     {
-        repository.ThrowIfNull();
+        repositoryName.ThrowIfNull();
 
-        string repositoryRootPath = pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
-        return new ClonedGithubRepositoryAccessor(repository, repositoryRootPath, fileSystem);
+        string repositoryRootPath = pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
+        return new ClonedGithubRepository(repositoryName, repositoryRootPath, fileSystem);
     }
 }

@@ -22,8 +22,8 @@ public class AnalyzeRepositoryCommand(
 
     public void Execute()
     {
-        GithubRepository githubRepository = RepositoryInputControl.Ask();
-        ClonedGithubRepositoryAccessor githubRepositoryAccessor = githubRepositoryProvider.GetGithubRepository(githubRepository.Owner, githubRepository.Name);
+        GithubRepositoryName githubRepositoryName = RepositoryInputControl.Ask();
+        ClonedGithubRepository githubRepositoryAccessor = githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
 
         logger.LogInformation("Validate repository {Url}", githubRepositoryAccessor.GithubMetadata.FullName);
         logger.LogTrace("Loading validation configuration");

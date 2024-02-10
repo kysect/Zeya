@@ -5,9 +5,9 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration.Abstraction;
 
-public class ClonedGithubRepositoryAccessor(GithubRepository githubMetadata, string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
+public class ClonedGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {
-    public GithubRepository GithubMetadata { get; } = githubMetadata;
+    public GithubRepositoryName GithubMetadata { get; } = githubMetadata;
 
     public string GetFullPath()
     {

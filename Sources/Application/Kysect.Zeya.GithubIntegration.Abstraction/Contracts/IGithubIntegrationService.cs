@@ -5,9 +5,9 @@ namespace Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 
 public interface IGithubIntegrationService
 {
-    void CloneOrUpdate(GithubRepository repository);
+    void CloneOrUpdate(GithubRepositoryName repositoryName);
     void PushCommitToRemote(IClonedRepository repository, string branchName);
-    void CreatePullRequest(GithubRepository repository, string message);
-    bool DeleteBranchOnMerge(GithubRepository githubRepository);
-    RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepository githubRepository, string branch);
+    void CreatePullRequest(GithubRepositoryName repositoryName, string message);
+    bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName);
+    RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepositoryName githubRepositoryName, string branch);
 }

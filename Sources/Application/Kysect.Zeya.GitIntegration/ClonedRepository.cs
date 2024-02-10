@@ -4,7 +4,7 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GitIntegration;
 
-public class ClonedRepositoryAccessor(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
+public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {
     public string GetFullPath()
     {

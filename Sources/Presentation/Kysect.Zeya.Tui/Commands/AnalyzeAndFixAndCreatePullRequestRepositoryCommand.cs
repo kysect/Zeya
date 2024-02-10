@@ -27,8 +27,8 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     public void Execute()
     {
         // TODO: reduce copy-paste
-        GithubRepository githubRepository = RepositoryInputControl.Ask();
-        ClonedGithubRepositoryAccessor repository = githubRepositoryProvider.GetGithubRepository(githubRepository.Owner, githubRepository.Name);
+        GithubRepositoryName githubRepositoryName = RepositoryInputControl.Ask();
+        ClonedGithubRepository repository = githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
 
         // TODO: remove hardcoded value
         logger.LogTrace("Loading validation configuration");
@@ -48,6 +48,6 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
         logger.LogInformation("Create PR");
         var pullRequestMessageCreator = new PullRequestMessageCreator();
         string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
-        githubIntegrationService.CreatePullRequest(githubRepository, pullRequestMessage);
+        githubIntegrationService.CreatePullRequest(githubRepositoryName, pullRequestMessage);
     }
 }

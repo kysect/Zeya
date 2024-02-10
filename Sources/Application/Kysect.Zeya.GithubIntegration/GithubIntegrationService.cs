@@ -12,7 +12,6 @@ using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
-using GithubRepository = Kysect.Zeya.GithubIntegration.Abstraction.Models.GithubRepository;
 using Repository = LibGit2Sharp.Repository;
 
 namespace Kysect.Zeya.GithubIntegration;
@@ -37,14 +36,14 @@ public class GithubIntegrationService : IGithubIntegrationService
         _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 
-    public void CloneOrUpdate(GithubRepository repository)
+    public void CloneOrUpdate(GithubRepositoryName repositoryName)
     {
-        repository.ThrowIfNull();
+        repositoryName.ThrowIfNull();
 
         var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
-        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
     }
 
     public void PushCommitToRemote(IClonedRepository repository, string branchName)
@@ -65,38 +64,38 @@ public class GithubIntegrationService : IGithubIntegrationService
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
-    public void CreatePullRequest(GithubRepository repository, string message)
+    public void CreatePullRequest(GithubRepositoryName repositoryName, string message)
     {
-        repository.ThrowIfNull();
+        repositoryName.ThrowIfNull();
         message.ThrowIfNull();
 
-        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
         using (PowerShellPathChangeContext.TemporaryChangeCurrentDirectory(_powerShellAccessor, targetPath))
         {
             _powerShellAccessor.ExecuteAndGet(new PowerShellQuery($"gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\""));
         }
     }
-    public bool DeleteBranchOnMerge(GithubRepository githubRepository)
+    public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
     {
-        githubRepository.ThrowIfNull();
+        githubRepositoryName.ThrowIfNull();
 
-        var repositoryInfo = _gitHubClient.Repository.Get(githubRepository.Owner, githubRepository.Name).Result;
+        var repositoryInfo = _gitHubClient.Repository.Get(githubRepositoryName.Owner, githubRepositoryName.Name).Result;
         return repositoryInfo.DeleteBranchOnMerge ?? false;
     }
 
-    public RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepository githubRepository, string branch)
+    public RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepositoryName githubRepositoryName, string branch)
     {
-        githubRepository.ThrowIfNull();
+        githubRepositoryName.ThrowIfNull();
 
         try
         {
-            BranchProtectionSettings repositoryBranchProtection = _gitHubClient.Repository.Branch.GetBranchProtection(githubRepository.Owner, githubRepository.Name, branch).Result;
+            BranchProtectionSettings repositoryBranchProtection = _gitHubClient.Repository.Branch.GetBranchProtection(githubRepositoryName.Owner, githubRepositoryName.Name, branch).Result;
             return new RepositoryBranchProtection(repositoryBranchProtection.RequiredPullRequestReviews is not null, repositoryBranchProtection.RequiredConversationResolution?.Enabled ?? false);
         }
         catch (Exception e)
         {
             // TODO: rework this. Possible exception: NotFound, Forbidden (for private repo)
-            _logger.LogWarning("Failed to get branch protection info for {Repository}: {Message}", githubRepository.FullName, e.Message);
+            _logger.LogWarning("Failed to get branch protection info for {Repository}: {Message}", githubRepositoryName.FullName, e.Message);
             return new RepositoryBranchProtection(false, false);
         }
     }

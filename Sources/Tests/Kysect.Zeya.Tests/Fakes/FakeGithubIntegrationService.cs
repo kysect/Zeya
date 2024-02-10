@@ -28,14 +28,14 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
     }
 
-    public void CloneOrUpdate(GithubRepository repository)
+    public void CloneOrUpdate(GithubRepositoryName repositoryName)
     {
-        repository.ThrowIfNull();
+        repositoryName.ThrowIfNull();
 
         var repositoryFetchOptions = new RepositoryFetchOptions(_options.GithubUsername, _options.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
-        repositoryFetcher.EnsureRepositoryUpdated(_localStoragePathFactory, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+        repositoryFetcher.EnsureRepositoryUpdated(_localStoragePathFactory, new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
     }
 
     public void PushCommitToRemote(IClonedRepository repository, string branchName)
@@ -43,32 +43,32 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         throw new NotImplementedException();
     }
 
-    public void CreateFixBranch(GithubRepository repository, string branchName)
+    public void CreateFixBranch(GithubRepositoryName repositoryName, string branchName)
     {
         throw new NotImplementedException();
     }
 
-    public void CreateCommitWithFix(GithubRepository repository, string commitMessage)
+    public void CreateCommitWithFix(GithubRepositoryName repositoryName, string commitMessage)
     {
         throw new NotImplementedException();
     }
 
-    public void PushCommitToRemote(GithubRepository repository, string branchName)
+    public void PushCommitToRemote(GithubRepositoryName repositoryName, string branchName)
     {
         throw new NotImplementedException();
     }
 
-    public void CreatePullRequest(GithubRepository repository, string message)
+    public void CreatePullRequest(GithubRepositoryName repositoryName, string message)
     {
         throw new NotImplementedException();
     }
 
-    public bool DeleteBranchOnMerge(GithubRepository githubRepository)
+    public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
     {
         return BranchProtectionEnabled;
     }
 
-    public RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepository githubRepository, string branch)
+    public RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepositoryName githubRepositoryName, string branch)
     {
         return RepositoryBranchProtection;
     }

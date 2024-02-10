@@ -16,14 +16,14 @@ public class RepositoryDiagnosticFixerTests
     private readonly ILogger _logger;
     private readonly MockFileSystem _fileSystem;
     private readonly string _currentPath;
-    private readonly ClonedRepositoryAccessor _repositoryAccessor;
+    private readonly ClonedRepository _repository;
 
     public RepositoryDiagnosticFixerTests()
     {
         _logger = TestLoggerProvider.GetLogger();
         _fileSystem = new MockFileSystem();
         _currentPath = _fileSystem.Path.GetFullPath(".");
-        _repositoryAccessor = new ClonedRepositoryAccessor(_currentPath, _fileSystem);
+        _repository = new ClonedRepository(_currentPath, _fileSystem);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class RepositoryDiagnosticFixerTests
         var validationRuleFixerApplier = new ValidationRuleFixerApplier(fixers);
         var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(RepositoryValidationReport.Empty, Array.Empty<IValidationRule>(), _repositoryAccessor);
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(RepositoryValidationReport.Empty, Array.Empty<IValidationRule>(), _repository);
 
         fixedRules.Should().BeEmpty();
     }
@@ -48,7 +48,7 @@ public class RepositoryDiagnosticFixerTests
 
         var exception = Assert.Throws<DotnetProjectSystemException>(() =>
         {
-            repositoryDiagnosticFixer.Fix(repositoryValidationReport, Array.Empty<IValidationRule>(), _repositoryAccessor);
+            repositoryDiagnosticFixer.Fix(repositoryValidationReport, Array.Empty<IValidationRule>(), _repository);
         });
 
         exception.Message.Should().Be("Rule CODE0001 was not found");
@@ -65,7 +65,7 @@ public class RepositoryDiagnosticFixerTests
         var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryValidationDiagnostic(fakeValidationRule.DiagnosticCode, "Repository", "Some error", RepositoryValidationSeverity.Warning)], []);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(repositoryValidationReport, validationRules, _repositoryAccessor);
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(repositoryValidationReport, validationRules, _repository);
 
         fixedRules.Should().BeEmpty();
     }
@@ -85,7 +85,7 @@ public class RepositoryDiagnosticFixerTests
         var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryValidationDiagnostic(fakeValidationRule.DiagnosticCode, "Repository", "Some error", RepositoryValidationSeverity.Warning)], []);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(repositoryValidationReport, validationRules, _repositoryAccessor);
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(repositoryValidationReport, validationRules, _repository);
 
         fixedRules.Should().BeEquivalentTo([fakeValidationRule]);
         fakeValidationRuleFixer.FixCalls.Should().Be(1);
@@ -111,7 +111,7 @@ public class RepositoryDiagnosticFixerTests
             ],
             []);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(repositoryValidationReport, validationRules, _repositoryAccessor);
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(repositoryValidationReport, validationRules, _repository);
 
         fixedRules.Should().BeEquivalentTo([fakeValidationRule]);
         fakeValidationRuleFixer.FixCalls.Should().Be(1);

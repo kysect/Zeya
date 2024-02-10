@@ -5,5 +5,5 @@ namespace Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 
 public interface IClonedRepositoryFactory<T> where T : IClonedRepository
 {
-    T Create(GithubRepository repository);
+    T Create(GithubRepositoryName repositoryName);
 }
