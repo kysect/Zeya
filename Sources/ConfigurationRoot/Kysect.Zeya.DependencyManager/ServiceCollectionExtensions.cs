@@ -15,7 +15,6 @@ using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
-using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tui;
@@ -82,7 +81,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaRepositoryValidation(this IServiceCollection serviceCollection)
     {
         serviceCollection
-            .AddSingleton<DotnetCli>()
             .AddSingleton<XmlDocumentSyntaxFormatter>()
             .AddSingleton<DotnetSolutionModifierFactory>()
             .AddSingleton<SolutionFileContentParser>()
