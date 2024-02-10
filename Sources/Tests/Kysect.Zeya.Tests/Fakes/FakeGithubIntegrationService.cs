@@ -2,8 +2,7 @@
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
-using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

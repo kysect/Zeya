@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.Tests.Fakes;
 using Kysect.Zeya.Tests.Tools;

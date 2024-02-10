@@ -1,7 +1,6 @@
-﻿using Kysect.Zeya.GithubIntegration.Abstraction.Models;
-using Kysect.Zeya.GitIntegration.Abstraction;
+﻿using Kysect.Zeya.GitIntegration.Abstraction;
 
-namespace Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
+namespace Kysect.Zeya.GithubIntegration.Abstraction;
 
 public interface IGithubIntegrationService
 {
