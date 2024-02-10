@@ -74,6 +74,7 @@ public class GithubIntegrationService : IGithubIntegrationService
             _powerShellAccessor.ExecuteAndGet(new PowerShellQuery($"gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\""));
         }
     }
+
     public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
     {
         githubRepositoryName.ThrowIfNull();
