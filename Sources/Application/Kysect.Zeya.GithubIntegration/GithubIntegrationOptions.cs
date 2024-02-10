@@ -14,7 +14,5 @@ public class GithubIntegrationOptions
     [Required]
     public string CacheDirectoryPath { get; init; } = null!;
     [Required]
-    public string IncludedOrganization { get; init; } = null!;
-    [Required]
     public IReadOnlyCollection<string> ExcludedRepositories { get; init; } = null!;
 }

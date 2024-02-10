@@ -12,7 +12,6 @@ using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
@@ -75,7 +74,6 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddSingleton<IFileSystem, FileSystem>()
             .AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>()
-            .AddSingleton<IClonedRepositoryFactory<ClonedGithubRepository>, GithubRepositoryAccessorFactory>()
             .AddSingleton<IGitIntegrationService>((sp) => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
             .AddSingleton<IGithubIntegrationService, GithubIntegrationService>();
     }

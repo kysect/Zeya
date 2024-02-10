@@ -1,3 +1,3 @@
-﻿namespace Kysect.Zeya.GithubIntegration.Abstraction.Models;
+﻿namespace Kysect.Zeya.GithubIntegration.Abstraction;
 
 public record struct RepositoryBranchProtection(bool PullRequestReviewsRequired, bool ConversationResolutionRequired);

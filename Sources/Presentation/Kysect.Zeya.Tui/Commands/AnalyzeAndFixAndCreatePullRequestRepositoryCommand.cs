@@ -1,7 +1,5 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
-using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;

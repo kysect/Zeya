@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.FileSystem;
-using Kysect.Zeya.GithubIntegration.Abstraction.Models;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using System.IO.Abstractions;
 

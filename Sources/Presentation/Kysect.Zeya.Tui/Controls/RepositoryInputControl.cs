@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
