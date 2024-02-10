@@ -1,4 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.GithubUtils.Models;
+using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
@@ -35,6 +37,19 @@ public class GithubIntegrationService : IGithubIntegrationService
         _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 
+    public IReadOnlyCollection<GithubRepositoryName> GetOrganizationRepositories(string organization)
+    {
+        var gitHubRepositoryDiscoveryService = new GitHubRepositoryDiscoveryService(_gitHubClient);
+        IReadOnlyList<GithubRepositoryBranch> githubRepositoryBranches = gitHubRepositoryDiscoveryService
+            .GetRepositories(organization)
+            .Result;
+
+        // TODO: remove this hack after fix https://github.com/kysect/GithubUtils/issues/41
+        return githubRepositoryBranches
+            .Select(r => new GithubRepositoryName(organization, r.Name))
+            .ToList();
+    }
+
     public void CloneOrUpdate(GithubRepositoryName repositoryName)
     {
         repositoryName.ThrowIfNull();
@@ -42,7 +57,7 @@ public class GithubIntegrationService : IGithubIntegrationService
         var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
-        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
+        repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubRepository(repositoryName.Owner, repositoryName.Name));
     }
 
     public void PushCommitToRemote(IClonedRepository repository, string branchName)
@@ -68,7 +83,7 @@ public class GithubIntegrationService : IGithubIntegrationService
         repositoryName.ThrowIfNull();
         message.ThrowIfNull();
 
-        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
+        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubRepository(repositoryName.Owner, repositoryName.Name));
         using (PowerShellPathChangeContext.TemporaryChangeCurrentDirectory(_powerShellAccessor, targetPath))
         {
             _powerShellAccessor.ExecuteAndGet(new PowerShellQuery($"gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\""));

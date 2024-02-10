@@ -24,7 +24,8 @@ public class AnalyzerGithubOrganization(
         logger.LogInformation("Start Zeya demo");
         string organization = AnsiConsole.Ask<string>("Organization for clone: ");
         logger.LogInformation("Loading github repositories for validation");
-        IReadOnlyCollection<ClonedGithubRepository> organizationRepositories = githubRepositoryProvider.GetGithubOrganizationRepositories(organization);
+        // TODO: allow to input exclusion
+        IReadOnlyCollection<ClonedGithubRepository> organizationRepositories = githubRepositoryProvider.GetGithubOrganizationRepositories(organization, []);
 
         logger.LogTrace("Loading validation configuration");
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules("Demo-validation.yaml");
