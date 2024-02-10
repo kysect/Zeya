@@ -48,14 +48,45 @@ public static class ServiceCollectionExtensions
     {
         return serviceCollection
             .AddZeyaLogging()
+            .AddPowerShellWrappers()
+            .AddZeyaDotnetProjectSystemIntegration()
+            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
             .AddZeyaGithubIntegration()
-            .AddZeyaRepositoryValidation()
-            .AddPowerShellWrappers();
+            .AddZeyaValidationRules()
+            .AddZeyaValidationRuleFixers()
+            .AddZeyaRepositoryValidation();
     }
 
     public static IServiceCollection AddZeyaLogging(this IServiceCollection serviceCollection)
     {
-        return serviceCollection.AddSingleton(_ => CreateLogger());
+        // TODO: disable IncludeScopes in default implementation PredefinedLogger.CreateConsoleLogger
+        using var logConfigurationBuilder = new LogConfigurationBuilder();
+        const LogLevel logLevel = LogLevel.Trace;
+
+        ILogger logger = logConfigurationBuilder
+            .SetLevel(logLevel)
+            .SetRedirectToAppData("Kysect", "Zeya")
+            .SetDefaultCategory("Zeya")
+            .AddSpectreConsole()
+            .AddSerilogToFile("Zeya.log")
+            .Build();
+
+        return serviceCollection.AddSingleton(logger);
+    }
+
+    private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddPowerShellLogger(b =>
+            {
+                b
+                    .SetDefaultCategory("Cloudext")
+                    .SetRedirectToAppData("GreenCloud", "Cloudext")
+                    .SetLevel(LogLevel.Trace)
+                    .AddSerilogToFile("Cloudext.log");
+            })
+            .AddPowerShellAccessorFactory()
+            .AddPowerShellAccessor();
     }
 
     public static IServiceCollection AddZeyaGithubIntegration(this IServiceCollection serviceCollection)
@@ -73,50 +104,34 @@ public static class ServiceCollectionExtensions
         });
 
         return serviceCollection
+            .AddSingleton<IGithubIntegrationService, GithubIntegrationService>()
+            .AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>();
+    }
+
+    public static IServiceCollection AddZeyaDotnetProjectSystemIntegration(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
             .AddSingleton<IFileSystem, FileSystem>()
-            .AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>()
-            .AddSingleton<IGitIntegrationService>((sp) => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
-            .AddSingleton<IGithubIntegrationService, GithubIntegrationService>();
+            .AddSingleton<XmlDocumentSyntaxFormatter>()
+            .AddSingleton<DotnetSolutionModifierFactory>()
+            .AddSingleton<SolutionFileContentParser>()
+            .AddSingleton<RepositorySolutionAccessorFactory>();
     }
 
     public static IServiceCollection AddZeyaRepositoryValidation(this IServiceCollection serviceCollection)
     {
         serviceCollection
-            .AddSingleton<XmlDocumentSyntaxFormatter>()
-            .AddSingleton<DotnetSolutionModifierFactory>()
-            .AddSingleton<SolutionFileContentParser>()
-            .AddSingleton<RepositorySolutionAccessorFactory>();
-
-        serviceCollection.AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>();
-        serviceCollection
+            .AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>()
             .AddSingleton<RepositoryValidationRuleProvider>()
             .AddSingleton<RepositoryValidator>()
             .AddSingleton<RepositoryDiagnosticFixer>()
             .AddSingleton<PullRequestMessageCreator>()
             .AddSingleton<RepositoryValidationService>();
 
-        serviceCollection = serviceCollection
-            .AddZeyaValidationRules()
-            .AddZeyaValidationRuleFixers();
-
         return serviceCollection;
     }
 
-    // TODO: disable IncludeScopes in default implementation PredefinedLogger.CreateConsoleLogger
-    private static ILogger CreateLogger(LogLevel logLevel = LogLevel.Trace)
-    {
-        using var logConfigurationBuilder = new LogConfigurationBuilder();
-
-        return logConfigurationBuilder
-            .SetLevel(logLevel)
-            .SetRedirectToAppData("Kysect", "Zeya")
-            .SetDefaultCategory("Zeya")
-            .AddSpectreConsole()
-            .AddSerilogToFile("Zeya.log")
-            .Build();
-    }
-
-    private static IServiceCollection AddZeyaValidationRules(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaValidationRules(this IServiceCollection serviceCollection)
     {
         Assembly[] validationRuleAssembly = new[]
         {
@@ -126,14 +141,14 @@ public static class ServiceCollectionExtensions
         // TODO: customize scenario directory path
 
         return serviceCollection
-            .AddSingleton<IScenarioSourceProvider>(sp => new ScenarioSourceProvider("Samples"))
+            .AddSingleton<IScenarioSourceProvider>(sp => new ScenarioSourceProvider(sp.GetRequiredService<IFileSystem>(), "Samples"))
             .AddSingleton<IScenarioSourceCodeParser, YamlScenarioSourceCodeParser>()
             .AddSingleton<IScenarioStepParser, ScenarioStepReflectionParser>(_ => ScenarioStepReflectionParser.Create(validationRuleAssembly))
             .AddAllImplementationOf<IScenarioStepExecutor>(validationRuleAssembly)
             .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, validationRuleAssembly));
     }
 
-    private static IServiceCollection AddZeyaValidationRuleFixers(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaValidationRuleFixers(this IServiceCollection serviceCollection)
     {
         Assembly[] validationRuleFixerAssembly = new[]
         {
@@ -165,20 +180,5 @@ public static class ServiceCollectionExtensions
         var userActionSelectionMenuInitializer = new TuiMenuInitializer(userActionSelectionMenuProvider);
         TuiMenuNavigationItem selectionMenuNavigatorItem = userActionSelectionMenuInitializer.CreateMenu();
         return new TuiMenuNavigator(selectionMenuNavigatorItem, logger);
-    }
-
-    private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddPowerShellLogger(b =>
-            {
-                b
-                    .SetDefaultCategory("Cloudext")
-                    .SetRedirectToAppData("GreenCloud", "Cloudext")
-                    .SetLevel(LogLevel.Trace)
-                    .AddSerilogToFile("Cloudext.log");
-            })
-            .AddPowerShellAccessorFactory()
-            .AddPowerShellAccessor();
     }
 }

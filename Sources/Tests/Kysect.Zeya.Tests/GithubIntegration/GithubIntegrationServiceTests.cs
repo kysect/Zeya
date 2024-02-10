@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using System.IO.Abstractions;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
+using Kysect.Zeya.Tests.Tools.Fakes;
 
 namespace Kysect.Zeya.Tests.GithubIntegration;
 

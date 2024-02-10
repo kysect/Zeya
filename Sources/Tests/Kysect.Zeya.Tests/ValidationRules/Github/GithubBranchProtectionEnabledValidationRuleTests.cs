@@ -1,5 +1,4 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
@@ -16,10 +15,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
 
     public GithubBranchProtectionEnabledValidationRuleTests()
     {
-        _fakeGithubIntegrationService = new FakeGithubIntegrationService(
-            new GithubIntegrationOptions(),
-            new FakePathFormatStrategy(string.Empty),
-            TestLoggerProvider.GetLogger());
+        _fakeGithubIntegrationService = FakeGithubIntegrationServiceTestInstance.Create();
         _validationRule = new GithubBranchProtectionEnabledValidationRule(_fakeGithubIntegrationService);
     }
 
