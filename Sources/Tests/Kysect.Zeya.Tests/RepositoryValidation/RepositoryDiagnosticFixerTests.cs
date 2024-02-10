@@ -2,7 +2,7 @@
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Models;
+using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.ValidationRules.Abstractions;

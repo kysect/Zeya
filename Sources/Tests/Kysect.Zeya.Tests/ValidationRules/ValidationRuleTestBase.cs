@@ -3,7 +3,7 @@ using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
-using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Asserts;
 using Microsoft.Extensions.Logging;

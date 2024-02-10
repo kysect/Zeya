@@ -17,6 +17,7 @@ using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.ManagedDotnetCli;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Abstractions;

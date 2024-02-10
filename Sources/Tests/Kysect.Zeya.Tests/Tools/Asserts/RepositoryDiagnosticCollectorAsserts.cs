@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.Collections.Extensions;
-using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Models;
+using Kysect.Zeya.RepositoryValidation.Abstractions;
+using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 
 namespace Kysect.Zeya.Tests.Tools.Asserts;
 
