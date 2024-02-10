@@ -1,6 +1,6 @@
 ﻿using Kysect.Zeya.GitIntegration.Abstraction;
 
-namespace Kysect.Zeya.RepositoryAccess;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryValidationContext
 {

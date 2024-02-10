@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kysect.DotnetProjectSystem" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

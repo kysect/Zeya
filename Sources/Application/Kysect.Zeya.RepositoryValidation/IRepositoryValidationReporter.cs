@@ -1,6 +1,6 @@
-﻿using Kysect.Zeya.Abstractions.Models;
+﻿using Kysect.Zeya.RepositoryValidation.Models;
 
-namespace Kysect.Zeya.Abstractions.Contracts;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public interface IRepositoryValidationReporter
 {

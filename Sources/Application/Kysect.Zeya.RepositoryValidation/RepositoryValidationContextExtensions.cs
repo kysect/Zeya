@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
 
-namespace Kysect.Zeya.RepositoryAccess;
+namespace Kysect.Zeya.RepositoryValidation;
 
 public static class RepositoryValidationContextExtensions
 {

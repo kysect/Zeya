@@ -1,7 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Logging;
-using Kysect.Zeya.Abstractions.Contracts;
-using Kysect.Zeya.Abstractions.Models;
+using Kysect.Zeya.RepositoryValidation.Models;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 

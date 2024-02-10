@@ -2,7 +2,7 @@
 using Kysect.Zeya.GitIntegration.Abstraction;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.RepositoryAccess;
+namespace Kysect.Zeya.GitIntegration;
 
 public class ClonedRepositoryAccessor(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {

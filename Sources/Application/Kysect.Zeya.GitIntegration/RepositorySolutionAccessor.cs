@@ -6,7 +6,7 @@ using Kysect.Zeya.Abstractions;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.RepositoryAccess;
+namespace Kysect.Zeya.GitIntegration;
 
 public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFileContentParser solutionFileParser, IFileSystem fileSystem)
 {
