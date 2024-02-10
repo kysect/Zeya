@@ -7,10 +7,13 @@ using Kysect.PowerShellRunner.Executions;
 using Kysect.PowerShellRunner.Tools;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+using Kysect.Zeya.GitIntegration.Abstraction;
+using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
 using GithubRepository = Kysect.Zeya.GithubIntegration.Abstraction.Models.GithubRepository;
+using Repository = LibGit2Sharp.Repository;
 
 namespace Kysect.Zeya.GithubIntegration;
 
@@ -42,6 +45,24 @@ public class GithubIntegrationService : IGithubIntegrationService
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
         repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+    }
+
+    public void PushCommitToRemote(IClonedRepository repository, string branchName)
+    {
+        repository.ThrowIfNull();
+
+        string targetPath = repository.GetFullPath();
+        using var repo = new Repository(targetPath);
+
+        Remote? remote = repo.Network.Remotes["origin"];
+        string pushRefSpec = $"refs/heads/{branchName}";
+
+        var pushOptions = new PushOptions
+        {
+            CredentialsProvider = (url, usernameFromUrl, types) => new UsernamePasswordCredentials() { Username = _githubIntegrationOptions.GithubUsername, Password = _githubIntegrationOptions.GithubToken }
+        };
+
+        repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
     public void CreatePullRequest(GithubRepository repository, string message)

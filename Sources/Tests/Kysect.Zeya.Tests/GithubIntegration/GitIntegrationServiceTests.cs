@@ -31,14 +31,14 @@ public class GitIntegrationServiceTests : IDisposable
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem, testDirectory);
         var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()
         {
-            CommitAuthor = new GithubCommitAuthor()
+            CommitAuthor = new GitCommitAuthor()
             {
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
             }
         });
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
-        _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
+        _gitIntegrationService = new GitIntegrationService(commitAuthor: null);
         _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepository = new GithubRepository("Kysect", "Zeya");
         _clonedRepositoryAccessor = new ClonedRepositoryAccessor(_repositoriesDirectory, _fileSystem);

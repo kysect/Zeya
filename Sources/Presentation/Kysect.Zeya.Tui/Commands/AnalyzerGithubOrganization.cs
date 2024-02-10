@@ -1,8 +1,6 @@
-﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.TerminalUserInterface.Commands;
+﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
@@ -26,17 +24,16 @@ public class AnalyzerGithubOrganization(
         logger.LogInformation("Start Zeya demo");
         string organization = AnsiConsole.Ask<string>("Organization for clone: ");
         logger.LogInformation("Loading github repositories for validation");
-        IReadOnlyCollection<IClonedRepository> organizationRepositories = githubRepositoryProvider.GetGithubOrganizationRepositories(organization);
+        IReadOnlyCollection<ClonedGithubRepositoryAccessor> organizationRepositories = githubRepositoryProvider.GetGithubOrganizationRepositories(organization);
 
         logger.LogTrace("Loading validation configuration");
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules("Demo-validation.yaml");
 
         var report = RepositoryValidationReport.Empty;
         logger.LogInformation("Start repositories validation");
-        foreach (IClonedRepository githubRepository in organizationRepositories)
+        foreach (ClonedGithubRepositoryAccessor githubRepository in organizationRepositories)
         {
-            ClonedGithubRepositoryAccessor clonedGithubRepositoryAccessor = githubRepository.To<ClonedGithubRepositoryAccessor>();
-            report = report.Compose(repositoryValidator.Validate(clonedGithubRepositoryAccessor, validationRules));
+            report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
         }
 
         reporter.Report(report);

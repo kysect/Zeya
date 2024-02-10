@@ -4,6 +4,7 @@ using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -35,6 +36,11 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
         repositoryFetcher.EnsureRepositoryUpdated(_localStoragePathFactory, new GithubUtils.Models.GithubRepository(repository.Owner, repository.Name));
+    }
+
+    public void PushCommitToRemote(IClonedRepository repository, string branchName)
+    {
+        throw new NotImplementedException();
     }
 
     public void CreateFixBranch(GithubRepository repository, string branchName)

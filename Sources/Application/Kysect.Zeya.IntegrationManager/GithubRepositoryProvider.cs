@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
+using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GitIntegration;
@@ -11,7 +12,7 @@ using Octokit;
 using System.IO.Abstractions;
 using GithubRepository = Kysect.Zeya.GithubIntegration.Abstraction.Models.GithubRepository;
 
-namespace Kysect.Zeya.GithubIntegration;
+namespace Kysect.Zeya.IntegrationManager;
 
 public class GithubRepositoryProvider : IGithubRepositoryProvider
 {
@@ -27,7 +28,9 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         IFileSystem fileSystem,
         IOptions<GithubIntegrationOptions> githubIntegrationOptions,
         IGitIntegrationService gitIntegrationService,
-        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> repositoryFactory, ILogger logger, IGithubIntegrationService githubIntegrationService)
+        IClonedRepositoryFactory<ClonedGithubRepositoryAccessor> repositoryFactory,
+        ILogger logger,
+        IGithubIntegrationService githubIntegrationService)
     {
         _fileSystem = fileSystem;
         _logger = logger;
@@ -40,7 +43,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 
-    public IReadOnlyCollection<IClonedRepository> GetGithubOrganizationRepositories(string organization)
+    public IReadOnlyCollection<ClonedGithubRepositoryAccessor> GetGithubOrganizationRepositories(string organization)
     {
         IReadOnlyCollection<GithubRepository> githubRepositories = GetAllInner(organization).Result;
 
@@ -51,7 +54,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         return result;
     }
 
-    public IClonedRepository GetGithubRepository(string owner, string repository)
+    public ClonedGithubRepositoryAccessor GetGithubRepository(string owner, string repository)
     {
         return CreateGithubRepositoryAccessor(new GithubRepository(owner, repository));
     }
@@ -65,14 +68,12 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
     {
         var result = new List<GithubRepository>();
 
-        HashSet<string> skipList = _githubIntegrationOptions.ExcludedRepositories.ToHashSet();
+        var skipList = _githubIntegrationOptions.ExcludedRepositories.ToHashSet();
         var gitHubRepositoryDiscoveryService = new GitHubRepositoryDiscoveryService(_gitHub);
         foreach (GithubRepositoryBranch repository in await gitHubRepositoryDiscoveryService.GetRepositories(organization))
         {
             if (!skipList.Contains(repository.Name))
-            {
                 result.Add(new GithubRepository(organization, repository.Name));
-            }
         }
 
         return result;

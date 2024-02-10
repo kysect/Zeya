@@ -1,8 +1,7 @@
-﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.TerminalUserInterface.Commands;
+﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GithubIntegration.Abstraction.Contracts;
 using Kysect.Zeya.GithubIntegration.Abstraction.Models;
+using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Models;
 using Kysect.Zeya.Tui.Controls;
@@ -24,9 +23,7 @@ public class AnalyzeRepositoryCommand(
     public void Execute()
     {
         GithubRepository githubRepository = RepositoryInputControl.Ask();
-        ClonedGithubRepositoryAccessor githubRepositoryAccessor = githubRepositoryProvider
-            .GetGithubRepository(githubRepository.Owner, githubRepository.Name)
-            .To<ClonedGithubRepositoryAccessor>();
+        ClonedGithubRepositoryAccessor githubRepositoryAccessor = githubRepositoryProvider.GetGithubRepository(githubRepository.Owner, githubRepository.Name);
 
         logger.LogInformation("Validate repository {Url}", githubRepositoryAccessor.GithubMetadata.FullName);
         logger.LogTrace("Loading validation configuration");
