@@ -2,6 +2,8 @@
 
 public interface IClonedRepository
 {
+    string GetRepositoryName();
+
     string GetFullPath();
     bool Exists(string partialPath);
     string ReadAllText(string partialPath);

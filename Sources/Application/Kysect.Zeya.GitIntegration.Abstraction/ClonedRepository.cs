@@ -5,6 +5,12 @@ namespace Kysect.Zeya.GitIntegration.Abstraction;
 
 public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {
+    public virtual string GetRepositoryName()
+    {
+        IDirectoryInfo directoryInfo = fileSystem.DirectoryInfo.New(repositoryRootPath);
+        return directoryInfo.Name;
+    }
+
     public string GetFullPath()
     {
         return repositoryRootPath;

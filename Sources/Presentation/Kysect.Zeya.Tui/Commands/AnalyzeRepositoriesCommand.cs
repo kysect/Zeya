@@ -1,5 +1,5 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
@@ -23,7 +23,7 @@ public class AnalyzeRepositoriesCommand(
     {
         var repositorySelector = new RepositorySelector(githubRepositoryProvider);
 
-        IReadOnlyCollection<ClonedGithubRepository> repositories = repositorySelector.SelectRepositories();
+        IReadOnlyCollection<IClonedRepository> repositories = repositorySelector.SelectRepositories();
 
         logger.LogTrace("Loading validation configuration");
         // TODO: remove hardcoded value
@@ -31,7 +31,7 @@ public class AnalyzeRepositoriesCommand(
 
         var report = RepositoryValidationReport.Empty;
         logger.LogInformation("Start repositories validation");
-        foreach (ClonedGithubRepository githubRepository in repositories)
+        foreach (IClonedRepository githubRepository in repositories)
         {
             logger.LogDebug("Validate {Repository}", githubRepository.GetFullPath());
             report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
