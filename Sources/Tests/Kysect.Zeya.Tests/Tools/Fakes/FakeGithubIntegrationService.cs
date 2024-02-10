@@ -5,7 +5,6 @@ using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Kysect.Zeya.Tests.Tools.Fakes;
 
@@ -17,11 +16,9 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
     public RepositoryBranchProtection RepositoryBranchProtection { get; set; }
     public bool BranchProtectionEnabled { get; set; }
 
-    public FakeGithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger logger)
+    public FakeGithubIntegrationService(GithubIntegrationOptions githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger logger)
     {
-        githubIntegrationOptions.ThrowIfNull();
-
-        _options = githubIntegrationOptions.Value;
+        _options = githubIntegrationOptions.ThrowIfNull();
         _localStoragePathFactory = localStoragePathFactory;
         _logger = logger;
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);

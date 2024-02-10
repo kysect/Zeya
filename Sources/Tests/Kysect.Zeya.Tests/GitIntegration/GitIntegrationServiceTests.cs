@@ -6,7 +6,6 @@ using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.IO.Abstractions;
 using Repository = LibGit2Sharp.Repository;
 
@@ -29,16 +28,16 @@ public class GitIntegrationServiceTests : IDisposable
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem);
         _repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
 
-        var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()
+        var githubIntegrationOptions = new GithubIntegrationOptions()
         {
             CommitAuthor = new GitCommitAuthor()
             {
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
             }
-        });
+        };
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
-        _gitIntegrationService = new GitIntegrationService(commitAuthor: null);
+        _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions.CommitAuthor);
         _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
         _clonedRepository = new ClonedRepository(_repositoriesDirectory, _fileSystem);
