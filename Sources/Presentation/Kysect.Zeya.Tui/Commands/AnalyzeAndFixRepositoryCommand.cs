@@ -22,8 +22,8 @@ public class AnalyzeAndFixRepositoryCommand(
 
     public void Execute()
     {
-        GithubRepository githubRepository = RepositoryInputControl.Ask();
-        ClonedGithubRepositoryAccessor repository = githubRepositoryProvider.GetGithubRepository(githubRepository.Owner, githubRepository.Name);
+        GithubRepositoryName githubRepositoryName = RepositoryInputControl.Ask();
+        ClonedGithubRepository repository = githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
 
         // TODO: remove hardcoded value
         logger.LogTrace("Loading validation configuration");

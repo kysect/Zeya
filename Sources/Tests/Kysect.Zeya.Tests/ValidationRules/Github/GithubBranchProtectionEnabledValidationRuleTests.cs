@@ -29,7 +29,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
         ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new ClonedRepositoryAccessor(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+            new RepositoryValidationContext(new ClonedRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
 
         _validationRule.Execute(nonGithubContext, arguments);
 

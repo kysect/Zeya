@@ -5,7 +5,7 @@ namespace Kysect.Zeya.IntegrationManager;
 
 public interface IGithubRepositoryProvider
 {
-    IReadOnlyCollection<ClonedGithubRepositoryAccessor> GetGithubOrganizationRepositories(string organization);
-    ClonedGithubRepositoryAccessor GetGithubRepository(string owner, string repository);
+    IReadOnlyCollection<ClonedGithubRepository> GetGithubOrganizationRepositories(string organization);
+    ClonedGithubRepository GetGithubRepository(string owner, string repository);
     IClonedRepository GetLocalRepository(string path);
 }

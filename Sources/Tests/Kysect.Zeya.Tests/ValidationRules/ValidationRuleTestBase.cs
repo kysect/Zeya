@@ -16,7 +16,7 @@ namespace Kysect.Zeya.Tests.ValidationRules;
 public abstract class ValidationRuleTestBase
 {
     protected ILogger Logger { get; }
-    protected ClonedGithubRepositoryAccessor Repository { get; }
+    protected ClonedGithubRepository Repository { get; }
     protected GithubRepositoryAccessorFactory GithubRepositoryAccessorFactory { get; }
     protected MockFileSystem FileSystem { get; }
     protected ScenarioContext Context { get; }
@@ -36,7 +36,7 @@ public abstract class ValidationRuleTestBase
 
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
         GithubRepositoryAccessorFactory = new GithubRepositoryAccessorFactory(new FakePathFormatStrategy(CurrentPath), FileSystem);
-        Repository = GithubRepositoryAccessorFactory.Create(new GithubRepository("owner", "name"));
+        Repository = GithubRepositoryAccessorFactory.Create(new GithubRepositoryName("owner", "name"));
 
         RepositoryDiagnosticCollector diagnosticCollector = DiagnosticCollectorAsserts.GetCollector();
         Context = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(Repository, diagnosticCollector));

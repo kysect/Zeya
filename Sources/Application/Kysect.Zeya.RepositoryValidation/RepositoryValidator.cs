@@ -11,7 +11,7 @@ namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryValidator(ILogger logger, IScenarioStepHandler scenarioStepHandler)
 {
-    public RepositoryValidationReport Validate(ClonedGithubRepositoryAccessor repository, IReadOnlyCollection<IValidationRule> rules)
+    public RepositoryValidationReport Validate(ClonedGithubRepository repository, IReadOnlyCollection<IValidationRule> rules)
     {
         repository.ThrowIfNull();
         rules.ThrowIfNull();
