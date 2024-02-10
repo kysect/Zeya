@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using System.IO.Abstractions;
 using Repository = LibGit2Sharp.Repository;
 
-namespace Kysect.Zeya.Tests.GithubIntegration;
+namespace Kysect.Zeya.Tests.GitIntegration;
 
 public class GitIntegrationServiceTests : IDisposable
 {
@@ -25,10 +25,9 @@ public class GitIntegrationServiceTests : IDisposable
     {
         ILogger logger = TestLoggerProvider.GetLogger();
         _fileSystem = new FileSystem();
-        string testDirectory = "Test-directory";
-        _repositoriesDirectory = _fileSystem.Path.Combine(".", testDirectory, "Repositories");
+        _temporaryDirectory = new TestTemporaryDirectory(_fileSystem);
+        _repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
 
-        _temporaryDirectory = new TestTemporaryDirectory(_fileSystem, testDirectory);
         var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()
         {
             CommitAuthor = new GitCommitAuthor()

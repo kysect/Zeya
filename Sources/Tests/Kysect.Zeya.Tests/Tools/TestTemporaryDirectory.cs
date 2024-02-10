@@ -9,10 +9,12 @@ public class TestTemporaryDirectory : IDisposable
     private readonly IFileSystem _fileSystem;
     private readonly IDirectoryInfo _directoryInfo;
 
-    public TestTemporaryDirectory(IFileSystem fileSystem, string path)
+    public TestTemporaryDirectory(IFileSystem fileSystem, string rootPath = ".")
     {
-        path.ThrowIfNull();
         _fileSystem = fileSystem.ThrowIfNull();
+        rootPath.ThrowIfNull();
+
+        string path = _fileSystem.Path.Combine(rootPath, "TempDirectory", Guid.NewGuid().ToString());
 
         if (_fileSystem.Directory.Exists(path))
         {
@@ -22,6 +24,11 @@ public class TestTemporaryDirectory : IDisposable
 
         _directoryInfo = _fileSystem.Directory.CreateDirectory(path);
         DirectoryExtensions.EnsureDirectoryExists(fileSystem, path);
+    }
+
+    public string GetTemporaryDirectory()
+    {
+        return _fileSystem.Path.Combine(_directoryInfo.FullName, Guid.NewGuid().ToString());
     }
 
     public void Dispose()
@@ -53,6 +60,7 @@ public class TestTemporaryDirectory : IDisposable
         {
             DeleteRecursive(dir);
         }
+
 
         target.Delete();
     }
