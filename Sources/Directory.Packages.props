@@ -19,17 +19,17 @@
     <PackageVersion Include="GuiLabs.Language.Xml" Version="1.2.88" />
     <PackageVersion Include="Kysect.EditorConfig" Version="1.1.8" />
     <PackageVersion Include="Kysect.DotnetSlnParser" Version="0.1.6" />
-    <PackageVersion Include="Kysect.ScenarioLib" Version="0.1.4" />
-    <PackageVersion Include="Kysect.ScenarioLib.Abstractions" Version="0.1.4" />
+    <PackageVersion Include="Kysect.ScenarioLib" Version="0.1.5" />
+    <PackageVersion Include="Kysect.ScenarioLib.Abstractions" Version="0.1.5" />
     <PackageVersion Include="System.Management.Automation" Version="7.4.0" />
     <PackageVersion Include="TestableIO.System.IO.Abstractions" Version="20.0.15" />
     <PackageVersion Include="TestableIO.System.IO.Abstractions.Analyzers" Version="2022.0.0" />
     <PackageVersion Include="Kysect.TerminalUserInterface" Version="0.1.2" />
     <PackageVersion Include="Kysect.CommonLib.DependencyInjection" Version="0.1.18" />
-    <PackageVersion Include="Kysect.ScenarioLib.YamlParser" Version="0.1.4" />
+    <PackageVersion Include="Kysect.ScenarioLib.YamlParser" Version="0.1.5" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Kysect.DotnetSlnGenerator" Version="0.1.18" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="NUnit" Version="4.0.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="3.10.0" />

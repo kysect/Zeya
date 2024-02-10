@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
-using Kysect.ScenarioLib;
-using Kysect.ScenarioLib.YamlParser;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.ValidationRules;
+using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.ValidationRules.Abstractions;
-using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests.RepositoryValidation;
 
@@ -14,11 +11,7 @@ public class RepositoryValidationRuleProviderTests
 
     public RepositoryValidationRuleProviderTests()
     {
-        var fileSystem = new FileSystem();
-        var scenarioSourceProvider = new ScenarioSourceProvider(fileSystem.Path.Combine("Tools", "Assets"));
-        var yamlScenarioSourceCodeParser = new YamlScenarioSourceCodeParser();
-        var scenarioStepReflectionParser = ScenarioStepReflectionParser.Create(typeof(RuleDescription).Assembly);
-        _repositoryValidationRuleProvider = new RepositoryValidationRuleProvider(scenarioSourceProvider, yamlScenarioSourceCodeParser, scenarioStepReflectionParser);
+        _repositoryValidationRuleProvider = RepositoryValidationRuleProviderTestInstance.Create();
     }
 
     [Fact]

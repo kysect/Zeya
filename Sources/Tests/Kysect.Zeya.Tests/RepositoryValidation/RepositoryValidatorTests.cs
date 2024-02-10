@@ -16,11 +16,7 @@ public class RepositoryValidatorTests : ValidationRuleTestBase
 
     public RepositoryValidatorTests()
     {
-        var scenarioStepReflectionHandler = new ScenarioStepReflectionHandler(new Dictionary<Type, ScenarioStepExecutorReflectionDecorator>()
-        {
-            {typeof(ArtifactsOutputEnabledValidationRule.Arguments), new ScenarioStepExecutorReflectionDecorator(new ArtifactsOutputEnabledValidationRule(RepositorySolutionAccessorFactory))},
-            {typeof(CentralPackageManagerEnabledValidationRule.Arguments), new ScenarioStepExecutorReflectionDecorator(new CentralPackageManagerEnabledValidationRule(RepositorySolutionAccessorFactory))}
-        });
+        ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create(FileSystem);
         _repositoryValidator = new RepositoryValidator(TestLoggerProvider.GetLogger(), scenarioStepReflectionHandler);
     }
 

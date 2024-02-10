@@ -1,7 +1,7 @@
 ﻿using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 
-namespace Kysect.Zeya.Tests.Tools;
+namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class FakePathFormatStrategy(string path) : ILocalStoragePathFactory
 {
