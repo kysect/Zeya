@@ -27,6 +27,11 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
     }
 
+    public IReadOnlyCollection<GithubRepositoryName> GetOrganizationRepositories(string organization)
+    {
+        throw new NotImplementedException();
+    }
+
     public void CloneOrUpdate(GithubRepositoryName repositoryName)
     {
         repositoryName.ThrowIfNull();

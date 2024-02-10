@@ -48,6 +48,14 @@ public class GithubIntegrationServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetOrganizationRepositories_ForKysect_ReturnZeya()
+    {
+        IReadOnlyCollection<GithubRepositoryName> repositories = _githubIntegrationService.GetOrganizationRepositories("Kysect");
+
+        repositories.Should().Contain(new GithubRepositoryName("Kysect", "Zeya"));
+    }
+
+    [Fact]
     public void CloneOrUpdate_NewRepository_GitDirectoryCreated()
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
