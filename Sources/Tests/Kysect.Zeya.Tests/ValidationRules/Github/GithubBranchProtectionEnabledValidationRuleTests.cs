@@ -3,8 +3,8 @@ using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.Tests.Fakes;
 using Kysect.Zeya.Tests.Tools;
+using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.ValidationRules.Rules.Github;
 using Microsoft.Extensions.Options;
 
