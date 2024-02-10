@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
 
-public static class RepositoryInputControl
+public static class RepositoryNameInputControl
 {
     public static GithubRepositoryName Ask()
     {

@@ -4,37 +4,36 @@ using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
+using Kysect.Zeya.Tui.Controls;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
-using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Commands;
 
-public class AnalyzerGithubOrganization(
+public class AnalyzeRepositoriesCommand(
     IRepositoryValidationReporter reporter,
     IGithubRepositoryProvider githubRepositoryProvider,
     RepositoryValidator repositoryValidator,
     RepositoryValidationRuleProvider validationRuleProvider,
-    ILogger logger)
-    : ITuiCommand
+    ILogger logger) : ITuiCommand
 {
-    public string Name => "Analyze Kysect Github organization";
+    public string Name => "Analyze repositories";
 
     public void Execute()
     {
-        logger.LogInformation("Start Zeya demo");
-        string organization = AnsiConsole.Ask<string>("Organization for clone: ");
-        logger.LogInformation("Loading github repositories for validation");
-        // TODO: allow to input exclusion
-        IReadOnlyCollection<ClonedGithubRepository> organizationRepositories = githubRepositoryProvider.GetGithubOrganizationRepositories(organization, []);
+        var repositorySelector = new RepositorySelector(githubRepositoryProvider);
+
+        IReadOnlyCollection<ClonedGithubRepository> repositories = repositorySelector.SelectRepositories();
 
         logger.LogTrace("Loading validation configuration");
+        // TODO: remove hardcoded value
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules("Demo-validation.yaml");
 
         var report = RepositoryValidationReport.Empty;
         logger.LogInformation("Start repositories validation");
-        foreach (ClonedGithubRepository githubRepository in organizationRepositories)
+        foreach (ClonedGithubRepository githubRepository in repositories)
         {
+            logger.LogDebug("Validate {Repository}", githubRepository.GetFullPath());
             report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
         }
 

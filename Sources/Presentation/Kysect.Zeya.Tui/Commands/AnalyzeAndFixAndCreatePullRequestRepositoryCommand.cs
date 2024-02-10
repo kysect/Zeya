@@ -25,7 +25,7 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     public void Execute()
     {
         // TODO: reduce copy-paste
-        GithubRepositoryName githubRepositoryName = RepositoryInputControl.Ask();
+        GithubRepositoryName githubRepositoryName = RepositoryNameInputControl.Ask();
         ClonedGithubRepository repository = githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
 
         // TODO: remove hardcoded value
