@@ -1,4 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.ValidationRules;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
@@ -17,7 +18,7 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
     [Fact]
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectoryBuildProps()
     {
-        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .Save(FileSystem, CurrentPath, Formatter);
 
@@ -31,7 +32,7 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
     [Fact]
     public void Validate_SolutionWithEmptyDirectoryBuildProps_ReturnDiagnosticAboutMissedPackage()
     {
-        var arguments = new RequiredPackagesAddedValidationRule.Arguments(["RequiredPackage"]);
+        var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
             .Save(FileSystem, CurrentPath, Formatter);
