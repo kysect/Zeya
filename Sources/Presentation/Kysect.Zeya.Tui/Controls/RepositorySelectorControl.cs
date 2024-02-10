@@ -7,11 +7,11 @@ using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
 
-public class RepositorySelector
+public class RepositorySelectorControl
 {
     private readonly IGithubRepositoryProvider _githubRepositoryProvider;
 
-    public RepositorySelector(IGithubRepositoryProvider githubRepositoryProvider)
+    public RepositorySelectorControl(IGithubRepositoryProvider githubRepositoryProvider)
     {
         _githubRepositoryProvider = githubRepositoryProvider;
     }
@@ -35,8 +35,7 @@ public class RepositorySelector
         if (selectionType == "Github repository")
         {
             GithubRepositoryName githubRepositoryName = RepositoryNameInputControl.Ask();
-            ClonedGithubRepository clonedGithubRepository = _githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
-            return [clonedGithubRepository];
+            return [CreateGithubRepository(githubRepositoryName)];
         }
 
         if (selectionType == "Github organization")
@@ -47,5 +46,10 @@ public class RepositorySelector
         }
 
         throw SwitchDefaultExceptions.OnUnexpectedValue(selectionType);
+    }
+
+    public ClonedGithubRepository CreateGithubRepository(GithubRepositoryName githubRepositoryName)
+    {
+        return _githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
     }
 }

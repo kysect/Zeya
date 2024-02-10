@@ -1,0 +1,82 @@
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.Abstractions;
+using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
+using Kysect.Zeya.ValidationRules.Abstractions;
+using Microsoft.Extensions.Logging;
+
+namespace Kysect.Zeya.IntegrationManager;
+
+public class RepositoryValidationService(
+    RepositoryValidationRuleProvider validationRuleProvider,
+    RepositoryValidator repositoryValidator,
+    IRepositoryValidationReporter reporter,
+    RepositoryDiagnosticFixer repositoryDiagnosticFixer,
+    IGitIntegrationService gitIntegrationService,
+    IGithubIntegrationService githubIntegrationService,
+    PullRequestMessageCreator pullRequestMessageCreator,
+    ILogger logger)
+{
+    public void AnalyzerAndFix(IClonedRepository repository, string scenario)
+    {
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
+        RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenario);
+        Fix(repository, repositoryValidationReport, validationRules);
+    }
+
+    public void CreatePullRequestWithFix(ClonedGithubRepository repository, string scenario)
+    {
+        string branchName = "zeya/fixer";
+        string commitMessage = "Apply Zeya code fixers";
+
+        // TODO: remove hardcoded value
+        RepositoryValidationReport report = Analyze([repository], scenario);
+        IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(scenario);
+
+        logger.LogInformation("Repositories analyzed, run fixers");
+        gitIntegrationService.CreateFixBranch(repository, branchName);
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, report, rules);
+
+        logger.LogInformation("Commit fixes");
+        gitIntegrationService.CreateCommitWithFix(repository, commitMessage);
+
+        logger.LogInformation("Push changes to remote");
+        githubIntegrationService.PushCommitToRemote(repository, branchName);
+
+        logger.LogInformation("Create PR");
+        string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
+        githubIntegrationService.CreatePullRequest(repository.GithubMetadata, pullRequestMessage);
+    }
+
+    public RepositoryValidationReport Analyze(IReadOnlyCollection<IClonedRepository> repositories, string scenario)
+    {
+        repositories.ThrowIfNull();
+
+        logger.LogTrace("Loading validation configuration");
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
+
+        RepositoryValidationReport report = RepositoryValidationReport.Empty;
+        logger.LogInformation("Start repositories validation");
+        foreach (IClonedRepository githubRepository in repositories)
+        {
+            logger.LogDebug("Validate {Repository}", githubRepository.GetFullPath());
+            report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
+        }
+
+        reporter.Report(report);
+        return report;
+    }
+
+    public IReadOnlyCollection<IValidationRule> Fix(IClonedRepository repository, RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> validationRules)
+    {
+        repository.ThrowIfNull();
+        report.ThrowIfNull();
+        validationRules.ThrowIfNull();
+
+        // TODO: log fix result
+        logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
+        return repositoryDiagnosticFixer.Fix(report, validationRules, repository);
+    }
+}
