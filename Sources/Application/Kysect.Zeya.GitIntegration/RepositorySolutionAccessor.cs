@@ -18,7 +18,7 @@ public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFi
 
     public string GetSolutionFilePath()
     {
-        var repositoryPath = repository.GetFullPath();
+        var repositoryPath = repository.FileSystem.GetFullPath();
 
         var solutions = fileSystem.Directory.EnumerateFiles(repositoryPath, "*.sln", SearchOption.AllDirectories).ToList();
         if (solutions.Count == 0)
@@ -42,7 +42,7 @@ public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFi
     public IReadOnlyCollection<string> GetProjectPaths()
     {
         string solutionFilePath = GetSolutionFilePath();
-        string solutionFileContent = repository.ReadAllText(solutionFilePath);
+        string solutionFileContent = repository.FileSystem.ReadAllText(solutionFilePath);
         IReadOnlyCollection<DotnetProjectFileDescriptor> projectFileDescriptors = solutionFileParser.ParseSolutionFileContent(solutionFileContent);
         string solutionDirectoryPath = GetSolutionDirectoryPath();
 
@@ -56,13 +56,13 @@ public class RepositorySolutionAccessor(IClonedRepository repository, SolutionFi
     {
         string solutionDirectoryPath = GetSolutionDirectoryPath();
         string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, SolutionItemNameConstants.DirectoryPackagesProps);
-        return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
+        return fileSystem.Path.GetRelativePath(repository.FileSystem.GetFullPath(), fullPath);
     }
 
     public string GetDirectoryBuildPropsPath()
     {
         string solutionDirectoryPath = GetSolutionDirectoryPath();
         string fullPath = fileSystem.Path.Combine(solutionDirectoryPath, SolutionItemNameConstants.DirectoryBuildProps);
-        return fileSystem.Path.GetRelativePath(repository.GetFullPath(), fullPath);
+        return fileSystem.Path.GetRelativePath(repository.FileSystem.GetFullPath(), fullPath);
     }
 }

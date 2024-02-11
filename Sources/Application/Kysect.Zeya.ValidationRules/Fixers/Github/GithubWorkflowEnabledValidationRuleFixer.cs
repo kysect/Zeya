@@ -26,6 +26,6 @@ public class GithubWorkflowEnabledValidationRuleFixer(IFileSystem fileSystem, IL
 
         logger.LogInformation("Copy workflow from {Source} to {Target}", rule.MasterFile, workflowPath);
         string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
-        clonedRepository.WriteAllText(workflowPath, masterFileContent);
+        clonedRepository.FileSystem.WriteAllText(workflowPath, masterFileContent);
     }
 }

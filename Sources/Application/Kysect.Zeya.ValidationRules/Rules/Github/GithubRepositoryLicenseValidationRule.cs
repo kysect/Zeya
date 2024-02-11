@@ -22,7 +22,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
 
         var repositoryValidationContext = context.GetValidationContext();
 
-        if (!repositoryValidationContext.Repository.Exists(ValidationConstants.LicenseFileName))
+        if (!repositoryValidationContext.Repository.FileSystem.Exists(ValidationConstants.LicenseFileName))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -31,7 +31,7 @@ public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<Githu
             return;
         }
 
-        var licenseContent = repositoryValidationContext.Repository.ReadAllText(ValidationConstants.LicenseFileName);
+        var licenseContent = repositoryValidationContext.Repository.FileSystem.ReadAllText(ValidationConstants.LicenseFileName);
         if (!licenseContent.StartsWith(request.LicenseType))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
