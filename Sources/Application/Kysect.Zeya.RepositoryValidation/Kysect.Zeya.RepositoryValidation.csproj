@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Domain\Kysect.Zeya.Common\Kysect.Zeya.Common.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.RepositoryValidation.Abstractions\Kysect.Zeya.RepositoryValidation.Abstractions.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.ValidationRules.Abstractions\Kysect.Zeya.ValidationRules.Abstractions.csproj" />
   </ItemGroup>

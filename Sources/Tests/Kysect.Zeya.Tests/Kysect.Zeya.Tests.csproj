@@ -32,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\Kysect.Zeya.Abstractions\Kysect.Zeya.Abstractions.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.ValidationRules\Kysect.Zeya.ValidationRules.csproj" />
