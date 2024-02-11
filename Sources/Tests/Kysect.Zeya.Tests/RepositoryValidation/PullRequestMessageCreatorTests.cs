@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Abstractions;
+using Kysect.Zeya.Common;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 

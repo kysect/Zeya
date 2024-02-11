@@ -1,4 +1,4 @@
-﻿namespace Kysect.Zeya.Abstractions;
+﻿namespace Kysect.Zeya.Common;
 
 public class ZeyaException : Exception
 {

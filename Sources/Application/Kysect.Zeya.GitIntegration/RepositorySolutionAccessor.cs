@@ -2,7 +2,7 @@
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.Zeya.Abstractions;
+using Kysect.Zeya.Common;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using System.IO.Abstractions;
 
