@@ -61,7 +61,7 @@ public class RepositoryValidationService(
         logger.LogInformation("Start repositories validation");
         foreach (IClonedRepository githubRepository in repositories)
         {
-            logger.LogDebug("Validate {Repository}", githubRepository.GetFullPath());
+            logger.LogDebug("Validate {Repository}", githubRepository.GetRepositoryName());
             report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
         }
 

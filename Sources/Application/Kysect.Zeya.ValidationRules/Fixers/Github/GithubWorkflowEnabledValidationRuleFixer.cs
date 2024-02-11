@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Kysect.Zeya.ValidationRules.Rules.Github;
@@ -14,8 +15,14 @@ public class GithubWorkflowEnabledValidationRuleFixer(IFileSystem fileSystem, IL
         rule.ThrowIfNull();
         clonedRepository.ThrowIfNull();
 
+        if (clonedRepository is not ClonedGithubRepository clonedGithubRepository)
+        {
+            logger.LogError("Cannot apply github validation rule on non github repository");
+            return;
+        }
+
         IFileInfo masterFileInfo = fileSystem.FileInfo.New(rule.MasterFile);
-        string workflowPath = clonedRepository.GetWorkflowPath(masterFileInfo.Name);
+        string workflowPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
 
         logger.LogInformation("Copy workflow from {Source} to {Target}", rule.MasterFile, workflowPath);
         string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
