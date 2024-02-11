@@ -1,5 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
+using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
@@ -34,8 +36,18 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         IFileInfo masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
         string masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
 
-        var expectedPath = repositoryValidationContext.Repository.GetWorkflowPath(masterFileInfo.Name);
-        if (!repositoryValidationContext.Repository.Exists(expectedPath))
+        IClonedRepository clonedRepository = repositoryValidationContext.Repository;
+        if (clonedRepository is not ClonedGithubRepository clonedGithubRepository)
+        {
+            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
+                request.DiagnosticCode,
+                $"Cannot apply github validation rule on non github repository",
+                Arguments.DefaultSeverity);
+            return;
+        }
+
+        var expectedPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
+        if (!clonedRepository.Exists(expectedPath))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -44,7 +56,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
             return;
         }
 
-        string repositoryWorkflowFileContent = repositoryValidationContext.Repository.ReadAllText(expectedPath);
+        string repositoryWorkflowFileContent = clonedRepository.ReadAllText(expectedPath);
         if (!string.Equals(masterFileContent, repositoryWorkflowFileContent))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(

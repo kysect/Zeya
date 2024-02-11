@@ -33,11 +33,6 @@ public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem)
         fileSystem.File.WriteAllText(fullPathToFile, content);
     }
 
-    public string GetWorkflowPath(string workflowName)
-    {
-        return fileSystem.Path.Combine(".github", "workflows", workflowName);
-    }
-
     private string GetFullPathToFile(string partialPath)
     {
         return fileSystem.Path.Combine(GetFullPath(), partialPath);
