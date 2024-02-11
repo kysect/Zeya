@@ -28,6 +28,15 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
                                                        </Project>
                                                        """;
 
+        const string expectedDirectoryPackagePropsFile = """
+                                                         <Project>
+                                                           <ItemGroup>
+                                                             <PackageVersion Include="RequiredPackage" Version="1.0" />
+                                                             <PackageVersion Include="Package2" Version="1.2" />
+                                                           </ItemGroup>
+                                                         </Project>
+                                                         """;
+
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.2")]);
         new SolutionFileStructureBuilder("Solution")
             .Save(FileSystem, CurrentPath, Formatter);
@@ -38,6 +47,12 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
             .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryBuildPropsFile);
+
+        FileSystemAsserts
+            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
+            .ShouldExists()
+            .ShouldHaveContent(expectedDirectoryPackagePropsFile);
+
     }
 
     [Fact]

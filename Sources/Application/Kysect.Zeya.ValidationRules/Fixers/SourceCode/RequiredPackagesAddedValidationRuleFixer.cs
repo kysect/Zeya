@@ -25,6 +25,7 @@ public class RequiredPackagesAddedValidationRuleFixer(
         RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
         DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
+        var directoryPackageProps = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
 
         logger.LogTrace("Apply changes to {FileName} file", SolutionItemNameConstants.DirectoryBuildProps);
         HashSet<string> addedPackage = directoryBuildPropsFile
@@ -34,16 +35,18 @@ public class RequiredPackagesAddedValidationRuleFixer(
             .Select(p => p.Name)
             .ToHashSet();
 
-        // TODO: set version to Packages.props
         foreach (ProjectPackageVersion rulePackage in rule.Packages)
         {
             if (addedPackage.Contains(rulePackage.Name))
                 continue;
 
-            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage, SolutionItemNameConstants.DirectoryBuildProps);
+            logger.LogDebug("Adding package {Package} to {DirectoryBuildFile}", rulePackage.Name, SolutionItemNameConstants.DirectoryBuildProps);
             directoryBuildPropsFile.File.PackageReferences.AddPackageReference(rulePackage.Name);
 
-            logger.LogDebug("Removing package {Package} from csproj files", rulePackage);
+            logger.LogDebug("Adding package {Package} version {Verion} to {DirectoryPackageFile}", rulePackage.Name, rulePackage.Version, SolutionItemNameConstants.DirectoryBuildProps);
+            directoryPackageProps.Versions.AddPackageVersion(rulePackage.Name, rulePackage.Version);
+
+            logger.LogDebug("Removing package {Package} from csproj files", rulePackage.Name);
             foreach (var dotnetProjectModifier in solutionModifier.Projects)
                 dotnetProjectModifier.Value.File.PackageReferences.RemovePackageReference(rulePackage.Name);
         }
