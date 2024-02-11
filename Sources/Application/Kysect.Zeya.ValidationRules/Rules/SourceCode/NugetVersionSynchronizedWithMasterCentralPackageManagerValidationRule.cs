@@ -41,7 +41,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             return;
         }
 
-        if (!repositoryValidationContext.Repository.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
+        if (!repositoryValidationContext.Repository.FileSystem.Exists(repositorySolutionAccessor.GetDirectoryPackagePropsPath()))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,

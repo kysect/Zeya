@@ -24,7 +24,7 @@ public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : ISce
         request.ThrowIfNull();
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
-        string repositoryRootPath = repositoryValidationContext.Repository.GetFullPath();
+        string repositoryRootPath = repositoryValidationContext.Repository.FileSystem.GetFullPath();
 
         var expectedSourceDirectoryPath = fileSystem.Path.Combine(repositoryRootPath, request.SourceDirectoryPath);
         if (!fileSystem.Directory.Exists(expectedSourceDirectoryPath))

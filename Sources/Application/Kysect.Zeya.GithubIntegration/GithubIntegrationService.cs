@@ -64,7 +64,7 @@ public class GithubIntegrationService : IGithubIntegrationService
     {
         repository.ThrowIfNull();
 
-        string targetPath = repository.GetFullPath();
+        string targetPath = repository.FileSystem.GetFullPath();
         using var repo = new Repository(targetPath);
 
         Remote? remote = repo.Network.Remotes["origin"];

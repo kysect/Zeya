@@ -22,7 +22,7 @@ public class GithubReadmeExistsValidationRule : IScenarioStepExecutor<GithubRead
 
         var repositoryValidationContext = context.GetValidationContext();
 
-        if (!repositoryValidationContext.Repository.Exists(ValidationConstants.ReadmeFileName))
+        if (!repositoryValidationContext.Repository.FileSystem.Exists(ValidationConstants.ReadmeFileName))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,

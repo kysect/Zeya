@@ -22,7 +22,7 @@ public class GitIntegrationService : IGitIntegrationService
 
         repository.ThrowIfNull();
 
-        string targetPath = repository.GetFullPath();
+        string targetPath = repository.FileSystem.GetFullPath();
         using var repo = new Repository(targetPath);
         // TODO: validate that branch is not exists
         Branch branch = repo.CreateBranch(branchName);
@@ -33,7 +33,7 @@ public class GitIntegrationService : IGitIntegrationService
     {
         repository.ThrowIfNull();
 
-        string targetPath = repository.GetFullPath();
+        string targetPath = repository.FileSystem.GetFullPath();
         using var repo = new Repository(targetPath);
         Commands.Stage(repo, "*");
 

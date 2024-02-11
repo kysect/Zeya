@@ -47,7 +47,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         }
 
         var expectedPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
-        if (!clonedRepository.Exists(expectedPath))
+        if (!clonedRepository.FileSystem.Exists(expectedPath))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -56,7 +56,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
             return;
         }
 
-        string repositoryWorkflowFileContent = clonedRepository.ReadAllText(expectedPath);
+        string repositoryWorkflowFileContent = clonedRepository.FileSystem.ReadAllText(expectedPath);
         if (!string.Equals(masterFileContent, repositoryWorkflowFileContent))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
