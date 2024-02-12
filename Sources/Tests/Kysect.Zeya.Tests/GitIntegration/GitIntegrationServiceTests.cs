@@ -2,7 +2,7 @@
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,7 @@ public class GitIntegrationServiceTests : IDisposable
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
     private readonly GithubRepositoryName _githubRepositoryName;
-    private readonly ClonedRepository _clonedRepository;
+    private readonly LocalRepository _localRepository;
     private readonly FakeGithubIntegrationService _githubIntegrationService;
 
     public GitIntegrationServiceTests()
@@ -40,7 +40,7 @@ public class GitIntegrationServiceTests : IDisposable
         _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions.CommitAuthor);
         _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
-        _clonedRepository = new ClonedRepository(_repositoriesDirectory, _fileSystem);
+        _localRepository = new LocalRepository(_repositoriesDirectory, _fileSystem);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         gitRepository.Head.FriendlyName.Should().Be("master");
-        _gitIntegrationService.CreateFixBranch(_clonedRepository, "new-branch");
+        _gitIntegrationService.CreateFixBranch(_localRepository, "new-branch");
 
         gitRepository.Head.FriendlyName.Should().Be("new-branch");
     }
@@ -83,7 +83,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.Create(_fileSystem.Path.Combine(_repositoriesDirectory, "file.txt")).Dispose();
-        _gitIntegrationService.CreateCommitWithFix(_clonedRepository, "Commit message");
+        _gitIntegrationService.CreateCommitWithFix(_localRepository, "Commit message");
 
         gitRepository.Head.Commits.First().Message.Trim().Should().Be("Commit message");
     }

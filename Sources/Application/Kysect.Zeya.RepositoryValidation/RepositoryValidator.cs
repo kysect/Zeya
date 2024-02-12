@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
@@ -12,7 +12,7 @@ namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryValidator(ILogger logger, IScenarioStepHandler scenarioStepHandler)
 {
-    public RepositoryValidationReport Validate(IClonedRepository repository, IReadOnlyCollection<IValidationRule> rules)
+    public RepositoryValidationReport Validate(ILocalRepository repository, IReadOnlyCollection<IValidationRule> rules)
     {
         repository.ThrowIfNull();
         rules.ThrowIfNull();

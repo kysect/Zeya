@@ -1,6 +1,6 @@
-﻿namespace Kysect.Zeya.GitIntegration.Abstraction;
+﻿namespace Kysect.Zeya.LocalRepositoryAccess;
 
-public interface IClonedRepository
+public interface ILocalRepository
 {
     string GetRepositoryName();
 

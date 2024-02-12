@@ -58,15 +58,15 @@ public class RepositoryValidationServiceTests : IDisposable
     [Fact]
     public void Analyze_ReturnExpectedResult()
     {
-        ClonedGithubRepository clonedGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        RepositoryValidationReport repositoryValidationReport = _repositoryValidationService.Analyze([clonedGithubRepository], "ValidationScenario.yaml");
+        LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
+        RepositoryValidationReport repositoryValidationReport = _repositoryValidationService.Analyze([localGithubRepository], "ValidationScenario.yaml");
     }
 
     [Fact]
     public void AnalyzerAndFix_ReturnExpectedResult()
     {
-        ClonedGithubRepository clonedGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        _repositoryValidationService.AnalyzerAndFix(clonedGithubRepository, "ValidationScenario.yaml");
+        LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
+        _repositoryValidationService.AnalyzerAndFix(localGithubRepository, "ValidationScenario.yaml");
     }
 
     public void Dispose()

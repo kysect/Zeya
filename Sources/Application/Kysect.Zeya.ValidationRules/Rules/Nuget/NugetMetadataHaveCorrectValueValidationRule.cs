@@ -3,7 +3,7 @@ using Kysect.CommonLib.Collections.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;

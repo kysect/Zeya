@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
@@ -11,11 +11,11 @@ namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRuleFixerApplier, ILogger logger)
 {
-    public IReadOnlyCollection<IValidationRule> Fix(RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> rules, IClonedRepository clonedRepository)
+    public IReadOnlyCollection<IValidationRule> Fix(RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> rules, ILocalRepository localRepository)
     {
         report.ThrowIfNull();
         rules.ThrowIfNull();
-        clonedRepository.ThrowIfNull();
+        localRepository.ThrowIfNull();
 
         var fixedDiagnostics = new List<IValidationRule>();
 
@@ -30,7 +30,7 @@ public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRul
             if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
                 logger.LogInformation("Apply code fixer for {Code}", diagnostic.Code);
-                validationRuleFixerApplier.Apply(validationRule, clonedRepository);
+                validationRuleFixerApplier.Apply(validationRule, localRepository);
                 fixedDiagnostics.Add(validationRule);
             }
             else

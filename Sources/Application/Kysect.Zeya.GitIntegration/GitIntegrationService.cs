@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using LibGit2Sharp;
 using Branch = LibGit2Sharp.Branch;
 using Repository = LibGit2Sharp.Repository;
@@ -16,7 +17,7 @@ public class GitIntegrationService : IGitIntegrationService
         _commitAuthor = commitAuthor;
     }
 
-    public void CreateFixBranch(IClonedRepository repository, string branchName)
+    public void CreateFixBranch(ILocalRepository repository, string branchName)
     {
         repository.ThrowIfNull();
 
@@ -29,7 +30,7 @@ public class GitIntegrationService : IGitIntegrationService
         Branch currentBranch = Commands.Checkout(repo, branch);
     }
 
-    public void CreateCommitWithFix(IClonedRepository repository, string commitMessage)
+    public void CreateCommitWithFix(ILocalRepository repository, string commitMessage)
     {
         repository.ThrowIfNull();
 

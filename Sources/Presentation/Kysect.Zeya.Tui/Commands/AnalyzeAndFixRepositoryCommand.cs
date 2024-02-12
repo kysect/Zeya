@@ -15,7 +15,7 @@ public class AnalyzeAndFixRepositoryCommand(
     public void Execute()
     {
         GithubRepositoryName githubRepositoryName = RepositoryNameInputControl.Ask();
-        ClonedGithubRepository repository = repositorySelector.CreateGithubRepository(githubRepositoryName);
+        LocalGithubRepository repository = repositorySelector.CreateGithubRepository(githubRepositoryName);
         // TODO: remove hardcoded value
         repositoryValidationService.AnalyzerAndFix(repository, "Demo-validation.yaml");
     }

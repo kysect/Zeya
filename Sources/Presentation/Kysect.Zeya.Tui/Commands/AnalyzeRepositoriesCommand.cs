@@ -1,6 +1,6 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;
@@ -13,7 +13,7 @@ public class AnalyzeRepositoriesCommand(
 
     public void Execute()
     {
-        IReadOnlyCollection<IClonedRepository> repositories = repositorySelector.SelectRepositories();
+        IReadOnlyCollection<ILocalRepository> repositories = repositorySelector.SelectRepositories();
         // TODO: remove hardcoded value
         repositoryValidationService.Analyze(repositories, "Demo-validation.yaml");
     }

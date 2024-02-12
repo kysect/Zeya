@@ -1,10 +1,10 @@
-﻿using Kysect.Zeya.GitIntegration.Abstraction;
+﻿using Kysect.Zeya.LocalRepositoryAccess;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.GithubIntegration.Abstraction;
 
-public class ClonedGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, IFileSystem fileSystem)
-    : IClonedRepository
+public class LocalGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, IFileSystem fileSystem)
+    : ILocalRepository
 {
     public GithubRepositoryName GithubMetadata { get; } = githubMetadata;
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);

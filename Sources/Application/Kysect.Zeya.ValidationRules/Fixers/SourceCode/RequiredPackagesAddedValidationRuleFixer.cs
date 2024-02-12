@@ -3,7 +3,7 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.DotnetProjectSystem.Xml;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
 using Microsoft.Extensions.Logging;
@@ -15,12 +15,12 @@ public class RequiredPackagesAddedValidationRuleFixer(
     ILogger logger)
     : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
-    public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, IClonedRepository clonedRepository)
+    public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, ILocalRepository localRepository)
     {
         rule.ThrowIfNull();
-        clonedRepository.ThrowIfNull();
+        localRepository.ThrowIfNull();
 
-        LocalRepositorySolution repositorySolutionAccessor = clonedRepository.SolutionManager.GetSolution();
+        LocalRepositorySolution repositorySolutionAccessor = localRepository.SolutionManager.GetSolution();
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
         DirectoryBuildPropsFile directoryBuildPropsFile = solutionModifier.GetOrCreateDirectoryBuildPropsModifier();
         var directoryPackageProps = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.Tests.Tools;
@@ -16,14 +16,14 @@ public class RepositoryDiagnosticFixerTests
     private readonly ILogger _logger;
     private readonly MockFileSystem _fileSystem;
     private readonly string _currentPath;
-    private readonly ClonedRepository _repository;
+    private readonly LocalRepository _repository;
 
     public RepositoryDiagnosticFixerTests()
     {
         _logger = TestLoggerProvider.GetLogger();
         _fileSystem = new MockFileSystem();
         _currentPath = _fileSystem.Path.GetFullPath(".");
-        _repository = new ClonedRepository(_currentPath, _fileSystem);
+        _repository = new LocalRepository(_currentPath, _fileSystem);
     }
 
     [Fact]

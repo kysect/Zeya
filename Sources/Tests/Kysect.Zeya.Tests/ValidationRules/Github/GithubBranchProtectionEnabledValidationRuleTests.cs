@@ -1,6 +1,6 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
@@ -24,7 +24,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
         ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new ClonedRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+            new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
 
         _validationRule.Execute(nonGithubContext, arguments);
 

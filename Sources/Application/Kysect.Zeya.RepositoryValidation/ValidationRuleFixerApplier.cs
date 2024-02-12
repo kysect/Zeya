@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -44,13 +44,13 @@ public class ValidationRuleFixerApplier(Dictionary<Type, ValidationRuleFixerRefl
         return fixers.ContainsKey(rule.GetType());
     }
 
-    public void Apply(IValidationRule rule, IClonedRepository clonedRepository)
+    public void Apply(IValidationRule rule, ILocalRepository localRepository)
     {
         rule.ThrowIfNull();
 
         if (!fixers.TryGetValue(rule.GetType(), out var fixer))
             throw new ArgumentException($"Fixer for {rule.DiagnosticCode} is not registered");
 
-        fixer.Execute(rule, clonedRepository);
+        fixer.Execute(rule, localRepository);
     }
 }

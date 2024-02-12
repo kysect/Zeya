@@ -13,7 +13,7 @@ namespace Kysect.Zeya.Tests.ValidationRules;
 public abstract class ValidationRuleTestBase
 {
     protected ILogger Logger { get; }
-    protected ClonedGithubRepository Repository { get; }
+    protected LocalGithubRepository Repository { get; }
     protected MockFileSystem FileSystem { get; }
     protected ScenarioContext Context { get; }
     protected XmlDocumentSyntaxFormatter Formatter { get; }
@@ -30,7 +30,7 @@ public abstract class ValidationRuleTestBase
         CurrentPath = FileSystem.Path.GetFullPath(".");
 
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
-        Repository = new ClonedGithubRepository(new GithubRepositoryName("owner", "name"), CurrentPath, FileSystem);
+        Repository = new LocalGithubRepository(new GithubRepositoryName("owner", "name"), CurrentPath, FileSystem);
 
         RepositoryDiagnosticCollector diagnosticCollector = DiagnosticCollectorAsserts.GetCollector();
         Context = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(Repository, diagnosticCollector));
