@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{06303EDB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{D9C54233-E761-4E9C-AB89-3FB055201E8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegration", "Application\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj", "{9B14B766-21A5-4597-A5D3-93055D2FF12D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tui", "Presentation\Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj", "{863F0493-7798-4BB8-9600-9E32D564C157}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya", "ConfigurationRoot\Kysect.Zeya\Kysect.Zeya.csproj", "{4C2B0697-AA32-4D04-A7E0-3A224D801083}"
@@ -20,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Tests", "Tests\Kysect.Zeya.Tests\Kysect.Zeya.Tests.csproj", "{D9150747-CAAF-45E3-B0D2-01910DD4B9C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DependencyManager", "ConfigurationRoot\Kysect.Zeya.DependencyManager\Kysect.Zeya.DependencyManager.csproj", "{9284441D-F4F3-4D27-849B-98826720A49E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GitIntegration", "Application\Kysect.Zeya.GitIntegration\Kysect.Zeya.GitIntegration.csproj", "{654F1544-7EBB-4276-AE36-62C6487DE0DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.IntegrationManager", "Application\Kysect.Zeya.IntegrationManager\Kysect.Zeya.IntegrationManager.csproj", "{4C3CE1E6-F935-4804-81D1-9918051ADAED}"
 EndProject
@@ -39,16 +35,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.RepositoryValid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.GitIntegration.Abstraction", "Domain\Kysect.Zeya.GitIntegration.Abstraction\Kysect.Zeya.GitIntegration.Abstraction.csproj", "{65EDE936-E53C-4608-B735-FD0E2EBFF546}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{E441327E-F838-433F-B8DE-FE74093825BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.GitIntegration", "Integration\Kysect.Zeya.GitIntegration\Kysect.Zeya.GitIntegration.csproj", "{73EDB63B-DAA5-4BF2-B465-963BB53CBA08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.GithubIntegration", "Integration\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj", "{7DADA5D3-4DCD-419B-B0F5-42107093CFF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B14B766-21A5-4597-A5D3-93055D2FF12D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{863F0493-7798-4BB8-9600-9E32D564C157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{863F0493-7798-4BB8-9600-9E32D564C157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{863F0493-7798-4BB8-9600-9E32D564C157}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,10 +63,6 @@ Global
 		{9284441D-F4F3-4D27-849B-98826720A49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9284441D-F4F3-4D27-849B-98826720A49E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9284441D-F4F3-4D27-849B-98826720A49E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{654F1544-7EBB-4276-AE36-62C6487DE0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{654F1544-7EBB-4276-AE36-62C6487DE0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{654F1544-7EBB-4276-AE36-62C6487DE0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{654F1544-7EBB-4276-AE36-62C6487DE0DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C3CE1E6-F935-4804-81D1-9918051ADAED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C3CE1E6-F935-4804-81D1-9918051ADAED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C3CE1E6-F935-4804-81D1-9918051ADAED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,17 +91,23 @@ Global
 		{65EDE936-E53C-4608-B735-FD0E2EBFF546}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65EDE936-E53C-4608-B735-FD0E2EBFF546}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65EDE936-E53C-4608-B735-FD0E2EBFF546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73EDB63B-DAA5-4BF2-B465-963BB53CBA08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73EDB63B-DAA5-4BF2-B465-963BB53CBA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73EDB63B-DAA5-4BF2-B465-963BB53CBA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73EDB63B-DAA5-4BF2-B465-963BB53CBA08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DADA5D3-4DCD-419B-B0F5-42107093CFF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DADA5D3-4DCD-419B-B0F5-42107093CFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DADA5D3-4DCD-419B-B0F5-42107093CFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DADA5D3-4DCD-419B-B0F5-42107093CFF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9B14B766-21A5-4597-A5D3-93055D2FF12D} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{863F0493-7798-4BB8-9600-9E32D564C157} = {45FA974A-DDBE-44F5-AF75-BBB49BB437B5}
 		{4C2B0697-AA32-4D04-A7E0-3A224D801083} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
 		{D9150747-CAAF-45E3-B0D2-01910DD4B9C8} = {06303EDB-8271-4E29-B7BF-8D362045C400}
 		{9284441D-F4F3-4D27-849B-98826720A49E} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
-		{654F1544-7EBB-4276-AE36-62C6487DE0DF} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{4C3CE1E6-F935-4804-81D1-9918051ADAED} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{A23A4617-34B2-44E6-B159-D33533506BCF} = {E1AABC83-945A-410B-BD1A-769C97D4BACC}
 		{123930B5-1082-4EFC-8B2F-DFD78DD5DE49} = {E1AABC83-945A-410B-BD1A-769C97D4BACC}
@@ -115,6 +115,8 @@ Global
 		{22182BD7-B16A-4363-AF86-7C759C72E867} = {E1AABC83-945A-410B-BD1A-769C97D4BACC}
 		{B5546D0C-5DD2-4EE9-B3CA-00E707AA84FC} = {E1AABC83-945A-410B-BD1A-769C97D4BACC}
 		{65EDE936-E53C-4608-B735-FD0E2EBFF546} = {E1AABC83-945A-410B-BD1A-769C97D4BACC}
+		{73EDB63B-DAA5-4BF2-B465-963BB53CBA08} = {E441327E-F838-433F-B8DE-FE74093825BF}
+		{7DADA5D3-4DCD-419B-B0F5-42107093CFF7} = {E441327E-F838-433F-B8DE-FE74093825BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}
