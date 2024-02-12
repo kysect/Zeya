@@ -25,7 +25,7 @@ public class GithubIntegrationService : IGithubIntegrationService
 
     public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
     {
-        _credential = credential;
+        _credential = credential.ThrowIfNull();
 
         _powerShellAccessor = powerShellAccessor.ThrowIfNull();
         _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();

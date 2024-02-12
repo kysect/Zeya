@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.DependencyManager;
+using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
@@ -35,6 +36,11 @@ public class GitIntegrationServiceTests : IDisposable
             {
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
+            },
+            Credential = new GithubIntegrationCredential()
+            {
+                GithubToken = "token",
+                GithubUsername = "Name",
             }
         };
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);

@@ -36,6 +36,11 @@ public class GithubIntegrationServiceTests : IDisposable
             {
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
+            },
+            Credential = new GithubIntegrationCredential()
+            {
+                GithubUsername = "Name",
+                GithubToken = "token"
             }
         };
 

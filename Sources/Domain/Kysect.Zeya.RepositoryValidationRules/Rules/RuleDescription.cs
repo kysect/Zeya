@@ -1,4 +1,4 @@
-﻿namespace Kysect.Zeya.RepositoryValidation;
+﻿namespace Kysect.Zeya.RepositoryValidationRules.Rules;
 
 public static class RuleDescription
 {

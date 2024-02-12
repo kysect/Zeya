@@ -2,6 +2,7 @@
 using Kysect.ScenarioLib;
 using Kysect.Zeya.RepositoryValidation;
 using System.IO.Abstractions;
+using Kysect.Zeya.RepositoryValidationRules.Rules;
 
 namespace Kysect.Zeya.Tests.Tools.Fakes;
 
