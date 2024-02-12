@@ -1,4 +1,4 @@
-﻿namespace Kysect.Zeya.GithubIntegration.Abstraction;
+﻿namespace Kysect.Zeya.LocalRepositoryAccess.Github;
 
 public record struct GithubRepositoryName(string Owner, string Name)
 {

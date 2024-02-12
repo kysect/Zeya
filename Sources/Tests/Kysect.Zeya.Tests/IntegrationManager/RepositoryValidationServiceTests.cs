@@ -3,6 +3,7 @@ using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.IntegrationManager;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.Tests.Tools;

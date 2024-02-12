@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Kysect.PowerShellRunner.Accessors;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.Tests.Tools;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using System.IO.Abstractions;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.Tests.Tools.Fakes;
 
 namespace Kysect.Zeya.Tests.GithubIntegration;

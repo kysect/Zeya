@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.Logging;

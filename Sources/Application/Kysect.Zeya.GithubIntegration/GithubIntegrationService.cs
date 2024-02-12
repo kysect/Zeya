@@ -9,6 +9,7 @@ using Kysect.PowerShellRunner.Executions;
 using Kysect.PowerShellRunner.Tools;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
