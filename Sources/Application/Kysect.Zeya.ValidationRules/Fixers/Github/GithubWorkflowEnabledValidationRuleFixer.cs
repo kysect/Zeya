@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Kysect.Zeya.ValidationRules.Rules.Github;
 using Microsoft.Extensions.Logging;

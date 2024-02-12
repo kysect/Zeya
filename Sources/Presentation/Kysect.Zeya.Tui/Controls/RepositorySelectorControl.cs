@@ -1,8 +1,8 @@
 ﻿using Kysect.CommonLib.Exceptions;
 using Kysect.TerminalUserInterface.Controls.Selection;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;

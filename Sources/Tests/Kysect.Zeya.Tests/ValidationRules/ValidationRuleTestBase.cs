@@ -1,7 +1,7 @@
 ﻿using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Asserts;

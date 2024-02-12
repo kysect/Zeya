@@ -1,7 +1,6 @@
-﻿using Kysect.Zeya.LocalRepositoryAccess;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 
-namespace Kysect.Zeya.GithubIntegration.Abstraction;
+namespace Kysect.Zeya.LocalRepositoryAccess.Github;
 
 public class LocalGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, IFileSystem fileSystem)
     : ILocalRepository
