@@ -2,7 +2,6 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
-using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using Kysect.Zeya.ValidationRules.Rules.SourceCode;
@@ -13,7 +12,6 @@ namespace Kysect.Zeya.ValidationRules.Fixers.SourceCode;
 
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(
     IFileSystem fileSystem,
-    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory,
     XmlDocumentSyntaxFormatter formatter,
     ILogger logger)
     : IValidationRuleFixer<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
@@ -23,7 +21,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         rule.ThrowIfNull();
         clonedRepository.ThrowIfNull();
 
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(clonedRepository);
+        LocalRepositorySolution repositorySolutionAccessor = clonedRepository.SolutionManager.GetSolution();
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();

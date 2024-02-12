@@ -12,7 +12,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRu
 
     public CentralPackageManagerEnabledValidationRuleFixerTests()
     {
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(RepositorySolutionAccessorFactory, Formatter, Logger);
+        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(Formatter, Logger);
     }
 
     [Fact]

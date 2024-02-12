@@ -3,14 +3,14 @@ using Kysect.CommonLib.Collections.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.Nuget;
 
-public class NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+public class NugetMetadataSpecifiedValidationRule()
     : IScenarioStepExecutor<NugetMetadataSpecifiedValidationRule.Arguments>
 {
     [ScenarioStep("Nuget.MetadataSpecified")]
@@ -26,7 +26,7 @@ public class NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFact
         request.ThrowIfNull();
 
         var repositoryValidationContext = context.GetValidationContext();
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        LocalRepositorySolution repositorySolutionAccessor = repositoryValidationContext.Repository.SolutionManager.GetSolution();
 
         if (!repositoryValidationContext.Repository.FileSystem.Exists(repositorySolutionAccessor.GetDirectoryBuildPropsPath()))
         {

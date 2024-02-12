@@ -11,7 +11,7 @@ public class NugetMetadataSpecifiedValidationRuleTests : ValidationRuleTestBase
 
     public NugetMetadataSpecifiedValidationRuleTests()
     {
-        _validationRule = new NugetMetadataSpecifiedValidationRule(RepositorySolutionAccessorFactory);
+        _validationRule = new NugetMetadataSpecifiedValidationRule();
     }
 
     [Fact]

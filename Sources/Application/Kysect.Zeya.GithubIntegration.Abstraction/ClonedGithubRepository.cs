@@ -8,6 +8,7 @@ public class ClonedGithubRepository(GithubRepositoryName githubMetadata, string 
 {
     public GithubRepositoryName GithubMetadata { get; } = githubMetadata;
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
+    public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, fileSystem);
 
     public string GetRepositoryName()
     {

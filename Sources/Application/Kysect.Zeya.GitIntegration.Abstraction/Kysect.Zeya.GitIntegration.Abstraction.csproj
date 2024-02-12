@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Kysect.CommonLib" />
+    <PackageReference Include="Kysect.DotnetProjectSystem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Kysect.Zeya.Common\Kysect.Zeya.Common.csproj" />
   </ItemGroup>
 
 </Project>

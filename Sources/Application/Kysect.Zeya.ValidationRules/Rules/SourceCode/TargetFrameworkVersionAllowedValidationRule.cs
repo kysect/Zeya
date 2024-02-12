@@ -2,14 +2,14 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+public class TargetFrameworkVersionAllowedValidationRule()
     : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
@@ -37,12 +37,8 @@ public class TargetFrameworkVersionAllowedValidationRule(RepositorySolutionAcces
 
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        LocalRepositorySolution repositorySolutionAccessor = repositoryValidationContext.Repository.SolutionManager.GetSolution();
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
-
-        List<string> projectFiles = repositorySolutionAccessor
-            .GetProjectPaths()
-            .ToList();
 
         foreach ((string key, DotnetCsprojFile value) in solutionModifier.Projects)
         {

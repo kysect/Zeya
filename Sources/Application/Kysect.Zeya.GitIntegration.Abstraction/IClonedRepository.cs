@@ -5,4 +5,5 @@ public interface IClonedRepository
     string GetRepositoryName();
 
     LocalRepositoryFileSystem FileSystem { get; }
+    LocalRepositorySolutionManager SolutionManager { get; }
 }

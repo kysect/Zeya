@@ -1,14 +1,14 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRule(RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+public class CentralPackageManagerEnabledValidationRule()
     : IScenarioStepExecutor<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.CentralPackageManagerEnabled")]
@@ -25,7 +25,7 @@ public class CentralPackageManagerEnabledValidationRule(RepositorySolutionAccess
         request.ThrowIfNull();
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        LocalRepositorySolution repositorySolutionAccessor = repositoryValidationContext.Repository.SolutionManager.GetSolution();
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         bool cpmEnabled = solutionModifier.GetOrCreateDirectoryPackagePropsModifier().GetCentralPackageManagement();

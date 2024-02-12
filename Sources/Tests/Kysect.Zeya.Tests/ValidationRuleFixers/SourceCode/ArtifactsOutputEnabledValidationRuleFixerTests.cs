@@ -12,7 +12,7 @@ public class ArtifactsOutputEnabledValidationRuleFixerTests : ValidationRuleTest
 
     public ArtifactsOutputEnabledValidationRuleFixerTests()
     {
-        _fixer = new ArtifactsOutputEnabledValidationRuleFixer(RepositorySolutionAccessorFactory, Formatter, Logger);
+        _fixer = new ArtifactsOutputEnabledValidationRuleFixer(Formatter, Logger);
     }
 
     [Fact]
