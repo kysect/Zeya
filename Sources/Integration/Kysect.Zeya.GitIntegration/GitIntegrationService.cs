@@ -1,8 +1,5 @@
 ﻿using Kysect.Zeya.GitIntegration.Abstraction;
 using LibGit2Sharp;
-using Branch = LibGit2Sharp.Branch;
-using Repository = LibGit2Sharp.Repository;
-using Signature = LibGit2Sharp.Signature;
 
 namespace Kysect.Zeya.GitIntegration;
 
