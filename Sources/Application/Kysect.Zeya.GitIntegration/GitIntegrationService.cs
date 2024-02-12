@@ -1,6 +1,4 @@
-﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.Zeya.GitIntegration.Abstraction;
-using Kysect.Zeya.LocalRepositoryAccess;
+﻿using Kysect.Zeya.GitIntegration.Abstraction;
 using LibGit2Sharp;
 using Branch = LibGit2Sharp.Branch;
 using Repository = LibGit2Sharp.Repository;
@@ -17,25 +15,17 @@ public class GitIntegrationService : IGitIntegrationService
         _commitAuthor = commitAuthor;
     }
 
-    public void CreateFixBranch(ILocalRepository repository, string branchName)
+    public void CreateFixBranch(string repositoryLocalPath, string branchName)
     {
-        repository.ThrowIfNull();
-
-        repository.ThrowIfNull();
-
-        string targetPath = repository.FileSystem.GetFullPath();
-        using var repo = new Repository(targetPath);
+        using var repo = new Repository(repositoryLocalPath);
         // TODO: validate that branch is not exists
         Branch branch = repo.CreateBranch(branchName);
         Branch currentBranch = Commands.Checkout(repo, branch);
     }
 
-    public void CreateCommitWithFix(ILocalRepository repository, string commitMessage)
+    public void CreateCommitWithFix(string repositoryLocalPath, string commitMessage)
     {
-        repository.ThrowIfNull();
-
-        string targetPath = repository.FileSystem.GetFullPath();
-        using var repo = new Repository(targetPath);
+        using var repo = new Repository(repositoryLocalPath);
         Commands.Stage(repo, "*");
 
         Signature author = _commitAuthor is not null

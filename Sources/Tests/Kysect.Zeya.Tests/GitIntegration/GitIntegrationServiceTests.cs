@@ -71,7 +71,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         gitRepository.Head.FriendlyName.Should().Be("master");
-        _gitIntegrationService.CreateFixBranch(_localRepository, "new-branch");
+        _gitIntegrationService.CreateFixBranch(_localRepository.FileSystem.GetFullPath(), "new-branch");
 
         gitRepository.Head.FriendlyName.Should().Be("new-branch");
     }
@@ -83,7 +83,7 @@ public class GitIntegrationServiceTests : IDisposable
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.Create(_fileSystem.Path.Combine(_repositoriesDirectory, "file.txt")).Dispose();
-        _gitIntegrationService.CreateCommitWithFix(_localRepository, "Commit message");
+        _gitIntegrationService.CreateCommitWithFix(_localRepository.FileSystem.GetFullPath(), "Commit message");
 
         gitRepository.Head.Commits.First().Message.Trim().Should().Be("Commit message");
     }
