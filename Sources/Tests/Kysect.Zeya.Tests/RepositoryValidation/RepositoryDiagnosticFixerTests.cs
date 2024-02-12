@@ -2,10 +2,8 @@
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
-using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions.TestingHelpers;
 

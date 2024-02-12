@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.ValidationRules.Rules.Github;
+﻿using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRules.Github;

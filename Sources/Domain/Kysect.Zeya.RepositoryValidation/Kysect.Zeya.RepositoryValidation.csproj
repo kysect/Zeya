@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kysect.ScenarioLib" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.LocalRepositoryAccess\Kysect.Zeya.LocalRepositoryAccess.csproj" />
+  </ItemGroup>
+
+</Project>

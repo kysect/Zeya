@@ -1,9 +1,9 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.RepositoryValidation.Abstractions;
+using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
-using Kysect.Zeya.ValidationRules.Rules.Github;
 
 namespace Kysect.Zeya.Tests.ValidationRules.Github;
 

@@ -1,7 +1,7 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.Zeya.RepositoryValidationRules.Fixers.Github;
+using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using Kysect.Zeya.Tests.ValidationRules;
-using Kysect.Zeya.ValidationRules.Fixers.Github;
-using Kysect.Zeya.ValidationRules.Rules.Github;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRuleFixers.Github;

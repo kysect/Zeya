@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools.Fakes;
-using Kysect.Zeya.ValidationRules.Abstractions;
 
 namespace Kysect.Zeya.Tests.RepositoryValidation;
 

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Common;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.ValidationRules.Rules.SourceCode;
+using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 
 namespace Kysect.Zeya.Tests.RepositoryValidation;
 

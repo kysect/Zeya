@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction;
+using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess.Github;
 

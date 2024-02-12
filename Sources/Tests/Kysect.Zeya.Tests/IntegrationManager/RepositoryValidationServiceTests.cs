@@ -5,7 +5,6 @@ using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.DependencyInjection;
