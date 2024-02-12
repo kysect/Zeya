@@ -1,5 +1,5 @@
 ﻿using Kysect.ScenarioLib;
-using Kysect.Zeya.ValidationRules.Rules.SourceCode;
+using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 
 namespace Kysect.Zeya.Tests.Tools;
 

@@ -4,9 +4,6 @@ using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.Abstractions;
-using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
-using Kysect.Zeya.ValidationRules.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.IntegrationManager;
@@ -45,7 +42,7 @@ public class RepositoryValidationService(
         gitIntegrationService.CreateCommitWithFix(repository, commitMessage);
 
         logger.LogInformation("Push changes to remote");
-        githubIntegrationService.PushCommitToRemote(repository, branchName);
+        githubIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName);
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);

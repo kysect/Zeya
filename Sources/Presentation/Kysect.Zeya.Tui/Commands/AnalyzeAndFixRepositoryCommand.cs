@@ -1,4 +1,5 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.Tui.Controls;

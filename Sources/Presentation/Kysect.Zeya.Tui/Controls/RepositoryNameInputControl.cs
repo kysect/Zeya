@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.LocalRepositoryAccess.Github;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;

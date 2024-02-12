@@ -8,8 +8,8 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using System.IO.Abstractions;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.Tests.Tools.Fakes;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 
 namespace Kysect.Zeya.Tests.GithubIntegration;
 

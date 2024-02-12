@@ -1,7 +1,6 @@
 ﻿using Kysect.ScenarioLib.YamlParser;
 using Kysect.ScenarioLib;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.ValidationRules;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests.Tools.Fakes;

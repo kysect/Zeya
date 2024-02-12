@@ -1,6 +1,6 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Projects;
-using Kysect.Zeya.ValidationRules.Rules.SourceCode;
+using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRules.SourceCode;

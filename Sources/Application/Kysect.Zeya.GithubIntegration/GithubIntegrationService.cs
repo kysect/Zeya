@@ -8,8 +8,6 @@ using Kysect.PowerShellRunner.Abstractions.Queries;
 using Kysect.PowerShellRunner.Executions;
 using Kysect.PowerShellRunner.Tools;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -61,12 +59,9 @@ public class GithubIntegrationService : IGithubIntegrationService
         repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubRepository(repositoryName.Owner, repositoryName.Name));
     }
 
-    public void PushCommitToRemote(ILocalRepository repository, string branchName)
+    public void PushCommitToRemote(string repositoryLocalPath, string branchName)
     {
-        repository.ThrowIfNull();
-
-        string targetPath = repository.FileSystem.GetFullPath();
-        using var repo = new Repository(targetPath);
+        using var repo = new Repository(repositoryLocalPath);
 
         Remote? remote = repo.Network.Remotes["origin"];
         string pushRefSpec = $"refs/heads/{branchName}";
