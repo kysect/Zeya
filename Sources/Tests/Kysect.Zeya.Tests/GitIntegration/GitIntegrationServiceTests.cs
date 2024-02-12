@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
@@ -14,7 +15,7 @@ namespace Kysect.Zeya.Tests.GitIntegration;
 public class GitIntegrationServiceTests : IDisposable
 {
     private readonly TestTemporaryDirectory _temporaryDirectory;
-    private readonly GitIntegrationService _gitIntegrationService;
+    private readonly IGitIntegrationService _gitIntegrationService;
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
     private readonly GithubRepositoryName _githubRepositoryName;
@@ -38,7 +39,7 @@ public class GitIntegrationServiceTests : IDisposable
         };
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
         _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions.CommitAuthor);
-        _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions, localStoragePathFactory, logger);
+        _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions.Credential, localStoragePathFactory, logger);
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
         _localRepository = new LocalRepository(_repositoriesDirectory, _fileSystem);
     }

@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj" />
-    <ProjectReference Include="..\Kysect.Zeya.GitIntegration\Kysect.Zeya.GitIntegration.csproj" />
   </ItemGroup>
 
 </Project>

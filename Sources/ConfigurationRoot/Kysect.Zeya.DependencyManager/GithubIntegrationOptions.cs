@@ -1,16 +1,15 @@
-﻿using Kysect.Zeya.GitIntegration;
+﻿using Kysect.Zeya.GithubIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kysect.Zeya.GithubIntegration;
+namespace Kysect.Zeya.DependencyManager;
 
 public class GithubIntegrationOptions
 {
     public GitCommitAuthor? CommitAuthor { get; init; }
 
     [Required]
-    public string GithubUsername { get; init; } = null!;
-    [Required]
-    public string GithubToken { get; init; } = null!;
+    public GithubIntegrationCredential Credential { get; init; } = null!;
     [Required]
     public string CacheDirectoryPath { get; init; } = null!;
 }

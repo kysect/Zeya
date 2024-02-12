@@ -11,11 +11,11 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
 {
     private readonly ILocalStoragePathFactory _localStoragePathFactory;
     private readonly ILogger _logger;
-    private readonly GithubIntegrationOptions _options;
+    private readonly GithubIntegrationCredential _options;
     public RepositoryBranchProtection RepositoryBranchProtection { get; set; }
     public bool BranchProtectionEnabled { get; set; }
 
-    public FakeGithubIntegrationService(GithubIntegrationOptions githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger logger)
+    public FakeGithubIntegrationService(GithubIntegrationCredential githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger logger)
     {
         _options = githubIntegrationOptions.ThrowIfNull();
         _localStoragePathFactory = localStoragePathFactory;

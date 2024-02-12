@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Kysect.CommonLib" />
-    <PackageReference Include="Kysect.DotnetProjectSystem" />
-  </ItemGroup>
-
 </Project>
