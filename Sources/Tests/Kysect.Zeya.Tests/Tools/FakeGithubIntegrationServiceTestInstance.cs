@@ -14,7 +14,7 @@ public static class FakeGithubIntegrationServiceTestInstance
     public static FakeGithubIntegrationService Create(ILocalStoragePathFactory pathFactory)
     {
         return new FakeGithubIntegrationService(
-            new GithubIntegrationOptions(),
+            new GithubIntegrationCredential(),
             pathFactory,
             TestLoggerProvider.GetLogger());
     }

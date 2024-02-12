@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Kysect.Zeya.GitIntegration;
+namespace Kysect.Zeya.GitIntegration.Abstraction;
 
 public class GitCommitAuthor
 {

@@ -1,15 +1,15 @@
 ﻿using FluentAssertions;
 using Kysect.PowerShellRunner.Accessors;
 using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Octokit;
 using System.IO.Abstractions;
 using Kysect.PowerShellRunner.Abstractions.Accessors;
+using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
 
 namespace Kysect.Zeya.Tests.GithubIntegration;
 
@@ -30,21 +30,21 @@ public class GithubIntegrationServiceTests : IDisposable
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem);
         _repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
 
-        var githubIntegrationOptions = new OptionsWrapper<GithubIntegrationOptions>(new GithubIntegrationOptions()
+        var githubIntegrationOptions = new GithubIntegrationOptions()
         {
             CommitAuthor = new GitCommitAuthor()
             {
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
             }
-        });
+        };
 
         _powerShellAccessor = new PowerShellAccessorDecoratorBuilder(new PowerShellAccessorFactory())
             .WithLogging(_logger)
             .Build();
 
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
-        _githubIntegrationService = new GithubIntegrationService(githubIntegrationOptions, new GitHubClient(new ProductHeaderValue("Zeya")), localStoragePathFactory, _powerShellAccessor, _logger);
+        _githubIntegrationService = new GithubIntegrationService(githubIntegrationOptions.Credential, new GitHubClient(new ProductHeaderValue("Zeya")), localStoragePathFactory, _powerShellAccessor, _logger);
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
     }
 

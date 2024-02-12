@@ -1,7 +1,6 @@
 ﻿using Kysect.CommonLib.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.DependencyManager;
-using Kysect.Zeya.GithubIntegration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO.Abstractions;

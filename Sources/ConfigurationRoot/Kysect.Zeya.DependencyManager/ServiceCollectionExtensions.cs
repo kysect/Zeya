@@ -88,6 +88,12 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddZeyaGithubIntegration(this IServiceCollection serviceCollection)
     {
+        serviceCollection.AddSingleton(sp =>
+        {
+            IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
+            return githubOptions.Value.Credential;
+        });
+
         serviceCollection.AddSingleton<ILocalStoragePathFactory>(sp =>
         {
             var githubIntegrationOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
@@ -96,8 +102,8 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddSingleton<IGitHubClient>(sp =>
         {
-            var githubIntegrationOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
-            return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(githubIntegrationOptions.Value.GithubToken) };
+            var credentials = sp.GetRequiredService<GithubIntegrationCredential>();
+            return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(credentials.GithubToken) };
         });
 
         return serviceCollection

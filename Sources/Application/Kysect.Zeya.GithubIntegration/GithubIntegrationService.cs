@@ -10,7 +10,6 @@ using Kysect.PowerShellRunner.Tools;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Octokit;
 using Repository = LibGit2Sharp.Repository;
 
@@ -18,22 +17,20 @@ namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
+    private readonly GithubIntegrationCredential _credential;
     private readonly IGitHubClient _gitHubClient;
     private readonly IPowerShellAccessor _powerShellAccessor;
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
-    private readonly GithubIntegrationOptions _githubIntegrationOptions;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(IOptions<GithubIntegrationOptions> githubIntegrationOptions, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
+    public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
     {
-        githubIntegrationOptions.ThrowIfNull();
+        _credential = credential;
 
         _powerShellAccessor = powerShellAccessor.ThrowIfNull();
         _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
         _gitHubClient = gitHubClient.ThrowIfNull();
         _logger = logger.ThrowIfNull();
-
-        _githubIntegrationOptions = githubIntegrationOptions.Value;
     }
 
     public IReadOnlyCollection<GithubRepositoryName> GetOrganizationRepositories(string organization)
@@ -53,7 +50,7 @@ public class GithubIntegrationService : IGithubIntegrationService
     {
         repositoryName.ThrowIfNull();
 
-        var repositoryFetchOptions = new RepositoryFetchOptions(_githubIntegrationOptions.GithubUsername, _githubIntegrationOptions.GithubToken);
+        var repositoryFetchOptions = new RepositoryFetchOptions(_credential.GithubUsername, _credential.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
         repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubRepository(repositoryName.Owner, repositoryName.Name));
@@ -68,7 +65,7 @@ public class GithubIntegrationService : IGithubIntegrationService
 
         var pushOptions = new PushOptions
         {
-            CredentialsProvider = (url, usernameFromUrl, types) => new UsernamePasswordCredentials() { Username = _githubIntegrationOptions.GithubUsername, Password = _githubIntegrationOptions.GithubToken }
+            CredentialsProvider = (url, usernameFromUrl, types) => new UsernamePasswordCredentials() { Username = _credential.GithubUsername, Password = _credential.GithubToken }
         };
 
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
