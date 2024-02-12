@@ -4,7 +4,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.GitIntegration.Abstraction;
+namespace Kysect.Zeya.LocalRepositoryAccess;
 
 public class LocalRepositorySolution(string repositoryPath, string solutionFilePath, IFileSystem fileSystem)
 {

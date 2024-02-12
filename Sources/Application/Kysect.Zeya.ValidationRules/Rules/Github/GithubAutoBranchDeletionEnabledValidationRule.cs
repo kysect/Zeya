@@ -23,7 +23,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
         request.ThrowIfNull();
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
-        if (repositoryValidationContext.Repository is not ClonedGithubRepository clonedGithubRepository)
+        if (repositoryValidationContext.Repository is not LocalGithubRepository clonedGithubRepository)
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
                 request.DiagnosticCode,

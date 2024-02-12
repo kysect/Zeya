@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Reflection;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.ValidationRules.Abstractions;
 using System;
 using System.Reflection;
@@ -25,8 +25,8 @@ public class ValidationRuleFixerReflectionDecorator
         _executeMethod = executeMethod ?? throw new ReflectionException($"Cannot get method {executeMethod} from type {executorType}");
     }
 
-    public void Execute(IValidationRule rule, IClonedRepository clonedRepository)
+    public void Execute(IValidationRule rule, ILocalRepository localRepository)
     {
-        _executeMethod.Invoke(_fixer, [rule, clonedRepository]);
+        _executeMethod.Invoke(_fixer, [rule, localRepository]);
     }
 }

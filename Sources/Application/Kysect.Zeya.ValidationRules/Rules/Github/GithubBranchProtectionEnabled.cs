@@ -26,7 +26,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
 
         string branch = ValidationConstants.DefaultBranch;
-        if (repositoryValidationContext.Repository is not ClonedGithubRepository clonedGithubRepository)
+        if (repositoryValidationContext.Repository is not LocalGithubRepository clonedGithubRepository)
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
                 request.DiagnosticCode,

@@ -8,7 +8,7 @@ using Kysect.PowerShellRunner.Abstractions.Queries;
 using Kysect.PowerShellRunner.Executions;
 using Kysect.PowerShellRunner.Tools;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -60,7 +60,7 @@ public class GithubIntegrationService : IGithubIntegrationService
         repositoryFetcher.EnsureRepositoryUpdated(_pathFormatStrategy, new GithubRepository(repositoryName.Owner, repositoryName.Name));
     }
 
-    public void PushCommitToRemote(IClonedRepository repository, string branchName)
+    public void PushCommitToRemote(ILocalRepository repository, string branchName)
     {
         repository.ThrowIfNull();
 

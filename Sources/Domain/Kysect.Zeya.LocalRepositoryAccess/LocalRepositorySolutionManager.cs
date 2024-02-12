@@ -1,7 +1,7 @@
 ﻿using Kysect.Zeya.Common;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.GitIntegration.Abstraction;
+namespace Kysect.Zeya.LocalRepositoryAccess;
 
 public class LocalRepositorySolutionManager(string repositoryPath, IFileSystem fileSystem)
 {

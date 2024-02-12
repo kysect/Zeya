@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.FileSystem;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.GitIntegration.Abstraction;
+namespace Kysect.Zeya.LocalRepositoryAccess;
 
 public class LocalRepositoryFileSystem(string repositoryRootPath, IFileSystem fileSystem)
 {

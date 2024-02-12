@@ -1,13 +1,13 @@
-﻿using Kysect.Zeya.GitIntegration.Abstraction;
+﻿using Kysect.Zeya.LocalRepositoryAccess;
 
 namespace Kysect.Zeya.RepositoryValidation.Abstractions;
 
 public class RepositoryValidationContext
 {
-    public IClonedRepository Repository { get; init; }
+    public ILocalRepository Repository { get; init; }
     public RepositoryDiagnosticCollector DiagnosticCollector { get; init; }
 
-    public RepositoryValidationContext(IClonedRepository repository, RepositoryDiagnosticCollector diagnosticCollector)
+    public RepositoryValidationContext(ILocalRepository repository, RepositoryDiagnosticCollector diagnosticCollector)
     {
         Repository = repository;
         DiagnosticCollector = diagnosticCollector;

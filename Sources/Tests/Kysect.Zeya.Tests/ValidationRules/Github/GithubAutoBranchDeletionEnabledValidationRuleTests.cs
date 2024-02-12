@@ -1,5 +1,5 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
@@ -23,7 +23,7 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
     {
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
         ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new ClonedRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+            new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
 
         _validationRule.Execute(nonGithubContext, arguments);
 

@@ -1,8 +1,8 @@
 ﻿using System.IO.Abstractions;
 
-namespace Kysect.Zeya.GitIntegration.Abstraction;
+namespace Kysect.Zeya.LocalRepositoryAccess;
 
-public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
+public class LocalRepository(string repositoryRootPath, IFileSystem fileSystem) : ILocalRepository
 {
     public LocalRepositoryFileSystem FileSystem { get; } = new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
     public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, fileSystem);

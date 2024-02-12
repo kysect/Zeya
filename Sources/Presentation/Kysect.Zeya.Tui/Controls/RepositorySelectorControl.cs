@@ -1,8 +1,8 @@
 ﻿using Kysect.CommonLib.Exceptions;
 using Kysect.TerminalUserInterface.Controls.Selection;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.IntegrationManager;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
@@ -16,7 +16,7 @@ public class RepositorySelectorControl
         _githubRepositoryProvider = githubRepositoryProvider;
     }
 
-    public IReadOnlyCollection<IClonedRepository> SelectRepositories()
+    public IReadOnlyCollection<ILocalRepository> SelectRepositories()
     {
         string? selectionType = new SelectionPrompt<string>()
             .AddChoices("Local git repository", "Github repository", "Github organization")
@@ -28,8 +28,8 @@ public class RepositorySelectorControl
         if (selectionType == "Local git repository")
         {
             string repositoryFullName = AnsiConsole.Ask<string>("Local repository path:");
-            IClonedRepository clonedRepository = _githubRepositoryProvider.GetLocalRepository(repositoryFullName);
-            return [clonedRepository];
+            ILocalRepository localRepository = _githubRepositoryProvider.GetLocalRepository(repositoryFullName);
+            return [localRepository];
         }
 
         if (selectionType == "Github repository")
@@ -48,7 +48,7 @@ public class RepositorySelectorControl
         throw SwitchDefaultExceptions.OnUnexpectedValue(selectionType);
     }
 
-    public ClonedGithubRepository CreateGithubRepository(GithubRepositoryName githubRepositoryName)
+    public LocalGithubRepository CreateGithubRepository(GithubRepositoryName githubRepositoryName)
     {
         return _githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
     }

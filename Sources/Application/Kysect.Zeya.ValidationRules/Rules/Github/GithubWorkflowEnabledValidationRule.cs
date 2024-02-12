@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
@@ -36,8 +36,8 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         IFileInfo masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
         string masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
 
-        IClonedRepository clonedRepository = repositoryValidationContext.Repository;
-        if (clonedRepository is not ClonedGithubRepository clonedGithubRepository)
+        ILocalRepository localRepository = repositoryValidationContext.Repository;
+        if (localRepository is not LocalGithubRepository clonedGithubRepository)
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
                 request.DiagnosticCode,
@@ -47,7 +47,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         }
 
         var expectedPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
-        if (!clonedRepository.FileSystem.Exists(expectedPath))
+        if (!localRepository.FileSystem.Exists(expectedPath))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -56,7 +56,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
             return;
         }
 
-        string repositoryWorkflowFileContent = clonedRepository.FileSystem.ReadAllText(expectedPath);
+        string repositoryWorkflowFileContent = localRepository.FileSystem.ReadAllText(expectedPath);
         if (!string.Equals(masterFileContent, repositoryWorkflowFileContent))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(

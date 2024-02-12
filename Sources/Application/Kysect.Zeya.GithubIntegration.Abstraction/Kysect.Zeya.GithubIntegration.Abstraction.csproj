@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kysect.Zeya.GitIntegration.Abstraction\Kysect.Zeya.GitIntegration.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Domain\Kysect.Zeya.LocalRepositoryAccess\Kysect.Zeya.LocalRepositoryAccess.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,9 @@
 ﻿using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
-using ClonedGithubRepository = Kysect.Zeya.GithubIntegration.Abstraction.ClonedGithubRepository;
 
 namespace Kysect.Zeya.IntegrationManager;
 
@@ -27,7 +26,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         _localStoragePathFactory = localStoragePathFactory;
     }
 
-    public IReadOnlyCollection<ClonedGithubRepository> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)
+    public IReadOnlyCollection<LocalGithubRepository> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)
     {
         HashSet<string> skipList = excludedRepositories.ToHashSet();
 
@@ -36,28 +35,28 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
             .Where(repository => !skipList.Contains(repository.Name))
             .ToList();
 
-        List<ClonedGithubRepository> result = githubRepositories
+        List<LocalGithubRepository> result = githubRepositories
             .Select(CreateGithubRepositoryAccessor)
             .ToList();
 
         return result;
     }
 
-    public ClonedGithubRepository GetGithubRepository(string owner, string repository)
+    public LocalGithubRepository GetGithubRepository(string owner, string repository)
     {
         return CreateGithubRepositoryAccessor(new GithubRepositoryName(owner, repository));
     }
 
-    public IClonedRepository GetLocalRepository(string path)
+    public ILocalRepository GetLocalRepository(string path)
     {
-        return new ClonedRepository(path, _fileSystem);
+        return new LocalRepository(path, _fileSystem);
     }
 
-    private ClonedGithubRepository CreateGithubRepositoryAccessor(GithubRepositoryName githubRepositoryName)
+    private LocalGithubRepository CreateGithubRepositoryAccessor(GithubRepositoryName githubRepositoryName)
     {
         _logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
         _githubIntegrationService.CloneOrUpdate(githubRepositoryName);
         string repositoryRootPath = _localStoragePathFactory.GetPathToRepository(new GithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name));
-        return new ClonedGithubRepository(githubRepositoryName, repositoryRootPath, _fileSystem);
+        return new LocalGithubRepository(githubRepositoryName, repositoryRootPath, _fileSystem);
     }
 }

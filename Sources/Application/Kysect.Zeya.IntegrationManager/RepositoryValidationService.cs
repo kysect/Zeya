@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
@@ -19,14 +20,14 @@ public class RepositoryValidationService(
     PullRequestMessageCreator pullRequestMessageCreator,
     ILogger logger)
 {
-    public void AnalyzerAndFix(IClonedRepository repository, string scenario)
+    public void AnalyzerAndFix(ILocalRepository repository, string scenario)
     {
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
         RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenario);
         Fix(repository, repositoryValidationReport, validationRules);
     }
 
-    public void CreatePullRequestWithFix(ClonedGithubRepository repository, string scenario)
+    public void CreatePullRequestWithFix(LocalGithubRepository repository, string scenario)
     {
         string branchName = "zeya/fixer";
         string commitMessage = "Apply Zeya code fixers";
@@ -50,7 +51,7 @@ public class RepositoryValidationService(
         githubIntegrationService.CreatePullRequest(repository.GithubMetadata, pullRequestMessage);
     }
 
-    public RepositoryValidationReport Analyze(IReadOnlyCollection<IClonedRepository> repositories, string scenario)
+    public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, string scenario)
     {
         repositories.ThrowIfNull();
 
@@ -59,7 +60,7 @@ public class RepositoryValidationService(
 
         RepositoryValidationReport report = RepositoryValidationReport.Empty;
         logger.LogInformation("Start repositories validation");
-        foreach (IClonedRepository githubRepository in repositories)
+        foreach (ILocalRepository githubRepository in repositories)
         {
             logger.LogDebug("Validate {Repository}", githubRepository.GetRepositoryName());
             report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
@@ -69,7 +70,7 @@ public class RepositoryValidationService(
         return report;
     }
 
-    public IReadOnlyCollection<IValidationRule> Fix(IClonedRepository repository, RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> validationRules)
+    public IReadOnlyCollection<IValidationRule> Fix(ILocalRepository repository, RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> validationRules)
     {
         repository.ThrowIfNull();
         report.ThrowIfNull();
