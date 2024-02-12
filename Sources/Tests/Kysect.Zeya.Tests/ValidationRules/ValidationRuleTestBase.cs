@@ -33,8 +33,7 @@ public abstract class ValidationRuleTestBase
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
         Repository = new LocalGithubRepository(new GithubRepositoryName("owner", "name"), CurrentPath, FileSystem);
 
-        RepositoryDiagnosticCollector diagnosticCollector = DiagnosticCollectorAsserts.GetCollector();
-        Context = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(Repository, diagnosticCollector));
+        Context = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(Repository, DiagnosticCollectorAsserts.GetCollector()));
 
         SolutionFileContentParser = new SolutionFileContentParser();
 

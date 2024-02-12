@@ -23,6 +23,16 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
 
         var repositoryValidationContext = context.GetValidationContext();
 
+        ILocalRepository localRepository = repositoryValidationContext.Repository;
+        if (localRepository is not LocalGithubRepository clonedGithubRepository)
+        {
+            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
+                request.DiagnosticCode,
+                $"Cannot apply github validation rule on non github repository",
+                Arguments.DefaultSeverity);
+            return;
+        }
+
         if (!fileSystem.File.Exists(request.MasterFile))
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
@@ -33,16 +43,6 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         }
         IFileInfo masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
         string masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
-
-        ILocalRepository localRepository = repositoryValidationContext.Repository;
-        if (localRepository is not LocalGithubRepository clonedGithubRepository)
-        {
-            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
-                request.DiagnosticCode,
-                $"Cannot apply github validation rule on non github repository",
-                Arguments.DefaultSeverity);
-            return;
-        }
 
         var expectedPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
         if (!localRepository.FileSystem.Exists(expectedPath))

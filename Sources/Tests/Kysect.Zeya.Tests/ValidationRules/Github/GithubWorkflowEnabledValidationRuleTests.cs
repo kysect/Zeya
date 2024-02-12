@@ -1,4 +1,6 @@
-﻿using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
+﻿using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.ValidationRules.Github;
@@ -10,6 +12,19 @@ public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
     public GithubWorkflowEnabledValidationRuleTests()
     {
         _validationRule = new GithubWorkflowEnabledValidationRule(FileSystem);
+    }
+
+    [Fact]
+    public void Execute_NotGithubRepository_ReturnErrorAboutIncorrectRepository()
+    {
+        var arguments = new GithubWorkflowEnabledValidationRule.Arguments("Master.yaml");
+
+        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+        _validationRule.Execute(notGithubContext, arguments);
+
+        DiagnosticCollectorAsserts
+            .ShouldHaveErrorCount(1)
+            .ShouldHaveError(1, arguments.DiagnosticCode, "Cannot apply github validation rule on non github repository");
     }
 
     [Fact]
