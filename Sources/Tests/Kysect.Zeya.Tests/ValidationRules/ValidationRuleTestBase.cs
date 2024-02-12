@@ -2,7 +2,6 @@
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Asserts;
@@ -21,7 +20,6 @@ public abstract class ValidationRuleTestBase
     protected RepositoryDiagnosticCollectorAsserts DiagnosticCollectorAsserts { get; }
     protected string CurrentPath { get; }
     protected SolutionFileContentParser SolutionFileContentParser { get; }
-    protected RepositorySolutionAccessorFactory RepositorySolutionAccessorFactory { get; }
     protected FileSystemAsserts FileSystemAsserts { get; }
 
     protected ValidationRuleTestBase()
@@ -38,7 +36,6 @@ public abstract class ValidationRuleTestBase
         Context = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(Repository, diagnosticCollector));
 
         SolutionFileContentParser = new SolutionFileContentParser();
-        RepositorySolutionAccessorFactory = new RepositorySolutionAccessorFactory(SolutionFileContentParser, FileSystem);
 
         FileSystemAsserts = new FileSystemAsserts(FileSystem);
     }

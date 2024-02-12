@@ -114,8 +114,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IFileSystem, FileSystem>()
             .AddSingleton<XmlDocumentSyntaxFormatter>()
             .AddSingleton<DotnetSolutionModifierFactory>()
-            .AddSingleton<SolutionFileContentParser>()
-            .AddSingleton<RepositorySolutionAccessorFactory>();
+            .AddSingleton<SolutionFileContentParser>();
     }
 
     public static IServiceCollection AddZeyaRepositoryValidation(this IServiceCollection serviceCollection)

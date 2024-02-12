@@ -3,7 +3,7 @@ using Kysect.CommonLib.Collections.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GitIntegration;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation.Abstractions;
 using Kysect.Zeya.RepositoryValidation.Abstractions.Models;
 using Kysect.Zeya.ValidationRules.Abstractions;
@@ -12,8 +12,7 @@ using System.IO.Abstractions;
 namespace Kysect.Zeya.ValidationRules.Rules.SourceCode;
 
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule(
-    IFileSystem fileSystem,
-    RepositorySolutionAccessorFactory repositorySolutionAccessorFactory)
+    IFileSystem fileSystem)
     : IScenarioStepExecutor<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager")]
@@ -30,7 +29,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         request.ThrowIfNull();
 
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
-        RepositorySolutionAccessor repositorySolutionAccessor = repositorySolutionAccessorFactory.Create(repositoryValidationContext.Repository);
+        LocalRepositorySolution repositorySolutionAccessor = repositoryValidationContext.Repository.SolutionManager.GetSolution();
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
         if (!fileSystem.File.Exists(request.MasterFile))

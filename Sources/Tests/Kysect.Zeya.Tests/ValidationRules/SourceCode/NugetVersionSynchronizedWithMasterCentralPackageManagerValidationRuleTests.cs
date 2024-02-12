@@ -15,7 +15,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     {
         _directoryPackageMasterPropsPath = "Directory.Package.Master.props";
         _arguments = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments(_directoryPackageMasterPropsPath);
-        _requiredPackagesAddedValidationRule = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule(FileSystem, RepositorySolutionAccessorFactory);
+        _requiredPackagesAddedValidationRule = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule(FileSystem);
     }
 
     [Fact]

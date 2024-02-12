@@ -4,7 +4,8 @@ namespace Kysect.Zeya.GitIntegration.Abstraction;
 
 public class ClonedRepository(string repositoryRootPath, IFileSystem fileSystem) : IClonedRepository
 {
-    public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
+    public LocalRepositoryFileSystem FileSystem { get; } = new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
+    public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, fileSystem);
 
     public virtual string GetRepositoryName()
     {

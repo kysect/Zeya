@@ -11,7 +11,7 @@ public class NugetMetadataHaveCorrectValueValidationRuleTests : ValidationRuleTe
 
     public NugetMetadataHaveCorrectValueValidationRuleTests()
     {
-        _validationRule = new NugetMetadataHaveCorrectValueValidationRule(RepositorySolutionAccessorFactory);
+        _validationRule = new NugetMetadataHaveCorrectValueValidationRule();
     }
 
     [Fact]

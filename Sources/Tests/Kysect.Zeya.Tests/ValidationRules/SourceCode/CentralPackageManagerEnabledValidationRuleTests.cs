@@ -10,7 +10,7 @@ public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTes
 
     public CentralPackageManagerEnabledValidationRuleTests()
     {
-        _validationRule = new CentralPackageManagerEnabledValidationRule(RepositorySolutionAccessorFactory);
+        _validationRule = new CentralPackageManagerEnabledValidationRule();
     }
 
     [Fact]

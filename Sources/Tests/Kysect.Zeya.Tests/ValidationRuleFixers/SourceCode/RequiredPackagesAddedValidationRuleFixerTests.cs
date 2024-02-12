@@ -13,7 +13,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
 
     public RequiredPackagesAddedValidationRuleFixerTests()
     {
-        _fixer = new RequiredPackagesAddedValidationRuleFixer(RepositorySolutionAccessorFactory, Formatter, Logger);
+        _fixer = new RequiredPackagesAddedValidationRuleFixer(Formatter, Logger);
     }
 
     [Fact]

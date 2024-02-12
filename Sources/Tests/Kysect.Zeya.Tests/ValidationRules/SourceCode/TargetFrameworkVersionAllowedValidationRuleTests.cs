@@ -10,7 +10,7 @@ public class TargetFrameworkVersionAllowedValidationRuleTests : ValidationRuleTe
 
     public TargetFrameworkVersionAllowedValidationRuleTests()
     {
-        _validationRule = new TargetFrameworkVersionAllowedValidationRule(RepositorySolutionAccessorFactory);
+        _validationRule = new TargetFrameworkVersionAllowedValidationRule();
     }
 
     [Theory]

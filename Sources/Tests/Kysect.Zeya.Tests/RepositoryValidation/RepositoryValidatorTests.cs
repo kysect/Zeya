@@ -16,7 +16,7 @@ public class RepositoryValidatorTests : ValidationRuleTestBase
 
     public RepositoryValidatorTests()
     {
-        ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create(FileSystem);
+        ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create();
         _repositoryValidator = new RepositoryValidator(TestLoggerProvider.GetLogger(), scenarioStepReflectionHandler);
     }
 
