@@ -1,4 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.Github;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using Kysect.Zeya.Tests.ValidationRules;
@@ -13,6 +14,23 @@ public class GithubWorkflowEnabledValidationRuleFixerTests : ValidationRuleTestB
     public GithubWorkflowEnabledValidationRuleFixerTests()
     {
         _fixer = new GithubWorkflowEnabledValidationRuleFixer(FileSystem, Logger);
+    }
+
+    [Fact]
+    public void Fix_NonGithubRepository_SkipFixing()
+    {
+        var masterFileContent = """
+                                - name
+                                  - run
+                                    - step
+                                """;
+
+        new SolutionFileStructureBuilder("Solution")
+            .Save(FileSystem, CurrentPath, Formatter);
+        FileSystem.AddFile("build.yaml", new MockFileData(masterFileContent));
+
+        var nonGitRepository = new LocalRepository(CurrentPath, FileSystem);
+        _fixer.Fix(new GithubWorkflowEnabledValidationRule.Arguments("build.yaml"), nonGitRepository);
     }
 
     [Fact]
