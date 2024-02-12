@@ -1,5 +1,4 @@
-﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
@@ -20,17 +19,16 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     }
 
     [Fact]
-    public void Execute_NoGithubRepositoryMetadata_ReturnDiagnosticAboutMissedMetadata()
+    public void Execute_NotGithubRepository_ReturnErrorAboutIncorrectRepository()
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
-        ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
 
-        _validationRule.Execute(nonGithubContext, arguments);
+        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+        _validationRule.Execute(notGithubContext, arguments);
 
         DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
-            .ShouldHaveError(1, arguments.DiagnosticCode, $"Skip {arguments.DiagnosticCode} because repository do not have GitHub metadata.");
+            .ShouldHaveError(1, arguments.DiagnosticCode, "Cannot apply github validation rule on non github repository");
     }
 
     [Fact]
