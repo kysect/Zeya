@@ -27,6 +27,8 @@ public class RepositoryValidationService(
 
     public void CreatePullRequestWithFix(LocalGithubRepository repository, string scenario)
     {
+        repository.ThrowIfNull();
+
         string branchName = "zeya/fixer";
         string commitMessage = "Apply Zeya code fixers";
 
@@ -35,11 +37,11 @@ public class RepositoryValidationService(
         IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(scenario);
 
         logger.LogInformation("Repositories analyzed, run fixers");
-        gitIntegrationService.CreateFixBranch(repository, branchName);
+        gitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, report, rules);
 
         logger.LogInformation("Commit fixes");
-        gitIntegrationService.CreateCommitWithFix(repository, commitMessage);
+        gitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
 
         logger.LogInformation("Push changes to remote");
         githubIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName);

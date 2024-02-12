@@ -1,9 +1,7 @@
-﻿using Kysect.Zeya.LocalRepositoryAccess;
-
-namespace Kysect.Zeya.GitIntegration.Abstraction;
+﻿namespace Kysect.Zeya.GitIntegration.Abstraction;
 
 public interface IGitIntegrationService
 {
-    void CreateFixBranch(ILocalRepository repository, string branchName);
-    void CreateCommitWithFix(ILocalRepository repository, string commitMessage);
+    void CreateFixBranch(string repositoryLocalPath, string branchName);
+    void CreateCommitWithFix(string repositoryLocalPath, string commitMessage);
 }
