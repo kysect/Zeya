@@ -8,6 +8,8 @@
     <PackageVersion Include="Kysect.GithubUtils" Version="1.2.0" />
     <PackageVersion Include="Kysect.PowerShellRunner" Version="0.2.0" />
     <PackageVersion Include="Kysect.PowerShellRunner.Configuration" Version="0.2.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />

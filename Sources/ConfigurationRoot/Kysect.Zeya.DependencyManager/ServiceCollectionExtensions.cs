@@ -10,6 +10,7 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
 using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
+using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
@@ -19,6 +20,7 @@ using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.Tui.Controls;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -46,6 +48,7 @@ public static class ServiceCollectionExtensions
     {
         return serviceCollection
             .AddZeyaLogging()
+            .AddZeyaDbContext()
             .AddPowerShellWrappers()
             .AddZeyaDotnetProjectSystemIntegration()
             .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
@@ -70,6 +73,12 @@ public static class ServiceCollectionExtensions
             .Build();
 
         return serviceCollection.AddSingleton(logger);
+    }
+
+    public static IServiceCollection AddZeyaDbContext(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddDbContextFactory<ZeyaDbContext>(o => o.UseInMemoryDatabase("Database"));
     }
 
     private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
