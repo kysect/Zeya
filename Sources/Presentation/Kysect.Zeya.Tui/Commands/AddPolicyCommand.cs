@@ -7,18 +7,19 @@ namespace Kysect.Zeya.Tui.Commands;
 
 public class AddPolicyCommand(
     ValidationPolicyService validationPolicyService,
-    IFileSystem fileSystem) : ITuiCommand
+    IFileSystem fileSystem,
+    IAnsiConsole console) : ITuiCommand
 {
     public string Name => "Add policy";
 
     public void Execute()
     {
-        string name = AnsiConsole.Ask<string>("Enter policy name");
-        string filePath = AnsiConsole.Ask<string>("Enter the path to the policy file");
+        string name = console.Ask<string>("Enter policy name");
+        string filePath = console.Ask<string>("Enter the path to the policy file");
 
         if (!fileSystem.File.Exists(filePath))
         {
-            AnsiConsole.WriteLine("File does not exist.");
+            console.WriteLine("File does not exist.");
             return;
         }
 
