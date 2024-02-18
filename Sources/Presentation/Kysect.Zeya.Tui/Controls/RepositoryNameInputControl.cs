@@ -1,17 +1,17 @@
-﻿using Kysect.Zeya.GithubIntegration.Abstraction;
+﻿using Kysect.Zeya.Client.Abstractions.Models;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
 
 public class RepositoryNameInputControl(IAnsiConsole console)
 {
-    public GithubRepositoryName Ask()
+    public GithubRepositoryNameDto AskDto()
     {
         string repositoryFullName = console.Ask<string>("Repository (format: org/repo):");
         if (!repositoryFullName.Contains('/'))
             throw new ArgumentException("Incorrect repository format");
 
         string[] parts = repositoryFullName.Split('/', 2);
-        return new GithubRepositoryName(parts[0], parts[1]);
+        return new GithubRepositoryNameDto(parts[0], parts[1]);
     }
 }

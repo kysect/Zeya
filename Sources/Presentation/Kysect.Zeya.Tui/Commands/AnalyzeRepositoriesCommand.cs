@@ -1,20 +1,20 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.IntegrationManager;
-using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeRepositoriesCommand(
-    RepositorySelectorControl repositorySelector,
-    RepositoryValidationService repositoryValidationService) : ITuiCommand
+    IRepositoryValidationApi repositoryValidationApi,
+    RepositoryNameInputControl repositoryNameInputControl) : ITuiCommand
 {
     public string Name => "Analyze repositories";
 
     public void Execute()
     {
-        IReadOnlyCollection<ILocalRepository> repositories = repositorySelector.SelectRepositories();
+        GithubRepositoryNameDto githubRepositoryName = repositoryNameInputControl.AskDto();
         // TODO: remove hardcoded value
-        repositoryValidationService.Analyze(repositories, "Demo-validation.yaml");
+        repositoryValidationApi.Analyze(githubRepositoryName, "Demo-validation.yaml");
     }
 }
