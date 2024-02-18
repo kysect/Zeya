@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.IntegrationManager;
-using Kysect.Zeya.IntegrationManager.Models;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.EntityFrameworkCore;

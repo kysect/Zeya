@@ -43,7 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.GithubIntegrati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DataAccess.Abstractions", "Application\Kysect.Zeya.DataAccess.Abstractions\Kysect.Zeya.DataAccess.Abstractions.csproj", "{0815E3F8-9075-4E70-A530-71C5F0008347}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.DataAccess.EntityFramework", "Integration\Kysect.Zeya.DataAccess.EntityFramework\Kysect.Zeya.DataAccess.EntityFramework.csproj", "{3B70AC8D-289C-4028-87B0-A187FAFF6E60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DataAccess.EntityFramework", "Integration\Kysect.Zeya.DataAccess.EntityFramework\Kysect.Zeya.DataAccess.EntityFramework.csproj", "{3B70AC8D-289C-4028-87B0-A187FAFF6E60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Client.Abstractions", "Application\Kysect.Zeya.Client.Abstractions\Kysect.Zeya.Client.Abstractions.csproj", "{26BD7567-AA6E-4250-8766-5F77AED16BF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Client.Local", "Application\Kysect.Zeya.Client.Local\Kysect.Zeya.Client.Local.csproj", "{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +115,14 @@ Global
 		{3B70AC8D-289C-4028-87B0-A187FAFF6E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B70AC8D-289C-4028-87B0-A187FAFF6E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B70AC8D-289C-4028-87B0-A187FAFF6E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26BD7567-AA6E-4250-8766-5F77AED16BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26BD7567-AA6E-4250-8766-5F77AED16BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26BD7567-AA6E-4250-8766-5F77AED16BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26BD7567-AA6E-4250-8766-5F77AED16BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +143,8 @@ Global
 		{7DADA5D3-4DCD-419B-B0F5-42107093CFF7} = {E441327E-F838-433F-B8DE-FE74093825BF}
 		{0815E3F8-9075-4E70-A530-71C5F0008347} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{3B70AC8D-289C-4028-87B0-A187FAFF6E60} = {E441327E-F838-433F-B8DE-FE74093825BF}
+		{26BD7567-AA6E-4250-8766-5F77AED16BF5} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}

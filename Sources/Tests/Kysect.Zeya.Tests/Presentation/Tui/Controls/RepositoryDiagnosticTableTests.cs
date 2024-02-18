@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.IntegrationManager.Models;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console.Testing;
 

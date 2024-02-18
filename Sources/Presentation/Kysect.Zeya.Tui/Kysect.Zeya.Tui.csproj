@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\Kysect.Zeya.Client.Abstractions\Kysect.Zeya.Client.Abstractions.csproj" />
     <ProjectReference Include="..\..\Application\Kysect.Zeya.IntegrationManager\Kysect.Zeya.IntegrationManager.csproj" />
   </ItemGroup>
 
