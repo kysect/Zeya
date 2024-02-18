@@ -55,18 +55,13 @@ public class RepositoryValidationService(
     {
         repositories.ThrowIfNull();
 
-        logger.LogTrace("Loading validation configuration");
-        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
-
-        RepositoryValidationReport report = RepositoryValidationReport.Empty;
         logger.LogInformation("Start repositories validation");
+        RepositoryValidationReport report = RepositoryValidationReport.Empty;
         foreach (ILocalRepository githubRepository in repositories)
         {
-            logger.LogDebug("Validate {Repository}", githubRepository.GetRepositoryName());
-            report = report.Compose(repositoryValidator.Validate(githubRepository, validationRules));
+            report = report.Compose(AnalyzeSingleRepository(githubRepository, scenario));
         }
 
-        reporter.Report(report);
         return report;
     }
 
@@ -79,5 +74,19 @@ public class RepositoryValidationService(
         // TODO: log fix result
         logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
         return repositoryDiagnosticFixer.Fix(report, validationRules, repository);
+    }
+
+    public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, string scenario)
+    {
+        repository.ThrowIfNull();
+
+        logger.LogTrace("Loading validation configuration");
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
+
+        logger.LogDebug("Validate {Repository}", repository.GetRepositoryName());
+        RepositoryValidationReport report = repositoryValidator.Validate(repository, validationRules);
+
+        reporter.Report(report);
+        return report;
     }
 }

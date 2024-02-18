@@ -138,7 +138,8 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositoryValidator>()
             .AddSingleton<RepositoryDiagnosticFixer>()
             .AddSingleton<PullRequestMessageCreator>()
-            .AddSingleton<RepositoryValidationService>();
+            .AddSingleton<RepositoryValidationService>()
+            .AddSingleton<ValidationPolicyService>();
 
         return serviceCollection;
     }
