@@ -3,11 +3,11 @@ using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
 
-public static class RepositoryNameInputControl
+public class RepositoryNameInputControl(IAnsiConsole console)
 {
-    public static GithubRepositoryName Ask()
+    public GithubRepositoryName Ask()
     {
-        string repositoryFullName = AnsiConsole.Ask<string>("Repository (format: org/repo):");
+        string repositoryFullName = console.Ask<string>("Repository (format: org/repo):");
         if (!repositoryFullName.Contains('/'))
             throw new ArgumentException("Incorrect repository format");
 

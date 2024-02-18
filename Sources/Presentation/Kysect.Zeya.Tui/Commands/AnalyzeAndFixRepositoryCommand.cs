@@ -8,14 +8,15 @@ namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndFixRepositoryCommand(
     RepositorySelectorControl repositorySelector,
-    RepositoryValidationService repositoryValidationService)
+    RepositoryValidationService repositoryValidationService,
+    RepositoryNameInputControl repositoryNameInputControl)
     : ITuiCommand
 {
     public string Name => "Analyze and fix repository";
 
     public void Execute()
     {
-        GithubRepositoryName githubRepositoryName = RepositoryNameInputControl.Ask();
+        GithubRepositoryName githubRepositoryName = repositoryNameInputControl.Ask();
         LocalGithubRepository repository = repositorySelector.CreateGithubRepository(githubRepositoryName);
         // TODO: remove hardcoded value
         repositoryValidationService.AnalyzerAndFix(repository, "Demo-validation.yaml");
