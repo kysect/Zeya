@@ -1,6 +1,8 @@
-﻿using Kysect.CommonLib.DependencyInjection;
+﻿using FluentAssertions;
+using Kysect.CommonLib.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.DependencyManager;
+using Kysect.Zeya.Tui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO.Abstractions;
@@ -28,7 +30,9 @@ public class ServiceCollectionExtensionsTests
             .AddZeyaTerminalUserInterface();
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(serviceProviderOptions);
-        var tuiMenuNavigator = serviceProvider.GetRequiredService<TuiMenuNavigator>();
+        TuiMenuNavigator tuiMenuNavigator = serviceProvider.GetRequiredService<TuiMenuNavigator>();
+        RootMenu menu = serviceProvider.GetRequiredService<RootMenu>();
+        menu.GetMenuItems().Should().NotBeEmpty();
     }
 
     private static IServiceCollection AddTestZeyaConfiguration(IServiceCollection serviceCollection)
