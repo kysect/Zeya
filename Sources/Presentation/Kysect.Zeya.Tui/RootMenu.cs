@@ -10,7 +10,8 @@ public record RootMenu(
     AnalyzeAndFixAndCreatePullRequestRepositoryCommand AnalyzeAndFixAndCreatePullRequestRepositoryCommand,
     AddPolicyCommand AddPolicyCommand,
     AddRepositoryCommand AddRepositoryCommand,
-    AnalyzeAndSaveToDatabaseCommand AnalyzeAndSaveToDatabaseCommand) : ITuiMenu
+    AnalyzeAndSaveToDatabaseCommand AnalyzeAndSaveToDatabaseCommand,
+    ShowRepositoryValidationReportCommand ShowRepositoryValidationReportCommand) : ITuiMenu
 {
     public string Name => "Root menu";
 
@@ -23,7 +24,8 @@ public record RootMenu(
             AnalyzeAndFixAndCreatePullRequestRepositoryCommand,
             AddPolicyCommand,
             AddRepositoryCommand,
-            AnalyzeAndSaveToDatabaseCommand
+            AnalyzeAndSaveToDatabaseCommand,
+            ShowRepositoryValidationReportCommand
         };
     }
 }

@@ -23,6 +23,7 @@ using Kysect.Zeya.Tui.Controls;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
@@ -48,7 +49,7 @@ public static class ServiceCollectionExtensions
     {
         return serviceCollection
             .AddZeyaLogging()
-            .AddZeyaDbContext()
+            .AddZeyaSqliteDbContext("Database.sql")
             .AddPowerShellWrappers()
             .AddZeyaDotnetProjectSystemIntegration()
             .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
@@ -75,10 +76,14 @@ public static class ServiceCollectionExtensions
         return serviceCollection.AddSingleton(logger);
     }
 
-    public static IServiceCollection AddZeyaDbContext(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaSqliteDbContext(this IServiceCollection serviceCollection, string databaseName = ":memory:")
     {
         return serviceCollection
-            .AddDbContextFactory<ZeyaDbContext>(o => o.UseInMemoryDatabase("Database"));
+            .AddDbContextFactory<ZeyaDbContext>(options =>
+            {
+                options.UseInMemoryDatabase($"Data Source={databaseName}");
+            })
+            .AddSingleton<IHostedService, MigrateDatabaseHostedService>();
     }
 
     private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
