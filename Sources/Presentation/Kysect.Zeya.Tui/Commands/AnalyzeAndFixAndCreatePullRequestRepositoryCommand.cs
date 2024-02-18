@@ -1,14 +1,12 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.IntegrationManager;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
+using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
-    RepositorySelectorControl repositorySelector,
-    RepositoryValidationService repositoryValidationService,
+    IRepositoryValidationApi repositoryValidationApi,
     RepositoryNameInputControl repositoryNameInputControl)
     : ITuiCommand
 {
@@ -16,9 +14,8 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
 
     public void Execute()
     {
-        GithubRepositoryName githubRepositoryName = repositoryNameInputControl.Ask();
-        LocalGithubRepository repository = repositorySelector.CreateGithubRepository(githubRepositoryName);
+        GithubRepositoryNameDto githubRepositoryName = repositoryNameInputControl.AskDto();
         // TODO: remove hardcoded value
-        repositoryValidationService.CreatePullRequestWithFix(repository, "Demo-validation.yaml");
+        repositoryValidationApi.CreatePullRequestWithFix(githubRepositoryName, "Demo-validation.yaml");
     }
 }

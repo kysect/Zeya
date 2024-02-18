@@ -8,4 +8,5 @@ public interface IValidationPolicyApi
     IReadOnlyCollection<ValidationPolicyDto> ReadPolicies();
     ValidationPolicyRepositoryDto AddRepository(Guid policyId, string githubOwner, string githubRepository);
     IReadOnlyCollection<RepositoryDiagnosticTableRow> GetDiagnosticsTable(Guid policyId);
+    IReadOnlyCollection<ValidationPolicyRepositoryDto> GetRepositories(Guid policyId);
 }

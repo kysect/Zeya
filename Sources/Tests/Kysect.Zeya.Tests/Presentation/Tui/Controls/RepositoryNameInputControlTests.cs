@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console.Testing;
 
@@ -18,8 +18,8 @@ public class RepositoryNameInputControlTests
 
         console.Input.PushText(repositoryFullName);
         console.Input.PushKey(ConsoleKey.Enter);
-        GithubRepositoryName result = repositoryNameInputControl.Ask();
+        GithubRepositoryNameDto result = repositoryNameInputControl.AskDto();
 
-        result.Should().Be(new GithubRepositoryName(expectedOwner, expectedName));
+        result.Should().Be(new GithubRepositoryNameDto(expectedOwner, expectedName));
     }
 }

@@ -1,17 +1,12 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
+using Kysect.Zeya.Client.Abstractions.Contracts;
 using Kysect.Zeya.Client.Abstractions.Models;
-using Kysect.Zeya.DataAccess.Abstractions;
-using Kysect.Zeya.IntegrationManager;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
-using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndSaveToDatabaseCommand(
-    RepositoryValidationService repositoryValidationService,
-    IGithubRepositoryProvider githubRepositoryProvider,
-    ValidationPolicyService validationPolicyService,
+    IRepositoryValidationApi repositoryValidationApi,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public string Name => "Analyze and save to database";
@@ -22,12 +17,6 @@ public class AnalyzeAndSaveToDatabaseCommand(
         if (policy is null)
             return;
 
-        IReadOnlyCollection<ValidationPolicyRepository> repositories = validationPolicyService.GetRepositories(policy.Id);
-        foreach (ValidationPolicyRepository validationPolicyRepository in repositories)
-        {
-            LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(validationPolicyRepository.GithubOwner, validationPolicyRepository.GithubRepository);
-            RepositoryValidationReport report = repositoryValidationService.AnalyzeSingleRepository(localGithubRepository, "Demo-validation.yaml");
-            validationPolicyService.SaveReport(validationPolicyRepository, report);
-        }
+        repositoryValidationApi.ValidatePolicyRepositories(policy.Id);
     }
 }

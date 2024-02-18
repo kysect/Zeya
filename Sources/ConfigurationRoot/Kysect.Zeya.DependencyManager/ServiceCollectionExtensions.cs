@@ -186,7 +186,6 @@ public static class ServiceCollectionExtensions
 
         serviceCollection
             .AddSingleton(AnsiConsole.Console)
-            .AddSingleton<RepositorySelectorControl>()
             .AddSingleton<PolicySelectorControl>()
             .AddSingleton<RepositoryNameInputControl>()
             .AddUserActionSelectionMenus(consoleCommandAssemblies)
@@ -199,7 +198,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaLocalServer(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IValidationPolicyApi, ValidationPolicyLocalClient>();
+            .AddSingleton<IValidationPolicyApi, ValidationPolicyLocalClient>()
+            .AddSingleton<IRepositoryValidationApi, RepositoryValidationLocalClient>();
     }
 
     private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)

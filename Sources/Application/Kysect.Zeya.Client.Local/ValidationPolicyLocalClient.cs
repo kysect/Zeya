@@ -36,4 +36,12 @@ public class ValidationPolicyLocalClient : IValidationPolicyApi
     {
         return _service.GetDiagnosticsTable(policyId);
     }
+
+    public IReadOnlyCollection<ValidationPolicyRepositoryDto> GetRepositories(Guid policyId)
+    {
+        return _service
+            .GetRepositories(policyId)
+            .Select(r => new ValidationPolicyRepositoryDto(r.Id, r.ValidationPolicyId, r.GithubOwner, r.GithubRepository))
+            .ToList();
+    }
 }
