@@ -43,11 +43,9 @@ public class ValidationPolicyServiceTests
     [Fact]
     public void AddRepository_NoPolicy_ThrowException()
     {
-        ValidationPolicyRepository repository = _validationPolicyService.AddRepository(Guid.Empty, "Owner", "Repository");
-
         var argumentException = Assert.Throws<ArgumentException>(() =>
         {
-            _validationPolicyService.GetRepositories(Guid.Empty);
+            _validationPolicyService.AddRepository(Guid.Empty, "Owner", "Repository");
         });
 
         argumentException.Message.Should().Be("Policy not found");
