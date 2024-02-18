@@ -184,6 +184,7 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddSingleton(AnsiConsole.Console)
             .AddSingleton<RepositorySelectorControl>()
+            .AddSingleton<PolicySelectorControl>()
             .AddUserActionSelectionMenus(consoleCommandAssemblies);
         serviceCollection.AddSingleton(CreateUserActionSelectionMenuNavigator);
 
