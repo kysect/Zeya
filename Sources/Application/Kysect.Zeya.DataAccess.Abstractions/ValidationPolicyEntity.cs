@@ -2,17 +2,11 @@
 
 namespace Kysect.Zeya.DataAccess.Abstractions;
 
-public class ValidationPolicyEntity
+public class ValidationPolicyEntity(Guid id, string name, string content)
 {
     [Key]
-    public Guid Id { get; init; }
-    public string Name { get; init; }
-    public string Content { get; init; }
+    public Guid Id { get; init; } = id;
 
-    public ValidationPolicyEntity(Guid id, string name, string content)
-    {
-        Id = id;
-        Name = name;
-        Content = content;
-    }
+    public string Name { get; init; } = name;
+    public string Content { get; init; } = content;
 }

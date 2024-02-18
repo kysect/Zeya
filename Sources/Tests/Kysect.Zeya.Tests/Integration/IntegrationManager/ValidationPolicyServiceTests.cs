@@ -24,4 +24,15 @@ public class ValidationPolicyServiceTests
 
         policies.Should().HaveCount(1);
     }
+
+    [Fact]
+    public void AddRepository_OnEmptyDatabase_RepositoryAdded()
+    {
+        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.Create("Policy", "Content");
+        ValidationPolicyRepository repository = _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
+
+        IReadOnlyCollection<ValidationPolicyRepository> repositories = _validationPolicyService.GetRepositories(validationPolicyEntity.Id);
+
+        repositories.Should().HaveCount(1);
+    }
 }

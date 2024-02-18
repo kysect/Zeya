@@ -7,15 +7,23 @@ namespace Kysect.Zeya.Tui;
 public record RootMenu(
     AnalyzeRepositoriesCommand AnalyzeRepositoriesCommand,
     AnalyzeAndFixRepositoryCommand AnalyzeAndFixRepositoryCommand,
-    AnalyzeAndFixAndCreatePullRequestRepositoryCommand AnalyzeAndFixAndCreatePullRequestRepositoryCommand) : ITuiMenu
+    AnalyzeAndFixAndCreatePullRequestRepositoryCommand AnalyzeAndFixAndCreatePullRequestRepositoryCommand,
+    AddPolicyCommand AddPolicyCommand,
+    AddRepositoryCommand AddRepositoryCommand,
+    AnalyzeAndSaveToDatabaseCommand AnalyzeAndSaveToDatabaseCommand) : ITuiMenu
 {
     public string Name => "Root menu";
 
     public IReadOnlyCollection<ITuiCommand> GetMenuItems()
     {
-        return [
+        return new List<ITuiCommand>
+        {
             AnalyzeRepositoriesCommand,
             AnalyzeAndFixRepositoryCommand,
-            AnalyzeAndFixAndCreatePullRequestRepositoryCommand];
+            AnalyzeAndFixAndCreatePullRequestRepositoryCommand,
+            AddPolicyCommand,
+            AddRepositoryCommand,
+            AnalyzeAndSaveToDatabaseCommand
+        };
     }
 }
