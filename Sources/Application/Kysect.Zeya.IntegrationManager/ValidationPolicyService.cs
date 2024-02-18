@@ -20,7 +20,7 @@ public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextF
         return createdPolicy.Entity;
     }
 
-    public IReadOnlyCollection<ValidationPolicyEntity> Read()
+    public IReadOnlyCollection<ValidationPolicyEntity> ReadPolicies()
     {
         using ZeyaDbContext context = dbContextFactory.CreateDbContext();
 

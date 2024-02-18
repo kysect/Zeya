@@ -24,7 +24,7 @@ public class ValidationPolicyServiceTests
     {
         ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
 
-        IReadOnlyCollection<ValidationPolicyEntity> policies = _validationPolicyService.Read();
+        IReadOnlyCollection<ValidationPolicyEntity> policies = _validationPolicyService.ReadPolicies();
 
         policies.Should().HaveCount(1);
     }

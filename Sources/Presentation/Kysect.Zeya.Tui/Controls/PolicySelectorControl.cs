@@ -8,7 +8,7 @@ public class PolicySelectorControl(ValidationPolicyService validationPolicyServi
 {
     public ValidationPolicyEntity? SelectPolicy()
     {
-        IReadOnlyCollection<ValidationPolicyEntity> policies = validationPolicyService.Read();
+        IReadOnlyCollection<ValidationPolicyEntity> policies = validationPolicyService.ReadPolicies();
 
         if (policies.Count == 0)
         {

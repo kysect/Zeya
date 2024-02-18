@@ -9,11 +9,9 @@ public static class ZeyaDbContextProvider
 {
     public static IDbContextFactory<ZeyaDbContext> Create()
     {
-        ServiceProvider serviceProvider = new ServiceCollection()
-            .AddZeyaSqliteDbContext()
-            .BuildServiceProvider();
-
-        IDbContextFactory<ZeyaDbContext> dbContextFactory = serviceProvider.GetRequiredService<IDbContextFactory<ZeyaDbContext>>();
-        return dbContextFactory;
+        return new ServiceCollection()
+            .AddZeyaSqliteDbContext(Guid.NewGuid().ToString())
+            .BuildServiceProvider()
+            .GetRequiredService<IDbContextFactory<ZeyaDbContext>>();
     }
 }
