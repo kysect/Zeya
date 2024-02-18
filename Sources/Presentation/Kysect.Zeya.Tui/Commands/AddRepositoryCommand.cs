@@ -7,13 +7,13 @@ using Spectre.Console;
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AddRepositoryCommand(
-    ValidationPolicyService validationPolicyService) : ITuiCommand
+    ValidationPolicyService validationPolicyService,
+    PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public string Name => "Add repository";
 
     public void Execute()
     {
-        var policySelectorControl = new PolicySelectorControl(validationPolicyService);
         ValidationPolicyEntity? policy = policySelectorControl.SelectPolicy();
         if (policy is null)
             return;

@@ -23,10 +23,10 @@ using Kysect.Zeya.Tui.Controls;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
+using Spectre.Console;
 using System.IO.Abstractions;
 using System.Reflection;
 
@@ -82,8 +82,7 @@ public static class ServiceCollectionExtensions
             .AddDbContextFactory<ZeyaDbContext>(options =>
             {
                 options.UseInMemoryDatabase($"Data Source={databaseName}");
-            })
-            .AddSingleton<IHostedService, MigrateDatabaseHostedService>();
+            });
     }
 
     private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
@@ -183,6 +182,7 @@ public static class ServiceCollectionExtensions
         Assembly[] consoleCommandAssemblies = new[] { typeof(TuiMenuInitializer).Assembly };
 
         serviceCollection
+            .AddSingleton(AnsiConsole.Console)
             .AddSingleton<RepositorySelectorControl>()
             .AddUserActionSelectionMenus(consoleCommandAssemblies);
         serviceCollection.AddSingleton(CreateUserActionSelectionMenuNavigator);
