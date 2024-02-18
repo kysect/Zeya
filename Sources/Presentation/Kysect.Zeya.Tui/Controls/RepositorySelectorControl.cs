@@ -8,15 +8,10 @@ using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
 
-public class RepositorySelectorControl
+public class RepositorySelectorControl(
+    IGithubRepositoryProvider githubRepositoryProvider,
+    RepositoryNameInputControl repositoryNameInputControl)
 {
-    private readonly IGithubRepositoryProvider _githubRepositoryProvider;
-
-    public RepositorySelectorControl(IGithubRepositoryProvider githubRepositoryProvider)
-    {
-        _githubRepositoryProvider = githubRepositoryProvider;
-    }
-
     public IReadOnlyCollection<ILocalRepository> SelectRepositories()
     {
         string? selectionType = new SelectionPrompt<string>()
@@ -29,13 +24,13 @@ public class RepositorySelectorControl
         if (selectionType == "Local git repository")
         {
             string repositoryFullName = AnsiConsole.Ask<string>("Local repository path:");
-            ILocalRepository localRepository = _githubRepositoryProvider.GetLocalRepository(repositoryFullName);
+            ILocalRepository localRepository = githubRepositoryProvider.GetLocalRepository(repositoryFullName);
             return [localRepository];
         }
 
         if (selectionType == "Github repository")
         {
-            GithubRepositoryName githubRepositoryName = RepositoryNameInputControl.Ask();
+            GithubRepositoryName githubRepositoryName = repositoryNameInputControl.Ask();
             return [CreateGithubRepository(githubRepositoryName)];
         }
 
@@ -43,7 +38,7 @@ public class RepositorySelectorControl
         {
             string organization = AnsiConsole.Ask<string>("Organization for clone: ");
             // TODO: allow to input exclusion
-            return _githubRepositoryProvider.GetGithubOrganizationRepositories(organization, []);
+            return githubRepositoryProvider.GetGithubOrganizationRepositories(organization, []);
         }
 
         throw SwitchDefaultExceptions.OnUnexpectedValue(selectionType);
@@ -51,6 +46,6 @@ public class RepositorySelectorControl
 
     public LocalGithubRepository CreateGithubRepository(GithubRepositoryName githubRepositoryName)
     {
-        return _githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
+        return githubRepositoryProvider.GetGithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
     }
 }
