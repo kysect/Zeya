@@ -186,8 +186,9 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositorySelectorControl>()
             .AddSingleton<PolicySelectorControl>()
             .AddSingleton<RepositoryNameInputControl>()
-            .AddUserActionSelectionMenus(consoleCommandAssemblies);
-        serviceCollection.AddSingleton(CreateUserActionSelectionMenuNavigator);
+            .AddUserActionSelectionMenus(consoleCommandAssemblies)
+            .AddSingleton<RootMenu>()
+            .AddSingleton(CreateUserActionSelectionMenuNavigator);
 
         return serviceCollection;
     }

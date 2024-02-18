@@ -41,6 +41,19 @@ public class ValidationPolicyServiceTests
     }
 
     [Fact]
+    public void AddRepository_NoPolicy_ThrowException()
+    {
+        ValidationPolicyRepository repository = _validationPolicyService.AddRepository(Guid.Empty, "Owner", "Repository");
+
+        var argumentException = Assert.Throws<ArgumentException>(() =>
+        {
+            _validationPolicyService.GetRepositories(Guid.Empty);
+        });
+
+        argumentException.Message.Should().Be("Policy not found");
+    }
+
+    [Fact]
     public void GetAllRulesForPolicy_DatabaseWithTwoRepositoryDiagnostic_ReturnDistinctRuleIds()
     {
         ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
