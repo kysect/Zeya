@@ -1,5 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.Zeya.IntegrationManager.Models;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;

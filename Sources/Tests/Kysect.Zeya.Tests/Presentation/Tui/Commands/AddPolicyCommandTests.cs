@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Kysect.Zeya.Client.Local;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.IntegrationManager;
@@ -34,7 +35,7 @@ public class AddPolicyCommandTests : IDisposable
         _console.Input.PushText(filePath);
         _console.Input.PushKey(ConsoleKey.Enter);
         _mockFileSystem.AddFile(filePath, new MockFileData(policyContent));
-        var addPolicyCommand = new AddPolicyCommand(_validationPolicyService, _mockFileSystem, _console);
+        var addPolicyCommand = new AddPolicyCommand(new ValidationPolicyLocalClient(_validationPolicyService), _mockFileSystem, _console);
 
         addPolicyCommand.Execute();
         IReadOnlyCollection<ValidationPolicyEntity> policies = _validationPolicyService.ReadPolicies();

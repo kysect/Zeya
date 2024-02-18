@@ -1,14 +1,14 @@
-﻿using Kysect.Zeya.DataAccess.Abstractions;
-using Kysect.Zeya.IntegrationManager;
+﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions.Models;
 using Spectre.Console;
 
 namespace Kysect.Zeya.Tui.Controls;
 
-public class PolicySelectorControl(ValidationPolicyService validationPolicyService, IAnsiConsole ansiConsole)
+public class PolicySelectorControl(IValidationPolicyApi validationPolicyApi, IAnsiConsole ansiConsole)
 {
-    public ValidationPolicyEntity? SelectPolicy()
+    public ValidationPolicyDto? SelectPolicy()
     {
-        IReadOnlyCollection<ValidationPolicyEntity> policies = validationPolicyService.ReadPolicies();
+        IReadOnlyCollection<ValidationPolicyDto> policies = validationPolicyApi.ReadPolicies();
 
         if (policies.Count == 0)
         {

@@ -10,6 +10,8 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
 using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
+using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Local;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -56,7 +58,8 @@ public static class ServiceCollectionExtensions
             .AddZeyaGithubIntegration()
             .AddZeyaValidationRules()
             .AddZeyaValidationRuleFixers()
-            .AddZeyaRepositoryValidation();
+            .AddZeyaRepositoryValidation()
+            .AddZeyaLocalServer();
     }
 
     public static IServiceCollection AddZeyaLogging(this IServiceCollection serviceCollection)
@@ -191,6 +194,12 @@ public static class ServiceCollectionExtensions
             .AddSingleton(CreateUserActionSelectionMenuNavigator);
 
         return serviceCollection;
+    }
+
+    public static IServiceCollection AddZeyaLocalServer(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddSingleton<IValidationPolicyApi, ValidationPolicyLocalClient>();
     }
 
     private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)
