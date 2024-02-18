@@ -10,7 +10,7 @@ namespace Kysect.Zeya.IntegrationManager;
 
 public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextFactory)
 {
-    public ValidationPolicyEntity Create(string name, string content)
+    public ValidationPolicyEntity CreatePolicy(string name, string content)
     {
         using ZeyaDbContext context = dbContextFactory.CreateDbContext();
 

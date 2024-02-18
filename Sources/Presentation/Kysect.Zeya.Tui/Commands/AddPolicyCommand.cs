@@ -24,6 +24,6 @@ public class AddPolicyCommand(
 
         string content = fileSystem.File.ReadAllText(filePath);
 
-        validationPolicyService.Create(name, content);
+        validationPolicyService.CreatePolicy(name, content);
     }
 }

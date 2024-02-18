@@ -10,13 +10,13 @@ namespace Kysect.Zeya.Tui.Commands;
 public class AnalyzeAndSaveToDatabaseCommand(
     RepositoryValidationService repositoryValidationService,
     IGithubRepositoryProvider githubRepositoryProvider,
-    ValidationPolicyService validationPolicyService) : ITuiCommand
+    ValidationPolicyService validationPolicyService,
+    PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public string Name => "Analyze and save to database";
 
     public void Execute()
     {
-        var policySelectorControl = new PolicySelectorControl(validationPolicyService);
         ValidationPolicyEntity? policy = policySelectorControl.SelectPolicy();
         if (policy is null)
             return;

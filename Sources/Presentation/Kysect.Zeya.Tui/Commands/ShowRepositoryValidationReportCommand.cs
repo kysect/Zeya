@@ -8,14 +8,14 @@ using Spectre.Console;
 namespace Kysect.Zeya.Tui.Commands;
 
 public class ShowRepositoryValidationReportCommand(
-    ValidationPolicyService validationPolicyService) : ITuiCommand
+    ValidationPolicyService validationPolicyService,
+    PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public string Name => "Show repository validation report";
 
     public void Execute()
     {
         var repositoryDiagnosticTable = new RepositoryDiagnosticTable();
-        var policySelectorControl = new PolicySelectorControl(validationPolicyService);
         ValidationPolicyEntity? policy = policySelectorControl.SelectPolicy();
         if (policy is null)
             return;

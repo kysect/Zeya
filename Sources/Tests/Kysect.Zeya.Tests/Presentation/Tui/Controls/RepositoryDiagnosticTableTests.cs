@@ -3,14 +3,15 @@ using Kysect.Zeya.IntegrationManager.Models;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console.Testing;
 
-namespace Kysect.Zeya.Tests.Presentation.Tui;
+namespace Kysect.Zeya.Tests.Presentation.Tui.Controls;
 
 public class RepositoryDiagnosticTableTests
 {
     [Fact]
     public void Show_TwoRowWithRules_ReturnExpectedResult()
     {
-        using TestConsole console = new TestConsole();
+        using var console = new TestConsole();
+
         var repositoryDiagnosticTable = new RepositoryDiagnosticTable();
         List<RepositoryDiagnosticTableRow> rows =
         [

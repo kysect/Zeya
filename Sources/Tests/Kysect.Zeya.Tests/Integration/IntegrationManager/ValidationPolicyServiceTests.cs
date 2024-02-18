@@ -22,7 +22,7 @@ public class ValidationPolicyServiceTests
     [Fact]
     public void Create_OnEmptyDatabase_EntityCreated()
     {
-        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.Create("Policy", "Content");
+        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
 
         IReadOnlyCollection<ValidationPolicyEntity> policies = _validationPolicyService.Read();
 
@@ -32,7 +32,7 @@ public class ValidationPolicyServiceTests
     [Fact]
     public void AddRepository_OnEmptyDatabase_RepositoryAdded()
     {
-        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.Create("Policy", "Content");
+        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepository repository = _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
 
         IReadOnlyCollection<ValidationPolicyRepository> repositories = _validationPolicyService.GetRepositories(validationPolicyEntity.Id);
@@ -43,7 +43,7 @@ public class ValidationPolicyServiceTests
     [Fact]
     public void GetAllRulesForPolicy_DatabaseWithTwoRepositoryDiagnostic_ReturnDistinctRuleIds()
     {
-        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.Create("Policy", "Content");
+        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepository repository = _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
@@ -59,7 +59,7 @@ public class ValidationPolicyServiceTests
     [Fact]
     public void SaveReport_OnEmptyDatabase_ReportSaved()
     {
-        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.Create("Policy", "Content");
+        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepository repository = _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
         var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", "Warning");
@@ -76,7 +76,7 @@ public class ValidationPolicyServiceTests
     [Fact]
     public void GetDiagnosticsTable_ForTwoRepositoriesWithDiagnostics_ReturnTwoElementInListWithExpectedValue()
     {
-        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.Create("Policy", "Content");
+        ValidationPolicyEntity validationPolicyEntity = _validationPolicyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepository firstRepository = _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
         ValidationPolicyRepository secondRepository = _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository2");
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
