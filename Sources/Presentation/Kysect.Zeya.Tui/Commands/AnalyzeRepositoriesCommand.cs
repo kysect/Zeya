@@ -9,8 +9,6 @@ public class AnalyzeRepositoriesCommand(
     IRepositoryValidationApi repositoryValidationApi,
     RepositoryNameInputControl repositoryNameInputControl) : ITuiCommand
 {
-    public string Name => "Analyze repositories";
-
     public void Execute()
     {
         GithubRepositoryNameDto githubRepositoryName = repositoryNameInputControl.AskDto();

@@ -8,6 +8,7 @@ using Kysect.PowerShellRunner.Configuration;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
+using Kysect.TerminalUserInterface.Commands;
 using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Client.Abstractions.Contracts;
@@ -182,14 +183,13 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddZeyaTerminalUserInterface(this IServiceCollection serviceCollection)
     {
-        Assembly[] consoleCommandAssemblies = new[] { typeof(TuiMenuInitializer).Assembly };
+        Assembly[] consoleCommandAssemblies = new[] { typeof(IRootMenu).Assembly };
 
         serviceCollection
             .AddSingleton(AnsiConsole.Console)
             .AddSingleton<PolicySelectorControl>()
             .AddSingleton<RepositoryNameInputControl>()
             .AddUserActionSelectionMenus(consoleCommandAssemblies)
-            .AddSingleton<RootMenu>()
             .AddSingleton(CreateUserActionSelectionMenuNavigator);
 
         return serviceCollection;
@@ -205,10 +205,7 @@ public static class ServiceCollectionExtensions
     private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)
     {
         ILogger logger = serviceProvider.GetRequiredService<ILogger>();
-
-        var userActionSelectionMenuProvider = new TuiMenuProvider(serviceProvider);
-        var userActionSelectionMenuInitializer = new TuiMenuInitializer(userActionSelectionMenuProvider);
-        TuiMenuNavigationItem selectionMenuNavigatorItem = userActionSelectionMenuInitializer.CreateMenu();
-        return new TuiMenuNavigator(selectionMenuNavigatorItem, logger);
+        ICommandExecutor commandExecutor = serviceProvider.GetRequiredService<ICommandExecutor>();
+        return TuiMenuNavigator.Create<IRootMenu>(commandExecutor, logger);
     }
 }

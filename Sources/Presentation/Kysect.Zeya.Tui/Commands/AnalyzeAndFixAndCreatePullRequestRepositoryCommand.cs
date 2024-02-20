@@ -10,8 +10,6 @@ public class AnalyzeAndFixAndCreatePullRequestRepositoryCommand(
     RepositoryNameInputControl repositoryNameInputControl)
     : ITuiCommand
 {
-    public string Name => "Analyze, fix and create PR repository";
-
     public void Execute()
     {
         GithubRepositoryNameDto githubRepositoryName = repositoryNameInputControl.AskDto();
