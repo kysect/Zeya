@@ -10,8 +10,6 @@ public class AddPolicyCommand(
     IFileSystem fileSystem,
     IAnsiConsole console) : ITuiCommand
 {
-    public string Name => "Add policy";
-
     public void Execute()
     {
         string name = console.Ask<string>("Enter policy name");

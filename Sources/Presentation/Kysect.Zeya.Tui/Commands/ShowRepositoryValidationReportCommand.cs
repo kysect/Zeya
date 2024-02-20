@@ -10,8 +10,6 @@ public class ShowRepositoryValidationReportCommand(
     IValidationPolicyApi validationPolicyService,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
-    public string Name => "Show repository validation report";
-
     public void Execute()
     {
         var repositoryDiagnosticTable = new RepositoryDiagnosticTable();

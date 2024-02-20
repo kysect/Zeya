@@ -10,8 +10,6 @@ public class AnalyzeAndFixRepositoryCommand(
     RepositoryNameInputControl repositoryNameInputControl)
     : ITuiCommand
 {
-    public string Name => "Analyze and fix repository";
-
     public void Execute()
     {
         GithubRepositoryNameDto githubRepositoryName = repositoryNameInputControl.AskDto();

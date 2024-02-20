@@ -10,8 +10,6 @@ public class AddRepositoryCommand(
     IValidationPolicyApi validationPolicyApi,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
-    public string Name => "Add repository";
-
     public void Execute()
     {
         ValidationPolicyDto? policy = policySelectorControl.SelectPolicy();

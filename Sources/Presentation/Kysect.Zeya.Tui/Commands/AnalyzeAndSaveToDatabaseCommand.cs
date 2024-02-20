@@ -9,8 +9,6 @@ public class AnalyzeAndSaveToDatabaseCommand(
     IRepositoryValidationApi repositoryValidationApi,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
-    public string Name => "Analyze and save to database";
-
     public void Execute()
     {
         ValidationPolicyDto? policy = policySelectorControl.SelectPolicy();
