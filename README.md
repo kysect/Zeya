@@ -1,6 +1,7 @@
 # Kysect.Zeya
 
 [![codecov](https://codecov.io/github/kysect/Zeya/graph/badge.svg?token=3UGRWLL7JF)](https://codecov.io/github/kysect/Zeya)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkysect%2FZeya.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkysect%2FZeya?ref=badge_shield)
 
 > Это Proof of Concept. Поведение и API могут меняться.
 
@@ -23,6 +24,9 @@ Zeya - приложение для мониторинга за GitHub репоз
 - Валидация конфигурации метаданных для нюгета:
   - Наличие указания автора, лицензии, ссылки на репозиторий
   - Использование Symbol Packages
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkysect%2FZeya.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkysect%2FZeya?ref=badge_large)
 
 ## Rules
 
