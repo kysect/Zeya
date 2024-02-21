@@ -3,17 +3,14 @@ using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.RepositoryValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Kysect.Zeya.IntegrationManager;
 
-public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextFactory)
+public class ValidationPolicyService(ZeyaDbContext context)
 {
     public ValidationPolicyEntity CreatePolicy(string name, string content)
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         EntityEntry<ValidationPolicyEntity> createdPolicy = context.ValidationPolicies.Add(new ValidationPolicyEntity(Guid.NewGuid(), name, content));
 
         context.SaveChanges();
@@ -22,15 +19,11 @@ public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextF
 
     public IReadOnlyCollection<ValidationPolicyEntity> ReadPolicies()
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         return context.ValidationPolicies.ToList();
     }
 
     public ValidationPolicyRepository AddRepository(Guid policyId, string githubOwner, string githubRepository)
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         ValidationPolicyEntity? policy = context.ValidationPolicies.Find(policyId);
         if (policy is null)
             throw new ArgumentException("Policy not found");
@@ -44,16 +37,12 @@ public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextF
 
     public IReadOnlyCollection<ValidationPolicyRepository> GetRepositories(Guid policyId)
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         return context.ValidationPolicyRepositories.Where(r => r.ValidationPolicyId == policyId).ToList();
     }
 
     public void SaveReport(ValidationPolicyRepository repository, RepositoryValidationReport report)
     {
         report.ThrowIfNull();
-
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
 
         IQueryable<ValidationPolicyRepositoryDiagnostic> oldPolicyDiagnostics = context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repository.Id);
         context.ValidationPolicyRepositoryDiagnostics.RemoveRange(oldPolicyDiagnostics);
@@ -69,8 +58,6 @@ public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextF
 
     public IReadOnlyCollection<string> GetAllRulesForPolicy(Guid policyId)
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         return context
             .ValidationPolicyRepositories
             .Join(context.ValidationPolicyRepositoryDiagnostics,
@@ -85,15 +72,11 @@ public class ValidationPolicyService(IDbContextFactory<ZeyaDbContext> dbContextF
 
     public IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic> GetDiagnostics(Guid repositoryId)
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         return context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repositoryId).ToList();
     }
 
     public IReadOnlyCollection<RepositoryDiagnosticTableRow> GetDiagnosticsTable(Guid policyId)
     {
-        using ZeyaDbContext context = dbContextFactory.CreateDbContext();
-
         var diagnostics = context
             .ValidationPolicyRepositories
             .Join(context.ValidationPolicyRepositoryDiagnostics,

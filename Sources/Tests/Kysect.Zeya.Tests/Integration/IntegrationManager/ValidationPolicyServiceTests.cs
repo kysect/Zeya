@@ -1,11 +1,9 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.DataAccess.Abstractions;
-using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
-using Microsoft.EntityFrameworkCore;
 
 namespace Kysect.Zeya.Tests.Integration.IntegrationManager;
 
@@ -15,8 +13,7 @@ public class ValidationPolicyServiceTests
 
     public ValidationPolicyServiceTests()
     {
-        IDbContextFactory<ZeyaDbContext> dbContextFactory = ZeyaDbContextProvider.Create();
-        _validationPolicyService = new ValidationPolicyService(dbContextFactory);
+        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextProvider.CreateContext());
     }
 
     [Fact]

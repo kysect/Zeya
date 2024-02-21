@@ -21,6 +21,6 @@ public static class Program
             .AddZeyaRequiredService()
             .AddZeyaTerminalUserInterface();
 
-        return serviceCollection.BuildServiceProvider();
+        return serviceCollection.BuildServiceProvider(new ServiceProviderOptions() { ValidateOnBuild = true, ValidateScopes = true });
     }
 }
