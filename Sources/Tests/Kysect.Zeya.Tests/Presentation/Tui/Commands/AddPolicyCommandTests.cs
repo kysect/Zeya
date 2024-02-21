@@ -1,11 +1,9 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Client.Local;
 using Kysect.Zeya.DataAccess.Abstractions;
-using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tui.Commands;
-using Microsoft.EntityFrameworkCore;
 using Spectre.Console.Testing;
 using System.IO.Abstractions.TestingHelpers;
 
@@ -19,8 +17,7 @@ public class AddPolicyCommandTests : IDisposable
 
     public AddPolicyCommandTests()
     {
-        IDbContextFactory<ZeyaDbContext> dbContextFactory = ZeyaDbContextProvider.Create();
-        _validationPolicyService = new ValidationPolicyService(dbContextFactory);
+        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextProvider.CreateContext());
         _mockFileSystem = new MockFileSystem();
         _console = new TestConsole();
     }
