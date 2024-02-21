@@ -85,7 +85,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddDbContextFactory<ZeyaDbContext>(options =>
             {
-                options.UseInMemoryDatabase($"Data Source={databaseName}");
+                options.UseSqlite($"Data Source={databaseName}");
             });
     }
 
