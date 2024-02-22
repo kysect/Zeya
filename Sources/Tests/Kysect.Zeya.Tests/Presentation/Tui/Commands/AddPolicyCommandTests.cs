@@ -3,7 +3,7 @@ using Kysect.Zeya.Client.Local;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.Tests.Tools;
-using Kysect.Zeya.Tui.Commands;
+using Kysect.Zeya.Tui.Commands.Policies;
 using Spectre.Console.Testing;
 using System.IO.Abstractions.TestingHelpers;
 
