@@ -4,7 +4,7 @@ using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console;
 
-namespace Kysect.Zeya.Tui.Commands;
+namespace Kysect.Zeya.Tui.Commands.Policies;
 
 public class AddRepositoryCommand(
     IValidationPolicyApi validationPolicyApi,
