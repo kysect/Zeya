@@ -3,7 +3,7 @@ using Kysect.Zeya.Client.Abstractions.Contracts;
 using Spectre.Console;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.Tui.Commands;
+namespace Kysect.Zeya.Tui.Commands.Policies;
 
 public class AddPolicyCommand(
     IValidationPolicyApi validationPolicyApi,
