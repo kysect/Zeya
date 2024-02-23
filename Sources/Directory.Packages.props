@@ -27,6 +27,7 @@
     <PackageVersion Include="Kysect.ScenarioLib" Version="0.1.5" />
     <PackageVersion Include="Kysect.ScenarioLib.Abstractions" Version="0.1.5" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.48.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageVersion Include="System.Management.Automation" Version="7.4.0" />
     <PackageVersion Include="TestableIO.System.IO.Abstractions" Version="20.0.15" />
