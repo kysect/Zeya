@@ -11,6 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Presentation\Kysect.Zeya.WebApi\Kysect.Zeya.WebApi.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.DependencyManager\Kysect.Zeya.DependencyManager.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.ServiceDefaults\Kysect.Zeya.ServiceDefaults.csproj" />
   </ItemGroup>
