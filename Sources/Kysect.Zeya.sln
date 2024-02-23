@@ -45,9 +45,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DataAccess.Abst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.DataAccess.EntityFramework", "Integration\Kysect.Zeya.DataAccess.EntityFramework\Kysect.Zeya.DataAccess.EntityFramework.csproj", "{3B70AC8D-289C-4028-87B0-A187FAFF6E60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Client.Abstractions", "Application\Kysect.Zeya.Client.Abstractions\Kysect.Zeya.Client.Abstractions.csproj", "{26BD7567-AA6E-4250-8766-5F77AED16BF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Client.Abstractions", "Application\Kysect.Zeya.Client.Abstractions\Kysect.Zeya.Client.Abstractions.csproj", "{26BD7567-AA6E-4250-8766-5F77AED16BF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Client.Local", "Application\Kysect.Zeya.Client.Local\Kysect.Zeya.Client.Local.csproj", "{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Client.Local", "Application\Kysect.Zeya.Client.Local\Kysect.Zeya.Client.Local.csproj", "{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.WebService", "ConfigurationRoot\Kysect.Zeya.WebService\Kysect.Zeya.WebService.csproj", "{2EF4793C-D09D-4D02-9A6D-65FFC170044C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebClient", "ConfigurationRoot\Kysect.Zeya.WebClient\Kysect.Zeya.WebClient.csproj", "{CCE90CD4-5E7A-4D59-9FCD-CFFE682EFC19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.ServiceDefaults", "ConfigurationRoot\Kysect.Zeya.ServiceDefaults\Kysect.Zeya.ServiceDefaults.csproj", "{F565A9FD-EFB6-408C-BBDA-8EA91A074B22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.WebAppHost", "ConfigurationRoot\Kysect.Zeya.WebAppHost\Kysect.Zeya.WebAppHost.csproj", "{D4567E0F-6B0B-4A83-9855-D9EA2A2706E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C8A0E04-E4BA-473B-87A2-DBC0683368BD}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +137,22 @@ Global
 		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF4793C-D09D-4D02-9A6D-65FFC170044C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF4793C-D09D-4D02-9A6D-65FFC170044C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF4793C-D09D-4D02-9A6D-65FFC170044C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF4793C-D09D-4D02-9A6D-65FFC170044C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE90CD4-5E7A-4D59-9FCD-CFFE682EFC19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE90CD4-5E7A-4D59-9FCD-CFFE682EFC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE90CD4-5E7A-4D59-9FCD-CFFE682EFC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE90CD4-5E7A-4D59-9FCD-CFFE682EFC19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F565A9FD-EFB6-408C-BBDA-8EA91A074B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F565A9FD-EFB6-408C-BBDA-8EA91A074B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F565A9FD-EFB6-408C-BBDA-8EA91A074B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F565A9FD-EFB6-408C-BBDA-8EA91A074B22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4567E0F-6B0B-4A83-9855-D9EA2A2706E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4567E0F-6B0B-4A83-9855-D9EA2A2706E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4567E0F-6B0B-4A83-9855-D9EA2A2706E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4567E0F-6B0B-4A83-9855-D9EA2A2706E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +175,10 @@ Global
 		{3B70AC8D-289C-4028-87B0-A187FAFF6E60} = {E441327E-F838-433F-B8DE-FE74093825BF}
 		{26BD7567-AA6E-4250-8766-5F77AED16BF5} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{5D7ABEDC-5DCE-4847-8B0F-E0A118D1B9F4} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
+		{2EF4793C-D09D-4D02-9A6D-65FFC170044C} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
+		{CCE90CD4-5E7A-4D59-9FCD-CFFE682EFC19} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
+		{F565A9FD-EFB6-408C-BBDA-8EA91A074B22} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
+		{D4567E0F-6B0B-4A83-9855-D9EA2A2706E9} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}
