@@ -10,4 +10,8 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Kysect.Zeya.Dtos\Kysect.Zeya.Dtos.csproj" />
+  </ItemGroup>
+
 </Project>
