@@ -26,6 +26,9 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet-version }}
 
+    - name: Install .NET Aspire workload
+      run: dotnet workload install aspire
+
     - name: Restore dependencies
       run: dotnet restore
       working-directory: ${{ env.working-directory }}
