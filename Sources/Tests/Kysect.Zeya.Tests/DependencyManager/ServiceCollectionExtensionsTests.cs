@@ -24,6 +24,7 @@ public class ServiceCollectionExtensionsTests
         AddTestZeyaConfiguration(serviceCollection);
 
         serviceCollection
+            .AddZeyaLogging()
             .AddZeyaRequiredService()
             .AddZeyaTerminalUserInterface();
 

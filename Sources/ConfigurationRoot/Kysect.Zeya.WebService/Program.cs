@@ -1,3 +1,4 @@
+using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.ServiceDefaults;
 using Kysect.Zeya.WebApi;
 
@@ -11,6 +12,10 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(IWebApiMarker).Assembly);
 
 builder.Services.AddSwaggerGen();
+
+builder.Services
+    .AddZeyaConfiguration()
+    .AddZeyaRequiredService();
 
 var app = builder.Build();
 
