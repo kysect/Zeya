@@ -51,7 +51,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaRequiredService(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddZeyaLogging()
             .AddZeyaSqliteDbContext("Database.sql")
             .AddPowerShellWrappers()
             .AddZeyaDotnetProjectSystemIntegration()

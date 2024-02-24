@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.WebApi;
 
-
 public class DebugController : Controller
 {
     private readonly ILogger<DebugController> _logger;
