@@ -26,7 +26,7 @@ public class ServiceCollectionExtensionsTests
         serviceCollection
             .AddZeyaConsoleLogging()
             .AddZeyaSqliteDbContext("Database.sql")
-            .AddZeyaRequiredService()
+            .AddZeyaLocalHandlingService()
             .AddZeyaTerminalUserInterface();
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(serviceProviderOptions);

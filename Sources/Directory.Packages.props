@@ -31,6 +31,9 @@
     <PackageVersion Include="Kysect.DotnetSlnParser" Version="0.1.6" />
     <PackageVersion Include="Kysect.ScenarioLib" Version="0.1.5" />
     <PackageVersion Include="Kysect.ScenarioLib.Abstractions" Version="0.1.5" />
+    <PackageVersion Include="Refit" Version="7.0.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="7.0.0" />
+    <PackageVersion Include="RestSharp" Version="110.2.0" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.48.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />

@@ -22,7 +22,7 @@ builder.Services.AddControllers()
 
 builder.Services
     .AddZeyaConfiguration()
-    .AddZeyaRequiredService();
+    .AddZeyaLocalHandlingService();
 
 var app = builder.Build();
 
