@@ -1,6 +1,9 @@
 <Project>
-	<ItemGroup>
-        <PackageReference Include="Kysect.Editorconfig" />
-        <PackageReference Include="TestableIO.System.IO.Abstractions.Analyzers" />
-	</ItemGroup>
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Kysect.Editorconfig" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions.Analyzers" />
+  </ItemGroup>
 </Project>
