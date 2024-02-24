@@ -25,6 +25,7 @@ public class ServiceCollectionExtensionsTests
 
         serviceCollection
             .AddZeyaConsoleLogging()
+            .AddZeyaSqliteDbContext("Database.sql")
             .AddZeyaRequiredService()
             .AddZeyaTerminalUserInterface();
 

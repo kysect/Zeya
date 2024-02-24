@@ -52,7 +52,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaRequiredService(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddZeyaSqliteDbContext("Database.sql")
             .AddPowerShellWrappers()
             .AddZeyaDotnetProjectSystemIntegration()
             .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))

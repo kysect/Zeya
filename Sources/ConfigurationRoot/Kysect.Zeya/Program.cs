@@ -20,6 +20,7 @@ public static class Program
         serviceCollection
             .AddZeyaConfiguration()
             .AddZeyaConsoleLogging()
+            .AddZeyaSqliteDbContext("Database.sql")
             .AddZeyaRequiredService()
             .AddZeyaTerminalUserInterface();
 
