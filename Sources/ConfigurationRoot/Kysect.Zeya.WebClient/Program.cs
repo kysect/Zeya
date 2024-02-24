@@ -1,38 +1,11 @@
-using Kysect.Zeya.ServiceDefaults;
-using Kysect.Zeya.WebApiClient;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Kysect.Zeya.WebClient;
 
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-// Add service defaults & Aspire components.
-builder.AddServiceDefaults();
-
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
-builder.Services.AddOutputCache();
-
-builder.Services
-    .AddZeyaRefit(new Uri("http://apiservice"));
-
-var app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-}
-
-app.UseStaticFiles();
-
-app.UseAntiforgery();
-
-app.UseOutputCache();
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.MapDefaultEndpoints();
-
-app.Run();
+await builder.Build().RunAsync();
