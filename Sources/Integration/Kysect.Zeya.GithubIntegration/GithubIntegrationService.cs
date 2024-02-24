@@ -23,7 +23,7 @@ public class GithubIntegrationService : IGithubIntegrationService
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger logger)
+    public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger<GithubIntegrationService> logger)
     {
         _credential = credential.ThrowIfNull();
 

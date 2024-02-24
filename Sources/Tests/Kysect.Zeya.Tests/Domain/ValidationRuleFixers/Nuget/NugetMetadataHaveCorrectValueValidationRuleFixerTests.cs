@@ -12,7 +12,7 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixerTests : ValidationR
 
     public NugetMetadataHaveCorrectValueValidationRuleFixerTests()
     {
-        _fixer = new NugetMetadataHaveCorrectValueValidationRuleFixer(Formatter, Logger);
+        _fixer = new NugetMetadataHaveCorrectValueValidationRuleFixer(Formatter, GetLogger<NugetMetadataHaveCorrectValueValidationRuleFixer>());
     }
 
     [Fact]

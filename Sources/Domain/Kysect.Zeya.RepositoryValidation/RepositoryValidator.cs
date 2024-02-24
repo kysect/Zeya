@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation;
 
-public class RepositoryValidator(ILogger logger, IScenarioStepHandler scenarioStepHandler)
+public class RepositoryValidator(IScenarioStepHandler scenarioStepHandler, ILogger<RepositoryValidator> logger)
 {
     public RepositoryValidationReport Validate(ILocalRepository repository, IReadOnlyCollection<IValidationRule> rules)
     {

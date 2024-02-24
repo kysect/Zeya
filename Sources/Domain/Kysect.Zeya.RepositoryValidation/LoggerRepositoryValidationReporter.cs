@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation;
 
-public class LoggerRepositoryValidationReporter(ILogger logger) : IRepositoryValidationReporter
+public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidationReporter> logger) : IRepositoryValidationReporter
 {
     public void Report(RepositoryValidationReport repositoryValidationReport)
     {

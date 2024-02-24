@@ -1,5 +1,4 @@
-﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.DependencyManager;
+﻿using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.IntegrationManager;
@@ -22,7 +21,6 @@ public class RepositoryValidationServiceTests : IDisposable
 
     public RepositoryValidationServiceTests()
     {
-        ILogger logger = TestLoggerProvider.GetLogger();
         var fileSystem = new FileSystem();
 
         _repositoryValidationRuleProvider = RepositoryValidationRuleProviderTestInstance.Create();
@@ -32,27 +30,29 @@ public class RepositoryValidationServiceTests : IDisposable
         IGithubIntegrationService githubIntegrationService = FakeGithubIntegrationServiceTestInstance.Create(localStoragePathFactory);
 
         IServiceCollection serviceCollection = new ServiceCollection()
-            .AddSingleton(logger)
+            .AddZeyaTestLogging()
             .AddZeyaDotnetProjectSystemIntegration()
             .AddZeyaValidationRules()
             .AddZeyaValidationRuleFixers()
+            .AddZeyaRepositoryValidation()
             .AddSingleton(githubIntegrationService);
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-        IValidationRuleFixerApplier validationRuleFixerApplier = serviceProvider.GetRequiredService<IValidationRuleFixerApplier>();
-        IScenarioStepHandler scenarioStepHandler = serviceProvider.GetRequiredService<IScenarioStepHandler>();
+        var repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidator>();
+        var repositoryValidationReporter = serviceProvider.GetRequiredService<IRepositoryValidationReporter>();
+        var repositoryDiagnosticFixer = serviceProvider.GetRequiredService<RepositoryDiagnosticFixer>();
 
         _repositoryValidationService = new RepositoryValidationService(
             _repositoryValidationRuleProvider,
-            new RepositoryValidator(logger, scenarioStepHandler),
-            new LoggerRepositoryValidationReporter(logger),
-            new RepositoryDiagnosticFixer(validationRuleFixerApplier, logger),
+            repositoryValidator,
+            repositoryValidationReporter,
+            repositoryDiagnosticFixer,
             new GitIntegrationService(null),
             githubIntegrationService,
             new PullRequestMessageCreator(),
-            logger);
+            serviceProvider.GetRequiredService<ILogger<RepositoryValidationService>>());
 
-        _githubRepositoryProvider = new GithubRepositoryProvider(fileSystem, logger, githubIntegrationService, localStoragePathFactory);
+        _githubRepositoryProvider = new GithubRepositoryProvider(fileSystem, serviceProvider.GetRequiredService<ILogger<GithubRepositoryProvider>>(), githubIntegrationService, localStoragePathFactory);
     }
 
     [Fact]

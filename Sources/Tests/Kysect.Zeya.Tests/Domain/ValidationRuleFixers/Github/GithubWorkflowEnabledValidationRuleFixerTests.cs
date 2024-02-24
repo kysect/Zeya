@@ -13,7 +13,7 @@ public class GithubWorkflowEnabledValidationRuleFixerTests : ValidationRuleTestB
 
     public GithubWorkflowEnabledValidationRuleFixerTests()
     {
-        _fixer = new GithubWorkflowEnabledValidationRuleFixer(FileSystem, Logger);
+        _fixer = new GithubWorkflowEnabledValidationRuleFixer(FileSystem, GetLogger<GithubWorkflowEnabledValidationRuleFixer>());
     }
 
     [Fact]

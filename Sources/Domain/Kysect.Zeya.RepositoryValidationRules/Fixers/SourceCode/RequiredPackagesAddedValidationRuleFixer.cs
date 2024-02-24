@@ -12,7 +12,7 @@ namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
 public class RequiredPackagesAddedValidationRuleFixer(
     XmlDocumentSyntaxFormatter formatter,
-    ILogger logger)
+    ILogger<RequiredPackagesAddedValidationRuleFixer> logger)
     : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
     public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, ILocalRepository localRepository)

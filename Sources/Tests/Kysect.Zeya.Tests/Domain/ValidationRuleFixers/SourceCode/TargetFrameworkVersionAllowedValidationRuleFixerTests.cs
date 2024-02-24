@@ -12,7 +12,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests : ValidationR
 
     public TargetFrameworkVersionAllowedValidationRuleFixerTests()
     {
-        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(Formatter, Logger);
+        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(Formatter, GetLogger<TargetFrameworkVersionAllowedValidationRuleFixer>());
     }
 
     [Theory]

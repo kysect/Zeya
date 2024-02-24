@@ -11,14 +11,14 @@ namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
 
 public class RepositoryDiagnosticFixerTests
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<RepositoryDiagnosticFixer> _logger;
     private readonly MockFileSystem _fileSystem;
     private readonly string _currentPath;
     private readonly LocalRepository _repository;
 
     public RepositoryDiagnosticFixerTests()
     {
-        _logger = TestLoggerProvider.GetLogger();
+        _logger = TestLoggerProvider.GetLogger<RepositoryDiagnosticFixer>();
         _fileSystem = new MockFileSystem();
         _currentPath = _fileSystem.Path.GetFullPath(".");
         _repository = new LocalRepository(_currentPath, _fileSystem);

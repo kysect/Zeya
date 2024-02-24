@@ -12,7 +12,7 @@ namespace Kysect.Zeya.RepositoryValidationRules.Fixers.Nuget;
 
 public class NugetMetadataHaveCorrectValueValidationRuleFixer(
     XmlDocumentSyntaxFormatter formatter,
-    ILogger logger) : IValidationRuleFixer<NugetMetadataHaveCorrectValueValidationRule.Arguments>
+    ILogger<NugetMetadataHaveCorrectValueValidationRuleFixer> logger) : IValidationRuleFixer<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
     public void Fix(NugetMetadataHaveCorrectValueValidationRule.Arguments rule, ILocalRepository localRepository)
     {

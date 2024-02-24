@@ -19,7 +19,7 @@ public static class Program
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection
             .AddZeyaConfiguration()
-            .AddZeyaLogging()
+            .AddZeyaConsoleLogging()
             .AddZeyaRequiredService()
             .AddZeyaTerminalUserInterface();
 
