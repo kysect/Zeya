@@ -1,4 +1,5 @@
 using Kysect.Zeya.ServiceDefaults;
+using Kysect.Zeya.WebApiClient;
 using Kysect.Zeya.WebClient;
 
 
@@ -12,6 +13,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddOutputCache();
+
+builder.Services
+    .AddZeyaRefit(new Uri("http://apiservice"));
 
 var app = builder.Build();
 

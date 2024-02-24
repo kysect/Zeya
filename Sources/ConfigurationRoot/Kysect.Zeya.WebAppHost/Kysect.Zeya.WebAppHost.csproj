@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.WebClient\Kysect.Zeya.WebClient.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.WebService\Kysect.Zeya.WebService.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya\Kysect.Zeya.csproj" />
   </ItemGroup>
 
 </Project>

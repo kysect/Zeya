@@ -21,7 +21,7 @@ public static class Program
             .AddZeyaConfiguration()
             .AddZeyaConsoleLogging()
             .AddZeyaSqliteDbContext("Database.sql")
-            .AddZeyaRequiredService()
+            .AddZeyaLocalHandlingService()
             .AddZeyaTerminalUserInterface();
 
         return serviceCollection.BuildServiceProvider(new ServiceProviderOptions() { ValidateOnBuild = true, ValidateScopes = true });

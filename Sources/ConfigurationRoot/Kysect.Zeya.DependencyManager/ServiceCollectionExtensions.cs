@@ -22,6 +22,7 @@ using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.Tui.Controls;
+using Kysect.Zeya.WebApiClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +50,13 @@ public static class ServiceCollectionExtensions
             .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
     }
 
-    public static IServiceCollection AddZeyaRequiredService(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaHttpService(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddZeyaRefit(new Uri("http://apiservice"));
+    }
+
+    public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)
     {
         return serviceCollection
             .AddPowerShellWrappers()
@@ -59,7 +66,7 @@ public static class ServiceCollectionExtensions
             .AddZeyaValidationRules()
             .AddZeyaValidationRuleFixers()
             .AddZeyaRepositoryValidation()
-            .AddZeyaLocalServer();
+            .AddZeyaLocalServerApiClients();
     }
 
     public static IServiceCollection AddZeyaConsoleLogging(this IServiceCollection serviceCollection)
@@ -199,7 +206,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection;
     }
 
-    public static IServiceCollection AddZeyaLocalServer(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaLocalServerApiClients(this IServiceCollection serviceCollection)
     {
         return serviceCollection
             .AddScoped<IValidationPolicyApi, ValidationPolicyLocalClient>()
