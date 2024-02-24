@@ -6,6 +6,7 @@ using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Asserts;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions.TestingHelpers;
 
@@ -13,6 +14,7 @@ namespace Kysect.Zeya.Tests.Domain.ValidationRules;
 
 public abstract class ValidationRuleTestBase
 {
+    private readonly IServiceProvider _serviceProvider;
     protected ILogger Logger { get; }
     protected LocalGithubRepository Repository { get; }
     protected MockFileSystem FileSystem { get; }
@@ -38,5 +40,14 @@ public abstract class ValidationRuleTestBase
         SolutionFileContentParser = new SolutionFileContentParser();
 
         FileSystemAsserts = new FileSystemAsserts(FileSystem);
+
+        _serviceProvider = new ServiceCollection()
+            .AddZeyaTestLogging()
+            .BuildServiceProvider();
+    }
+
+    public ILogger<T> GetLogger<T>()
+    {
+        return _serviceProvider.GetRequiredService<ILogger<T>>();
     }
 }

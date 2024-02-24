@@ -13,7 +13,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 
     public NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixerTests()
     {
-        _fixer = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(FileSystem, Formatter, Logger);
+        _fixer = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(FileSystem, Formatter, GetLogger<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer>());
     }
 
     [Fact]

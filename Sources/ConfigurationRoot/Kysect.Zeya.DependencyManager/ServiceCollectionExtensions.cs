@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.DependencyInjection;
-using Kysect.CommonLib.DependencyInjection.Logging;
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
@@ -29,6 +28,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
+using Serilog;
+using Serilog.Extensions.Logging;
 using Spectre.Console;
 using System.IO.Abstractions;
 using System.Reflection;
@@ -62,21 +63,26 @@ public static class ServiceCollectionExtensions
             .AddZeyaLocalServer();
     }
 
-    public static IServiceCollection AddZeyaLogging(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaConsoleLogging(this IServiceCollection serviceCollection)
     {
-        // TODO: disable IncludeScopes in default implementation PredefinedLogger.CreateConsoleLogger
-        using var logConfigurationBuilder = new LogConfigurationBuilder();
-        const LogLevel logLevel = LogLevel.Trace;
-
-        ILogger logger = logConfigurationBuilder
-            .SetLevel(logLevel)
-            .SetRedirectToAppData("Kysect", "Zeya")
-            .SetDefaultCategory("Zeya")
-            .AddSpectreConsole()
-            .AddSerilogToFile("Zeya.log")
-            .Build();
-
-        return serviceCollection.AddSingleton(logger);
+        return serviceCollection
+            .AddLogging(b =>
+            {
+                b
+                    .AddFilter(null, LogLevel.Trace)
+                    .AddSimpleConsole(options =>
+                    {
+                        options.IncludeScopes = false;
+                        options.SingleLine = true;
+                        options.TimestampFormat = "HH:mm:ss";
+                    })
+                    .AddProvider(
+                        new SerilogLoggerProvider(
+                            new LoggerConfiguration()
+                                .WriteTo.File(path: "Zeya.log", rollingInterval: RollingInterval.Day)
+                                .MinimumLevel.Verbose()
+                                .CreateLogger()));
+            });
     }
 
     public static IServiceCollection AddZeyaSqliteDbContext(this IServiceCollection serviceCollection, string databaseName = ":memory:")
@@ -203,7 +209,7 @@ public static class ServiceCollectionExtensions
 
     private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)
     {
-        ILogger logger = serviceProvider.GetRequiredService<ILogger>();
+        ILogger<TuiMenuNavigator> logger = serviceProvider.GetRequiredService<ILogger<TuiMenuNavigator>>();
         ICommandExecutor commandExecutor = serviceProvider.GetRequiredService<ICommandExecutor>();
         return TuiMenuNavigator.Create<IRootMenu>(commandExecutor, logger);
     }

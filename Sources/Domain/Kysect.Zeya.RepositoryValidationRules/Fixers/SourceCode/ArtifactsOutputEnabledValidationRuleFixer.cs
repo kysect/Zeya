@@ -12,7 +12,7 @@ namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
 public class ArtifactsOutputEnabledValidationRuleFixer(
     XmlDocumentSyntaxFormatter formatter,
-    ILogger logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
+    ILogger<ArtifactsOutputEnabledValidationRuleFixer> logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
 {
     public void Fix(ArtifactsOutputEnabledValidationRule.Arguments rule, ILocalRepository localRepository)
     {

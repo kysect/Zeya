@@ -16,7 +16,7 @@ public class RepositoryValidationService(
     IGitIntegrationService gitIntegrationService,
     IGithubIntegrationService githubIntegrationService,
     PullRequestMessageCreator pullRequestMessageCreator,
-    ILogger logger)
+    ILogger<RepositoryValidationService> logger)
 {
     public void AnalyzerAndFix(ILocalRepository repository, string scenario)
     {

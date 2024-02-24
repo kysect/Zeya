@@ -13,7 +13,7 @@ namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(
     IFileSystem fileSystem,
     XmlDocumentSyntaxFormatter formatter,
-    ILogger logger)
+    ILogger<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer> logger)
     : IValidationRuleFixer<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
     public void Fix(NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments rule, ILocalRepository localRepository)

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixer(XmlDocumentSyntaxFormatter formatter, ILogger logger)
+public class CentralPackageManagerEnabledValidationRuleFixer(XmlDocumentSyntaxFormatter formatter, ILogger<CentralPackageManagerEnabledValidationRuleFixer> logger)
     : IValidationRuleFixer<CentralPackageManagerEnabledValidationRule.Arguments>
 {
     public void Fix(CentralPackageManagerEnabledValidationRule.Arguments rule, ILocalRepository localRepository)

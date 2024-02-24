@@ -8,7 +8,9 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Fixers.Github;
 
-public class GithubWorkflowEnabledValidationRuleFixer(IFileSystem fileSystem, ILogger logger) : IValidationRuleFixer<GithubWorkflowEnabledValidationRule.Arguments>
+public class GithubWorkflowEnabledValidationRuleFixer(
+    IFileSystem fileSystem,
+    ILogger<GithubWorkflowEnabledValidationRuleFixer> logger) : IValidationRuleFixer<GithubWorkflowEnabledValidationRule.Arguments>
 {
     public void Fix(GithubWorkflowEnabledValidationRule.Arguments rule, ILocalRepository localRepository)
     {

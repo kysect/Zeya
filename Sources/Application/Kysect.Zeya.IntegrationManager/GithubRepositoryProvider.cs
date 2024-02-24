@@ -13,11 +13,11 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
     private readonly IFileSystem _fileSystem;
     private readonly IGithubIntegrationService _githubIntegrationService;
     private readonly ILocalStoragePathFactory _localStoragePathFactory;
-    private readonly ILogger _logger;
+    private readonly ILogger<GithubRepositoryProvider> _logger;
 
     public GithubRepositoryProvider(
         IFileSystem fileSystem,
-        ILogger logger,
+        ILogger<GithubRepositoryProvider> logger,
         IGithubIntegrationService githubIntegrationService,
         ILocalStoragePathFactory localStoragePathFactory)
     {

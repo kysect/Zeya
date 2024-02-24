@@ -11,7 +11,7 @@ namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
 public class TargetFrameworkVersionAllowedValidationRuleFixer(
     XmlDocumentSyntaxFormatter formatter,
-    ILogger logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
+    ILogger<TargetFrameworkVersionAllowedValidationRuleFixer> logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, ILocalRepository localRepository)
     {
