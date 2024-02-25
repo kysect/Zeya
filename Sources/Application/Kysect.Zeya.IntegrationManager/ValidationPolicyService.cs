@@ -3,83 +3,91 @@ using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.RepositoryValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Kysect.Zeya.IntegrationManager;
 
-public class ValidationPolicyService(ZeyaDbContext context)
+public class ValidationPolicyService
 {
-    public ValidationPolicyEntity CreatePolicy(string name, string content)
-    {
-        EntityEntry<ValidationPolicyEntity> createdPolicy = context.ValidationPolicies.Add(new ValidationPolicyEntity(Guid.NewGuid(), name, content));
+    private readonly ZeyaDbContext _context;
 
-        context.SaveChanges();
+    public ValidationPolicyService(ZeyaDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<ValidationPolicyEntity> CreatePolicy(string name, string content)
+    {
+        EntityEntry<ValidationPolicyEntity> createdPolicy = _context.ValidationPolicies.Add(new ValidationPolicyEntity(Guid.NewGuid(), name, content));
+
+        await _context.SaveChangesAsync();
         return createdPolicy.Entity;
     }
 
-    public IReadOnlyCollection<ValidationPolicyEntity> ReadPolicies()
+    public async Task<IReadOnlyCollection<ValidationPolicyEntity>> ReadPolicies()
     {
-        return context.ValidationPolicies.ToList();
+        return await _context.ValidationPolicies.ToListAsync();
     }
 
-    public ValidationPolicyRepository AddRepository(Guid policyId, string githubOwner, string githubRepository)
+    public async Task<ValidationPolicyRepository> AddRepository(Guid policyId, string githubOwner, string githubRepository)
     {
-        ValidationPolicyEntity? policy = context.ValidationPolicies.Find(policyId);
+        ValidationPolicyEntity? policy = await _context.ValidationPolicies.FindAsync(policyId);
         if (policy is null)
             throw new ArgumentException("Policy not found");
 
         var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, githubOwner, githubRepository);
-        context.ValidationPolicyRepositories.Add(repository);
-        context.SaveChanges();
+        _context.ValidationPolicyRepositories.Add(repository);
+        await _context.SaveChangesAsync();
 
         return repository;
     }
 
-    public IReadOnlyCollection<ValidationPolicyRepository> GetRepositories(Guid policyId)
+    public async Task<IReadOnlyCollection<ValidationPolicyRepository>> GetRepositories(Guid policyId)
     {
-        return context.ValidationPolicyRepositories.Where(r => r.ValidationPolicyId == policyId).ToList();
+        return await _context.ValidationPolicyRepositories.Where(r => r.ValidationPolicyId == policyId).ToListAsync();
     }
 
-    public void SaveReport(ValidationPolicyRepository repository, RepositoryValidationReport report)
+    public async Task SaveReport(ValidationPolicyRepository repository, RepositoryValidationReport report)
     {
         report.ThrowIfNull();
 
-        IQueryable<ValidationPolicyRepositoryDiagnostic> oldPolicyDiagnostics = context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repository.Id);
-        context.ValidationPolicyRepositoryDiagnostics.RemoveRange(oldPolicyDiagnostics);
+        IQueryable<ValidationPolicyRepositoryDiagnostic> oldPolicyDiagnostics = _context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repository.Id);
+        _context.ValidationPolicyRepositoryDiagnostics.RemoveRange(oldPolicyDiagnostics);
 
         var diagnostics = report
             .Diagnostics
             .Select(d => new ValidationPolicyRepositoryDiagnostic(repository.Id, d.Code, d.Severity.ToString()))
             .ToList();
 
-        context.ValidationPolicyRepositoryDiagnostics.AddRange(diagnostics);
-        context.SaveChanges();
+        await _context.ValidationPolicyRepositoryDiagnostics.AddRangeAsync(diagnostics);
+        await _context.SaveChangesAsync();
     }
 
-    public IReadOnlyCollection<string> GetAllRulesForPolicy(Guid policyId)
+    public async Task<IReadOnlyCollection<string>> GetAllRulesForPolicy(Guid policyId)
     {
-        return context
+        return await _context
             .ValidationPolicyRepositories
-            .Join(context.ValidationPolicyRepositoryDiagnostics,
+            .Join(_context.ValidationPolicyRepositoryDiagnostics,
                 r => r.Id,
                 d => d.ValidationPolicyRepositoryId,
                 (r, d) => new { Repository = r, Diagnostic = d })
             .Where(t => t.Repository.ValidationPolicyId == policyId)
             .Select(t => t.Diagnostic.RuleId)
             .Distinct()
-            .ToList();
+            .ToListAsync();
     }
 
-    public IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic> GetDiagnostics(Guid repositoryId)
+    public async Task<IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic>> GetDiagnostics(Guid repositoryId)
     {
-        return context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repositoryId).ToList();
+        return await _context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repositoryId).ToListAsync();
     }
 
-    public IReadOnlyCollection<RepositoryDiagnosticTableRow> GetDiagnosticsTable(Guid policyId)
+    public async Task<IReadOnlyCollection<RepositoryDiagnosticTableRow>> GetDiagnosticsTable(Guid policyId)
     {
-        var diagnostics = context
+        var diagnostics = await _context
             .ValidationPolicyRepositories
-            .Join(context.ValidationPolicyRepositoryDiagnostics,
+            .Join(_context.ValidationPolicyRepositoryDiagnostics,
                 r => r.Id,
                 d => d.ValidationPolicyRepositoryId,
                 (r, d) => new
@@ -95,7 +103,7 @@ public class ValidationPolicyService(ZeyaDbContext context)
                 t.Diagnostic.RuleId,
                 t.Diagnostic.Severity
             })
-            .ToList();
+            .ToListAsync();
 
         var groupedDiagnostics = new List<RepositoryDiagnosticTableRow>();
         foreach (var group in diagnostics.GroupBy(d => d.RepositoryId))

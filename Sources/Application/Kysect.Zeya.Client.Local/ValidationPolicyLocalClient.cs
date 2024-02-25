@@ -14,33 +14,33 @@ public class ValidationPolicyLocalClient : IValidationPolicyApi
         _service = service;
     }
 
-    public ValidationPolicyDto CreatePolicy(string name, string content)
+    public async Task<ValidationPolicyDto> CreatePolicy(string name, string content)
     {
-        ValidationPolicyEntity policyEntity = _service.CreatePolicy(name, content);
+        ValidationPolicyEntity policyEntity = await _service.CreatePolicy(name, content);
         return new ValidationPolicyDto(policyEntity.Id, policyEntity.Name, policyEntity.Content);
     }
 
-    public IReadOnlyCollection<ValidationPolicyDto> ReadPolicies()
+    public async Task<IReadOnlyCollection<ValidationPolicyDto>> ReadPolicies()
     {
-        IReadOnlyCollection<ValidationPolicyEntity> policyEntities = _service.ReadPolicies();
+        IReadOnlyCollection<ValidationPolicyEntity> policyEntities = await _service.ReadPolicies();
         return policyEntities.Select(policyEntity => new ValidationPolicyDto(policyEntity.Id, policyEntity.Name, policyEntity.Content)).ToList();
     }
 
-    public ValidationPolicyRepositoryDto AddRepository(Guid policyId, string githubOwner, string githubRepository)
+    public async Task<ValidationPolicyRepositoryDto> AddRepository(Guid policyId, string githubOwner, string githubRepository)
     {
-        ValidationPolicyRepository repository = _service.AddRepository(policyId, githubOwner, githubRepository);
+        ValidationPolicyRepository repository = await _service.AddRepository(policyId, githubOwner, githubRepository);
         return new ValidationPolicyRepositoryDto(repository.Id, repository.ValidationPolicyId, repository.GithubOwner, repository.GithubRepository);
     }
 
-    public IReadOnlyCollection<RepositoryDiagnosticTableRow> GetDiagnosticsTable(Guid policyId)
+    public async Task<IReadOnlyCollection<RepositoryDiagnosticTableRow>> GetDiagnosticsTable(Guid policyId)
     {
-        return _service.GetDiagnosticsTable(policyId);
+        return await _service.GetDiagnosticsTable(policyId);
     }
 
-    public IReadOnlyCollection<ValidationPolicyRepositoryDto> GetRepositories(Guid policyId)
+    public async Task<IReadOnlyCollection<ValidationPolicyRepositoryDto>> GetRepositories(Guid policyId)
     {
-        return _service
-            .GetRepositories(policyId)
+        IReadOnlyCollection<ValidationPolicyRepository> repositories = await _service.GetRepositories(policyId);
+        return repositories
             .Select(r => new ValidationPolicyRepositoryDto(r.Id, r.ValidationPolicyId, r.GithubOwner, r.GithubRepository))
             .ToList();
     }

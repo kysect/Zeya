@@ -5,14 +5,18 @@ namespace Kysect.Zeya.Client.Abstractions.Contracts;
 
 public interface IValidationPolicyApi
 {
-    [Put("ValidationPolicy/Policies")]
-    ValidationPolicyDto CreatePolicy(string name, string content);
-    [Get("ValidationPolicy/Policies")]
-    IReadOnlyCollection<ValidationPolicyDto> ReadPolicies();
-    [Post("ValidationPolicy/Repositories")]
-    ValidationPolicyRepositoryDto AddRepository(Guid policyId, string githubOwner, string githubRepository);
-    [Get("ValidationPolicy/DiagnosticsTables")]
-    IReadOnlyCollection<RepositoryDiagnosticTableRow> GetDiagnosticsTable(Guid policyId);
-    [Get("ValidationPolicy/Repositories")]
-    IReadOnlyCollection<ValidationPolicyRepositoryDto> GetRepositories(Guid policyId);
+    [Put("/ValidationPolicy/Policies")]
+    Task<ValidationPolicyDto> CreatePolicy(string name, string content);
+
+    [Get("/ValidationPolicy/Policies")]
+    Task<IReadOnlyCollection<ValidationPolicyDto>> ReadPolicies();
+
+    [Post("/ValidationPolicy/Repositories")]
+    Task<ValidationPolicyRepositoryDto> AddRepository(Guid policyId, string githubOwner, string githubRepository);
+
+    [Get("/ValidationPolicy/DiagnosticsTables")]
+    Task<IReadOnlyCollection<RepositoryDiagnosticTableRow>> GetDiagnosticsTable(Guid policyId);
+
+    [Get("/ValidationPolicy/Repositories")]
+    Task<IReadOnlyCollection<ValidationPolicyRepositoryDto>> GetRepositories(Guid policyId);
 }

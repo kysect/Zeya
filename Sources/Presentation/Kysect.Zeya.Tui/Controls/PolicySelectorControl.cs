@@ -8,7 +8,7 @@ public class PolicySelectorControl(IValidationPolicyApi validationPolicyApi, IAn
 {
     public ValidationPolicyDto? SelectPolicy()
     {
-        IReadOnlyCollection<ValidationPolicyDto> policies = validationPolicyApi.ReadPolicies();
+        IReadOnlyCollection<ValidationPolicyDto> policies = validationPolicyApi.ReadPolicies().Result;
 
         if (policies.Count == 0)
         {
