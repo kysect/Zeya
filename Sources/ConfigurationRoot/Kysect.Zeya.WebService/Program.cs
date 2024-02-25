@@ -31,6 +31,10 @@ app.UseExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
+
+// Disable CORS
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 app.UseAuthorization();
 app.MapControllers();
 app.MapDefaultEndpoints();
