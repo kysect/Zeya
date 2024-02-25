@@ -18,6 +18,7 @@ public static class Program
     {
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection
+            .AddAppSettingsConfiguration()
             .AddZeyaConfiguration()
             .AddZeyaConsoleLogging()
             .AddZeyaSqliteDbContext("Database.sql")
