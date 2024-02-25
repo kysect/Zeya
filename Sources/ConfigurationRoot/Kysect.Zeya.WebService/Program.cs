@@ -12,8 +12,8 @@ builder
 
 // Add services to the container.
 builder.Services
-    .AddProblemDetails()
     .AddEndpointsApiExplorer()
+    .AddProblemDetails()
     .AddSwaggerGen();
 
 // Add services to the container.
