@@ -39,14 +39,19 @@ namespace Kysect.Zeya.DependencyManager;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddZeyaConfiguration(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddAppSettingsConfiguration(this IServiceCollection serviceCollection)
     {
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
 
         return serviceCollection
-            .AddSingleton(config)
+            .AddSingleton(config);
+    }
+
+    public static IServiceCollection AddZeyaConfiguration(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
             .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
     }
 
