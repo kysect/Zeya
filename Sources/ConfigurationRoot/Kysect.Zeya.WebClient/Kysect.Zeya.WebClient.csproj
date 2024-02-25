@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Presentation\Kysect.Zeya.WebApiClient\Kysect.Zeya.WebApiClient.csproj" />
+  </ItemGroup>
+
 </Project>
