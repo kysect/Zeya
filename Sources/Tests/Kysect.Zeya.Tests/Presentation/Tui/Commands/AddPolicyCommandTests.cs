@@ -23,7 +23,7 @@ public class AddPolicyCommandTests : IDisposable
     }
 
     [Fact]
-    public void AddPolicyCommandTests_WhenCalled_ShouldAddPolicy()
+    public async Task AddPolicyCommandTests_WhenCalled_ShouldAddPolicy()
     {
         string filePath = "File.yaml";
         string policyContent = "Policy content";
@@ -35,7 +35,7 @@ public class AddPolicyCommandTests : IDisposable
         var addPolicyCommand = new AddPolicyCommand(new ValidationPolicyLocalClient(_validationPolicyService), _mockFileSystem, _console);
 
         addPolicyCommand.Execute();
-        IReadOnlyCollection<ValidationPolicyEntity> policies = _validationPolicyService.ReadPolicies();
+        IReadOnlyCollection<ValidationPolicyEntity> policies = await _validationPolicyService.ReadPolicies();
 
         policies.Should().HaveCount(1);
         policies.First().Name.Should().Be("Nuget");

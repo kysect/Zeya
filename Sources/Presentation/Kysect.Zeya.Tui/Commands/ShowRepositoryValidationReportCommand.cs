@@ -17,7 +17,7 @@ public class ShowRepositoryValidationReportCommand(
         if (policy is null)
             return;
 
-        IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticTableRows = validationPolicyService.GetDiagnosticsTable(policy.Id);
+        IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticTableRows = validationPolicyService.GetDiagnosticsTable(policy.Id).Result;
         Grid grid = repositoryDiagnosticTable.CreateGrid(diagnosticTableRows);
         AnsiConsole.Write(grid);
     }
