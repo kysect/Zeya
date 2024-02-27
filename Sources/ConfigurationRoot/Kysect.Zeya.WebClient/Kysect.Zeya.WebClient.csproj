@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Kysect.Zeya.WebApiClient\Kysect.Zeya.WebApiClient.csproj" />
+    <ProjectReference Include="..\..\Presentation\Kysect.Zeya.WebClient.Pages\Kysect.Zeya.WebClient.Pages.csproj" />
   </ItemGroup>
 
 </Project>
