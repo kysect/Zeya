@@ -69,6 +69,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebApiClient", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebClient", "ConfigurationRoot\Kysect.Zeya.WebClient\Kysect.Zeya.WebClient.csproj", "{33A21F95-6562-47B4-AA02-0BC4D925CAAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.WebClient.Pages", "Presentation\Kysect.Zeya.WebClient.Pages\Kysect.Zeya.WebClient.Pages.csproj", "{9BC05B6C-44A0-4D44-86C4-8BA981734138}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,10 @@ Global
 		{33A21F95-6562-47B4-AA02-0BC4D925CAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33A21F95-6562-47B4-AA02-0BC4D925CAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33A21F95-6562-47B4-AA02-0BC4D925CAAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BC05B6C-44A0-4D44-86C4-8BA981734138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BC05B6C-44A0-4D44-86C4-8BA981734138}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BC05B6C-44A0-4D44-86C4-8BA981734138}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BC05B6C-44A0-4D44-86C4-8BA981734138}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +206,7 @@ Global
 		{62DB4B2A-48E3-4236-8564-8EC8D25B3BE5} = {D9C54233-E761-4E9C-AB89-3FB055201E8F}
 		{1169E96C-BA58-4E5A-BE86-274B8F0D4EB9} = {45FA974A-DDBE-44F5-AF75-BBB49BB437B5}
 		{33A21F95-6562-47B4-AA02-0BC4D925CAAC} = {C72FCAE7-7BC0-4633-893A-76B95E23FB14}
+		{9BC05B6C-44A0-4D44-86C4-8BA981734138} = {45FA974A-DDBE-44F5-AF75-BBB49BB437B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1F1A375-4712-46E4-9BB7-071B26413F49}
