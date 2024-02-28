@@ -25,6 +25,18 @@ public class ValidationPolicyService
         return createdPolicy.Entity;
     }
 
+    public async Task<ValidationPolicyEntity> GetPolicy(Guid id)
+    {
+        // TODO: Handle null result
+        ValidationPolicyEntity? result = await _context
+            .ValidationPolicies
+            .FindAsync(id);
+
+        result.ThrowIfNull();
+
+        return result;
+    }
+
     public async Task<IReadOnlyCollection<ValidationPolicyEntity>> ReadPolicies()
     {
         return await _context.ValidationPolicies.ToListAsync();
