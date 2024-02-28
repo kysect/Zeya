@@ -14,12 +14,10 @@ public class RepositoryValidationLocalClient(
 {
     public void ValidatePolicyRepositories(Guid policyId)
     {
-        // TODO: do not read all policies
-        var policies = service.ReadPolicies().Result;
-        ValidationPolicyEntity policy = policies.Single(p => p.Id == policyId);
+        ValidationPolicyEntity policy = service.GetPolicy(policyId).Result;
 
-        var repositories = service.GetRepositories(policy.Id).Result;
-        foreach (var validationPolicyRepository in repositories)
+        IReadOnlyCollection<ValidationPolicyRepository> repositories = service.GetRepositories(policy.Id).Result;
+        foreach (ValidationPolicyRepository validationPolicyRepository in repositories)
         {
             LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(validationPolicyRepository.GithubOwner, validationPolicyRepository.GithubRepository);
             // TODO: looks like bug, we must use content from policy instead of this hardcoded value

@@ -16,7 +16,7 @@ public partial class ValidationPolicies
 
     protected override async Task OnInitializedAsync()
     {
-        _validationPolicies = await _validationPolicyApi.ReadPolicies();
+        _validationPolicies = await _validationPolicyApi.GetPolicies();
     }
 
     private void EditPolicy(Guid id)

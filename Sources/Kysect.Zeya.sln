@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebApiClient", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebClient", "ConfigurationRoot\Kysect.Zeya.WebClient\Kysect.Zeya.WebClient.csproj", "{33A21F95-6562-47B4-AA02-0BC4D925CAAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.WebClient.Pages", "Presentation\Kysect.Zeya.WebClient.Pages\Kysect.Zeya.WebClient.Pages.csproj", "{9BC05B6C-44A0-4D44-86C4-8BA981734138}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebClient.Pages", "Presentation\Kysect.Zeya.WebClient.Pages\Kysect.Zeya.WebClient.Pages.csproj", "{9BC05B6C-44A0-4D44-86C4-8BA981734138}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

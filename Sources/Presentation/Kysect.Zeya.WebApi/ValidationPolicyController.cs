@@ -15,24 +15,24 @@ public class ValidationPolicyController : Controller
         _policyApi = policyApi;
     }
 
-    [HttpPost("Policies")]
+    [HttpPost("")]
     public async Task<ActionResult<ValidationPolicyDto>> CreatePolicy(string name, string content)
     {
         ValidationPolicyDto result = await _policyApi.CreatePolicy(name, content);
         return Ok(result);
     }
 
-    [HttpGet("Policies")]
+    [HttpGet("")]
     public async Task<ActionResult<IReadOnlyCollection<ValidationPolicyDto>>> ReadPolicies()
     {
-        IReadOnlyCollection<ValidationPolicyDto> result = await _policyApi.ReadPolicies();
+        IReadOnlyCollection<ValidationPolicyDto> result = await _policyApi.GetPolicies();
         return Ok(result);
     }
 
-    [HttpPost("Repository")]
-    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddRepository(Guid policyId, string githubOwner, string githubRepository)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<IReadOnlyCollection<ValidationPolicyDto>>> GetPolicy(Guid id)
     {
-        ValidationPolicyRepositoryDto result = await _policyApi.AddRepository(policyId, githubOwner, githubRepository);
+        ValidationPolicyDto result = await _policyApi.GetPolicy(id);
         return Ok(result);
     }
 
@@ -40,13 +40,6 @@ public class ValidationPolicyController : Controller
     public async Task<ActionResult<IReadOnlyCollection<RepositoryDiagnosticTableRow>>> GetDiagnosticsTable(Guid policyId)
     {
         IReadOnlyCollection<RepositoryDiagnosticTableRow> result = await _policyApi.GetDiagnosticsTable(policyId);
-        return Ok(result);
-    }
-
-    [HttpGet("Repositories")]
-    public async Task<ActionResult<IReadOnlyCollection<ValidationPolicyRepositoryDto>>> GetRepositories(Guid policyId)
-    {
-        IReadOnlyCollection<ValidationPolicyRepositoryDto> result = await _policyApi.GetRepositories(policyId);
         return Ok(result);
     }
 }
