@@ -16,10 +16,9 @@
 
     <div class="form-group">
         <label for="rules">Rules</label>
-        <InputText id="rules" class="form-control" @bind-Value="_formData.Content" />
+        <InputTextArea rows="4" id="rules" class="form-control" @bind-Value="_formData.Content" />
         <ValidationMessage For="@(() => _formData.Content)" />
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>
 </EditForm>
-
