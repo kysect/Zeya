@@ -12,6 +12,10 @@ public static class HttpClientServiceCollectionExtensions
             .AddRefitClient<IValidationPolicyApi>()
             .ConfigureHttpClient(c => c.BaseAddress = baseAddress);
 
+        services
+            .AddRefitClient<IValidationPolicyRepositoryApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = baseAddress);
+
         return services;
     }
 }
