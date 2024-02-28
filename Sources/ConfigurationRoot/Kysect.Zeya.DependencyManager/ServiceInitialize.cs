@@ -5,10 +5,10 @@ namespace Kysect.Zeya.DependencyManager;
 
 public static class ServiceInitialize
 {
-    public static void InitializeDatabase(IServiceProvider serviceProvider)
+    public static async Task InitializeDatabase(IServiceProvider serviceProvider)
     {
         using IServiceScope serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ZeyaDbContext>();
-        context.Database.EnsureCreated();
+        await context.Database.EnsureCreatedAsync();
     }
 }

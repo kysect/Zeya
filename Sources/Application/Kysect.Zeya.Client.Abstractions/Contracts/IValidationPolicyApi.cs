@@ -5,7 +5,7 @@ namespace Kysect.Zeya.Client.Abstractions.Contracts;
 
 public interface IValidationPolicyApi
 {
-    [Put("/ValidationPolicy/Policies")]
+    [Post("/ValidationPolicy/Policies")]
     Task<ValidationPolicyDto> CreatePolicy(string name, string content);
 
     [Get("/ValidationPolicy/Policies")]
