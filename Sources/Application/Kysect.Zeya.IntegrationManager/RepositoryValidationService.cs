@@ -18,14 +18,14 @@ public class RepositoryValidationService(
     PullRequestMessageCreator pullRequestMessageCreator,
     ILogger<RepositoryValidationService> logger)
 {
-    public void AnalyzerAndFix(ILocalRepository repository, string scenario)
+    public void AnalyzerAndFix(ILocalRepository repository, ScenarioContent scenarioContent)
     {
-        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
-        RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenario);
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenarioContent);
+        RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenarioContent);
         Fix(repository, repositoryValidationReport, validationRules);
     }
 
-    public void CreatePullRequestWithFix(LocalGithubRepository repository, string scenario)
+    public void CreatePullRequestWithFix(LocalGithubRepository repository, ScenarioContent scenarioContent)
     {
         repository.ThrowIfNull();
 
@@ -33,8 +33,8 @@ public class RepositoryValidationService(
         string commitMessage = "Apply Zeya code fixers";
 
         // TODO: remove hardcoded value
-        RepositoryValidationReport report = Analyze([repository], scenario);
-        IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(scenario);
+        RepositoryValidationReport report = Analyze([repository], scenarioContent);
+        IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(scenarioContent);
 
         logger.LogInformation("Repositories analyzed, run fixers");
         gitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
@@ -51,7 +51,7 @@ public class RepositoryValidationService(
         githubIntegrationService.CreatePullRequest(repository.GithubMetadata, pullRequestMessage);
     }
 
-    public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, string scenario)
+    public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, ScenarioContent scenarioContent)
     {
         repositories.ThrowIfNull();
 
@@ -59,7 +59,7 @@ public class RepositoryValidationService(
         RepositoryValidationReport report = RepositoryValidationReport.Empty;
         foreach (ILocalRepository githubRepository in repositories)
         {
-            report = report.Compose(AnalyzeSingleRepository(githubRepository, scenario));
+            report = report.Compose(AnalyzeSingleRepository(githubRepository, scenarioContent));
         }
 
         return report;
@@ -76,12 +76,11 @@ public class RepositoryValidationService(
         return repositoryDiagnosticFixer.Fix(report, validationRules, repository);
     }
 
-    public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, string scenario)
+    public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, ScenarioContent scenarioContent)
     {
         repository.ThrowIfNull();
 
-        logger.LogTrace("Loading validation configuration");
-        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenario);
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenarioContent);
 
         logger.LogDebug("Validate {Repository}", repository.GetRepositoryName());
         RepositoryValidationReport report = repositoryValidator.Validate(repository, validationRules);
