@@ -1,0 +1,34 @@
+﻿@page "/validation-policies/{PolicyId:guid}"
+@using Microsoft.AspNetCore.Components.Routing
+
+
+@if (_policy is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h3>Validation policy @_policy.Name</h3>
+    <p>@_policy.Content</p>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var repository in _policyRepositories)
+        {
+            <tr>
+                <td>@repository.GithubOwner / @repository.GithubRepository</td>
+                <td>Github</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <NavLink class="nav-link" href="@($"/validation-policies/{PolicyId}/repository")">
+        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Add repository
+    </NavLink>
+}

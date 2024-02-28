@@ -15,7 +15,7 @@ public class ValidationPolicyRepositoryController : Controller
         _policyApi = policyApi;
     }
 
-    [HttpPost("{policyId}/Repository")]
+    [HttpPost("{policyId}/Repositories")]
     public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddRepository(Guid policyId, string githubOwner, string githubRepository)
     {
         ValidationPolicyRepositoryDto result = await _policyApi.AddRepository(policyId, githubOwner, githubRepository);
