@@ -14,6 +14,6 @@ public interface IValidationPolicyApi
     [Get("/ValidationPolicy")]
     Task<IReadOnlyCollection<ValidationPolicyDto>> GetPolicies();
 
-    [Get("/ValidationPolicy/DiagnosticsTables")]
+    [Get("/ValidationPolicy/{policyId}/DiagnosticsTables")]
     Task<IReadOnlyCollection<RepositoryDiagnosticTableRow>> GetDiagnosticsTable(Guid policyId);
 }
