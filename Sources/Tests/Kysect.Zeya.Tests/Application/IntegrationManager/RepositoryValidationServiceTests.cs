@@ -59,14 +59,16 @@ public class RepositoryValidationServiceTests : IDisposable
     public void Analyze_ReturnExpectedResult()
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        RepositoryValidationReport repositoryValidationReport = _repositoryValidationService.Analyze([localGithubRepository], "ValidationScenario.yaml");
+        ScenarioContent scenarioContent = _repositoryValidationRuleProvider.ReadScenario("ValidationScenario.yaml");
+        RepositoryValidationReport repositoryValidationReport = _repositoryValidationService.Analyze([localGithubRepository], scenarioContent);
     }
 
     [Fact]
     public void AnalyzerAndFix_ReturnExpectedResult()
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        _repositoryValidationService.AnalyzerAndFix(localGithubRepository, "ValidationScenario.yaml");
+        ScenarioContent scenarioContent = _repositoryValidationRuleProvider.ReadScenario("ValidationScenario.yaml");
+        _repositoryValidationService.AnalyzerAndFix(localGithubRepository, scenarioContent);
     }
 
     public void Dispose()

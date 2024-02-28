@@ -14,13 +14,14 @@ public class PolicyValidationLocalClient(
     public async Task Validate(Guid policyId)
     {
         ValidationPolicyEntity policy = await service.GetPolicy(policyId);
+        ScenarioContent scenarioContent = new ScenarioContent(policy.Content);
 
         IReadOnlyCollection<ValidationPolicyRepository> repositories = await service.GetRepositories(policy.Id);
         foreach (ValidationPolicyRepository validationPolicyRepository in repositories)
         {
             LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(validationPolicyRepository.GithubOwner, validationPolicyRepository.GithubRepository);
             // TODO: looks like bug, we must use content from policy instead of this hardcoded value
-            RepositoryValidationReport report = repositoryValidationService.AnalyzeSingleRepository(localGithubRepository, "Demo-validation.yaml");
+            RepositoryValidationReport report = repositoryValidationService.AnalyzeSingleRepository(localGithubRepository, scenarioContent);
             await service.SaveReport(validationPolicyRepository, report);
         }
     }
