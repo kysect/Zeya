@@ -1,0 +1,38 @@
+﻿@page "/validation-policies"
+
+<h3>ValidationPolicies</h3>
+
+<p><a href="create">Create New</a></p>
+
+@if (_validationPolicies == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Rules</th>
+                <th></th>
+            </tr>
+        </thead>
+        @inject NavigationManager NavManager
+
+        <tbody>
+            @foreach (var policy in _validationPolicies)
+            {
+                <tr>
+                    <td>@policy.Name</td>
+                    @* TODO: think about how to display rules *@
+                    @* <td>@policy.Content</td> *@
+                    <td>
+                        <button @onclick="() => EditPolicy(policy.Id)">Edit</button> |
+                        @* <button @onclick="() => DeletePolicy(policy.Id)">Delete</button> *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
