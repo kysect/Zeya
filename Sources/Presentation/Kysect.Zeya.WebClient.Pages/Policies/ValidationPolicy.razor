@@ -12,23 +12,48 @@ else
     <p>@_policy.Content</p>
     <table>
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-        </tr>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var repository in _policyRepositories)
-        {
-            <tr>
-                <td>@repository.GithubOwner / @repository.GithubRepository</td>
-                <td>Github</td>
-            </tr>
-        }
+            @foreach (var repository in _policyRepositories)
+            {
+                <tr>
+                    <td>@repository.GithubOwner / @repository.GithubRepository</td>
+                    <td>Github</td>
+                </tr>
+            }
         </tbody>
     </table>
 
     <NavLink class="nav-link" href="@($"/validation-policies/{PolicyId}/repository")">
         <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Add repository
     </NavLink>
+    <button onclick="@RunValidation">
+        Run validation
+    </button>
+
+    <table>
+        <thead>
+        <th>Repository name</th>
+            @foreach (var ruleId in GetDiagnosticHeaders())
+            {
+            <th>@ruleId</th>
+            }
+        </thead>
+        <tbody>
+            @foreach (var repositoryDiagnostics in _diagnosticsTable)
+            {
+                <tr>
+                    <td>@repositoryDiagnostics.RepositoryName</td>
+                    @foreach (var ruleId in GetDiagnosticHeaders())
+                    {
+                        <td>@repositoryDiagnostics.Diagnostics[ruleId]</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
 }

@@ -6,7 +6,7 @@ using Kysect.Zeya.Tui.Controls;
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndSaveToDatabaseCommand(
-    IRepositoryValidationApi repositoryValidationApi,
+    IPolicyValidationApi policyValidationApi,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public void Execute()
@@ -15,6 +15,6 @@ public class AnalyzeAndSaveToDatabaseCommand(
         if (policy is null)
             return;
 
-        repositoryValidationApi.ValidatePolicyRepositories(policy.Id);
+        policyValidationApi.Validate(policy.Id);
     }
 }

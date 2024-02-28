@@ -36,7 +36,7 @@ public class ValidationPolicyController : Controller
         return Ok(result);
     }
 
-    [HttpGet("DiagnosticsTables")]
+    [HttpGet("{policyId}/DiagnosticsTables")]
     public async Task<ActionResult<IReadOnlyCollection<RepositoryDiagnosticTableRow>>> GetDiagnosticsTable(Guid policyId)
     {
         IReadOnlyCollection<RepositoryDiagnosticTableRow> result = await _policyApi.GetDiagnosticsTable(policyId);

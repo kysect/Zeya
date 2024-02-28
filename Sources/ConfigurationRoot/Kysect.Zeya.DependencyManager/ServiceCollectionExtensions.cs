@@ -216,6 +216,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddScoped<IValidationPolicyApi, ValidationPolicyLocalClient>()
             .AddScoped<IValidationPolicyRepositoryApi, ValidationPolicyRepositoryApiLocalClient>()
+            .AddScoped<IPolicyValidationApi, PolicyValidationLocalClient>()
             .AddScoped<IRepositoryValidationApi, RepositoryValidationLocalClient>();
     }
 
