@@ -41,7 +41,7 @@ app.MapDefaultEndpoints();
 
 using (IServiceScope serviceScope = app.Services.CreateScope())
 {
-    ServiceInitialize.InitializeDatabase(serviceScope.ServiceProvider);
+    await ServiceInitialize.InitializeDatabase(serviceScope.ServiceProvider);
 }
 
-app.Run();
+await app.RunAsync();

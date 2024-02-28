@@ -9,7 +9,7 @@ public static class Program
     public static void Main()
     {
         var serviceProvider = BuildServiceProvider();
-        ServiceInitialize.InitializeDatabase(serviceProvider);
+        ServiceInitialize.InitializeDatabase(serviceProvider).Wait();
         var tuiMenuNavigator = serviceProvider.GetRequiredService<TuiMenuNavigator>();
         tuiMenuNavigator.Run();
     }
