@@ -12,15 +12,14 @@ public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidati
 
         if (repositoryValidationReport.RuntimeErrors.Any())
         {
-            logger.LogError("Some analyzers finished with errors");
+            logger.LogWarning("Some analyzers finished with errors");
             foreach (RepositoryValidationDiagnostic diagnostic in repositoryValidationReport.RuntimeErrors)
-                logger.LogTabError(1, $"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
+                logger.LogTabWarning(1, $"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
         }
 
         foreach (var diagnostic in repositoryValidationReport.Diagnostics)
         {
-            // TODO: use severity
-            logger.LogWarning($"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
+            logger.LogInformation($"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
         }
     }
 }

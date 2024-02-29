@@ -31,7 +31,6 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(
             directoryBuildPropsFile.File.Properties.SetProperty(key, value);
         }
 
-        // TODO: force somehow saving
         solutionModifier.Save(formatter);
     }
 }

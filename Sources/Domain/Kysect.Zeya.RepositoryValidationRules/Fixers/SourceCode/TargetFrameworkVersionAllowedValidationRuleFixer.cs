@@ -37,7 +37,6 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
             projectModifier.Value.File.Properties.SetProperty("TargetFramework", allowedTargetFrameworkVersion);
         }
 
-        // TODO: force somehow saving
         solutionModifier.Save(formatter);
     }
 
