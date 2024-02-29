@@ -93,7 +93,7 @@ public class ValidationPolicyServiceTests
         List<RepositoryDiagnosticTableRow> expected = new List<RepositoryDiagnosticTableRow>
             {
                 new RepositoryDiagnosticTableRow("Owner", "Repository", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" }),
-                new RepositoryDiagnosticTableRow("Owner", "Repository", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" })
+                new RepositoryDiagnosticTableRow("Owner", "Repository2", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" })
             };
 
         await _validationPolicyService.SaveReport(firstRepository, report);

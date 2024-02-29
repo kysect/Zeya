@@ -20,7 +20,7 @@ public class RepositoryDiagnosticTable
         {
             grid.AddRow(ruleIds
                 .Select(ruleId => tableRow.Diagnostics.GetValueOrDefault(ruleId, "N/A"))
-                .Prepend(tableRow.RepositoryName)
+                .Prepend($"{tableRow.RepositoryOwner}/{tableRow.RepositoryName}")
                 .ToArray());
         }
 
