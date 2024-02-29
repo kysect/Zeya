@@ -21,4 +21,11 @@ public class PolicyValidationController : Controller
         await _policyValidationApi.Validate(policyId);
         return Ok();
     }
+
+    [HttpPost("/Policy/{PolicyId}/Create-fix")]
+    public async Task<ActionResult> CreateFix(Guid policyId, string repositoryOwner, string repositoryName)
+    {
+        await _policyValidationApi.CreateFix(policyId, repositoryOwner, repositoryName);
+        return Ok();
+    }
 }

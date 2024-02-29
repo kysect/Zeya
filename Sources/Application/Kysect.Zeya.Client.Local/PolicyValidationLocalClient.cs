@@ -25,4 +25,14 @@ public class PolicyValidationLocalClient(
             await service.SaveReport(validationPolicyRepository, report);
         }
     }
+
+    public async Task CreateFix(Guid policyId, string repositoryOwner, string repositoryName)
+    {
+        ValidationPolicyEntity policy = await service.GetPolicy(policyId);
+        ValidationPolicyRepository repository = await service.GetRepository(policyId, repositoryOwner, repositoryName);
+        LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(repository.GithubOwner, repository.GithubRepository);
+
+        // TODO: No need to analyze, we already have report in database
+        repositoryValidationService.CreatePullRequestWithFix(localGithubRepository, new ScenarioContent(policy.Content));
+    }
 }
