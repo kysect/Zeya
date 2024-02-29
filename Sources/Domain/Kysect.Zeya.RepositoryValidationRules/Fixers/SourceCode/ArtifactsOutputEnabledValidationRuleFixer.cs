@@ -28,7 +28,6 @@ public class ArtifactsOutputEnabledValidationRuleFixer(
         logger.LogDebug("Set UseArtifactsOutput to true");
         directoryBuildPropsFile.File.Properties.SetProperty("UseArtifactsOutput", "true");
 
-        // TODO: force somehow saving
         solutionModifier.Save(formatter);
     }
 }

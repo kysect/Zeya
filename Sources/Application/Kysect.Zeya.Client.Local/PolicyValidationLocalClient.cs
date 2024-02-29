@@ -20,7 +20,6 @@ public class PolicyValidationLocalClient(
         foreach (ValidationPolicyRepository validationPolicyRepository in repositories)
         {
             LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(validationPolicyRepository.GithubOwner, validationPolicyRepository.GithubRepository);
-            // TODO: looks like bug, we must use content from policy instead of this hardcoded value
             RepositoryValidationReport report = repositoryValidationService.AnalyzeSingleRepository(localGithubRepository, scenarioContent);
             await service.SaveReport(validationPolicyRepository, report);
         }
@@ -32,7 +31,7 @@ public class PolicyValidationLocalClient(
         ValidationPolicyRepository repository = await service.GetRepository(policyId, repositoryOwner, repositoryName);
         LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(repository.GithubOwner, repository.GithubRepository);
 
-        // TODO: No need to analyze, we already have report in database
+        // TODO: issues #89 No need to analyze, we already have report in database
         repositoryValidationService.CreatePullRequestWithFix(localGithubRepository, new ScenarioContent(policy.Content));
     }
 }
