@@ -60,6 +60,16 @@ public class ValidationPolicyService
         return await _context.ValidationPolicyRepositories.Where(r => r.ValidationPolicyId == policyId).ToListAsync();
     }
 
+    public async Task<ValidationPolicyRepository> GetRepository(Guid policyId, string repositoryOwner, string repositoryName)
+    {
+        return await _context
+            .ValidationPolicyRepositories
+            .Where(r => r.ValidationPolicyId == policyId)
+            .Where(r => r.GithubOwner == repositoryOwner)
+            .Where(r => r.GithubRepository == repositoryName)
+            .SingleAsync();
+    }
+
     public async Task SaveReport(ValidationPolicyRepository repository, RepositoryValidationReport report)
     {
         report.ThrowIfNull();
@@ -70,6 +80,7 @@ public class ValidationPolicyService
         var diagnostics = report
             .Diagnostics
             .Select(d => new ValidationPolicyRepositoryDiagnostic(repository.Id, d.Code, d.Severity.ToString()))
+            .DistinctBy(d => d.RuleId)
             .ToList();
 
         await _context.ValidationPolicyRepositoryDiagnostics.AddRangeAsync(diagnostics);
@@ -111,7 +122,8 @@ public class ValidationPolicyService
             .Select(t => new
             {
                 RepositoryId = t.Repository.Id,
-                RepositoryName = $"{t.Repository.GithubOwner}/{t.Repository.GithubRepository}",
+                RepositoryOwner = t.Repository.GithubOwner,
+                RepositoryName = t.Repository.GithubRepository,
                 t.Diagnostic.RuleId,
                 t.Diagnostic.Severity
             })
@@ -125,7 +137,7 @@ public class ValidationPolicyService
             foreach (var item in group)
                 dictionary[item.RuleId] = item.Severity;
 
-            var row = new RepositoryDiagnosticTableRow(group.First().RepositoryName, dictionary);
+            var row = new RepositoryDiagnosticTableRow(group.First().RepositoryOwner, group.First().RepositoryName, dictionary);
             groupedDiagnostics.Add(row);
         }
 

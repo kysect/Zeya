@@ -29,6 +29,7 @@ public class RepositoryValidationService(
     {
         repository.ThrowIfNull();
 
+        // TODO: handle that branch already exists
         string branchName = "zeya/fixer";
         string commitMessage = "Apply Zeya code fixers";
 

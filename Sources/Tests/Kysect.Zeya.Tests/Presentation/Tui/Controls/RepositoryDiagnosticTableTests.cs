@@ -15,8 +15,8 @@ public class RepositoryDiagnosticTableTests
         var repositoryDiagnosticTable = new RepositoryDiagnosticTable();
         List<RepositoryDiagnosticTableRow> rows =
         [
-            new RepositoryDiagnosticTableRow("Owner/Repository", new Dictionary<string, string>() { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" }),
-            new RepositoryDiagnosticTableRow("Owner/Repository2", new Dictionary<string, string>() { ["SRC0001"] = "Warning" })
+            new RepositoryDiagnosticTableRow("Owner", "Repository", new Dictionary<string, string>() { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" }),
+            new RepositoryDiagnosticTableRow("Owner", "Repository2", new Dictionary<string, string>() { ["SRC0001"] = "Warning" })
         ];
 
         console.Write(repositoryDiagnosticTable.CreateGrid(rows));

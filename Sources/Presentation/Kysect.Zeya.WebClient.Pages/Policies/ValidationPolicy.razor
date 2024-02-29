@@ -38,7 +38,8 @@ else
     <table>
         <thead>
         <th>Repository name</th>
-            @foreach (var ruleId in GetDiagnosticHeaders())
+        <th>Action</th>
+        @foreach (var ruleId in GetDiagnosticHeaders())
             {
             <th>@ruleId</th>
             }
@@ -48,6 +49,7 @@ else
             {
                 <tr>
                     <td>@repositoryDiagnostics.RepositoryName</td>
+                    <td><button @onclick="@(async () => await CreateFix(repositoryDiagnostics.RepositoryOwner, repositoryDiagnostics.RepositoryName))">Create Fix</button></td>
                     @foreach (var ruleId in GetDiagnosticHeaders())
                     {
                         <td>@repositoryDiagnostics.Diagnostics[ruleId]</td>

@@ -41,4 +41,9 @@ public partial class ValidationPolicy
     {
         await _policyValidationApi.Validate(PolicyId);
     }
+
+    public async Task CreateFix(string repositoryOwner, string repositoryName)
+    {
+        await _policyValidationApi.CreateFix(PolicyId, repositoryOwner, repositoryName);
+    }
 }
