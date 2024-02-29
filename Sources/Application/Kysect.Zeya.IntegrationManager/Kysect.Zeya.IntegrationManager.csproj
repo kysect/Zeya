@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
     <ProjectReference Include="..\..\Integration\Kysect.Zeya.DataAccess.EntityFramework\Kysect.Zeya.DataAccess.EntityFramework.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.Client.Abstractions\Kysect.Zeya.Client.Abstractions.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.ModelMapping\Kysect.Zeya.ModelMapping.csproj" />
   </ItemGroup>
 
 </Project>

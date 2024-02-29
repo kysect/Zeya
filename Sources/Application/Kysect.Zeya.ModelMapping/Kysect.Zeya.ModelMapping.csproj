@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.DataAccess.Abstractions\Kysect.Zeya.DataAccess.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -70,7 +70,7 @@ public class ValidationPolicyServiceTests
         ValidationPolicyEntity validationPolicyEntity = await _validationPolicyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepository repository = await _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
         var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
-        var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", "Warning");
+        var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { validationDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
 
         await _validationPolicyService.SaveReport(repository, report);
