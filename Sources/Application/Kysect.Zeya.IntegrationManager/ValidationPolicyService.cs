@@ -2,6 +2,7 @@
 using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.ModelMapping;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -79,7 +80,7 @@ public class ValidationPolicyService
 
         var diagnostics = report
             .Diagnostics
-            .Select(d => new ValidationPolicyRepositoryDiagnostic(repository.Id, d.Code, d.Severity.ToString()))
+            .Select(d => new ValidationPolicyRepositoryDiagnostic(repository.Id, d.Code, RepositoryValidationSeverityMapping.ToApplicationModel(d.Severity)))
             .DistinctBy(d => d.RuleId)
             .ToList();
 
@@ -135,7 +136,7 @@ public class ValidationPolicyService
             var dictionary = new Dictionary<string, string>();
 
             foreach (var item in group)
-                dictionary[item.RuleId] = item.Severity;
+                dictionary[item.RuleId] = item.Severity.ToString();
 
             var row = new RepositoryDiagnosticTableRow(group.First().RepositoryOwner, group.First().RepositoryName, dictionary);
             groupedDiagnostics.Add(row);
