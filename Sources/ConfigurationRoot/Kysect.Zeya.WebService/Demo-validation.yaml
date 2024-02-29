@@ -1,0 +1,65 @@
+- Name: Github.RepositoryLicense
+  Parameters:
+    OwnerName: Kysect
+    Year: 2024
+    LicenseType: MIT
+
+- Name: Github.ReadmeExists
+
+- Name: Github.BranchProtectionEnabled
+  Parameters:
+    PullRequestReviewRequired: true
+    ConversationResolutionRequired: true
+
+- Name: Github.AutoBranchDeletionEnabled
+
+- Name: Github.BuildWorkflowEnabled
+  Parameters:
+    MasterFile: Samples\build-test.yaml
+
+- Name: Github.BuildWorkflowEnabled
+  Parameters:
+    MasterFile: Samples\nuget-publish.yaml
+
+- Name: SourceCode.SourcesMustNotBeInRoot
+  Parameters:
+    SourceDirectoryPath: Sources
+
+- Name: SourceCode.TargetFrameworkVersionAllowed
+  Parameters:
+    AllowedCoreVersion: net8.0
+    AllowedStandardVersion: netstandard2.0
+    AllowedFrameworkVersion: net48
+
+- Name: SourceCode.CentralPackageManagerEnabled
+
+- Name: SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager
+  Parameters:
+    MasterFile: Samples\MasterDirectory.Packages.props
+
+- Name: SourceCode.RequiredPackagesAdded
+  Parameters:
+    Packages:
+    - Name: Kysect.Editorconfig
+      Version: "1.1.8"
+
+- Name: SourceCode.ArtifactsOutputEnabled
+
+- Name: Nuget.MetadataSpecified
+  Parameters:
+    RequiredValues: ["PackageIcon", "PackageReadmeFile", "RepositoryUrl", "PublishRepositoryUrl"]
+
+- Name: Nuget.MetadataHaveCorrectValue
+  Parameters:
+    RequiredKeyValues:
+      Authors: Kysect
+      Company: Kysect
+      Copyright: Copyright (c) Kysect 2024
+      PackageLicenseExpression: MIT
+      RepositoryType: git
+      DebugType: portable
+      IncludeSymbols: true
+      SymbolPackageFormat: snupkg
+      LangVersion: latest
+      ImplicitUsings: enable
+      UseArtifactsOutput: true

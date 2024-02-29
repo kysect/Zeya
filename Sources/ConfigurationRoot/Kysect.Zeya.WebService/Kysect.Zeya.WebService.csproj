@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Kysect.Zeya.ServiceDefaults\Kysect.Zeya.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Demo-validation.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

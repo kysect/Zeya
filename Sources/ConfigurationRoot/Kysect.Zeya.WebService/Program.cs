@@ -2,6 +2,7 @@ using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.ServiceDefaults;
 using Kysect.Zeya.WebApi;
+using Kysect.Zeya.WebService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ builder.Services
     .AddZeyaConfiguration()
     .AddZeyaLocalHandlingService();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
@@ -39,9 +40,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapDefaultEndpoints();
 
-using (IServiceScope serviceScope = app.Services.CreateScope())
-{
-    await ServiceInitialize.InitializeDatabase(serviceScope.ServiceProvider);
-}
+var webServiceStartupConfigurator = new WebServiceStartupConfigurator();
+await webServiceStartupConfigurator.Config(app);
 
 await app.RunAsync();
