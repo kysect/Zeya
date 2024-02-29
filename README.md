@@ -85,9 +85,15 @@ dotnet workload install aspire
 
 Configure settings:
 - Add a GitHub token to the user secrets: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-- 
+
+Install Github Actions via user secrets:
 
 ```bash
+dotnet user-secrets init --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+dotnet user-secrets set "GithubIntegrationOptions:Credential:GithubToken" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+```
+
+
 
 Solution can be built using the `dotnet` command line tool or Visual Studio.
 
