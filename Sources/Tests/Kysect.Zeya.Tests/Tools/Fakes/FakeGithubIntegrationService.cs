@@ -58,7 +58,7 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         throw new NotImplementedException();
     }
 
-    public void CreatePullRequest(GithubRepositoryName repositoryName, string message)
+    public void CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         throw new NotImplementedException();
     }

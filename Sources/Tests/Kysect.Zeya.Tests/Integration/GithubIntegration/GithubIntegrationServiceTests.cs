@@ -59,12 +59,11 @@ public class GithubIntegrationServiceTests : IDisposable
             githubIntegrationOptions.Credential,
             new GitHubClient(new ProductHeaderValue("Zeya")),
             localStoragePathFactory,
-            _powerShellAccessor,
             serviceProvider.GetRequiredService<ILogger<GithubIntegrationService>>());
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
     }
 
-    [Fact]
+    [Fact(Skip = "Github has limit for requests")]
     public void GetOrganizationRepositories_ForKysect_ReturnZeya()
     {
         IReadOnlyCollection<GithubRepositoryName> repositories = _githubIntegrationService.GetOrganizationRepositories("Kysect");
