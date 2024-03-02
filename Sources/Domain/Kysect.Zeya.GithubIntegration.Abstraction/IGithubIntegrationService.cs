@@ -6,7 +6,7 @@ public interface IGithubIntegrationService
 
     void CloneOrUpdate(GithubRepositoryName repositoryName);
     void PushCommitToRemote(string repositoryLocalPath, string branchName);
-    void CreatePullRequest(GithubRepositoryName repositoryName, string message);
+    void CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch);
     bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName);
     RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepositoryName githubRepositoryName, string branch);
 }

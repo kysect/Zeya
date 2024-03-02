@@ -30,7 +30,11 @@ public class RepositoryValidationService(
         repository.ThrowIfNull();
 
         // TODO: handle that branch already exists
+        // TODO: remove hardcoded value
+        // TODO: support case when base branch is not master
+        string baseBranch = "master";
         string branchName = "zeya/fixer";
+        string pullRequestTitle = "Fix warnings from Zeya";
         string commitMessage = "Apply Zeya code fixers";
 
         // TODO: remove hardcoded value
@@ -49,7 +53,7 @@ public class RepositoryValidationService(
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
-        githubIntegrationService.CreatePullRequest(repository.GithubMetadata, pullRequestMessage);
+        githubIntegrationService.CreatePullRequest(repository.GithubMetadata, pullRequestMessage, pullRequestTitle, branchName, baseBranch);
     }
 
     public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, ScenarioContent scenarioContent)

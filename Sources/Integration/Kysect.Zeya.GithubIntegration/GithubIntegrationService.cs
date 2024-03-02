@@ -3,10 +3,6 @@ using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
-using Kysect.PowerShellRunner.Abstractions.Accessors;
-using Kysect.PowerShellRunner.Abstractions.Queries;
-using Kysect.PowerShellRunner.Executions;
-using Kysect.PowerShellRunner.Tools;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
@@ -19,15 +15,13 @@ public class GithubIntegrationService : IGithubIntegrationService
 {
     private readonly GithubIntegrationCredential _credential;
     private readonly IGitHubClient _gitHubClient;
-    private readonly IPowerShellAccessor _powerShellAccessor;
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, IPowerShellAccessor powerShellAccessor, ILogger<GithubIntegrationService> logger)
+    public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, ILogger<GithubIntegrationService> logger)
     {
         _credential = credential.ThrowIfNull();
 
-        _powerShellAccessor = powerShellAccessor.ThrowIfNull();
         _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
         _gitHubClient = gitHubClient.ThrowIfNull();
         _logger = logger.ThrowIfNull();
@@ -71,16 +65,14 @@ public class GithubIntegrationService : IGithubIntegrationService
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
-    public void CreatePullRequest(GithubRepositoryName repositoryName, string message)
+    public void CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         repositoryName.ThrowIfNull();
         message.ThrowIfNull();
 
-        string targetPath = _pathFormatStrategy.GetPathToRepository(new GithubRepository(repositoryName.Owner, repositoryName.Name));
-        using (PowerShellPathChangeContext.TemporaryChangeCurrentDirectory(_powerShellAccessor, targetPath))
-        {
-            _powerShellAccessor.ExecuteAndGet(new PowerShellQuery($"gh pr create --title \"Fix warnings from Zeya\" --body \"{message}\""));
-        }
+        // TODO: return PR info
+        // TODO: make it async
+        PullRequest pullRequest = _gitHubClient.Repository.PullRequest.Create(repositoryName.Owner, repositoryName.Name, new NewPullRequest(pullRequestTitle, branch, baseBranch) { Body = message }).Result;
     }
 
     public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
