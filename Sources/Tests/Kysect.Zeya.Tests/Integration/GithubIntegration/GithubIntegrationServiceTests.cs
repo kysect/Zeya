@@ -1,11 +1,9 @@
 ﻿using FluentAssertions;
-using Kysect.PowerShellRunner.Accessors;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using System.IO.Abstractions;
-using Kysect.PowerShellRunner.Abstractions.Accessors;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -21,12 +19,10 @@ public class GithubIntegrationServiceTests : IDisposable
     private readonly FileSystem _fileSystem;
     private readonly GithubRepositoryName _githubRepositoryName;
     private readonly GithubIntegrationService _githubIntegrationService;
-    private readonly IPowerShellAccessor _powerShellAccessor;
-    private readonly ILogger _logger;
 
     public GithubIntegrationServiceTests()
     {
-        _logger = TestLoggerProvider.GetLogger();
+        TestLoggerProvider.GetLogger();
         _fileSystem = new FileSystem();
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem);
         _repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
@@ -49,10 +45,6 @@ public class GithubIntegrationServiceTests : IDisposable
                 GithubToken = "token"
             }
         };
-
-        _powerShellAccessor = new PowerShellAccessorDecoratorBuilder(new PowerShellAccessorFactory())
-            .WithLogging(_logger)
-            .Build();
 
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
         _githubIntegrationService = new GithubIntegrationService(
@@ -112,7 +104,6 @@ public class GithubIntegrationServiceTests : IDisposable
 
     public void Dispose()
     {
-        _powerShellAccessor.Dispose();
         _temporaryDirectory.Dispose();
     }
 }
