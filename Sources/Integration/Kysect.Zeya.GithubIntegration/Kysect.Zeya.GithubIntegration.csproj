@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Kysect.GithubUtils" />
-    <PackageReference Include="Kysect.PowerShellRunner" />
   </ItemGroup>
 
   <ItemGroup>

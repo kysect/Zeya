@@ -3,7 +3,6 @@ using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
-using Kysect.PowerShellRunner.Configuration;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
@@ -64,7 +63,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddPowerShellWrappers()
             .AddZeyaDotnetProjectSystemIntegration()
             .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
             .AddZeyaGithubIntegration()
@@ -103,21 +101,6 @@ public static class ServiceCollectionExtensions
             {
                 options.UseSqlite($"Data Source={databaseName}");
             });
-    }
-
-    private static IServiceCollection AddPowerShellWrappers(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddPowerShellLogger(b =>
-            {
-                b
-                    .SetDefaultCategory("Cloudext")
-                    .SetRedirectToAppData("GreenCloud", "Cloudext")
-                    .SetLevel(LogLevel.Trace)
-                    .AddSerilogToFile("Cloudext.log");
-            })
-            .AddPowerShellAccessorFactory()
-            .AddPowerShellAccessor();
     }
 
     public static IServiceCollection AddZeyaGithubIntegration(this IServiceCollection serviceCollection)
