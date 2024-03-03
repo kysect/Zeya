@@ -44,7 +44,7 @@ public class LocalRepositorySolutionManagerTests
     }
 
     [Fact]
-    public void GetSolution_TwoSolution_ThrowExpectionAboutNotSupportedMoreThatOneSolution()
+    public void GetSolution_TwoSolution_ThrowExceptionAboutNotSupportedMoreThatOneSolution()
     {
         string firstSln = _fileSystem.Path.Combine(_repositoryRootPath, "First.sln");
         string secondSln = _fileSystem.Path.Combine(_repositoryRootPath, "Second.sln");
