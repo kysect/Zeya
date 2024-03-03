@@ -5,7 +5,7 @@ using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 
-namespace Kysect.Zeya.Tests.Integration.IntegrationManager;
+namespace Kysect.Zeya.Tests.Application.IntegrationManager;
 
 public class ValidationPolicyServiceTests
 {
@@ -90,7 +90,7 @@ public class ValidationPolicyServiceTests
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
-        List<RepositoryDiagnosticTableRow> expected = new List<RepositoryDiagnosticTableRow>
+        var expected = new List<RepositoryDiagnosticTableRow>
             {
                 new RepositoryDiagnosticTableRow("Owner", "Repository", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" }),
                 new RepositoryDiagnosticTableRow("Owner", "Repository2", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" })

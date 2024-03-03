@@ -161,9 +161,10 @@ public static class ServiceCollectionExtensions
         // TODO: customize scenario directory path
 
         return serviceCollection
-            .AddSingleton<IScenarioSourceProvider>(sp => new ScenarioSourceProvider(sp.GetRequiredService<IFileSystem>(), "Samples"))
-            .AddSingleton<IScenarioSourceCodeParser, YamlScenarioSourceCodeParser>()
-            .AddSingleton<IScenarioStepParser, ScenarioStepReflectionParser>(_ => ScenarioStepReflectionParser.Create(validationRuleAssembly))
+            .AddSingleton<IScenarioContentProvider>(sp => new ScenarioContentProvider(sp.GetRequiredService<IFileSystem>(), "Samples"))
+            .AddSingleton<IScenarioContentParser, YamlScenarioContentParser>()
+            .AddSingleton<IScenarioContentStepDeserializer, ScenarioContentStepReflectionDeserializer>(_ => ScenarioContentStepReflectionDeserializer.Create(validationRuleAssembly))
+            .AddSingleton<IScenarioContentDeserializer, ScenarioContentDeserializer>()
             .AddAllImplementationOf<IScenarioStepExecutor>(validationRuleAssembly)
             .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, validationRuleAssembly));
     }

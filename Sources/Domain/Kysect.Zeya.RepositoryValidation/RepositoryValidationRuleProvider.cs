@@ -3,9 +3,8 @@
 namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryValidationRuleProvider(
-    IScenarioSourceProvider scenarioProvider,
-    IScenarioSourceCodeParser scenarioSourceCodeParser,
-    IScenarioStepParser scenarioStepParser)
+    IScenarioContentProvider scenarioProvider,
+    IScenarioContentDeserializer contentDeserializer)
 {
     public ScenarioContent ReadScenario(string validationScenarioName)
     {
@@ -15,9 +14,9 @@ public class RepositoryValidationRuleProvider(
 
     public IReadOnlyCollection<IValidationRule> GetValidationRules(ScenarioContent scenarioContent)
     {
-        string scenarioSourceCode = scenarioContent.Content;
-        IReadOnlyCollection<ScenarioStepArguments> scenarioStepNodes = scenarioSourceCodeParser.Parse(scenarioSourceCode);
-        IReadOnlyCollection<IValidationRule> steps = scenarioStepNodes.Select(scenarioStepParser.ParseScenarioStep).Cast<IValidationRule>().ToList();
-        return steps;
+        return contentDeserializer
+            .Deserialize(scenarioContent.Content)
+            .Cast<IValidationRule>()
+            .ToList();
     }
 }
