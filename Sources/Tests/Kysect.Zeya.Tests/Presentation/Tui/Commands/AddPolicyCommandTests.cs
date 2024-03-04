@@ -32,7 +32,7 @@ public class AddPolicyCommandTests : IDisposable
         _console.Input.PushText(filePath);
         _console.Input.PushKey(ConsoleKey.Enter);
         _mockFileSystem.AddFile(filePath, new MockFileData(policyContent));
-        var addPolicyCommand = new AddPolicyCommand(new ValidationPolicyLocalClient(_validationPolicyService), _mockFileSystem, _console);
+        var addPolicyCommand = new AddPolicyCommand(new PolicyService(_validationPolicyService), _mockFileSystem, _console);
 
         addPolicyCommand.Execute();
         IReadOnlyCollection<ValidationPolicyEntity> policies = await _validationPolicyService.ReadPolicies();

@@ -1,14 +1,14 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.Dtos;
 
 namespace Kysect.Zeya.Application.LocalHandling;
 
-public class ValidationPolicyRepositoryApiLocalClient : IValidationPolicyRepositoryApi
+public class PolicyRepositoryService : IPolicyRepositoryService
 {
     private readonly ValidationPolicyService _service;
 
-    public ValidationPolicyRepositoryApiLocalClient(ValidationPolicyService service)
+    public PolicyRepositoryService(ValidationPolicyService service)
     {
         _service = service;
     }

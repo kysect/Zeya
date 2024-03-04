@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -16,13 +16,13 @@ public partial class CreateValidationPolicy
     }
 
     [Inject] private NavigationManager _navigationManager { get; set; } = null!;
-    [Inject] private IValidationPolicyApi _validationPolicyApi { get; set; } = null!;
+    [Inject] private IPolicyService PolicyService { get; set; } = null!;
 
     private readonly CreateValidationPolicyForm _formData = new CreateValidationPolicyForm();
 
     private async Task CreatePolicy()
     {
-        await _validationPolicyApi.CreatePolicy(_formData.Name, _formData.Content);
+        await PolicyService.CreatePolicy(_formData.Name, _formData.Content);
         _navigationManager.NavigateTo("validation-policies");
     }
 }

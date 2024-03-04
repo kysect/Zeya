@@ -1,34 +1,34 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Application.LocalHandling;
 
-public class RepositoryValidationLocalClient(
+public class PolicyRepositoryValidationService(
     IGithubRepositoryProvider githubRepositoryProvider,
-    RepositoryValidationService repositoryValidationService,
+    RepositoryValidationService policyRepositoryValidationService,
     RepositoryValidationRuleProvider validationRuleProvider,
-    ILogger<RepositoryValidationLocalClient> logger) : IRepositoryValidationApi
+    ILogger<PolicyRepositoryValidationService> logger) : IPolicyRepositoryValidationService
 {
     public void CreatePullRequestWithFix(GithubRepositoryNameDto repository, string scenario)
     {
         logger.LogTrace("Loading validation configuration");
         ScenarioContent scenarioContent = validationRuleProvider.ReadScenario(scenario);
-        repositoryValidationService.CreatePullRequestWithFix(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenarioContent);
+        policyRepositoryValidationService.CreatePullRequestWithFix(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenarioContent);
     }
 
     public void AnalyzerAndFix(GithubRepositoryNameDto repository, string scenario)
     {
         logger.LogTrace("Loading validation configuration");
         ScenarioContent scenarioContent = validationRuleProvider.ReadScenario(scenario);
-        repositoryValidationService.AnalyzerAndFix(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenarioContent);
+        policyRepositoryValidationService.AnalyzerAndFix(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenarioContent);
     }
 
     public void Analyze(GithubRepositoryNameDto repository, string scenario)
     {
         logger.LogTrace("Loading validation configuration");
         ScenarioContent scenarioContent = validationRuleProvider.ReadScenario(scenario);
-        repositoryValidationService.AnalyzeSingleRepository(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenarioContent);
+        policyRepositoryValidationService.AnalyzeSingleRepository(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenarioContent);
     }
 }
