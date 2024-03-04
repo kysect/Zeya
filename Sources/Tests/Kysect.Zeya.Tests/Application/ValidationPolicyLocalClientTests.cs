@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Client.Local;
+using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Dtos;
-using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.Tests.Tools;
 
-namespace Kysect.Zeya.Tests.Application.LocalServer;
+namespace Kysect.Zeya.Tests.Application;
 
 public class ValidationPolicyLocalClientTests
 {

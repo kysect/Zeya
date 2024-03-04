@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Client.Local;
+using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.DataAccess.Abstractions;
-using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tui.Commands.Policies;
 using Spectre.Console.Testing;

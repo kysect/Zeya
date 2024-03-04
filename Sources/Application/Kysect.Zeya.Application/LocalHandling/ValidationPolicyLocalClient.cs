@@ -1,9 +1,8 @@
 ﻿using Kysect.Zeya.Client.Abstractions.Contracts;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.Dtos;
-using Kysect.Zeya.IntegrationManager;
 
-namespace Kysect.Zeya.Client.Local;
+namespace Kysect.Zeya.Application.LocalHandling;
 
 public class ValidationPolicyLocalClient : IValidationPolicyApi
 {

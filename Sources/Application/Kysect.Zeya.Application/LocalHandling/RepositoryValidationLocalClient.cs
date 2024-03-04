@@ -1,10 +1,9 @@
 ﻿using Kysect.Zeya.Client.Abstractions.Contracts;
 using Kysect.Zeya.Dtos;
-using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.Client.Local;
+namespace Kysect.Zeya.Application.LocalHandling;
 
 public class RepositoryValidationLocalClient(
     IGithubRepositoryProvider githubRepositoryProvider,
