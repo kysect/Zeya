@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -12,9 +12,9 @@ public partial class ValidationPolicy
 {
     [Parameter] public Guid PolicyId { get; set; }
 
-    [Inject] private IValidationPolicyApi _validationPolicyApi { get; set; } = null!;
-    [Inject] private IValidationPolicyRepositoryApi _policyRepositoryApi { get; set; } = null!;
-    [Inject] private IPolicyValidationApi _policyValidationApi { get; set; } = null!;
+    [Inject] private IPolicyService PolicyService { get; set; } = null!;
+    [Inject] private IPolicyRepositoryService PolicyRepositoryService { get; set; } = null!;
+    [Inject] private IPolicyValidationService PolicyValidationService { get; set; } = null!;
 
     private ValidationPolicyDto? _policy;
     private IReadOnlyCollection<ValidationPolicyRepositoryDto> _policyRepositories = new List<ValidationPolicyRepositoryDto>();
@@ -24,9 +24,9 @@ public partial class ValidationPolicy
     {
         await base.OnInitializedAsync();
 
-        _policy = await _validationPolicyApi.GetPolicy(PolicyId);
-        _policyRepositories = await _policyRepositoryApi.GetRepositories(PolicyId);
-        _diagnosticsTable = await _validationPolicyApi.GetDiagnosticsTable(PolicyId);
+        _policy = await PolicyService.GetPolicy(PolicyId);
+        _policyRepositories = await PolicyRepositoryService.GetRepositories(PolicyId);
+        _diagnosticsTable = await PolicyService.GetDiagnosticsTable(PolicyId);
     }
 
     public IReadOnlyCollection<string> GetDiagnosticHeaders()
@@ -39,11 +39,11 @@ public partial class ValidationPolicy
 
     public async Task RunValidation()
     {
-        await _policyValidationApi.Validate(PolicyId);
+        await PolicyValidationService.Validate(PolicyId);
     }
 
     public async Task CreateFix(string repositoryOwner, string repositoryName)
     {
-        await _policyValidationApi.CreateFix(PolicyId, repositoryOwner, repositoryName);
+        await PolicyValidationService.CreateFix(PolicyId, repositoryOwner, repositoryName);
     }
 }

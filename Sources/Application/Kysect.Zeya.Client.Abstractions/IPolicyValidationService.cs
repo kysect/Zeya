@@ -1,8 +1,8 @@
 ﻿using Refit;
 
-namespace Kysect.Zeya.Client.Abstractions.Contracts;
+namespace Kysect.Zeya.Client.Abstractions;
 
-public interface IPolicyValidationApi
+public interface IPolicyValidationService
 {
     [Post("/Policy/{PolicyId}/Validate")]
     Task Validate(Guid policyId);

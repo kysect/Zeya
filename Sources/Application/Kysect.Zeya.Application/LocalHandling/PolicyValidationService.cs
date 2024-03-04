@@ -1,14 +1,14 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 
 namespace Kysect.Zeya.Application.LocalHandling;
 
-public class PolicyValidationLocalClient(
+public class PolicyValidationService(
     ValidationPolicyService service,
     IGithubRepositoryProvider githubRepositoryProvider,
-    RepositoryValidationService repositoryValidationService) : IPolicyValidationApi
+    RepositoryValidationService policyRepositoryValidationService) : IPolicyValidationService
 {
     public async Task Validate(Guid policyId)
     {
@@ -19,7 +19,7 @@ public class PolicyValidationLocalClient(
         foreach (ValidationPolicyRepository validationPolicyRepository in repositories)
         {
             LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(validationPolicyRepository.GithubOwner, validationPolicyRepository.GithubRepository);
-            RepositoryValidationReport report = repositoryValidationService.AnalyzeSingleRepository(localGithubRepository, scenarioContent);
+            RepositoryValidationReport report = policyRepositoryValidationService.AnalyzeSingleRepository(localGithubRepository, scenarioContent);
             await service.SaveReport(validationPolicyRepository, report);
         }
     }
@@ -31,6 +31,6 @@ public class PolicyValidationLocalClient(
         LocalGithubRepository localGithubRepository = githubRepositoryProvider.GetGithubRepository(repository.GithubOwner, repository.GithubRepository);
 
         // TODO: issues #89 No need to analyze, we already have report in database
-        repositoryValidationService.CreatePullRequestWithFix(localGithubRepository, new ScenarioContent(policy.Content));
+        policyRepositoryValidationService.CreatePullRequestWithFix(localGithubRepository, new ScenarioContent(policy.Content));
     }
 }

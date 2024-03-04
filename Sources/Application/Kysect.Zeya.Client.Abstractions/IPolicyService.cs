@@ -1,9 +1,9 @@
 ﻿using Kysect.Zeya.Dtos;
 using Refit;
 
-namespace Kysect.Zeya.Client.Abstractions.Contracts;
+namespace Kysect.Zeya.Client.Abstractions;
 
-public interface IValidationPolicyApi
+public interface IPolicyService
 {
     [Post("/ValidationPolicy")]
     Task<ValidationPolicyDto> CreatePolicy(string name, string content);

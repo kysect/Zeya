@@ -1,5 +1,5 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console;
@@ -7,7 +7,7 @@ using Spectre.Console;
 namespace Kysect.Zeya.Tui.Commands.Policies;
 
 public class AddRepositoryCommand(
-    IValidationPolicyRepositoryApi validationPolicyRepositoryApi,
+    IPolicyRepositoryService policyRepositoryService,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public void Execute()
@@ -18,6 +18,6 @@ public class AddRepositoryCommand(
 
         string repositoryOwner = AnsiConsole.Ask<string>("Enter repository owner");
         string repositoryName = AnsiConsole.Ask<string>("Enter repository name");
-        validationPolicyRepositoryApi.AddRepository(policy.Id, repositoryOwner, repositoryName);
+        policyRepositoryService.AddRepository(policy.Id, repositoryOwner, repositoryName);
     }
 }

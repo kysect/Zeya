@@ -1,8 +1,8 @@
 ﻿using Kysect.Zeya.Dtos;
 
-namespace Kysect.Zeya.Client.Abstractions.Contracts;
+namespace Kysect.Zeya.Client.Abstractions;
 
-public interface IRepositoryValidationApi
+public interface IPolicyRepositoryValidationService
 {
     void CreatePullRequestWithFix(GithubRepositoryNameDto repository, string scenario);
     void AnalyzerAndFix(GithubRepositoryNameDto repository, string scenario);

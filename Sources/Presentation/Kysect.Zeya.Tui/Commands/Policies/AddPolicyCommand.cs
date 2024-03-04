@@ -1,12 +1,12 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions;
 using Spectre.Console;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tui.Commands.Policies;
 
 public class AddPolicyCommand(
-    IValidationPolicyApi validationPolicyApi,
+    IPolicyService policyService,
     IFileSystem fileSystem,
     IAnsiConsole console) : ITuiCommand
 {
@@ -23,6 +23,6 @@ public class AddPolicyCommand(
 
         string content = fileSystem.File.ReadAllText(filePath);
 
-        validationPolicyApi.CreatePolicy(name, content);
+        policyService.CreatePolicy(name, content);
     }
 }

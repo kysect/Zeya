@@ -11,7 +11,7 @@ using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.Application.LocalHandling;
-using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -145,7 +145,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositoryValidator>()
             .AddSingleton<RepositoryDiagnosticFixer>()
             .AddSingleton<PullRequestMessageCreator>()
-            .AddScoped<RepositoryValidationService>()
+            .AddScoped<Application.RepositoryValidationService>()
             .AddScoped<ValidationPolicyService>();
 
         return serviceCollection;
@@ -198,10 +198,10 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaLocalServerApiClients(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddScoped<IValidationPolicyApi, ValidationPolicyLocalClient>()
-            .AddScoped<IValidationPolicyRepositoryApi, ValidationPolicyRepositoryApiLocalClient>()
-            .AddScoped<IPolicyValidationApi, PolicyValidationLocalClient>()
-            .AddScoped<IRepositoryValidationApi, RepositoryValidationLocalClient>();
+            .AddScoped<IPolicyService, PolicyService>()
+            .AddScoped<IPolicyRepositoryService, PolicyRepositoryService>()
+            .AddScoped<IPolicyValidationService, PolicyValidationService>()
+            .AddScoped<IPolicyRepositoryValidationService, PolicyRepositoryValidationService>();
     }
 
     private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)

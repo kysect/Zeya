@@ -12,14 +12,14 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests.Application;
 
-public class RepositoryValidationServiceTests : IDisposable
+public class PolicyRepositoryValidationServiceTests : IDisposable
 {
     private readonly RepositoryValidationRuleProvider _repositoryValidationRuleProvider;
-    private readonly RepositoryValidationService _repositoryValidationService;
+    private readonly RepositoryValidationService _policyRepositoryValidationService;
     private readonly TestTemporaryDirectory _temporaryDirectory;
     private readonly GithubRepositoryProvider _githubRepositoryProvider;
 
-    public RepositoryValidationServiceTests()
+    public PolicyRepositoryValidationServiceTests()
     {
         var fileSystem = new FileSystem();
 
@@ -42,7 +42,7 @@ public class RepositoryValidationServiceTests : IDisposable
         var repositoryValidationReporter = serviceProvider.GetRequiredService<IRepositoryValidationReporter>();
         var repositoryDiagnosticFixer = serviceProvider.GetRequiredService<RepositoryDiagnosticFixer>();
 
-        _repositoryValidationService = new RepositoryValidationService(
+        _policyRepositoryValidationService = new RepositoryValidationService(
             _repositoryValidationRuleProvider,
             repositoryValidator,
             repositoryValidationReporter,
@@ -60,7 +60,7 @@ public class RepositoryValidationServiceTests : IDisposable
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
         ScenarioContent scenarioContent = _repositoryValidationRuleProvider.ReadScenario("ValidationScenario.yaml");
-        RepositoryValidationReport repositoryValidationReport = _repositoryValidationService.Analyze([localGithubRepository], scenarioContent);
+        RepositoryValidationReport repositoryValidationReport = _policyRepositoryValidationService.Analyze([localGithubRepository], scenarioContent);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class RepositoryValidationServiceTests : IDisposable
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
         ScenarioContent scenarioContent = _repositoryValidationRuleProvider.ReadScenario("ValidationScenario.yaml");
-        _repositoryValidationService.AnalyzerAndFix(localGithubRepository, scenarioContent);
+        _policyRepositoryValidationService.AnalyzerAndFix(localGithubRepository, scenarioContent);
     }
 
     public void Dispose()

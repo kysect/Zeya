@@ -1,12 +1,12 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;
 
 public class AnalyzeAndSaveToDatabaseCommand(
-    IPolicyValidationApi policyValidationApi,
+    IPolicyValidationService policyValidationService,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public void Execute()
@@ -15,6 +15,6 @@ public class AnalyzeAndSaveToDatabaseCommand(
         if (policy is null)
             return;
 
-        policyValidationApi.Validate(policy.Id);
+        policyValidationService.Validate(policy.Id);
     }
 }

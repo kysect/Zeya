@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Application;
 
+// TODO: merge with PolicyRepositoryValidationService
 public class RepositoryValidationService(
     RepositoryValidationRuleProvider validationRuleProvider,
     RepositoryValidator repositoryValidator,

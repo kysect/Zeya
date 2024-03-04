@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kysect.Zeya.WebApi;
@@ -7,25 +7,25 @@ namespace Kysect.Zeya.WebApi;
 [Route("Policy")]
 public class PolicyValidationController : Controller
 {
-    private readonly IPolicyValidationApi _policyValidationApi;
+    private readonly IPolicyValidationService _policyValidationService;
 
-    public PolicyValidationController(IPolicyValidationApi policyValidationApi)
+    public PolicyValidationController(IPolicyValidationService policyValidationService)
     {
-        _policyValidationApi = policyValidationApi;
+        _policyValidationService = policyValidationService;
     }
 
 
     [HttpPost("{PolicyId}/Validate")]
     public async Task<ActionResult> Validate(Guid policyId)
     {
-        await _policyValidationApi.Validate(policyId);
+        await _policyValidationService.Validate(policyId);
         return Ok();
     }
 
     [HttpPost("/Policy/{PolicyId}/Create-fix")]
     public async Task<ActionResult> CreateFix(Guid policyId, string repositoryOwner, string repositoryName)
     {
-        await _policyValidationApi.CreateFix(policyId, repositoryOwner, repositoryName);
+        await _policyValidationService.CreateFix(policyId, repositoryOwner, repositoryName);
         return Ok();
     }
 }

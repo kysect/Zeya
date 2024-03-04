@@ -1,5 +1,5 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
-using Kysect.Zeya.Client.Abstractions.Contracts;
+using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console;
@@ -7,7 +7,7 @@ using Spectre.Console;
 namespace Kysect.Zeya.Tui.Commands;
 
 public class ShowRepositoryValidationReportCommand(
-    IValidationPolicyApi validationPolicyService,
+    IPolicyService policyService,
     PolicySelectorControl policySelectorControl) : ITuiCommand
 {
     public void Execute()
@@ -17,7 +17,7 @@ public class ShowRepositoryValidationReportCommand(
         if (policy is null)
             return;
 
-        IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticTableRows = validationPolicyService.GetDiagnosticsTable(policy.Id).Result;
+        IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticTableRows = policyService.GetDiagnosticsTable(policy.Id).Result;
         Grid grid = repositoryDiagnosticTable.CreateGrid(diagnosticTableRows);
         AnsiConsole.Write(grid);
     }

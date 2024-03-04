@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Client.Abstractions.Contracts;
+﻿using Kysect.Zeya.Client.Abstractions;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -18,13 +18,13 @@ public partial class AddPolicyRepositoryPage
 
     [Parameter] public Guid PolicyId { get; set; }
     [Inject] private NavigationManager _navigationManager { get; set; } = null!;
-    [Inject] private IValidationPolicyRepositoryApi _policyRepositoryApi { get; set; } = null!;
+    [Inject] private IPolicyRepositoryService PolicyRepositoryService { get; set; } = null!;
 
     private readonly AddPolicyGithubRepositoryForm _formData = new AddPolicyGithubRepositoryForm();
 
     private async Task AddPolicyRepository()
     {
-        await _policyRepositoryApi.AddRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository);
+        await PolicyRepositoryService.AddRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository);
         _navigationManager.NavigateTo($"/validation-policies/{PolicyId}");
     }
 }

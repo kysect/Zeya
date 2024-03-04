@@ -6,13 +6,13 @@ using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Application;
 
-public class ValidationPolicyLocalClientTests
+public class PolicyServiceTests
 {
-    private readonly ValidationPolicyLocalClient _client;
+    private readonly PolicyService _client;
 
-    public ValidationPolicyLocalClientTests()
+    public PolicyServiceTests()
     {
-        _client = new ValidationPolicyLocalClient(new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext()));
+        _client = new PolicyService(new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext()));
     }
 
     [Fact]
