@@ -1,5 +1,5 @@
 ﻿using Kysect.Zeya.Client.Abstractions.Contracts;
-using Kysect.Zeya.Client.Abstractions.Models;
+using Kysect.Zeya.Dtos;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;

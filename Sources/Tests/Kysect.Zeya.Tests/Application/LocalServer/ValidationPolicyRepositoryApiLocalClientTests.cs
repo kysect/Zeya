@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.Client.Local;
+using Kysect.Zeya.Dtos;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.Tests.Tools;
 

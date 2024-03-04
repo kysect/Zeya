@@ -1,4 +1,4 @@
-﻿using Kysect.Zeya.Client.Abstractions.Models;
+﻿using Kysect.Zeya.Dtos;
 using Refit;
 
 namespace Kysect.Zeya.Client.Abstractions.Contracts;
