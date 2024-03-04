@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Kysect.Zeya.Tests.Tools;
 
-public static class ZeyaDbContextProvider
+public static class ZeyaDbContextTestProvider
 {
     public static ZeyaDbContext CreateContext()
     {

@@ -17,7 +17,7 @@ public class AddPolicyCommandTests : IDisposable
 
     public AddPolicyCommandTests()
     {
-        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextProvider.CreateContext());
+        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext());
         _mockFileSystem = new MockFileSystem();
         _console = new TestConsole();
     }
