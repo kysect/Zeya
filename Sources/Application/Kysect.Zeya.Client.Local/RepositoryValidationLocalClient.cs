@@ -1,5 +1,5 @@
 ﻿using Kysect.Zeya.Client.Abstractions.Contracts;
-using Kysect.Zeya.Client.Abstractions.Models;
+using Kysect.Zeya.Dtos;
 using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;

@@ -1,6 +1,6 @@
 ﻿using Kysect.TerminalUserInterface.Commands;
 using Kysect.Zeya.Client.Abstractions.Contracts;
-using Kysect.Zeya.Client.Abstractions.Models;
+using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tui.Controls;
 
 namespace Kysect.Zeya.Tui.Commands;

@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.Zeya.Client.Abstractions.Models;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.Dtos;
 using Kysect.Zeya.ModelMapping;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.EntityFrameworkCore;

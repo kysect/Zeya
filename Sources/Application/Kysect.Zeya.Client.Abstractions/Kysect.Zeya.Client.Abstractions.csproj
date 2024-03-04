@@ -10,4 +10,8 @@
     <PackageReference Include="Refit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kysect.Zeya.Dtos\Kysect.Zeya.Dtos.csproj" />
+  </ItemGroup>
+
 </Project>

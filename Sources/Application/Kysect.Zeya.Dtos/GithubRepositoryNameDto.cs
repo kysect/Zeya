@@ -1,3 +1,3 @@
-﻿namespace Kysect.Zeya.Client.Abstractions.Models;
+﻿namespace Kysect.Zeya.Dtos;
 
 public record struct GithubRepositoryNameDto(string Owner, string Name);
