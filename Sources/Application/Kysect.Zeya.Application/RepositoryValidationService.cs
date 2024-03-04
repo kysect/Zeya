@@ -6,7 +6,7 @@ using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.IntegrationManager;
+namespace Kysect.Zeya.Application;
 
 public class RepositoryValidationService(
     RepositoryValidationRuleProvider validationRuleProvider,

@@ -1,7 +1,7 @@
 ﻿using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 
-namespace Kysect.Zeya.IntegrationManager;
+namespace Kysect.Zeya.Application;
 
 public interface IGithubRepositoryProvider
 {

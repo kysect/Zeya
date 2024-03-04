@@ -7,7 +7,7 @@ using Kysect.Zeya.RepositoryValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Kysect.Zeya.IntegrationManager;
+namespace Kysect.Zeya.Application;
 
 public class ValidationPolicyService
 {

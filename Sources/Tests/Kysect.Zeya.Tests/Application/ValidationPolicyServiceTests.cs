@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
+using Kysect.Zeya.Application;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.Dtos;
-using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 
-namespace Kysect.Zeya.Tests.Application.IntegrationManager;
+namespace Kysect.Zeya.Tests.Application;
 
 public class ValidationPolicyServiceTests
 {

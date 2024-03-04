@@ -1,7 +1,7 @@
-﻿using Kysect.Zeya.DependencyManager;
+﻿using Kysect.Zeya.Application;
+using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
-using Kysect.Zeya.IntegrationManager;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.Tests.Application.IntegrationManager;
+namespace Kysect.Zeya.Tests.Application;
 
 public class RepositoryValidationServiceTests : IDisposable
 {

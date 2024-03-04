@@ -6,7 +6,7 @@ using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 
-namespace Kysect.Zeya.IntegrationManager;
+namespace Kysect.Zeya.Application;
 
 public class GithubRepositoryProvider : IGithubRepositoryProvider
 {
@@ -29,14 +29,14 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
 
     public IReadOnlyCollection<LocalGithubRepository> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)
     {
-        HashSet<string> skipList = excludedRepositories.ToHashSet();
+        var skipList = excludedRepositories.ToHashSet();
 
         IReadOnlyCollection<GithubRepositoryName> githubRepositories = _githubIntegrationService
             .GetOrganizationRepositories(organization)
             .Where(repository => !skipList.Contains(repository.Name))
             .ToList();
 
-        List<LocalGithubRepository> result = githubRepositories
+        var result = githubRepositories
             .Select(CreateGithubRepositoryAccessor)
             .ToList();
 
