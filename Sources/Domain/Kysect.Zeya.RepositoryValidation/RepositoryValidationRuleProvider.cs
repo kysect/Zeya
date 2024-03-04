@@ -2,6 +2,7 @@
 
 namespace Kysect.Zeya.RepositoryValidation;
 
+// TODO: split into two types
 public class RepositoryValidationRuleProvider(
     IScenarioContentProvider scenarioProvider,
     IScenarioContentDeserializer contentDeserializer)

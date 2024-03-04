@@ -13,7 +13,7 @@ public class ValidationPolicyServiceTests
 
     public ValidationPolicyServiceTests()
     {
-        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextProvider.CreateContext());
+        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext());
     }
 
     [Fact]
