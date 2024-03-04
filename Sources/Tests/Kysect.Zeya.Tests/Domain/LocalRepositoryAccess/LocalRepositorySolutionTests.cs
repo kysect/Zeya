@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess;
 using System.IO.Abstractions.TestingHelpers;
 
@@ -32,18 +33,22 @@ public class LocalRepositorySolutionTests
     [Fact]
     public void GetDirectoryPackagePropsPath_ReturnCorrectPath()
     {
+        string expected = _fileSystem.Path.Combine("Sources", SolutionItemNameConstants.DirectoryPackagesProps);
+
         new LocalRepositorySolution(_repositoryDirectoryPath, _solutionPath, _fileSystem)
             .GetDirectoryPackagePropsPath()
             .Should()
-            .Be("Sources\\Directory.Packages.props");
+            .Be(expected);
     }
 
     [Fact]
     public void GetDirectoryBuildPropsPath_ReturnCorrectPath()
     {
+        string expected = _fileSystem.Path.Combine("Sources", SolutionItemNameConstants.DirectoryBuildProps);
+
         new LocalRepositorySolution(_repositoryDirectoryPath, _solutionPath, _fileSystem)
             .GetDirectoryBuildPropsPath()
             .Should()
-            .Be("Sources\\Directory.Build.props");
+            .Be(expected);
     }
 }
