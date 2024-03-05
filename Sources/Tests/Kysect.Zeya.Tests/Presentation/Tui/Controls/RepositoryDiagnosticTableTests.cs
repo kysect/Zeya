@@ -24,7 +24,7 @@ public class RepositoryDiagnosticTableTests
         string consoleOutput = console.Output;
 
         // TODO: need to report bug to Spectre.Console
-        consoleOutput = consoleOutput.Replace("\n", "\r\n");
+        consoleOutput = consoleOutput.Replace("\n", Environment.NewLine);
         consoleOutput.Should().Be("""
                                   Repository         SRC0001  SRC0002
                                   Owner/Repository   Warning  Warning
