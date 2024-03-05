@@ -1,4 +1,4 @@
-using Kysect.CommonLib.BaseTypes.Extensions;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
@@ -51,7 +51,7 @@ public class ValidationPolicyService
             throw new ArgumentException("Policy not found");
 
         var githubRepositoryName = new GithubRepositoryName(githubOwner, githubRepository);
-        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Github, githubRepositoryName.FullName, githubOwner, githubRepository);
+        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Github, githubRepositoryName.FullName);
         _context.ValidationPolicyRepositories.Add(repository);
         await _context.SaveChangesAsync();
 
@@ -69,7 +69,6 @@ public class ValidationPolicyService
             .ValidationPolicyRepositories
             .Where(r => r.ValidationPolicyId == policyId)
             .Where(r => r.Id == repositoryId)
-            .Where(r => r.GithubRepository == repositoryName)
             .SingleAsync();
     }
 
@@ -125,8 +124,7 @@ public class ValidationPolicyService
             .Select(t => new
             {
                 RepositoryId = t.Repository.Id,
-                RepositoryOwner = t.Repository.GithubOwner,
-                RepositoryName = t.Repository.GithubRepository,
+                RepositoryName = t.Repository.Metadata,
                 t.Diagnostic.RuleId,
                 t.Diagnostic.Severity
             })
@@ -140,7 +138,7 @@ public class ValidationPolicyService
             foreach (var item in group)
                 dictionary[item.RuleId] = item.Severity.ToString();
 
-            var row = new RepositoryDiagnosticTableRow(group.First().RepositoryOwner, group.First().RepositoryName, dictionary);
+            var row = new RepositoryDiagnosticTableRow(group.First().RepositoryId, group.First().RepositoryName, dictionary);
             groupedDiagnostics.Add(row);
         }
 
