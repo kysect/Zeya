@@ -22,10 +22,10 @@ public class PolicyValidationController : Controller
         return Ok();
     }
 
-    [HttpPost("{PolicyId}/Create-fix")]
-    public async Task<ActionResult> CreateFix(Guid policyId, string repositoryOwner, string repositoryName)
+    [HttpPost("{PolicyId}/{RepositoryId}/Fix")]
+    public async Task<ActionResult> CreateFix(Guid policyId, Guid repositoryId)
     {
-        await _policyValidationService.CreateFix(policyId, repositoryOwner, repositoryName);
+        await _policyValidationService.CreateFix(policyId, repositoryId);
         return Ok();
     }
 }

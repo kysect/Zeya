@@ -1,4 +1,4 @@
-﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
@@ -63,12 +63,12 @@ public class ValidationPolicyService
         return await _context.ValidationPolicyRepositories.Where(r => r.ValidationPolicyId == policyId).ToListAsync();
     }
 
-    public async Task<ValidationPolicyRepository> GetRepository(Guid policyId, string repositoryOwner, string repositoryName)
+    public async Task<ValidationPolicyRepository> GetRepository(Guid policyId, Guid repositoryId)
     {
         return await _context
             .ValidationPolicyRepositories
             .Where(r => r.ValidationPolicyId == policyId)
-            .Where(r => r.GithubOwner == repositoryOwner)
+            .Where(r => r.Id == repositoryId)
             .Where(r => r.GithubRepository == repositoryName)
             .SingleAsync();
     }

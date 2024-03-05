@@ -42,8 +42,8 @@ public partial class ValidationPolicy
         await PolicyValidationService.Validate(PolicyId);
     }
 
-    public async Task CreateFix(string repositoryOwner, string repositoryName)
+    public async Task CreateFix(Guid repositoryId)
     {
-        await PolicyValidationService.CreateFix(PolicyId, repositoryOwner, repositoryName);
+        await PolicyValidationService.CreateFix(PolicyId, repositoryId);
     }
 }
