@@ -49,7 +49,7 @@ else
             {
                 <tr>
                     <td>@repositoryDiagnostics.RepositoryName</td>
-                    <td><button @onclick="@(async () => await CreateFix(repositoryDiagnostics.RepositoryOwner, repositoryDiagnostics.RepositoryName))">Create Fix</button></td>
+                    <td><button @onclick="@(async () => await CreateFix(repositoryDiagnostics.Id))">Create Fix</button></td>
                     @foreach (var ruleId in GetDiagnosticHeaders())
                     {
                         <td>@repositoryDiagnostics.Diagnostics[ruleId]</td>

@@ -28,10 +28,10 @@ public class PolicyValidationService(
         }
     }
 
-    public async Task CreateFix(Guid policyId, string repositoryOwner, string repositoryName)
+    public async Task CreateFix(Guid policyId, Guid repositoryId)
     {
         ValidationPolicyEntity policy = await service.GetPolicy(policyId);
-        ValidationPolicyRepository repositoryInfo = await service.GetRepository(policyId, repositoryOwner, repositoryName);
+        ValidationPolicyRepository repositoryInfo = await service.GetRepository(policyId, repositoryId);
         IValidationPolicyRepository repository = repositoryFactory.Create(repositoryInfo);
         ILocalRepository localGithubRepository = githubRepositoryProvider.InitializeRepository(repository);
 
