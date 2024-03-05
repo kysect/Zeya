@@ -11,6 +11,7 @@ using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.Application.LocalHandling;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.GithubIntegration;
@@ -145,7 +146,8 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositoryValidator>()
             .AddSingleton<RepositoryDiagnosticFixer>()
             .AddSingleton<PullRequestMessageCreator>()
-            .AddScoped<Application.RepositoryValidationService>()
+            .AddScoped<RepositoryValidationService>()
+            .AddScoped<ValidationPolicyRepositoryFactory>()
             .AddScoped<ValidationPolicyService>();
 
         return serviceCollection;

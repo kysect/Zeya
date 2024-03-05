@@ -1,29 +1,26 @@
-﻿using Kysect.Zeya.Client.Abstractions;
+﻿using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.Dtos;
 
 namespace Kysect.Zeya.Application.LocalHandling;
 
-public class PolicyRepositoryService : IPolicyRepositoryService
+public class PolicyRepositoryService(
+    ValidationPolicyService service,
+    ValidationPolicyRepositoryFactory repositoryFactory)
+    : IPolicyRepositoryService
 {
-    private readonly ValidationPolicyService _service;
-
-    public PolicyRepositoryService(ValidationPolicyService service)
-    {
-        _service = service;
-    }
-
     public async Task<ValidationPolicyRepositoryDto> AddRepository(Guid policyId, string githubOwner, string githubRepository)
     {
-        ValidationPolicyRepository repository = await _service.AddRepository(policyId, githubOwner, githubRepository);
-        return new ValidationPolicyRepositoryDto(repository.Id, repository.ValidationPolicyId, repository.GithubOwner, repository.GithubRepository);
+        ValidationPolicyRepository repository = await service.AddRepository(policyId, githubOwner, githubRepository);
+        return repositoryFactory.Create(repository).ToDto();
     }
 
     public async Task<IReadOnlyCollection<ValidationPolicyRepositoryDto>> GetRepositories(Guid policyId)
     {
-        IReadOnlyCollection<ValidationPolicyRepository> repositories = await _service.GetRepositories(policyId);
+        IReadOnlyCollection<ValidationPolicyRepository> repositories = await service.GetRepositories(policyId);
         return repositories
-            .Select(r => new ValidationPolicyRepositoryDto(r.Id, r.ValidationPolicyId, r.GithubOwner, r.GithubRepository))
+            .Select(r => repositoryFactory.Create(r).ToDto())
             .ToList();
     }
 }
