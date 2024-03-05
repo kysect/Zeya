@@ -1,6 +1,9 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.LocalHandling;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.DataAccess.Abstractions;
+using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
@@ -10,56 +13,40 @@ namespace Kysect.Zeya.Tests.Application;
 public class ValidationPolicyServiceTests
 {
     private readonly ValidationPolicyService _validationPolicyService;
+    private readonly PolicyRepositoryService _policyRepositoryService;
+    private readonly PolicyService _policyService;
 
     public ValidationPolicyServiceTests()
     {
-        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext());
-    }
-
-    [Fact]
-    public async Task Create_OnEmptyDatabase_EntityCreated()
-    {
-        ValidationPolicyEntity validationPolicyEntity = await _validationPolicyService.CreatePolicy("Policy", "Content");
-
-        IReadOnlyCollection<ValidationPolicyEntity> policies = await _validationPolicyService.ReadPolicies();
-
-        policies.Should().HaveCount(1);
+        ZeyaDbContext context = ZeyaDbContextTestProvider.CreateContext();
+        _validationPolicyService = new ValidationPolicyService(context);
+        _policyRepositoryService = new PolicyRepositoryService(new ValidationPolicyRepositoryFactory(), context);
+        _policyService = new PolicyService(_validationPolicyService, context);
     }
 
     [Fact]
     public async Task AddRepository_OnEmptyDatabase_RepositoryAdded()
     {
-        ValidationPolicyEntity validationPolicyEntity = await _validationPolicyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepository repository = await _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
+        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
 
-        IReadOnlyCollection<ValidationPolicyRepository> repositories = await _validationPolicyService.GetRepositories(validationPolicyEntity.Id);
+        IReadOnlyCollection<ValidationPolicyRepositoryDto> repositories = await _policyRepositoryService.GetRepositories(validationPolicyEntity.Id);
 
         repositories.Should().HaveCount(1);
     }
 
     [Fact]
-    public async Task AddRepository_NoPolicy_ThrowException()
-    {
-        var argumentException = await Assert.ThrowsAsync<ArgumentException>(() =>
-        {
-            return _validationPolicyService.AddRepository(Guid.Empty, "Owner", "Repository");
-        });
-
-        argumentException.Message.Should().Be("Policy not found");
-    }
-
-    [Fact]
     public async Task GetAllRulesForPolicy_DatabaseWithTwoRepositoryDiagnostic_ReturnDistinctRuleIds()
     {
-        ValidationPolicyEntity validationPolicyEntity = await _validationPolicyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepository repository = await _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
+        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
 
-        await _validationPolicyService.SaveReport(repository, report);
+        await _validationPolicyService.SaveReport(repository.Id, report);
 
-        var rules = await _validationPolicyService.GetAllRulesForPolicy(repository.ValidationPolicyId);
+        IReadOnlyCollection<string> rules = await _validationPolicyService.GetAllRulesForPolicy(repository.ValidationPolicyId);
 
         rules.Should().BeEquivalentTo("SRC0001", "SRC0002");
     }
@@ -67,13 +54,13 @@ public class ValidationPolicyServiceTests
     [Fact]
     public async Task SaveReport_OnEmptyDatabase_ReportSaved()
     {
-        ValidationPolicyEntity validationPolicyEntity = await _validationPolicyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepository repository = await _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
+        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
         var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { validationDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
 
-        await _validationPolicyService.SaveReport(repository, report);
+        await _validationPolicyService.SaveReport(repository.Id, report);
 
         IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic> diagnostics = await _validationPolicyService.GetDiagnostics(repository.Id);
 
@@ -84,9 +71,9 @@ public class ValidationPolicyServiceTests
     [Fact]
     public async Task GetDiagnosticsTable_ForTwoRepositoriesWithDiagnostics_ReturnTwoElementInListWithExpectedValue()
     {
-        ValidationPolicyEntity validationPolicyEntity = await _validationPolicyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepository firstRepository = await _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
-        ValidationPolicyRepository secondRepository = await _validationPolicyService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository2");
+        ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
+        ValidationPolicyRepositoryDto firstRepository = await _policyRepositoryService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyRepositoryDto secondRepository = await _policyRepositoryService.AddRepository(validationPolicyEntity.Id, "Owner", "Repository2");
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
@@ -96,8 +83,8 @@ public class ValidationPolicyServiceTests
                 new RepositoryDiagnosticTableRow(secondRepository.Id, "Owner/Repository2", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" })
             };
 
-        await _validationPolicyService.SaveReport(firstRepository, report);
-        await _validationPolicyService.SaveReport(secondRepository, report);
+        await _validationPolicyService.SaveReport(firstRepository.Id, report);
+        await _validationPolicyService.SaveReport(secondRepository.Id, report);
 
         IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticsTable = await _validationPolicyService.GetDiagnosticsTable(validationPolicyEntity.Id);
         diagnosticsTable.Should().BeEquivalentTo(expected);
