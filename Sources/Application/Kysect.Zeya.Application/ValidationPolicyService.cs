@@ -2,6 +2,7 @@
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.ModelMapping;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +50,8 @@ public class ValidationPolicyService
         if (policy is null)
             throw new ArgumentException("Policy not found");
 
-        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, githubOwner, githubRepository);
+        var githubRepositoryName = new GithubRepositoryName(githubOwner, githubRepository);
+        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Github, githubRepositoryName.FullName, githubOwner, githubRepository);
         _context.ValidationPolicyRepositories.Add(repository);
         await _context.SaveChangesAsync();
 

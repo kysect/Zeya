@@ -1,5 +1,7 @@
-﻿using Kysect.GithubUtils.Models;
+﻿using Kysect.CommonLib.Exceptions;
+using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
@@ -25,6 +27,15 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         _logger = logger;
         _githubIntegrationService = githubIntegrationService;
         _localStoragePathFactory = localStoragePathFactory;
+    }
+
+    public ILocalRepository InitializeRepository(IValidationPolicyRepository repository)
+    {
+        return repository switch
+        {
+            GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(new GithubRepositoryName(githubRepository.Owner, githubRepository.Name)),
+            _ => throw SwitchDefaultExceptions.OnUnexpectedType(repository)
+        };
     }
 
     public IReadOnlyCollection<LocalGithubRepository> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.Application.LocalHandling;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tests.Tools;
 
@@ -15,7 +16,7 @@ public class PolicyRepositoryServiceTests
     {
         var validationPolicyService = new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext());
         _policyService = new PolicyService(validationPolicyService);
-        _policyRepositoryService = new PolicyRepositoryService(validationPolicyService);
+        _policyRepositoryService = new PolicyRepositoryService(validationPolicyService, new ValidationPolicyRepositoryFactory());
     }
 
     [Fact]
