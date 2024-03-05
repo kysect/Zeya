@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kysect.Zeya.WebApi;
 
 [ApiController]
-[Route("Policy")]
+[Route("Policies")]
 public class PolicyValidationController : Controller
 {
     private readonly IPolicyValidationService _policyValidationService;
@@ -22,7 +22,7 @@ public class PolicyValidationController : Controller
         return Ok();
     }
 
-    [HttpPost("/Policy/{PolicyId}/Create-fix")]
+    [HttpPost("{PolicyId}/Create-fix")]
     public async Task<ActionResult> CreateFix(Guid policyId, string repositoryOwner, string repositoryName)
     {
         await _policyValidationService.CreateFix(policyId, repositoryOwner, repositoryName);

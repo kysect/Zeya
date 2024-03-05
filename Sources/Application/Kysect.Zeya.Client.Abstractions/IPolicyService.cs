@@ -5,15 +5,15 @@ namespace Kysect.Zeya.Client.Abstractions;
 
 public interface IPolicyService
 {
-    [Post("/ValidationPolicy")]
+    [Post("/Policies")]
     Task<ValidationPolicyDto> CreatePolicy(string name, string content);
 
-    [Get("/ValidationPolicy/{id}")]
+    [Get("/Policies/{id}")]
     Task<ValidationPolicyDto> GetPolicy(Guid id);
 
-    [Get("/ValidationPolicy")]
+    [Get("/Policies")]
     Task<IReadOnlyCollection<ValidationPolicyDto>> GetPolicies();
 
-    [Get("/ValidationPolicy/{policyId}/DiagnosticsTables")]
+    [Get("/Policies/{policyId}/DiagnosticsTables")]
     Task<IReadOnlyCollection<RepositoryDiagnosticTableRow>> GetDiagnosticsTable(Guid policyId);
 }

@@ -4,9 +4,9 @@ namespace Kysect.Zeya.Client.Abstractions;
 
 public interface IPolicyValidationService
 {
-    [Post("/Policy/{PolicyId}/Validate")]
+    [Post("/Policies/{PolicyId}/Validate")]
     Task Validate(Guid policyId);
 
-    [Post("/Policy/{PolicyId}/Create-fix")]
+    [Post("/Policies/{PolicyId}/Create-fix")]
     Task CreateFix(Guid policyId, string repositoryOwner, string repositoryName);
 }
