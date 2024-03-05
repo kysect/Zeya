@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kysect.Zeya.WebApi;
 
 [ApiController]
-[Route("[controller]")]
+[Route("Policies")]
 public class ValidationPolicyController : Controller
 {
     private readonly IPolicyService _policyService;
