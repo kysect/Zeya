@@ -30,6 +30,7 @@ public class GithubValidationPolicyRepository : IValidationPolicyRepository
 
         _info = info;
 
+        // TODO: Move this to GithubRepositoryName
         if (!info.Metadata.Contains('/'))
             throw new ZeyaException("Repository does not contains '/'");
 
