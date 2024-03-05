@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.Application.LocalHandling;
-using Kysect.Zeya.DataAccess.Abstractions;
+using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tui.Commands.Policies;
 using Spectre.Console.Testing;
@@ -11,15 +12,17 @@ namespace Kysect.Zeya.Tests.Presentation.Tui.Commands;
 
 public class AddPolicyCommandTests : IDisposable
 {
-    private readonly ValidationPolicyService _validationPolicyService;
     private readonly MockFileSystem _mockFileSystem;
     private readonly TestConsole _console;
+    private readonly PolicyService _policyService;
 
     public AddPolicyCommandTests()
     {
-        _validationPolicyService = new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext());
+        ZeyaDbContext dbContext = ZeyaDbContextTestProvider.CreateContext();
+        var validationPolicyService = new ValidationPolicyService(dbContext);
         _mockFileSystem = new MockFileSystem();
         _console = new TestConsole();
+        _policyService = new PolicyService(validationPolicyService, dbContext);
     }
 
     [Fact]
@@ -32,10 +35,10 @@ public class AddPolicyCommandTests : IDisposable
         _console.Input.PushText(filePath);
         _console.Input.PushKey(ConsoleKey.Enter);
         _mockFileSystem.AddFile(filePath, new MockFileData(policyContent));
-        var addPolicyCommand = new AddPolicyCommand(new PolicyService(_validationPolicyService), _mockFileSystem, _console);
+        var addPolicyCommand = new AddPolicyCommand(_policyService, _mockFileSystem, _console);
 
         addPolicyCommand.Execute();
-        IReadOnlyCollection<ValidationPolicyEntity> policies = await _validationPolicyService.ReadPolicies();
+        IReadOnlyCollection<ValidationPolicyDto> policies = await _policyService.GetPolicies();
 
         policies.Should().HaveCount(1);
         policies.First().Name.Should().Be("Nuget");

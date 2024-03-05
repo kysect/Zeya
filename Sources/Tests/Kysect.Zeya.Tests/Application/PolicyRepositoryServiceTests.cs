@@ -2,6 +2,7 @@
 using Kysect.Zeya.Application;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tests.Tools;
 
@@ -14,9 +15,10 @@ public class PolicyRepositoryServiceTests
 
     public PolicyRepositoryServiceTests()
     {
-        var validationPolicyService = new ValidationPolicyService(ZeyaDbContextTestProvider.CreateContext());
-        _policyService = new PolicyService(validationPolicyService);
-        _policyRepositoryService = new PolicyRepositoryService(validationPolicyService, new ValidationPolicyRepositoryFactory());
+        ZeyaDbContext context = ZeyaDbContextTestProvider.CreateContext();
+        var validationPolicyService = new ValidationPolicyService(context);
+        _policyService = new PolicyService(validationPolicyService, context);
+        _policyRepositoryService = new PolicyRepositoryService(new ValidationPolicyRepositoryFactory(), context);
     }
 
     [Fact]
@@ -44,5 +46,16 @@ public class PolicyRepositoryServiceTests
 
         result.Should().NotBeNull();
         result.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task AddRepository_NoPolicy_ThrowException()
+    {
+        var argumentException = await Assert.ThrowsAsync<ArgumentException>(() =>
+        {
+            return _policyRepositoryService.AddRepository(Guid.Empty, "Owner", "Repository");
+        });
+
+        argumentException.Message.Should().Be("Policy not found");
     }
 }
