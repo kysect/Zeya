@@ -13,6 +13,7 @@ public class ValidationPolicyRepositoryFactory
         return info.Type switch
         {
             ValidationPolicyRepositoryType.Github => new GithubValidationPolicyRepository(info),
+            ValidationPolicyRepositoryType.Local => new LocalValidationPolicyRepository(info),
             _ => throw SwitchDefaultExceptions.OnUnexpectedValue(info.Type)
         };
     }

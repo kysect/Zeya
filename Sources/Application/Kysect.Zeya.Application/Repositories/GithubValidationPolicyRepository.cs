@@ -13,11 +13,6 @@ public class GithubValidationPolicyRepository : IValidationPolicyRepository
     public Guid Id => _info.Id;
     public Guid ValidationPolicyId => _info.ValidationPolicyId;
     public ValidationPolicyRepositoryType Type => _info.Type;
-    public ValidationPolicyRepositoryDto ToDto()
-    {
-        return new ValidationPolicyRepositoryDto(_info.Id, _info.ValidationPolicyId, Owner, Name);
-    }
-
     public string Owner { get; }
     public string Name { get; }
 
@@ -37,5 +32,10 @@ public class GithubValidationPolicyRepository : IValidationPolicyRepository
         string[] parts = info.Metadata.Split('/', 2);
         Owner = parts[0];
         Name = parts[1];
+    }
+
+    public ValidationPolicyRepositoryDto ToDto()
+    {
+        return new ValidationPolicyRepositoryDto(_info.Id, _info.ValidationPolicyId, _info.Metadata);
     }
 }

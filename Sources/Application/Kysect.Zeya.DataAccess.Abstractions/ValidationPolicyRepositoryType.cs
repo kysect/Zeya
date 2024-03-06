@@ -2,5 +2,6 @@
 
 public enum ValidationPolicyRepositoryType
 {
-    Github = 1
+    Github = 1,
+    Local = 2
 }

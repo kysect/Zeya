@@ -25,8 +25,9 @@ public class PolicyRepositoryService(
             .ToList();
     }
 
-    public async Task<ValidationPolicyRepositoryDto> AddRepository(Guid policyId, string githubOwner, string githubRepository)
+    public async Task<ValidationPolicyRepositoryDto> AddGithubRepository(Guid policyId, string githubOwner, string githubRepository)
     {
+        // TODO: add extension method Get
         ValidationPolicyEntity? policy = await context.ValidationPolicies.FindAsync(policyId);
 
         if (policy is null)
@@ -34,6 +35,21 @@ public class PolicyRepositoryService(
 
         var githubRepositoryName = new GithubRepositoryName(githubOwner, githubRepository);
         var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Github, githubRepositoryName.FullName);
+        context.ValidationPolicyRepositories.Add(repository);
+        await context.SaveChangesAsync();
+
+        return repositoryFactory.Create(repository).ToDto();
+    }
+
+    public async Task<ValidationPolicyRepositoryDto> AddLocalRepository(Guid policyId, string path)
+    {
+        // TODO: add extension method Get
+        ValidationPolicyEntity? policy = await context.ValidationPolicies.FindAsync(policyId);
+
+        if (policy is null)
+            throw new ArgumentException("Policy not found");
+
+        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Local, path);
         context.ValidationPolicyRepositories.Add(repository);
         await context.SaveChangesAsync();
 
