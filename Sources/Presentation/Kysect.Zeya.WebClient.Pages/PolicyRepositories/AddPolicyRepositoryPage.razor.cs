@@ -24,7 +24,7 @@ public partial class AddPolicyRepositoryPage
 
     private async Task AddPolicyRepository()
     {
-        await PolicyRepositoryService.AddRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository);
+        await PolicyRepositoryService.AddGithubRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository);
         _navigationManager.NavigateTo($"/validation-policies/{PolicyId}");
     }
 }

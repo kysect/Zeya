@@ -28,7 +28,7 @@ public class PolicyRepositoryServiceTests
         var githubRepository = "repo";
 
         ValidationPolicyDto validationPolicyDto = await _policyService.CreatePolicy("Policy", "Content");
-        var result = await _policyRepositoryService.AddRepository(validationPolicyDto.Id, githubOwner, githubRepository);
+        var result = await _policyRepositoryService.AddGithubRepository(validationPolicyDto.Id, githubOwner, githubRepository);
 
         result.Should().NotBeNull();
         result.Id.Should().NotBeEmpty();
@@ -40,7 +40,7 @@ public class PolicyRepositoryServiceTests
         var githubOwner = "owner";
         var githubRepository = "repo";
         ValidationPolicyDto validationPolicyDto = await _policyService.CreatePolicy("Policy", "Content");
-        await _policyRepositoryService.AddRepository(validationPolicyDto.Id, githubOwner, githubRepository);
+        await _policyRepositoryService.AddGithubRepository(validationPolicyDto.Id, githubOwner, githubRepository);
 
         var result = await _policyRepositoryService.GetRepositories(validationPolicyDto.Id);
 
@@ -53,7 +53,7 @@ public class PolicyRepositoryServiceTests
     {
         var argumentException = await Assert.ThrowsAsync<ArgumentException>(() =>
         {
-            return _policyRepositoryService.AddRepository(Guid.Empty, "Owner", "Repository");
+            return _policyRepositoryService.AddGithubRepository(Guid.Empty, "Owner", "Repository");
         });
 
         argumentException.Message.Should().Be("Policy not found");
