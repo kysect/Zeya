@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kysect.Zeya.WebClient.Pages.PolicyRepositories;
 
-public partial class AddPolicyRepositoryPage
+public partial class AddPolicyGithubRepositoryPage
 {
     public class AddPolicyGithubRepositoryForm
     {
@@ -17,7 +17,7 @@ public partial class AddPolicyRepositoryPage
     }
 
     [Parameter] public Guid PolicyId { get; set; }
-    [Inject] private NavigationManager _navigationManager { get; set; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IPolicyRepositoryService PolicyRepositoryService { get; set; } = null!;
 
     private readonly AddPolicyGithubRepositoryForm _formData = new AddPolicyGithubRepositoryForm();
@@ -25,6 +25,6 @@ public partial class AddPolicyRepositoryPage
     private async Task AddPolicyRepository()
     {
         await PolicyRepositoryService.AddGithubRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository);
-        _navigationManager.NavigateTo($"/validation-policies/{PolicyId}");
+        NavigationManager.NavigateTo($"/validation-policies/{PolicyId}");
     }
 }

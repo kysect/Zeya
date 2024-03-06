@@ -34,6 +34,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         return repository switch
         {
             GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(new GithubRepositoryName(githubRepository.Owner, githubRepository.Name)),
+            LocalValidationPolicyRepository localRepository => GetLocalRepository(localRepository.Path),
             _ => throw SwitchDefaultExceptions.OnUnexpectedType(repository)
         };
     }
