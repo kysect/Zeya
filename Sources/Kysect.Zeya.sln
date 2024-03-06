@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.WebClient.Pages
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.ModelMapping", "Application\Kysect.Zeya.ModelMapping\Kysect.Zeya.ModelMapping.csproj", "{4682764B-95C9-452E-BE87-EDF9EE6F2AF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kysect.Zeya.Application", "Application\Kysect.Zeya.Application\Kysect.Zeya.Application.csproj", "{24D4FBA6-9489-4DC9-8F2C-E299A4A11250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kysect.Zeya.Application", "Application\Kysect.Zeya.Application\Kysect.Zeya.Application.csproj", "{24D4FBA6-9489-4DC9-8F2C-E299A4A11250}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

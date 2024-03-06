@@ -28,9 +28,14 @@ else
         </tbody>
     </table>
 
-    <NavLink class="nav-link" href="@($"/validation-policies/{PolicyId}/repository")">
-        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Add repository
+    <NavLink class="nav-link" href="@($"/validation-policies/{PolicyId}/add-github-repository")">
+        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Add Github repository
     </NavLink>
+
+    <NavLink class="nav-link" href="@($"/validation-policies/{PolicyId}/add-local-repository")">
+        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Add local repository
+    </NavLink>
+
     <button onclick="@RunValidation">
         Run validation
     </button>
