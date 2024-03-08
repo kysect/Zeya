@@ -32,7 +32,7 @@ public class GithubWorkflowEnabledValidationRuleFixerTests
             .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
         _validationTestFixture.FileSystem.AddFile("build.yaml", new MockFileData(masterFileContent));
 
-        var nonGitRepository = new LocalRepository(_validationTestFixture.CurrentPath, _validationTestFixture.FileSystem);
+        ILocalRepository nonGitRepository = _validationTestFixture.CreateLocalRepository();
         _fixer.Fix(new GithubWorkflowEnabledValidationRule.Arguments("build.yaml"), nonGitRepository);
     }
 

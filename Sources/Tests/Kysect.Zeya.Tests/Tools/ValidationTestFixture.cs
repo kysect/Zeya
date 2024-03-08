@@ -3,6 +3,7 @@ using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools.Asserts;
@@ -54,10 +55,22 @@ public class ValidationTestFixture
         return RepositoryProvider.GetGithubRepository("owner", "name");
     }
 
+    public ILocalRepository CreateLocalRepository()
+    {
+        return RepositoryProvider.GetLocalRepository(CurrentPath);
+    }
+
     public ScenarioContext CreateGithubRepositoryValidationScenarioContext()
     {
         LocalGithubRepository localGithubRepository = CreateGithubRepository();
         var repositoryValidationContext = new RepositoryValidationContext(localGithubRepository, DiagnosticCollectorAsserts.GetCollector());
+        return RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
+    }
+
+    public ScenarioContext CreateLocalRepositoryValidationScenarioContext()
+    {
+        var localRepository = CreateLocalRepository();
+        var repositoryValidationContext = new RepositoryValidationContext(localRepository, DiagnosticCollectorAsserts.GetCollector());
         return RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
     }
 

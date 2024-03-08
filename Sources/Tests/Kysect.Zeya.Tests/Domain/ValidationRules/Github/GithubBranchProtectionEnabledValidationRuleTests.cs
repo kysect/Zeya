@@ -1,6 +1,4 @@
 ﻿using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
@@ -24,8 +22,8 @@ public class GithubBranchProtectionEnabledValidationRuleTests
     public void Execute_NotGithubRepository_ReturnErrorAboutIncorrectRepository()
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
+        var notGithubContext = _validationTestFixture.CreateLocalRepositoryValidationScenarioContext();
 
-        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(_validationTestFixture.CurrentPath, _validationTestFixture.FileSystem), _validationTestFixture.DiagnosticCollectorAsserts.GetCollector()));
         _validationRule.Execute(notGithubContext, arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
