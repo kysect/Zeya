@@ -1,18 +1,21 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRuleFixers.SourceCode;
 
-public class ArtifactsOutputEnabledValidationRuleFixerTests : ValidationRuleTestBase
+public class ArtifactsOutputEnabledValidationRuleFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly ArtifactsOutputEnabledValidationRuleFixer _fixer;
 
     public ArtifactsOutputEnabledValidationRuleFixerTests()
     {
-        _fixer = new ArtifactsOutputEnabledValidationRuleFixer(Formatter, GetLogger<ArtifactsOutputEnabledValidationRuleFixer>());
+        _validationTestFixture = new ValidationTestFixture();
+        _fixer = new ArtifactsOutputEnabledValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<ArtifactsOutputEnabledValidationRuleFixer>());
     }
 
     [Fact]
@@ -27,12 +30,13 @@ public class ArtifactsOutputEnabledValidationRuleFixerTests : ValidationRuleTest
                                           """;
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(new ArtifactsOutputEnabledValidationRule.Arguments(), Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(new ArtifactsOutputEnabledValidationRule.Arguments(), localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryBuildProps);
     }

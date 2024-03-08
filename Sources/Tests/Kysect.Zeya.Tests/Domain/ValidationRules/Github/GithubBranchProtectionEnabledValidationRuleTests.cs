@@ -7,13 +7,15 @@ using Kysect.Zeya.Tests.Tools.Fakes;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.Github;
 
-public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTestBase
+public class GithubBranchProtectionEnabledValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly GithubBranchProtectionEnabledValidationRule _validationRule;
     private readonly FakeGithubIntegrationService _fakeGithubIntegrationService;
 
     public GithubBranchProtectionEnabledValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _fakeGithubIntegrationService = FakeGithubIntegrationServiceTestInstance.Create();
         _validationRule = new GithubBranchProtectionEnabledValidationRule(_fakeGithubIntegrationService);
     }
@@ -23,10 +25,10 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
 
-        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(_validationTestFixture.CurrentPath, _validationTestFixture.FileSystem), _validationTestFixture.DiagnosticCollectorAsserts.GetCollector()));
         _validationRule.Execute(notGithubContext, arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
             .ShouldHaveError(1, arguments.DiagnosticCode, "Cannot apply github validation rule on non github repository");
     }
@@ -36,9 +38,9 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
     {
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, false);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0);
     }
 
@@ -52,12 +54,12 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(required, false);
         _fakeGithubIntegrationService.RepositoryBranchProtection = new RepositoryBranchProtection(enabled, false);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
         if (reportDiagnostic)
-            DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
+            _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
         else
-            DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(0);
+            _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(0);
     }
 
     [Theory]
@@ -70,11 +72,11 @@ public class GithubBranchProtectionEnabledValidationRuleTests : ValidationRuleTe
         var arguments = new GithubBranchProtectionEnabledValidationRule.Arguments(false, required);
         _fakeGithubIntegrationService.RepositoryBranchProtection = new RepositoryBranchProtection(false, enabled);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
         if (reportDiagnostic)
-            DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
+            _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(1);
         else
-            DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(0);
+            _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0).ShouldHaveDiagnosticCount(0);
     }
 }

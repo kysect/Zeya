@@ -1,18 +1,21 @@
 ﻿using Kysect.CommonLib.FileSystem;
 using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.SourceCode;
 
-public class SourcesMustNotBeInRootValidationRuleTests : ValidationRuleTestBase
+public class SourcesMustNotBeInRootValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly SourcesMustNotBeInRootValidationRule _validationRule;
     private readonly SourcesMustNotBeInRootValidationRule.Arguments _arguments;
     private readonly string _expectedSourceDirectory = "Sources";
 
     public SourcesMustNotBeInRootValidationRuleTests()
     {
-        _validationRule = new SourcesMustNotBeInRootValidationRule(FileSystem);
+        _validationTestFixture = new ValidationTestFixture();
+        _validationRule = new SourcesMustNotBeInRootValidationRule(_validationTestFixture.FileSystem);
         _arguments = new SourcesMustNotBeInRootValidationRule.Arguments(_expectedSourceDirectory);
     }
 
@@ -20,11 +23,11 @@ public class SourcesMustNotBeInRootValidationRuleTests : ValidationRuleTestBase
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectory()
     {
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, _arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, _arguments.DiagnosticCode, SourcesMustNotBeInRootValidationRule.Arguments.DirectoryMissedMessage);
     }
@@ -32,13 +35,13 @@ public class SourcesMustNotBeInRootValidationRuleTests : ValidationRuleTestBase
     [Fact]
     public void Validate_SolutionInSourceDirectory_ReturnNoDiagnostic()
     {
-        string solutionDirectoryPath = FileSystem.Path.Combine(CurrentPath, _expectedSourceDirectory);
+        string solutionDirectoryPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, _expectedSourceDirectory);
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, solutionDirectoryPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, solutionDirectoryPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, _arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(0);
     }
@@ -46,15 +49,15 @@ public class SourcesMustNotBeInRootValidationRuleTests : ValidationRuleTestBase
     [Fact]
     public void Validate_SolutionNotInSourceDirectory_ReturnDiagnosticAboutIncorrectPath()
     {
-        string solutionDirectoryPath = FileSystem.Path.Combine(CurrentPath, _expectedSourceDirectory);
-        string solutionFilePath = FileSystem.Path.Combine(CurrentPath, "Solution.sln");
-        DirectoryExtensions.EnsureDirectoryExists(FileSystem, solutionDirectoryPath);
+        string solutionDirectoryPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, _expectedSourceDirectory);
+        string solutionFilePath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, "Solution.sln");
+        DirectoryExtensions.EnsureDirectoryExists(_validationTestFixture.FileSystem, solutionDirectoryPath);
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, _arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, _arguments.DiagnosticCode, $"Sources must be located in {solutionDirectoryPath}. Founded solution files: {solutionFilePath}");

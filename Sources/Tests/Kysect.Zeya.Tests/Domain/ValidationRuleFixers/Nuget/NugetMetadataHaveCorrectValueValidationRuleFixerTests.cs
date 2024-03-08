@@ -1,18 +1,21 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.Nuget;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRuleFixers.Nuget;
 
-public class NugetMetadataHaveCorrectValueValidationRuleFixerTests : ValidationRuleTestBase
+public class NugetMetadataHaveCorrectValueValidationRuleFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly NugetMetadataHaveCorrectValueValidationRuleFixer _fixer;
 
     public NugetMetadataHaveCorrectValueValidationRuleFixerTests()
     {
-        _fixer = new NugetMetadataHaveCorrectValueValidationRuleFixer(Formatter, GetLogger<NugetMetadataHaveCorrectValueValidationRuleFixer>());
+        _validationTestFixture = new ValidationTestFixture();
+        _fixer = new NugetMetadataHaveCorrectValueValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<NugetMetadataHaveCorrectValueValidationRuleFixer>());
     }
 
     [Fact]
@@ -28,12 +31,13 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixerTests : ValidationR
                                 """;
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expected);
     }

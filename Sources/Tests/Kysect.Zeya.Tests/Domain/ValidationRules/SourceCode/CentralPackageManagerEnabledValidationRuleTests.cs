@@ -1,15 +1,18 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTestBase
+public class CentralPackageManagerEnabledValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly CentralPackageManagerEnabledValidationRule _validationRule;
 
     public CentralPackageManagerEnabledValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _validationRule = new CentralPackageManagerEnabledValidationRule();
     }
 
@@ -19,11 +22,11 @@ public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTes
         var arguments = new CentralPackageManagerEnabledValidationRule.Arguments();
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, CentralPackageManagerEnabledValidationRule.Arguments.CentralPackageManagementDisabledMessage);
     }
@@ -36,12 +39,12 @@ public class CentralPackageManagerEnabledValidationRuleTests : ValidationRuleTes
         directoryBuildPropsFile.SetCentralPackageManagement(true);
 
         new SolutionFileStructureBuilder("Solution")
-            .AddDirectoryPackagesProps(directoryBuildPropsFile.File.ToXmlString(Formatter))
-            .Save(FileSystem, CurrentPath, Formatter);
+            .AddDirectoryPackagesProps(directoryBuildPropsFile.File.ToXmlString(_validationTestFixture.Formatter))
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
     }
 }

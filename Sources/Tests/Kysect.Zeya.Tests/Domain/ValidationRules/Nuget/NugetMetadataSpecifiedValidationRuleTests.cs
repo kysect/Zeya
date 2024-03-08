@@ -2,15 +2,18 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.Nuget;
 
-public class NugetMetadataSpecifiedValidationRuleTests : ValidationRuleTestBase
+public class NugetMetadataSpecifiedValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly NugetMetadataSpecifiedValidationRule _validationRule;
 
     public NugetMetadataSpecifiedValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _validationRule = new NugetMetadataSpecifiedValidationRule();
     }
 
@@ -20,11 +23,11 @@ public class NugetMetadataSpecifiedValidationRuleTests : ValidationRuleTestBase
         var arguments = new NugetMetadataSpecifiedValidationRule.Arguments([]);
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ValidationRuleMessages.DirectoryBuildPropsFileMissed);
@@ -38,11 +41,11 @@ public class NugetMetadataSpecifiedValidationRuleTests : ValidationRuleTestBase
 
         new SolutionFileStructureBuilder("Solution")
             .AddDirectoryBuildProps(directoryBuildPropsFile)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(0);
     }
@@ -55,11 +58,11 @@ public class NugetMetadataSpecifiedValidationRuleTests : ValidationRuleTestBase
 
         new SolutionFileStructureBuilder("Solution")
             .AddDirectoryBuildProps(directoryBuildPropsFile)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Directory.Build.props file does not contains required option: RequiredProperty");
@@ -74,11 +77,11 @@ public class NugetMetadataSpecifiedValidationRuleTests : ValidationRuleTestBase
 
         new SolutionFileStructureBuilder("Solution")
             .AddDirectoryBuildProps(directoryBuildPropsFile)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(0);
     }

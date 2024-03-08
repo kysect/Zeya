@@ -3,15 +3,18 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
+public class RequiredPackagesAddedValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly RequiredPackagesAddedValidationRule _requiredPackagesAddedValidationRule;
 
     public RequiredPackagesAddedValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _requiredPackagesAddedValidationRule = new RequiredPackagesAddedValidationRule();
     }
 
@@ -20,11 +23,11 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
     {
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _requiredPackagesAddedValidationRule.Execute(Context, arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
@@ -35,11 +38,11 @@ public class RequiredPackagesAddedValidationRuleTests : ValidationRuleTestBase
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _requiredPackagesAddedValidationRule.Execute(Context, arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Package RequiredPackage is not add to Directory.Build.props.");
     }

@@ -1,15 +1,18 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRuleTests : ValidationRuleTestBase
+public class TargetFrameworkVersionAllowedValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly TargetFrameworkVersionAllowedValidationRule _validationRule;
 
     public TargetFrameworkVersionAllowedValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _validationRule = new TargetFrameworkVersionAllowedValidationRule();
     }
 
@@ -32,15 +35,15 @@ public class TargetFrameworkVersionAllowedValidationRuleTests : ValidationRuleTe
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder("Project")
                 .SetContent(projectFileContent))
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts.ShouldHaveErrorCount(0);
+        _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0);
 
         if (returnDiagnostic)
-            DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(1);
+            _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(1);
         else
-            DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(0);
+            _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(0);
     }
 }

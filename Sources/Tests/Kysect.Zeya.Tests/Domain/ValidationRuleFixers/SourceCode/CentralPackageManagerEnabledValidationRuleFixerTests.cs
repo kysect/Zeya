@@ -1,18 +1,21 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRuleFixers.SourceCode;
 
-public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRuleTestBase
+public class CentralPackageManagerEnabledValidationRuleFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly CentralPackageManagerEnabledValidationRuleFixer _fixer;
 
     public CentralPackageManagerEnabledValidationRuleFixerTests()
     {
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(Formatter, GetLogger<CentralPackageManagerEnabledValidationRuleFixer>());
+        _validationTestFixture = new ValidationTestFixture();
+        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<CentralPackageManagerEnabledValidationRuleFixer>());
     }
 
     [Fact]
@@ -54,17 +57,18 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRu
         const string projectName = "SampleProject";
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDotnetPackageContent);
 
-        FileSystemAsserts
-            .File(CurrentPath, projectName, $"{projectName}.csproj")
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, projectName, $"{projectName}.csproj")
             .ShouldExists()
             .ShouldHaveContent(expectedProjectContent);
     }
@@ -111,22 +115,23 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests : ValidationRu
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
             .AddProject(new ProjectFileStructureBuilder(projectName2, originalProjectContent))
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDotnetPackageContent);
 
-        FileSystemAsserts
-            .File(CurrentPath, projectName, $"{projectName}.csproj")
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, projectName, $"{projectName}.csproj")
             .ShouldExists()
             .ShouldHaveContent(expectedProjectContent);
 
-        FileSystemAsserts
-            .File(CurrentPath, projectName2, $"{projectName2}.csproj")
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, projectName2, $"{projectName2}.csproj")
             .ShouldExists()
             .ShouldHaveContent(expectedProjectContent);
     }

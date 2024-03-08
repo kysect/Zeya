@@ -1,14 +1,17 @@
 ﻿using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
+using Kysect.Zeya.Tests.Tools;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.Github;
 
-public class GithubRepositoryLicenseValidationRuleTests : ValidationRuleTestBase
+public class GithubRepositoryLicenseValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly GithubRepositoryLicenseValidationRule _validationRule;
 
     public GithubRepositoryLicenseValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _validationRule = new GithubRepositoryLicenseValidationRule();
     }
 
@@ -17,9 +20,9 @@ public class GithubRepositoryLicenseValidationRuleTests : ValidationRuleTestBase
     {
         var arguments = new GithubRepositoryLicenseValidationRule.Arguments("owner", "2024", "MIT");
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "License file was not found by path LICENSE");
     }
@@ -32,11 +35,11 @@ public class GithubRepositoryLicenseValidationRuleTests : ValidationRuleTestBase
                                  This is some custom text. Looks like license, isn't?
                                  Copyright (c) 2024 owner
                                  """;
-        FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
+        _validationTestFixture.FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "License must have header with type MIT");
     }
@@ -46,11 +49,11 @@ public class GithubRepositoryLicenseValidationRuleTests : ValidationRuleTestBase
     {
         var arguments = new GithubRepositoryLicenseValidationRule.Arguments("owner", "2024", "MIT");
         var licenseFileContent = string.Empty;
-        FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
+        _validationTestFixture.FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(2)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "License must have header with type MIT")
             .ShouldHaveDiagnostic(2, arguments.DiagnosticCode, "License must contains copyright string: Copyright (c) 2024 owner");
@@ -64,11 +67,11 @@ public class GithubRepositoryLicenseValidationRuleTests : ValidationRuleTestBase
                                  MIT
                                  Copyright (c) 2023 owner
                                  """;
-        FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
+        _validationTestFixture.FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "License must contains copyright string: Copyright (c) 2024 owner");
     }
@@ -81,11 +84,11 @@ public class GithubRepositoryLicenseValidationRuleTests : ValidationRuleTestBase
                                  MIT
                                  Copyright (c) 2024 other owner
                                  """;
-        FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
+        _validationTestFixture.FileSystem.AddFile("LICENSE", new MockFileData(licenseFileContent));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "License must contains copyright string: Copyright (c) 2024 owner");
     }

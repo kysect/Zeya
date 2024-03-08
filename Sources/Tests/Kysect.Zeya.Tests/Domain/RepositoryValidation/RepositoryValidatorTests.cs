@@ -1,21 +1,24 @@
 ﻿using FluentAssertions;
 using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.ScenarioLib;
+using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
 using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
 
-public class RepositoryValidatorTests : ValidationRuleTestBase
+public class RepositoryValidatorTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly RepositoryValidator _repositoryValidator;
 
     public RepositoryValidatorTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
+
         ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create();
-        _repositoryValidator = new RepositoryValidator(scenarioStepReflectionHandler, TestLoggerProvider.GetLogger<RepositoryValidator>());
+        _repositoryValidator = new RepositoryValidator(scenarioStepReflectionHandler, _validationTestFixture.GetLogger<RepositoryValidator>());
     }
 
     [Fact]
@@ -28,9 +31,10 @@ public class RepositoryValidatorTests : ValidationRuleTestBase
         };
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        ILocalRepository localRepository = _validationTestFixture.RepositoryProvider.GetLocalRepository(_validationTestFixture.CurrentPath);
 
-        RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(Repository, rules);
+        RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(localRepository, rules);
 
         repositoryValidationReport
             .Diagnostics

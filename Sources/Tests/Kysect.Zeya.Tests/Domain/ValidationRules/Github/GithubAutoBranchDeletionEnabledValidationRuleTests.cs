@@ -7,13 +7,15 @@ using Kysect.Zeya.Tests.Tools.Fakes;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.Github;
 
-public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRuleTestBase
+public class GithubAutoBranchDeletionEnabledValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly GithubAutoBranchDeletionEnabledValidationRule _validationRule;
     private readonly FakeGithubIntegrationService _fakeGithubIntegrationService;
 
     public GithubAutoBranchDeletionEnabledValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _fakeGithubIntegrationService = FakeGithubIntegrationServiceTestInstance.Create();
         _validationRule = new GithubAutoBranchDeletionEnabledValidationRule(_fakeGithubIntegrationService);
     }
@@ -23,11 +25,11 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
     {
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
         ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+            new RepositoryValidationContext(new LocalRepository(_validationTestFixture.CurrentPath, _validationTestFixture.FileSystem), _validationTestFixture.DiagnosticCollectorAsserts.GetCollector()));
 
         _validationRule.Execute(nonGithubContext, arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
             .ShouldHaveError(1, arguments.DiagnosticCode, $"Skip {arguments.DiagnosticCode} because repository do not have GitHub metadata.");
     }
@@ -38,9 +40,10 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
         _fakeGithubIntegrationService.BranchProtectionEnabled = false;
 
-        _validationRule.Execute(Context, arguments);
+        ScenarioContext context = _validationTestFixture.CreateGithubRepositoryValidationScenarioContext();
+        _validationRule.Execute(context, arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Branch deletion on merge must be enabled.");
     }
@@ -51,9 +54,10 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests : ValidationRule
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
         _fakeGithubIntegrationService.BranchProtectionEnabled = true;
 
-        _validationRule.Execute(Context, arguments);
+        ScenarioContext context = _validationTestFixture.CreateGithubRepositoryValidationScenarioContext();
+        _validationRule.Execute(context, arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
     }
 }
