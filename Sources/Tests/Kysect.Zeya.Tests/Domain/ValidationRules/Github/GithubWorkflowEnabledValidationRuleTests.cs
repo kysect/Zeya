@@ -1,17 +1,20 @@
 ﻿using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
+using Kysect.Zeya.Tests.Tools;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.Github;
 
-public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
+public class GithubWorkflowEnabledValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly GithubWorkflowEnabledValidationRule _validationRule;
 
     public GithubWorkflowEnabledValidationRuleTests()
     {
-        _validationRule = new GithubWorkflowEnabledValidationRule(FileSystem);
+        _validationTestFixture = new ValidationTestFixture();
+        _validationRule = new GithubWorkflowEnabledValidationRule(_validationTestFixture.FileSystem);
     }
 
     [Fact]
@@ -19,10 +22,10 @@ public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
     {
         var arguments = new GithubWorkflowEnabledValidationRule.Arguments("Master.yaml");
 
-        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(CurrentPath, FileSystem), DiagnosticCollectorAsserts.GetCollector()));
+        var notGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(new RepositoryValidationContext(new LocalRepository(_validationTestFixture.CurrentPath, _validationTestFixture.FileSystem), _validationTestFixture.DiagnosticCollectorAsserts.GetCollector()));
         _validationRule.Execute(notGithubContext, arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
             .ShouldHaveError(1, arguments.DiagnosticCode, "Cannot apply github validation rule on non github repository");
     }
@@ -32,9 +35,9 @@ public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
     {
         var arguments = new GithubWorkflowEnabledValidationRule.Arguments("Master.yaml");
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
             .ShouldHaveError(1, arguments.DiagnosticCode, "Master file Master.yaml missed");
     }
@@ -44,11 +47,11 @@ public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
     {
         string masterYamlFilePath = "build.yaml";
         var arguments = new GithubWorkflowEnabledValidationRule.Arguments(masterYamlFilePath);
-        FileSystem.AddFile(masterYamlFilePath, new MockFileData(string.Empty));
+        _validationTestFixture.FileSystem.AddFile(masterYamlFilePath, new MockFileData(string.Empty));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Workflow build.yaml must be configured");
     }
@@ -64,14 +67,14 @@ public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
                                        """;
 
         var arguments = new GithubWorkflowEnabledValidationRule.Arguments(masterYamlFilePath);
-        string repositoryWorkflowFilePath = FileSystem.Path.Combine(CurrentPath, ".github", "workflows", "build.yaml");
+        string repositoryWorkflowFilePath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, ".github", "workflows", "build.yaml");
 
-        FileSystem.AddFile(masterYamlFilePath, new MockFileData(masterYamlFileContent));
-        FileSystem.AddFile(repositoryWorkflowFilePath, new MockFileData(masterYamlFileContent));
+        _validationTestFixture.FileSystem.AddFile(masterYamlFilePath, new MockFileData(masterYamlFileContent));
+        _validationTestFixture.FileSystem.AddFile(repositoryWorkflowFilePath, new MockFileData(masterYamlFileContent));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
     }
 
@@ -91,14 +94,14 @@ public class GithubWorkflowEnabledValidationRuleTests : ValidationRuleTestBase
                                        """;
 
         var arguments = new GithubWorkflowEnabledValidationRule.Arguments(masterYamlFilePath);
-        string repositoryWorkflowFilePath = FileSystem.Path.Combine(CurrentPath, ".github", "workflows", "build.yaml");
+        string repositoryWorkflowFilePath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, ".github", "workflows", "build.yaml");
 
-        FileSystem.AddFile(masterYamlFilePath, new MockFileData(masterYamlFileContent));
-        FileSystem.AddFile(repositoryWorkflowFilePath, new MockFileData(repositoryYamlFileContent));
+        _validationTestFixture.FileSystem.AddFile(masterYamlFilePath, new MockFileData(masterYamlFileContent));
+        _validationTestFixture.FileSystem.AddFile(repositoryWorkflowFilePath, new MockFileData(repositoryYamlFileContent));
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, "Workflow build.yaml configuration do not match with master file");
     }

@@ -2,15 +2,18 @@
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRules.SourceCode;
 
-public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
+public class ArtifactsOutputEnabledValidationRuleTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly ArtifactsOutputEnabledValidationRule _validationRule;
 
     public ArtifactsOutputEnabledValidationRuleTests()
     {
+        _validationTestFixture = new ValidationTestFixture();
         _validationRule = new ArtifactsOutputEnabledValidationRule();
     }
 
@@ -20,11 +23,11 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ValidationRuleMessages.DirectoryBuildPropsFileMissed);
     }
@@ -36,11 +39,11 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
 
         new SolutionFileStructureBuilder("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue);
     }
@@ -59,11 +62,11 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
 
         new SolutionFileStructureBuilder("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
             .ShouldHaveDiagnostic(1, arguments.DiagnosticCode, ArtifactsOutputEnabledValidationRule.Arguments.UseArtifactsOutputOptionMustBeTrue);
     }
@@ -82,11 +85,11 @@ public class ArtifactsOutputEnabledValidationRuleTests : ValidationRuleTestBase
 
         new SolutionFileStructureBuilder("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _validationRule.Execute(Context, arguments);
+        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
-        DiagnosticCollectorAsserts
+        _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
     }
 }

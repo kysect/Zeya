@@ -1,18 +1,21 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Projects;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRuleFixers.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRuleFixerTests : ValidationRuleTestBase
+public class TargetFrameworkVersionAllowedValidationRuleFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly TargetFrameworkVersionAllowedValidationRuleFixer _fixer;
 
     public TargetFrameworkVersionAllowedValidationRuleFixerTests()
     {
-        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(Formatter, GetLogger<TargetFrameworkVersionAllowedValidationRuleFixer>());
+        _validationTestFixture = new ValidationTestFixture();
+        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<TargetFrameworkVersionAllowedValidationRuleFixer>());
     }
 
     [Theory]
@@ -53,12 +56,13 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests : ValidationR
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName)
                 .SetContent(projectFileContent))
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, projectName, $"{projectName}.csproj")
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, projectName, $"{projectName}.csproj")
             .ShouldExists()
             .ShouldHaveContent(expectedProjectContent);
     }

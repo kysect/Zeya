@@ -1,19 +1,22 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
+using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRuleFixers.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestBase
+public class RequiredPackagesAddedValidationRuleFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly RequiredPackagesAddedValidationRuleFixer _fixer;
 
     public RequiredPackagesAddedValidationRuleFixerTests()
     {
-        _fixer = new RequiredPackagesAddedValidationRuleFixer(Formatter, GetLogger<RequiredPackagesAddedValidationRuleFixer>());
+        _validationTestFixture = new ValidationTestFixture();
+        _fixer = new RequiredPackagesAddedValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<RequiredPackagesAddedValidationRuleFixer>());
     }
 
     [Fact]
@@ -39,17 +42,18 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
 
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.2")]);
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryBuildPropsFile);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryPackagePropsFile);
 
@@ -89,20 +93,21 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
                                  </Project>
                                  """;
 
-        var projectPath = FileSystem.Path.Combine(CurrentPath, projectName, $"{projectName}.csproj");
+        var projectPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, projectName, $"{projectName}.csproj");
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, projectFileContent))
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryBuildPropsFile);
 
-        FileSystemAsserts
+        _validationTestFixture.FileSystemAsserts
             .File(projectPath)
             .ShouldExists()
             .ShouldHaveContent(expectedProjectFileContent);
@@ -130,12 +135,13 @@ public class RequiredPackagesAddedValidationRuleFixerTests : ValidationRuleTestB
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.0")]);
         new SolutionFileStructureBuilder("Solution")
             .AddDirectoryBuildProps(sourceDirectoryBuildPropsFile)
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryBuildProps)
             .ShouldExists()
             .ShouldHaveContent(expectedDirectoryBuildPropsFile);
     }

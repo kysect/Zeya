@@ -1,19 +1,22 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Tools;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
-using Kysect.Zeya.Tests.Domain.ValidationRules;
+using Kysect.Zeya.Tests.Tools;
 using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.Domain.ValidationRuleFixers.SourceCode;
 
-public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixerTests : ValidationRuleTestBase
+public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
     private readonly NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer _fixer;
 
     public NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixerTests()
     {
-        _fixer = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(FileSystem, Formatter, GetLogger<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer>());
+        _validationTestFixture = new ValidationTestFixture();
+        _fixer = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(_validationTestFixture.FileSystem, _validationTestFixture.Formatter, _validationTestFixture.GetLogger<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer>());
     }
 
     [Fact]
@@ -22,12 +25,13 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         var arguments = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments("Master.Directory.Package.props");
 
         new SolutionFileStructureBuilder("Solution")
-            .Save(FileSystem, CurrentPath, Formatter);
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldNotExists();
     }
 
@@ -71,13 +75,14 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 
         new SolutionFileStructureBuilder("Solution")
             .AddDirectoryPackagesProps(inputDirectoryBuildPackagePropsContent)
-            .Save(FileSystem, CurrentPath, Formatter);
-        FileSystem.AddFile("Master.Directory.Package.props", new MockFileData(masterFile));
+            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.FileSystem.AddFile("Master.Directory.Package.props", new MockFileData(masterFile));
 
-        _fixer.Fix(arguments, Repository);
+        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        _fixer.Fix(arguments, localGithubRepository);
 
-        FileSystemAsserts
-            .File(CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
+        _validationTestFixture.FileSystemAsserts
+            .File(_validationTestFixture.CurrentPath, SolutionItemNameConstants.DirectoryPackagesProps)
             .ShouldExists()
             .ShouldHaveContent(expected);
     }
