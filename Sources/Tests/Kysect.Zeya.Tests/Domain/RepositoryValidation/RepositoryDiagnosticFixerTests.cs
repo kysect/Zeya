@@ -5,23 +5,21 @@ using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.Logging;
-using System.IO.Abstractions.TestingHelpers;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
 
 public class RepositoryDiagnosticFixerTests
 {
+    private readonly ValidationTestFixture _validationTestFixture;
+
     private readonly ILogger<RepositoryDiagnosticFixer> _logger;
-    private readonly MockFileSystem _fileSystem;
-    private readonly string _currentPath;
-    private readonly LocalRepository _repository;
+    private readonly ILocalRepository _repository;
 
     public RepositoryDiagnosticFixerTests()
     {
-        _logger = TestLoggerProvider.GetLogger<RepositoryDiagnosticFixer>();
-        _fileSystem = new MockFileSystem();
-        _currentPath = _fileSystem.Path.GetFullPath(".");
-        _repository = new LocalRepository(_currentPath, _fileSystem);
+        _validationTestFixture = new ValidationTestFixture();
+        _logger = _validationTestFixture.GetLogger<RepositoryDiagnosticFixer>();
+        _repository = _validationTestFixture.CreateLocalRepository();
     }
 
     [Fact]

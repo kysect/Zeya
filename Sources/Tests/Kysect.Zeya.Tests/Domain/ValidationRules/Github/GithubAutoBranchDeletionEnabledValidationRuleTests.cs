@@ -1,6 +1,4 @@
 ﻿using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
@@ -24,8 +22,7 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests
     public void Execute_NoGithubRepositoryMetadata_ReturnDiagnosticAboutMissedMetadata()
     {
         var arguments = new GithubAutoBranchDeletionEnabledValidationRule.Arguments();
-        ScenarioContext nonGithubContext = RepositoryValidationContextExtensions.CreateScenarioContext(
-            new RepositoryValidationContext(new LocalRepository(_validationTestFixture.CurrentPath, _validationTestFixture.FileSystem), _validationTestFixture.DiagnosticCollectorAsserts.GetCollector()));
+        ScenarioContext nonGithubContext = _validationTestFixture.CreateLocalRepositoryValidationScenarioContext();
 
         _validationRule.Execute(nonGithubContext, arguments);
 
