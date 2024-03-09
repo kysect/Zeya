@@ -3,12 +3,12 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess.Github;
 
-public class LocalGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, IFileSystem fileSystem)
+public class LocalGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, string solutionSearchMask, IFileSystem fileSystem)
     : ILocalRepository
 {
     public GithubRepositoryName GithubMetadata { get; } = githubMetadata;
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
-    public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, fileSystem);
+    public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, solutionSearchMask, fileSystem);
 
     public string GetRepositoryName()
     {

@@ -17,7 +17,7 @@ public class LocalRepositoryTests
     public void GetRepositoryName_ReturnDirectoryName()
     {
         string repositoryRootPath = _fileSystem.Path.Combine("Path", "To", "SomeDirectory");
-        var localRepository = new LocalRepository(repositoryRootPath, _fileSystem);
+        var localRepository = new LocalRepository(repositoryRootPath, LocalRepositorySolutionManager.DefaultMask, _fileSystem);
 
         string name = localRepository.GetRepositoryName();
 
