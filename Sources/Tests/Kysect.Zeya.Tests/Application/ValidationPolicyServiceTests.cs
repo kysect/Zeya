@@ -48,7 +48,7 @@ public class ValidationPolicyServiceTests
 
         IReadOnlyCollection<string> rules = await _validationPolicyService.GetAllRulesForPolicy(repository.ValidationPolicyId);
 
-        rules.Should().BeEquivalentTo("SRC0001", "SRC0002", null);
+        rules.Should().BeEquivalentTo("SRC0001", "SRC0002");
     }
 
     [Fact]
