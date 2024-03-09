@@ -10,5 +10,5 @@ public class ValidationPolicyRepository(Guid id, Guid validationPolicyId, Valida
     public Guid ValidationPolicyId { get; init; } = validationPolicyId;
     public ValidationPolicyRepositoryType Type { get; init; } = type;
     public string Metadata { get; set; } = metadata;
-    public string SolutionPathMask { get; } = solutionPathMask;
+    public string SolutionPathMask { get; set; } = solutionPathMask;
 }
