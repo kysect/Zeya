@@ -47,7 +47,7 @@ public class GitIntegrationServiceTests : IDisposable
         _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions.CommitAuthor);
         _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions.Credential, localStoragePathFactory, logger);
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
-        _localRepository = new LocalRepository(_repositoriesDirectory, _fileSystem);
+        _localRepository = new LocalRepository(_repositoriesDirectory, LocalRepositorySolutionManager.DefaultMask, _fileSystem);
     }
 
     [Fact]

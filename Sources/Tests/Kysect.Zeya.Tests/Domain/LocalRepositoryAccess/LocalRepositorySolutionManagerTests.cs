@@ -10,22 +10,22 @@ public class LocalRepositorySolutionManagerTests
 {
     private readonly MockFileSystem _fileSystem;
     private readonly string _repositoryRootPath;
+    private readonly LocalRepositorySolutionManager _localRepositorySolutionManager;
 
     public LocalRepositorySolutionManagerTests()
     {
         _fileSystem = new MockFileSystem();
         _repositoryRootPath = _fileSystem.FileSystem.Path.GetFullPath(_fileSystem.Path.Combine(".", "Repository"));
         DirectoryExtensions.EnsureDirectoryExists(_fileSystem, _repositoryRootPath);
+        _localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, LocalRepositorySolutionManager.DefaultMask, _fileSystem);
     }
 
     [Fact]
     public void GetSolution_NoSolution_ReturnExceptionAboutNoSolution()
     {
-        var localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, _fileSystem);
-
         var exception = Assert.Throws<ZeyaException>(() =>
         {
-            localRepositorySolutionManager.GetSolution();
+            _localRepositorySolutionManager.GetSolution();
         });
 
         exception.Message.Should().Be($"Repository {_repositoryRootPath} does not contains .sln files");
@@ -37,8 +37,7 @@ public class LocalRepositorySolutionManagerTests
         var slnFilePath = _fileSystem.Path.Combine(_repositoryRootPath, "First.sln");
         _fileSystem.AddFile(slnFilePath, new MockFileData(string.Empty));
 
-        var localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, _fileSystem);
-        LocalRepositorySolution localRepositorySolution = localRepositorySolutionManager.GetSolution();
+        LocalRepositorySolution localRepositorySolution = _localRepositorySolutionManager.GetSolution();
 
         localRepositorySolution.GetSolutionDirectoryPath().Should().Be(_repositoryRootPath);
     }
@@ -52,12 +51,26 @@ public class LocalRepositorySolutionManagerTests
         _fileSystem.AddFile(firstSln, new MockFileData(string.Empty));
         _fileSystem.AddFile(secondSln, new MockFileData(string.Empty));
 
-        var localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, _fileSystem);
         var zeyaException = Assert.Throws<ZeyaException>(() =>
         {
-            localRepositorySolutionManager.GetSolution();
+            _localRepositorySolutionManager.GetSolution();
         });
 
         zeyaException.Message.Should().Be($"Repository {_repositoryRootPath} has more than one solution file.");
+    }
+
+    [Fact]
+    public void GetSolution_TwoSolutionWithMask_ReturnSolutionMatchedByMask()
+    {
+        string firstSln = _fileSystem.Path.Combine(_repositoryRootPath, "First.sln");
+        string secondSln = _fileSystem.Path.Combine(_repositoryRootPath, "Second.sln");
+
+        _fileSystem.AddFile(firstSln, new MockFileData(string.Empty));
+        _fileSystem.AddFile(secondSln, new MockFileData(string.Empty));
+
+        var localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, "Second.sln", _fileSystem);
+        LocalRepositorySolution localRepositorySolution = localRepositorySolutionManager.GetSolution();
+
+        localRepositorySolution.GetSolutionDirectoryPath().Should().Be(_repositoryRootPath);
     }
 }

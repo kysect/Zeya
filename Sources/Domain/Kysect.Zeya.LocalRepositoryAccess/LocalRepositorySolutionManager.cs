@@ -3,8 +3,10 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess;
 
-public class LocalRepositorySolutionManager(string repositoryPath, IFileSystem fileSystem)
+public class LocalRepositorySolutionManager(string repositoryPath, string solutionSearchMask, IFileSystem fileSystem)
 {
+    public const string DefaultMask = "*.sln";
+
     public LocalRepositorySolution GetSolution()
     {
         string solutionFilePath = GetSolutionFilePath();
@@ -13,7 +15,7 @@ public class LocalRepositorySolutionManager(string repositoryPath, IFileSystem f
 
     private string GetSolutionFilePath()
     {
-        var solutions = fileSystem.Directory.EnumerateFiles(repositoryPath, "*.sln", SearchOption.AllDirectories).ToList();
+        var solutions = fileSystem.Directory.EnumerateFiles(repositoryPath, solutionSearchMask, SearchOption.AllDirectories).ToList();
         if (solutions.Count == 0)
             throw new ZeyaException($"Repository {repositoryPath} does not contains .sln files");
 
