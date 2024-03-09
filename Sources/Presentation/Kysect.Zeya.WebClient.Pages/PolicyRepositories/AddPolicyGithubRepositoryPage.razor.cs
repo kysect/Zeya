@@ -14,6 +14,7 @@ public partial class AddPolicyGithubRepositoryPage
         public string GithubOwner { get; set; } = string.Empty;
         [Required]
         public string GithubRepository { get; set; } = string.Empty;
+        public string? SolutionPathMask { get; set; }
     }
 
     [Parameter] public Guid PolicyId { get; set; }
@@ -24,7 +25,7 @@ public partial class AddPolicyGithubRepositoryPage
 
     private async Task AddPolicyRepository()
     {
-        await PolicyRepositoryService.AddGithubRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository);
+        await PolicyRepositoryService.AddGithubRepository(PolicyId, _formData.GithubOwner, _formData.GithubRepository, _formData.SolutionPathMask);
         NavigationManager.NavigateTo($"/validation-policies/{PolicyId}");
     }
 }

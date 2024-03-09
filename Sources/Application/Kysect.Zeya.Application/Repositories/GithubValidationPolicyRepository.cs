@@ -13,6 +13,8 @@ public class GithubValidationPolicyRepository : IValidationPolicyRepository
     public Guid Id => _info.Id;
     public Guid ValidationPolicyId => _info.ValidationPolicyId;
     public ValidationPolicyRepositoryType Type => _info.Type;
+    public string SolutionPathMask => _info.SolutionPathMask;
+
     public string Owner { get; }
     public string Name { get; }
 

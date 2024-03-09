@@ -8,6 +8,7 @@ public interface IValidationPolicyRepository
     Guid Id { get; }
     Guid ValidationPolicyId { get; }
     ValidationPolicyRepositoryType Type { get; }
+    string SolutionPathMask { get; }
 
     ValidationPolicyRepositoryDto ToDto();
 }

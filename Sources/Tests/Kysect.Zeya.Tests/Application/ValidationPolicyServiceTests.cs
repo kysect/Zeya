@@ -28,7 +28,7 @@ public class ValidationPolicyServiceTests
     public async Task AddRepository_OnEmptyDatabase_RepositoryAdded()
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
 
         IReadOnlyCollection<ValidationPolicyRepositoryDto> repositories = await _policyRepositoryService.GetRepositories(validationPolicyEntity.Id);
 
@@ -39,7 +39,7 @@ public class ValidationPolicyServiceTests
     public async Task GetAllRulesForPolicy_DatabaseWithTwoRepositoryDiagnostic_ReturnDistinctRuleIds()
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
@@ -48,14 +48,14 @@ public class ValidationPolicyServiceTests
 
         IReadOnlyCollection<string> rules = await _validationPolicyService.GetAllRulesForPolicy(repository.ValidationPolicyId);
 
-        rules.Should().BeEquivalentTo("SRC0001", "SRC0002");
+        rules.Should().BeEquivalentTo("SRC0001", "SRC0002", null);
     }
 
     [Fact]
     public async Task SaveReport_OnEmptyDatabase_ReportSaved()
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository");
+        ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
         var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { validationDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
@@ -72,8 +72,8 @@ public class ValidationPolicyServiceTests
     public async Task GetDiagnosticsTable_ForTwoRepositoriesWithDiagnostics_ReturnTwoElementInListWithExpectedValue()
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
-        ValidationPolicyRepositoryDto firstRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository");
-        ValidationPolicyRepositoryDto secondRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository2");
+        ValidationPolicyRepositoryDto firstRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
+        ValidationPolicyRepositoryDto secondRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository2", null);
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());

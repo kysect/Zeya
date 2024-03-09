@@ -9,15 +9,21 @@
     <ValidationSummary />
 
     <div class="form-group">
-        <label for="name">Github owner</label>
-        <InputText id="name" class="form-control" @bind-Value="_formData.GithubOwner" />
+        <label for="owner">Github owner</label>
+        <InputText id="owner" class="form-control" @bind-Value="_formData.GithubOwner" />
         <ValidationMessage For="@(() => _formData.GithubOwner)" />
     </div>
 
     <div class="form-group">
-        <label for="rules">Github repository name</label>
-        <InputText id="rules" class="form-control" @bind-Value="_formData.GithubRepository" />
+        <label for="repository">Github repository name</label>
+        <InputText id="repository" class="form-control" @bind-Value="_formData.GithubRepository" />
         <ValidationMessage For="@(() => _formData.GithubRepository)" />
+    </div>
+    
+    <div class="form-group">
+        <label for="mask">Solution path mask (default "*.sln")</label>
+        <InputText id="mask" class="form-control" @bind-Value="_formData.SolutionPathMask" />
+        <ValidationMessage For="@(() => _formData.SolutionPathMask)" />
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>

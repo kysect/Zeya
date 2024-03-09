@@ -11,6 +11,7 @@ public class LocalValidationPolicyRepository : IValidationPolicyRepository
     public Guid Id => _info.Id;
     public Guid ValidationPolicyId => _info.ValidationPolicyId;
     public ValidationPolicyRepositoryType Type => _info.Type;
+    public string SolutionPathMask => _info.SolutionPathMask;
 
     public string Path => _info.Metadata;
 
