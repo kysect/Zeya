@@ -16,16 +16,16 @@ public class ValidationPolicyRepositoryController : Controller
     }
 
     [HttpPost("{policyId}/Repositories/Github")]
-    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddGithubRepository(Guid policyId, string githubOwner, string githubRepository)
+    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddGithubRepository(Guid policyId, string githubOwner, string githubRepository, string? solutionPathMask)
     {
-        ValidationPolicyRepositoryDto result = await _policyService.AddGithubRepository(policyId, githubOwner, githubRepository);
+        ValidationPolicyRepositoryDto result = await _policyService.AddGithubRepository(policyId, githubOwner, githubRepository, solutionPathMask);
         return Ok(result);
     }
 
     [HttpPost("{policyId}/Repositories/Local")]
-    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddLocalRepository(Guid policyId, string path)
+    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddLocalRepository(Guid policyId, string path, string solutionPathMask)
     {
-        ValidationPolicyRepositoryDto result = await _policyService.AddLocalRepository(policyId, path);
+        ValidationPolicyRepositoryDto result = await _policyService.AddLocalRepository(policyId, path, solutionPathMask);
         return Ok(result);
     }
 

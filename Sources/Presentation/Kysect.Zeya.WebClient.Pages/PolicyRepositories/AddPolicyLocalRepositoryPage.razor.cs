@@ -12,6 +12,7 @@ public partial class AddPolicyLocalRepositoryPage
     {
         [Required]
         public string Path { get; set; } = string.Empty;
+        public string? SolutionPathMask { get; set; }
     }
 
     [Parameter] public Guid PolicyId { get; set; }
@@ -22,7 +23,7 @@ public partial class AddPolicyLocalRepositoryPage
 
     private async Task AddPolicyRepository()
     {
-        await PolicyRepositoryService.AddLocalRepository(PolicyId, _formData.Path);
+        await PolicyRepositoryService.AddLocalRepository(PolicyId, _formData.Path, _formData.SolutionPathMask);
         NavigationManager.NavigateTo($"/validation-policies/{PolicyId}");
     }
 }

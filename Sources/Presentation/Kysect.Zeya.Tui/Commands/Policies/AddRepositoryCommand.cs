@@ -18,6 +18,6 @@ public class AddRepositoryCommand(
 
         string repositoryOwner = AnsiConsole.Ask<string>("Enter repository owner");
         string repositoryName = AnsiConsole.Ask<string>("Enter repository name");
-        policyRepositoryService.AddGithubRepository(policy.Id, repositoryOwner, repositoryName);
+        policyRepositoryService.AddGithubRepository(policy.Id, repositoryOwner, repositoryName, null);
     }
 }

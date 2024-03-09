@@ -9,9 +9,15 @@
     <ValidationSummary />
 
     <div class="form-group">
-        <label for="name">Path</label>
-        <InputText id="name" class="form-control" @bind-Value="_formData.Path" />
+        <label for="path">Path</label>
+        <InputText id="path" class="form-control" @bind-Value="_formData.Path" />
         <ValidationMessage For="@(() => _formData.Path)" />
+    </div>
+    
+    <div class="form-group">
+        <label for="mask">Solution path mask (default "*.sln")</label>
+        <InputText id="mask" class="form-control" @bind-Value="_formData.SolutionPathMask" />
+        <ValidationMessage For="@(() => _formData.SolutionPathMask)" />
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>
