@@ -23,7 +23,7 @@ public class ValidationPolicyRepositoryController : Controller
     }
 
     [HttpPost("{policyId}/Repositories/Local")]
-    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddLocalRepository(Guid policyId, string path, string solutionPathMask)
+    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddLocalRepository(Guid policyId, string path, string? solutionPathMask)
     {
         ValidationPolicyRepositoryDto result = await _policyService.AddLocalRepository(policyId, path, solutionPathMask);
         return Ok(result);
