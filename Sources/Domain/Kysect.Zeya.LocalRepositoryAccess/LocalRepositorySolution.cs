@@ -1,18 +1,15 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess;
 
-public class LocalRepositorySolution(string repositoryPath, string solutionFilePath, IFileSystem fileSystem)
+public class LocalRepositorySolution(string repositoryPath, string solutionFilePath, IFileSystem fileSystem, DotnetSolutionModifierFactory solutionModifierFactory)
 {
-    private readonly DotnetSolutionModifierFactory _solutionModifierFactory = new DotnetSolutionModifierFactory(fileSystem, new SolutionFileContentParser());
-
     public DotnetSolutionModifier GetSolutionModifier()
     {
-        return _solutionModifierFactory.Create(solutionFilePath);
+        return solutionModifierFactory.Create(solutionFilePath);
     }
 
     public string GetSolutionDirectoryPath()

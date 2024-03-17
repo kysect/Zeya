@@ -1,7 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
-using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
@@ -9,9 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
-public class TargetFrameworkVersionAllowedValidationRuleFixer(
-    XmlDocumentSyntaxFormatter formatter,
-    ILogger<TargetFrameworkVersionAllowedValidationRuleFixer> logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
+public class TargetFrameworkVersionAllowedValidationRuleFixer(ILogger<TargetFrameworkVersionAllowedValidationRuleFixer> logger) : IValidationRuleFixer<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     public void Fix(TargetFrameworkVersionAllowedValidationRule.Arguments rule, ILocalRepository localRepository)
     {
@@ -37,7 +34,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixer(
             projectModifier.Value.File.Properties.SetProperty("TargetFramework", allowedTargetFrameworkVersion);
         }
 
-        solutionModifier.Save(formatter);
+        solutionModifier.Save();
     }
 
     private string? GetCorrectVersion(TargetFrameworkVersionAllowedValidationRule.Arguments rule, string version)

@@ -1,16 +1,17 @@
-﻿using Kysect.Zeya.Common;
+﻿using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.Zeya.Common;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess;
 
-public class LocalRepositorySolutionManager(string repositoryPath, string solutionSearchMask, IFileSystem fileSystem)
+public class LocalRepositorySolutionManager(string repositoryPath, string solutionSearchMask, IFileSystem fileSystem, DotnetSolutionModifierFactory solutionModifierFactory)
 {
     public const string DefaultMask = "*.sln";
 
     public LocalRepositorySolution GetSolution()
     {
         string solutionFilePath = GetSolutionFilePath();
-        return new LocalRepositorySolution(repositoryPath, solutionFilePath, fileSystem);
+        return new LocalRepositorySolution(repositoryPath, solutionFilePath, fileSystem, solutionModifierFactory);
     }
 
     private string GetSolutionFilePath()

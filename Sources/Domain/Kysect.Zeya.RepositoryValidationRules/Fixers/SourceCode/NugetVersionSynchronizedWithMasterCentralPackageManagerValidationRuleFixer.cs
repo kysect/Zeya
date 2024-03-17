@@ -1,7 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
-using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
@@ -12,7 +11,6 @@ namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
 public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(
     IFileSystem fileSystem,
-    XmlDocumentSyntaxFormatter formatter,
     ILogger<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer> logger)
     : IValidationRuleFixer<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
@@ -42,6 +40,6 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
                 .SetPackageVersion(projectPackageVersion.Name, projectPackageVersion.Version);
         }
 
-        solutionModifier.Save(formatter);
+        solutionModifier.Save();
     }
 }

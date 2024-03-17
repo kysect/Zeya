@@ -1,4 +1,7 @@
-﻿using Kysect.Zeya.Application;
+﻿using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
+using Kysect.Zeya.Application;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
@@ -52,7 +55,12 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
             new PullRequestMessageCreator(),
             serviceProvider.GetRequiredService<ILogger<RepositoryValidationService>>());
 
-        _githubRepositoryProvider = new GithubRepositoryProvider(fileSystem, serviceProvider.GetRequiredService<ILogger<GithubRepositoryProvider>>(), githubIntegrationService, localStoragePathFactory);
+        _githubRepositoryProvider = new GithubRepositoryProvider(
+            fileSystem,
+            serviceProvider.GetRequiredService<ILogger<GithubRepositoryProvider>>(),
+            githubIntegrationService,
+            localStoragePathFactory,
+            new DotnetSolutionModifierFactory(fileSystem, new SolutionFileContentParser(), new XmlDocumentSyntaxFormatter()));
     }
 
     [Fact]

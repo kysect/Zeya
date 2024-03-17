@@ -1,5 +1,8 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.FileSystem;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.Common;
 using Kysect.Zeya.LocalRepositoryAccess;
 using System.IO.Abstractions.TestingHelpers;
@@ -11,13 +14,15 @@ public class LocalRepositorySolutionManagerTests
     private readonly MockFileSystem _fileSystem;
     private readonly string _repositoryRootPath;
     private readonly LocalRepositorySolutionManager _localRepositorySolutionManager;
+    private readonly DotnetSolutionModifierFactory _dotnetSolutionModifierFactory;
 
     public LocalRepositorySolutionManagerTests()
     {
         _fileSystem = new MockFileSystem();
         _repositoryRootPath = _fileSystem.FileSystem.Path.GetFullPath(_fileSystem.Path.Combine(".", "Repository"));
         DirectoryExtensions.EnsureDirectoryExists(_fileSystem, _repositoryRootPath);
-        _localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, LocalRepositorySolutionManager.DefaultMask, _fileSystem);
+        _dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser(), new XmlDocumentSyntaxFormatter());
+        _localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, LocalRepositorySolutionManager.DefaultMask, _fileSystem, _dotnetSolutionModifierFactory);
     }
 
     [Fact]
@@ -68,7 +73,7 @@ public class LocalRepositorySolutionManagerTests
         _fileSystem.AddFile(firstSln, new MockFileData(string.Empty));
         _fileSystem.AddFile(secondSln, new MockFileData(string.Empty));
 
-        var localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, "Second.sln", _fileSystem);
+        var localRepositorySolutionManager = new LocalRepositorySolutionManager(_repositoryRootPath, "Second.sln", _fileSystem, _dotnetSolutionModifierFactory);
         LocalRepositorySolution localRepositorySolution = localRepositorySolutionManager.GetSolution();
 
         localRepositorySolution.GetSolutionDirectoryPath().Should().Be(_repositoryRootPath);

@@ -2,7 +2,6 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
@@ -10,9 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Fixers.Nuget;
 
-public class NugetMetadataHaveCorrectValueValidationRuleFixer(
-    XmlDocumentSyntaxFormatter formatter,
-    ILogger<NugetMetadataHaveCorrectValueValidationRuleFixer> logger) : IValidationRuleFixer<NugetMetadataHaveCorrectValueValidationRule.Arguments>
+public class NugetMetadataHaveCorrectValueValidationRuleFixer(ILogger<NugetMetadataHaveCorrectValueValidationRuleFixer> logger) : IValidationRuleFixer<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
     public void Fix(NugetMetadataHaveCorrectValueValidationRule.Arguments rule, ILocalRepository localRepository)
     {
@@ -31,6 +28,6 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixer(
             directoryBuildPropsFile.File.Properties.SetProperty(key, value);
         }
 
-        solutionModifier.Save(formatter);
+        solutionModifier.Save();
     }
 }
