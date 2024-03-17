@@ -5,6 +5,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using System.ComponentModel.DataAnnotations;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
@@ -14,7 +15,8 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     : IScenarioStepExecutor<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager")]
-    public record Arguments(string MasterFile) : IValidationRule
+    public record Arguments(
+        [property: Required] string MasterFile) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.NugetVersionSynchronizedWithMasterCentralPackageManager;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;

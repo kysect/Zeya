@@ -3,6 +3,7 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
+using System.ComponentModel.DataAnnotations;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.Github;
@@ -10,7 +11,8 @@ namespace Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<GithubWorkflowEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.BuildWorkflowEnabled")]
-    public record Arguments(string MasterFile) : IValidationRule
+    public record Arguments(
+        [property: Required] string MasterFile) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Github.BuildWorkflowEnabled;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;

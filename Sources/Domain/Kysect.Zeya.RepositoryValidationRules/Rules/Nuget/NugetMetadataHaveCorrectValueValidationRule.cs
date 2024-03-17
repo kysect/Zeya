@@ -5,6 +5,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
 
@@ -12,7 +13,8 @@ public class NugetMetadataHaveCorrectValueValidationRule()
     : IScenarioStepExecutor<NugetMetadataHaveCorrectValueValidationRule.Arguments>
 {
     [ScenarioStep("Nuget.MetadataHaveCorrectValue")]
-    public record Arguments(Dictionary<string, string> RequiredKeyValues) : IValidationRule
+    public record Arguments(
+        [property: Required] Dictionary<string, string> RequiredKeyValues) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Nuget.MetadataHaveCorrectValue;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;

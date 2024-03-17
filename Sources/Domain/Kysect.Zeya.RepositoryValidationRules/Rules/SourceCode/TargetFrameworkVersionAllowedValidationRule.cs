@@ -11,7 +11,10 @@ public class TargetFrameworkVersionAllowedValidationRule()
     : IScenarioStepExecutor<TargetFrameworkVersionAllowedValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.TargetFrameworkVersionAllowed")]
-    public record Arguments(string? AllowedCoreVersion, string? AllowedStandardVersion, string? AllowedFrameworkVersion) : IValidationRule
+    public record Arguments(
+        string? AllowedCoreVersion,
+        string? AllowedStandardVersion,
+        string? AllowedFrameworkVersion) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.TargetFrameworkVersionAllowed;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;

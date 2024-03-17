@@ -5,6 +5,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
 
@@ -12,7 +13,8 @@ public class NugetMetadataSpecifiedValidationRule()
     : IScenarioStepExecutor<NugetMetadataSpecifiedValidationRule.Arguments>
 {
     [ScenarioStep("Nuget.MetadataSpecified")]
-    public record Arguments(IReadOnlyCollection<string> RequiredValues) : IValidationRule
+    public record Arguments(
+        [property: Required] IReadOnlyCollection<string> RequiredValues) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Nuget.MetadataSpecified;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;

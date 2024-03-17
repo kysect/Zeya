@@ -7,7 +7,10 @@ namespace Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 public class GithubRepositoryLicenseValidationRule : IScenarioStepExecutor<GithubRepositoryLicenseValidationRule.Arguments>
 {
     [ScenarioStep("Github.RepositoryLicense")]
-    public record Arguments(string OwnerName, string Year, string LicenseType) : IValidationRule
+    public record Arguments(
+        string OwnerName,
+        string Year,
+        string LicenseType) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.Github.RepositoryLicense;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
