@@ -67,8 +67,8 @@ public static class ServiceCollectionExtensions
             .AddZeyaDotnetProjectSystemIntegration()
             .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
             .AddZeyaGithubIntegration()
-            .AddZeyaValidationRules()
-            .AddZeyaValidationRuleFixers()
+            .AddZeyaValidationRulesAndFixers()
+            .AddZeyaScenarioExecuting()
             .AddZeyaRepositoryValidation()
             .AddZeyaLocalServerApiClients();
     }
@@ -153,7 +153,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection;
     }
 
-    public static IServiceCollection AddZeyaValidationRules(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaScenarioExecuting(this IServiceCollection serviceCollection)
     {
         Assembly[] validationRuleAssembly = new[]
         {
@@ -167,11 +167,10 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IScenarioContentParser, YamlScenarioContentParser>()
             .AddSingleton<IScenarioContentStepDeserializer, ScenarioContentStepReflectionDeserializer>(_ => ScenarioContentStepReflectionDeserializer.Create(validationRuleAssembly))
             .AddSingleton<IScenarioContentDeserializer, ScenarioContentDeserializer>()
-            .AddAllImplementationOf<IScenarioStepExecutor>(validationRuleAssembly)
             .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, validationRuleAssembly));
     }
 
-    public static IServiceCollection AddZeyaValidationRuleFixers(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaValidationRulesAndFixers(this IServiceCollection serviceCollection)
     {
         Assembly[] validationRuleFixerAssembly = new[]
         {
@@ -179,6 +178,7 @@ public static class ServiceCollectionExtensions
         };
 
         return serviceCollection
+            .AddAllImplementationOf<IScenarioStepExecutor>(validationRuleFixerAssembly)
             .AddAllImplementationOf<IValidationRuleFixer>(validationRuleFixerAssembly)
             .AddSingleton<IValidationRuleFixerApplier>(sp => ValidationRuleFixerApplier.Create(sp, validationRuleFixerAssembly));
     }

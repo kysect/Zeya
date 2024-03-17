@@ -14,7 +14,7 @@ public class ArtifactsOutputEnabledValidationRuleFixerTests
     public ArtifactsOutputEnabledValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new ArtifactsOutputEnabledValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<ArtifactsOutputEnabledValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<ArtifactsOutputEnabledValidationRuleFixer>();
     }
 
     [Fact]

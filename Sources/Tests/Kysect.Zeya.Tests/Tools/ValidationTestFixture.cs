@@ -3,6 +3,7 @@ using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application;
+using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
@@ -47,6 +48,7 @@ public class ValidationTestFixture
             .AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(CurrentPath))
             .AddSingleton<GithubRepositoryProvider>()
             .AddSingleton<SolutionFileStructureBuilderFactory>()
+            .AddZeyaValidationRulesAndFixers()
             .BuildServiceProvider();
 
         Formatter = _serviceProvider.GetRequiredService<XmlDocumentSyntaxFormatter>();
@@ -76,6 +78,11 @@ public class ValidationTestFixture
         var localRepository = CreateLocalRepository();
         var repositoryValidationContext = new RepositoryValidationContext(localRepository, DiagnosticCollectorAsserts.GetCollector());
         return RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
+    }
+
+    public T GetRequiredService<T>() where T : notnull
+    {
+        return _serviceProvider.GetRequiredService<T>();
     }
 
     public ILogger<T> GetLogger<T>()

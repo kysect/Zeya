@@ -32,8 +32,8 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
         IServiceCollection serviceCollection = new ServiceCollection()
             .AddZeyaTestLogging()
             .AddZeyaDotnetProjectSystemIntegration()
-            .AddZeyaValidationRules()
-            .AddZeyaValidationRuleFixers()
+            .AddZeyaScenarioExecuting()
+            .AddZeyaValidationRulesAndFixers()
             .AddZeyaRepositoryValidation()
             .AddSingleton(githubIntegrationService);
 

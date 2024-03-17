@@ -41,7 +41,7 @@ public class CentralPackageManagerEnabledValidationRuleTests
 
         _validationTestFixture.SolutionFileStructureBuilderFactory
             .Create("Solution")
-            .AddDirectoryPackagesProps(directoryBuildPropsFile.File.ToXmlString(_validationTestFixture.Formatter))
+            .AddDirectoryPackagesProps(directoryBuildPropsFile)
             .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);

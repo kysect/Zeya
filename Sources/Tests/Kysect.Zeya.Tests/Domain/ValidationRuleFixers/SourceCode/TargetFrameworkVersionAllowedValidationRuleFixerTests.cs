@@ -15,7 +15,7 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
     public TargetFrameworkVersionAllowedValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new TargetFrameworkVersionAllowedValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<TargetFrameworkVersionAllowedValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<TargetFrameworkVersionAllowedValidationRuleFixer>();
     }
 
     [Theory]

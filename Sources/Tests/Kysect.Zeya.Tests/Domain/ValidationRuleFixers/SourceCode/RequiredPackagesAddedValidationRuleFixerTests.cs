@@ -16,7 +16,7 @@ public class RequiredPackagesAddedValidationRuleFixerTests
     public RequiredPackagesAddedValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new RequiredPackagesAddedValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<RequiredPackagesAddedValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<RequiredPackagesAddedValidationRuleFixer>();
     }
 
     [Fact]
