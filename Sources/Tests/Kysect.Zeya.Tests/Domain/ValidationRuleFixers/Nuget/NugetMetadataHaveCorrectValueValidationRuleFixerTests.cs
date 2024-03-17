@@ -1,5 +1,4 @@
-﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Tools;
+﻿using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.Nuget;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
@@ -30,8 +29,9 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixerTests
                                 </Project>
                                 """;
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(arguments, localGithubRepository);

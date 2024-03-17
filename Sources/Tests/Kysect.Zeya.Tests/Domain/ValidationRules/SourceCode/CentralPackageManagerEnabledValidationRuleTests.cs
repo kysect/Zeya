@@ -1,5 +1,4 @@
-﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Projects;
+﻿using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
 
@@ -21,8 +20,8 @@ public class CentralPackageManagerEnabledValidationRuleTests
     {
         var arguments = new CentralPackageManagerEnabledValidationRule.Arguments();
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -38,9 +37,9 @@ public class CentralPackageManagerEnabledValidationRuleTests
         var directoryBuildPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.CreateEmpty());
         directoryBuildPropsFile.SetCentralPackageManagement(true);
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .AddDirectoryPackagesProps(directoryBuildPropsFile.File.ToXmlString(_validationTestFixture.Formatter))
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 

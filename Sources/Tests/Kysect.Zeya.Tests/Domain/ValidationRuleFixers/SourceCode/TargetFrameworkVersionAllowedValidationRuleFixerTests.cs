@@ -53,10 +53,10 @@ public class TargetFrameworkVersionAllowedValidationRuleFixerTests
         var projectFileContent = DotnetProjectFile.CreateEmpty();
         projectFileContent.Properties.SetProperty("TargetFramework", targetFramework);
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName)
                 .SetContent(projectFileContent))
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(arguments, localGithubRepository);

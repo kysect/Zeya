@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.ScenarioLib;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
@@ -30,8 +29,10 @@ public class RepositoryValidatorTests
             new CentralPackageManagerEnabledValidationRule.Arguments()
         };
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
+
         ILocalRepository localRepository = _validationTestFixture.RepositoryProvider.GetLocalRepository(_validationTestFixture.CurrentPath);
 
         RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(localRepository, rules);

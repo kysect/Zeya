@@ -32,10 +32,11 @@ public class TargetFrameworkVersionAllowedValidationRuleTests
         var projectFileContent = DotnetProjectFile.CreateEmpty();
         projectFileContent.Properties.SetProperty("TargetFramework", projectTarget);
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddProject(new ProjectFileStructureBuilder("Project")
                 .SetContent(projectFileContent))
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
