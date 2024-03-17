@@ -38,7 +38,7 @@ public class RequiredPackagesAddedValidationRuleTests
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
         _validationTestFixture.SolutionFileStructureBuilderFactory
             .Create("Solution")
-            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
+            .AddDirectoryBuildProps(string.Empty)
             .Save(_validationTestFixture.CurrentPath);
 
         _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
