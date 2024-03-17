@@ -21,8 +21,6 @@ public class SourcesMustNotBeInRootValidationRuleTests
     [Fact]
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectory()
     {
-        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution").Save(_validationTestFixture.CurrentPath);
-
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
@@ -57,6 +55,6 @@ public class SourcesMustNotBeInRootValidationRuleTests
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
             .ShouldHaveDiagnosticCount(1)
-            .ShouldHaveDiagnostic(1, _arguments.DiagnosticCode, $"Sources must be located in {solutionDirectoryPath}. Founded solution files: {solutionFilePath}");
+            .ShouldHaveDiagnostic(1, _arguments.DiagnosticCode, $"Solution file must not be located in repository root. Founded solution files: {solutionFilePath}");
     }
 }
