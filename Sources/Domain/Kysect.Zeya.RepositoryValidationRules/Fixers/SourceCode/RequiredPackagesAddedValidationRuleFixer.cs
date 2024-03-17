@@ -2,7 +2,6 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
@@ -10,9 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
-public class RequiredPackagesAddedValidationRuleFixer(
-    XmlDocumentSyntaxFormatter formatter,
-    ILogger<RequiredPackagesAddedValidationRuleFixer> logger)
+public class RequiredPackagesAddedValidationRuleFixer(ILogger<RequiredPackagesAddedValidationRuleFixer> logger)
     : IValidationRuleFixer<RequiredPackagesAddedValidationRule.Arguments>
 {
     public void Fix(RequiredPackagesAddedValidationRule.Arguments rule, ILocalRepository localRepository)
@@ -50,6 +47,6 @@ public class RequiredPackagesAddedValidationRuleFixer(
         }
 
         logger.LogTrace("Saving solution files");
-        solutionModifier.Save(formatter);
+        solutionModifier.Save();
     }
 }

@@ -1,4 +1,7 @@
 ﻿using FluentAssertions;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
+using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -47,7 +50,8 @@ public class GitIntegrationServiceTests : IDisposable
         _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions.CommitAuthor);
         _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions.Credential, localStoragePathFactory, logger);
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
-        _localRepository = new LocalRepository(_repositoriesDirectory, LocalRepositorySolutionManager.DefaultMask, _fileSystem);
+        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser(), new XmlDocumentSyntaxFormatter());
+        _localRepository = new LocalRepository(_repositoriesDirectory, LocalRepositorySolutionManager.DefaultMask, _fileSystem, dotnetSolutionModifierFactory);
     }
 
     [Fact]

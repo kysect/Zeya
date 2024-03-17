@@ -2,7 +2,6 @@
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.DotnetProjectSystem.Xml;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
@@ -10,9 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 
-public class ArtifactsOutputEnabledValidationRuleFixer(
-    XmlDocumentSyntaxFormatter formatter,
-    ILogger<ArtifactsOutputEnabledValidationRuleFixer> logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
+public class ArtifactsOutputEnabledValidationRuleFixer(ILogger<ArtifactsOutputEnabledValidationRuleFixer> logger) : IValidationRuleFixer<ArtifactsOutputEnabledValidationRule.Arguments>
 {
     public void Fix(ArtifactsOutputEnabledValidationRule.Arguments rule, ILocalRepository localRepository)
     {
@@ -28,6 +25,6 @@ public class ArtifactsOutputEnabledValidationRuleFixer(
         logger.LogDebug("Set UseArtifactsOutput to true");
         directoryBuildPropsFile.File.Properties.SetProperty("UseArtifactsOutput", "true");
 
-        solutionModifier.Save(formatter);
+        solutionModifier.Save();
     }
 }
