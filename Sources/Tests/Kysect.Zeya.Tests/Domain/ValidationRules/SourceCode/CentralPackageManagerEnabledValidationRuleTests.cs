@@ -20,7 +20,8 @@ public class CentralPackageManagerEnabledValidationRuleTests
     {
         var arguments = new CentralPackageManagerEnabledValidationRule.Arguments();
 
-        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
@@ -34,10 +35,12 @@ public class CentralPackageManagerEnabledValidationRuleTests
     public void Validate_ArtifactOutputEnabled_NoDiagnostics()
     {
         var arguments = new CentralPackageManagerEnabledValidationRule.Arguments();
-        var directoryBuildPropsFile = new DirectoryPackagesPropsFile(DotnetProjectFile.CreateEmpty());
+        var dotnetProjectFile = DotnetProjectFile.CreateEmpty();
+        var directoryBuildPropsFile = new DirectoryPackagesPropsFile(dotnetProjectFile);
         directoryBuildPropsFile.SetCentralPackageManagement(true);
 
-        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddDirectoryPackagesProps(directoryBuildPropsFile.File.ToXmlString(_validationTestFixture.Formatter))
             .Save(_validationTestFixture.CurrentPath);
 

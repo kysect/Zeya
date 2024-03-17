@@ -1,4 +1,5 @@
-﻿using Kysect.DotnetProjectSystem.Tools;
+﻿using Kysect.DotnetProjectSystem.Projects;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
@@ -39,7 +40,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
 
         _validationTestFixture.SolutionFileStructureBuilderFactory
             .Create("Solution")
-            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
+            .AddDirectoryBuildProps(new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty()))
             .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
@@ -63,7 +64,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
 
         _validationTestFixture.SolutionFileStructureBuilderFactory
             .Create("Solution")
-            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
+            .AddDirectoryBuildProps(directoryBuildPropsContent)
             .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
@@ -87,7 +88,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
 
         _validationTestFixture.SolutionFileStructureBuilderFactory
             .Create("Solution")
-            .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
+            .AddDirectoryBuildProps(directoryBuildPropsContent)
             .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);

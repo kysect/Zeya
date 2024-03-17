@@ -26,7 +26,9 @@ public class CentralPackageManagerEnabledValidationRule()
         LocalRepositorySolution repositorySolutionAccessor = repositoryValidationContext.Repository.SolutionManager.GetSolution();
         DotnetSolutionModifier solutionModifier = repositorySolutionAccessor.GetSolutionModifier();
 
-        bool cpmEnabled = solutionModifier.GetOrCreateDirectoryPackagePropsModifier().GetCentralPackageManagement();
+        bool cpmEnabled = solutionModifier
+            .GetOrCreateDirectoryPackagePropsModifier()
+            .GetCentralPackageManagement();
         if (!cpmEnabled)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(

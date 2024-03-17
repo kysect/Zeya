@@ -32,7 +32,8 @@ public class SourcesMustNotBeInRootValidationRuleTests
     public void Validate_SolutionInSourceDirectory_ReturnNoDiagnostic()
     {
         string solutionDirectoryPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, _expectedSourceDirectory);
-        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .Save(solutionDirectoryPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
