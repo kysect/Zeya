@@ -14,7 +14,7 @@ public class SourcesMustNotBeInRootValidationRuleTests
     public SourcesMustNotBeInRootValidationRuleTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _validationRule = new SourcesMustNotBeInRootValidationRule(_validationTestFixture.FileSystem);
+        _validationRule = _validationTestFixture.GetRequiredService<SourcesMustNotBeInRootValidationRule>();
         _arguments = new SourcesMustNotBeInRootValidationRule.Arguments(_expectedSourceDirectory);
     }
 

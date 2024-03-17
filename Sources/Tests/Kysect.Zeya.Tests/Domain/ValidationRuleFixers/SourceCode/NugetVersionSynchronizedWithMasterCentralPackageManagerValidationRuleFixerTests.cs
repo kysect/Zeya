@@ -15,7 +15,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     public NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer(_validationTestFixture.FileSystem, _validationTestFixture.Formatter, _validationTestFixture.GetLogger<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleFixer>();
     }
 
     [Fact]

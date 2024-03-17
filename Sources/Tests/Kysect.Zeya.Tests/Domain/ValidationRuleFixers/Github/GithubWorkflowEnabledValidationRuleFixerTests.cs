@@ -15,7 +15,7 @@ public class GithubWorkflowEnabledValidationRuleFixerTests
     public GithubWorkflowEnabledValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new GithubWorkflowEnabledValidationRuleFixer(_validationTestFixture.FileSystem, _validationTestFixture.GetLogger<GithubWorkflowEnabledValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<GithubWorkflowEnabledValidationRuleFixer>();
     }
 
     [Fact]

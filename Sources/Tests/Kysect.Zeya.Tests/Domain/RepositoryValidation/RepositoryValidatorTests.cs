@@ -33,7 +33,7 @@ public class RepositoryValidatorTests
             .Create("Solution")
             .Save(_validationTestFixture.CurrentPath);
 
-        ILocalRepository localRepository = _validationTestFixture.RepositoryProvider.GetLocalRepository(_validationTestFixture.CurrentPath);
+        ILocalRepository localRepository = _validationTestFixture.CreateLocalRepository();
 
         RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(localRepository, rules);
 

@@ -15,9 +15,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     public NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRuleTests()
     {
         _validationTestFixture = new ValidationTestFixture();
+        _requiredPackagesAddedValidationRule = _validationTestFixture.GetRequiredService<NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule>();
         _directoryPackageMasterPropsPath = "Directory.Package.Master.props";
         _arguments = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule.Arguments(_directoryPackageMasterPropsPath);
-        _requiredPackagesAddedValidationRule = new NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRule(_validationTestFixture.FileSystem);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         string directoryPackageFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
         _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
-            .AddDirectoryPackagesProps(directoryPackageFileContent)
+            .AddDirectoryPackagesProps(directoryPackagesPropsFile)
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(directoryPackageFileContent));
 
@@ -76,10 +76,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         string masterFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
         directoryPackagesPropsFile.Versions.AddPackageVersion("Package2", "2.3.4");
-        string directoryPackagePropsFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
         _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
-            .AddDirectoryPackagesProps(directoryPackagePropsFileContent)
+            .AddDirectoryPackagesProps(directoryPackagesPropsFile)
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(masterFileContent));
 
@@ -100,10 +99,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         string masterFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
         directoryPackagesPropsFile.Versions.SetPackageVersion("Package1", "2.3.4");
-        string directoryPackagePropsFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
         _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
-            .AddDirectoryPackagesProps(directoryPackagePropsFileContent)
+            .AddDirectoryPackagesProps(directoryPackagesPropsFile)
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(masterFileContent));
 

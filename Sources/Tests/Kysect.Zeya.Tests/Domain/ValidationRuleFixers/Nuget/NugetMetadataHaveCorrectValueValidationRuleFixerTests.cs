@@ -14,7 +14,7 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixerTests
     public NugetMetadataHaveCorrectValueValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new NugetMetadataHaveCorrectValueValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<NugetMetadataHaveCorrectValueValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<NugetMetadataHaveCorrectValueValidationRuleFixer>();
     }
 
     [Fact]

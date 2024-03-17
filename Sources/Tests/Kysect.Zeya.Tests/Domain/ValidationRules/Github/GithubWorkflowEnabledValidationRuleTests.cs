@@ -12,7 +12,7 @@ public class GithubWorkflowEnabledValidationRuleTests
     public GithubWorkflowEnabledValidationRuleTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _validationRule = new GithubWorkflowEnabledValidationRule(_validationTestFixture.FileSystem);
+        _validationRule = _validationTestFixture.GetRequiredService<GithubWorkflowEnabledValidationRule>();
     }
 
     [Fact]

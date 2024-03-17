@@ -15,7 +15,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
     public CentralPackageManagerEnabledValidationRuleFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _fixer = new CentralPackageManagerEnabledValidationRuleFixer(_validationTestFixture.Formatter, _validationTestFixture.GetLogger<CentralPackageManagerEnabledValidationRuleFixer>());
+        _fixer = _validationTestFixture.GetRequiredService<CentralPackageManagerEnabledValidationRuleFixer>();
     }
 
     [Fact]
