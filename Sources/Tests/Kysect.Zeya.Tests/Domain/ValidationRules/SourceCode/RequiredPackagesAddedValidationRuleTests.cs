@@ -1,5 +1,4 @@
 ﻿using Kysect.DotnetProjectSystem.Projects;
-using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
