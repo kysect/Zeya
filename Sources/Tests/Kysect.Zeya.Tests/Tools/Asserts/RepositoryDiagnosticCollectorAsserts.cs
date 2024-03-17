@@ -26,7 +26,13 @@ public class RepositoryDiagnosticCollectorAsserts
 
     public RepositoryDiagnosticCollectorAsserts ShouldHaveDiagnostic(int index, string diagnosticCode, string message)
     {
-        RepositoryValidationDiagnostic diagnostic = _collector.GetDiagnostics().ElementAt(index - 1);
+        index.Should().BeGreaterThan(0);
+
+        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _collector.GetDiagnostics();
+        if (diagnostics.Count < index)
+            Assert.Fail($"Diagnostic does not contains {index} diagnostics, diagnostic count {diagnostics.Count}");
+
+        RepositoryValidationDiagnostic diagnostic = diagnostics.ElementAt(index - 1);
         diagnostic.Code.Should().Be(diagnosticCode);
         diagnostic.Message.Should().Be(message);
         return this;

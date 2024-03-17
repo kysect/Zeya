@@ -17,6 +17,7 @@ public static class RuleDescription
         public const string SourcesMustNotBeInRoot = "SRC00001";
         public const string TargetFrameworkVersionAllowed = "SRC00002";
         public const string ArtifactsOutputEnables = "SRC0003";
+        public const string VersionInPropFile = "SRC0004";
 
         public const string CentralPackageManagerEnabled = "SRC0010";
         public const string NugetVersionMustBeSpecifiedInMasterCentralPackageManager = "SRC0011";
