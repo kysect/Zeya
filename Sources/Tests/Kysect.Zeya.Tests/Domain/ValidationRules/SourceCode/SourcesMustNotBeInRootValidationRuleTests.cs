@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.FileSystem;
-using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
 
@@ -22,8 +21,7 @@ public class SourcesMustNotBeInRootValidationRuleTests
     [Fact]
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectory()
     {
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution").Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
@@ -36,8 +34,8 @@ public class SourcesMustNotBeInRootValidationRuleTests
     public void Validate_SolutionInSourceDirectory_ReturnNoDiagnostic()
     {
         string solutionDirectoryPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, _expectedSourceDirectory);
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, solutionDirectoryPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+            .Save(solutionDirectoryPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
@@ -52,8 +50,7 @@ public class SourcesMustNotBeInRootValidationRuleTests
         string solutionDirectoryPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, _expectedSourceDirectory);
         string solutionFilePath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, "Solution.sln");
         DirectoryExtensions.EnsureDirectoryExists(_validationTestFixture.FileSystem, solutionDirectoryPath);
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution").Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 

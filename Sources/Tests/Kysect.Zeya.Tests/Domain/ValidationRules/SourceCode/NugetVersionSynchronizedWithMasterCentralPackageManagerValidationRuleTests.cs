@@ -1,5 +1,4 @@
-﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Projects;
+﻿using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
 using System.IO.Abstractions.TestingHelpers;
@@ -24,8 +23,8 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     [Fact]
     public void Execute_NoMasterFile_ReturnDiagnosticAboutMissedMasterFile()
     {
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
 
         _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
 
@@ -37,8 +36,8 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
     [Fact]
     public void Execute_NoDirectoryBuildPropsFile_ReturnDiagnosticAboutDirectoryBuildPropsFile()
     {
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(string.Empty));
 
         _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
@@ -57,9 +56,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         directoryPackagesPropsFile.Versions.AddPackageVersion("Package2", "2.3.4");
         string directoryPackageFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .AddDirectoryPackagesProps(directoryPackageFileContent)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(directoryPackageFileContent));
 
         _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
@@ -79,9 +78,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         directoryPackagesPropsFile.Versions.AddPackageVersion("Package2", "2.3.4");
         string directoryPackagePropsFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .AddDirectoryPackagesProps(directoryPackagePropsFileContent)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(masterFileContent));
 
         _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
@@ -103,9 +102,9 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         directoryPackagesPropsFile.Versions.SetPackageVersion("Package1", "2.3.4");
         string directoryPackagePropsFileContent = directoryPackagesPropsFile.File.ToXmlString(_validationTestFixture.Formatter);
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .AddDirectoryPackagesProps(directoryPackagePropsFileContent)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(masterFileContent));
 
         _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);

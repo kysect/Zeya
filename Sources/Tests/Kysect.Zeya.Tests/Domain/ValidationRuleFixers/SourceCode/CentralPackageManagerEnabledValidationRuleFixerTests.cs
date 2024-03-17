@@ -55,9 +55,10 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
                                            """;
 
         const string projectName = "SampleProject";
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), localGithubRepository);
@@ -112,10 +113,10 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
         const string projectName = "SampleProject";
         const string projectName2 = "SampleProject2";
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
             .AddProject(new ProjectFileStructureBuilder(projectName2, originalProjectContent))
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), localGithubRepository);

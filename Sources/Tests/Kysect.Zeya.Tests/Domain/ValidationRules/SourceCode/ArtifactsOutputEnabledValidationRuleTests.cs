@@ -1,5 +1,4 @@
-﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Tools;
+﻿using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
@@ -22,8 +21,9 @@ public class ArtifactsOutputEnabledValidationRuleTests
     {
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -37,9 +37,10 @@ public class ArtifactsOutputEnabledValidationRuleTests
     {
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], string.Empty)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -60,9 +61,10 @@ public class ArtifactsOutputEnabledValidationRuleTests
                                          """;
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -83,9 +85,10 @@ public class ArtifactsOutputEnabledValidationRuleTests
                                          """;
         var arguments = new ArtifactsOutputEnabledValidationRule.Arguments();
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddFile([SolutionItemNameConstants.DirectoryBuildProps], directoryBuildPropsContent)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 

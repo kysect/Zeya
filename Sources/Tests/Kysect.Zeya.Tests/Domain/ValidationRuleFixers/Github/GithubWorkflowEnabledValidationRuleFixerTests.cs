@@ -1,5 +1,4 @@
-﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.Zeya.LocalRepositoryAccess;
+﻿using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.Github;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Github;
@@ -28,8 +27,10 @@ public class GithubWorkflowEnabledValidationRuleFixerTests
                                     - step
                                 """;
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
+
         _validationTestFixture.FileSystem.AddFile("build.yaml", new MockFileData(masterFileContent));
 
         ILocalRepository nonGitRepository = _validationTestFixture.CreateLocalRepository();
@@ -45,8 +46,10 @@ public class GithubWorkflowEnabledValidationRuleFixerTests
                                               - step
                                           """;
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
+
         _validationTestFixture.FileSystem.AddFile("build.yaml", new MockFileData(masterFileContent));
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
 

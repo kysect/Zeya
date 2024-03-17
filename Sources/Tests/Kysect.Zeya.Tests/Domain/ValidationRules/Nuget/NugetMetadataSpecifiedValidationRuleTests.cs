@@ -1,5 +1,4 @@
-﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Projects;
+﻿using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
 using Kysect.Zeya.Tests.Tools;
@@ -22,8 +21,9 @@ public class NugetMetadataSpecifiedValidationRuleTests
     {
         var arguments = new NugetMetadataSpecifiedValidationRule.Arguments([]);
 
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -39,9 +39,10 @@ public class NugetMetadataSpecifiedValidationRuleTests
         var arguments = new NugetMetadataSpecifiedValidationRule.Arguments([]);
         var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty());
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddDirectoryBuildProps(directoryBuildPropsFile)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -56,9 +57,10 @@ public class NugetMetadataSpecifiedValidationRuleTests
         var arguments = new NugetMetadataSpecifiedValidationRule.Arguments(["RequiredProperty"]);
         var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty());
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddDirectoryBuildProps(directoryBuildPropsFile)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -75,9 +77,10 @@ public class NugetMetadataSpecifiedValidationRuleTests
         var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty());
         directoryBuildPropsFile.File.Properties.SetProperty("RequiredProperty", "true");
 
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddDirectoryBuildProps(directoryBuildPropsFile)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 

@@ -41,8 +41,9 @@ public class RequiredPackagesAddedValidationRuleFixerTests
                                                          """;
 
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.2")]);
-        new SolutionFileStructureBuilder("Solution")
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(arguments, localGithubRepository);
@@ -95,9 +96,10 @@ public class RequiredPackagesAddedValidationRuleFixerTests
 
         var projectPath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, projectName, $"{projectName}.csproj");
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0")]);
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddProject(new ProjectFileStructureBuilder(projectName, projectFileContent))
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(arguments, localGithubRepository);
@@ -133,9 +135,10 @@ public class RequiredPackagesAddedValidationRuleFixerTests
                                                      """;
 
         var arguments = new RequiredPackagesAddedValidationRule.Arguments([new ProjectPackageVersion("RequiredPackage", "1.0"), new ProjectPackageVersion("Package2", "1.0")]);
-        new SolutionFileStructureBuilder("Solution")
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
             .AddDirectoryBuildProps(sourceDirectoryBuildPropsFile)
-            .Save(_validationTestFixture.FileSystem, _validationTestFixture.CurrentPath, _validationTestFixture.Formatter);
+            .Save(_validationTestFixture.CurrentPath);
 
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
         _fixer.Fix(arguments, localGithubRepository);
