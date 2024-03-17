@@ -2,6 +2,7 @@
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.RepositoryValidation;
+using System.ComponentModel.DataAnnotations;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
@@ -9,7 +10,8 @@ namespace Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 public class SourcesMustNotBeInRootValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<SourcesMustNotBeInRootValidationRule.Arguments>
 {
     [ScenarioStep("SourceCode.SourcesMustNotBeInRoot")]
-    public record Arguments(string SourceDirectoryPath) : IValidationRule
+    public record Arguments(
+        [property: Required] string SourceDirectoryPath) : IValidationRule
     {
         public string DiagnosticCode => RuleDescription.SourceCode.SourcesMustNotBeInRoot;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
