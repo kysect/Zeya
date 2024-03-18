@@ -28,7 +28,7 @@ public class FileSystemFileAsserts
 
     public FileSystemFileAsserts ShouldHaveContent(string content)
     {
-        _fileSystem.File.ReadAllText(_path).Should().BeEquivalentTo(content);
+        _fileSystem.File.ReadAllText(_path).Should().BeEquivalentTo(content, $"File {_path} should have correct content");
         return this;
     }
 

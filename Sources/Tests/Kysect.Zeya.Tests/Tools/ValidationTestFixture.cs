@@ -1,4 +1,6 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.ScenarioLib.Abstractions;
@@ -48,6 +50,8 @@ public class ValidationTestFixture
             .AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(CurrentPath))
             .AddSingleton<GithubRepositoryProvider>()
             .AddSingleton<SolutionFileStructureBuilderFactory>()
+            .AddSingleton<DotnetSolutionModifierFactory>()
+            .AddSingleton<SolutionFileContentParser>()
             .AddZeyaValidationRulesAndFixers()
             .BuildServiceProvider();
 
