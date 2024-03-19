@@ -14,7 +14,7 @@ public class LocalRepositorySolutionManager(string repositoryPath, string soluti
         return new LocalRepositorySolution(repositoryPath, solutionFilePath, fileSystem, solutionModifierFactory);
     }
 
-    private string GetSolutionFilePath()
+    public string GetSolutionFilePath()
     {
         var solutions = fileSystem.Directory.EnumerateFiles(repositoryPath, solutionSearchMask, SearchOption.AllDirectories).ToList();
         if (solutions.Count == 0)
