@@ -2,6 +2,7 @@
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.DataAccess.EntityFramework.Tools;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
@@ -28,11 +29,7 @@ public class PolicyRepositoryService(
 
     public async Task<ValidationPolicyRepositoryDto> AddGithubRepository(Guid policyId, string githubOwner, string githubRepository, string? solutionPathMask)
     {
-        // TODO: add extension method Get
-        ValidationPolicyEntity? policy = await context.ValidationPolicies.FindAsync(policyId);
-
-        if (policy is null)
-            throw new ArgumentException("Policy not found");
+        ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);
 
         if (solutionPathMask is null)
             solutionPathMask = LocalRepositorySolutionManager.DefaultMask;
@@ -47,11 +44,7 @@ public class PolicyRepositoryService(
 
     public async Task<ValidationPolicyRepositoryDto> AddLocalRepository(Guid policyId, string path, string? solutionPathMask)
     {
-        // TODO: add extension method Get
-        ValidationPolicyEntity? policy = await context.ValidationPolicies.FindAsync(policyId);
-
-        if (policy is null)
-            throw new ArgumentException("Policy not found");
+        ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);
 
         if (solutionPathMask is null)
             solutionPathMask = LocalRepositorySolutionManager.DefaultMask;

@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.DataAccess.EntityFramework.Tools;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.ModelMapping;
 using Kysect.Zeya.RepositoryValidation;
@@ -19,14 +20,9 @@ public class ValidationPolicyService
 
     public async Task<ValidationPolicyEntity> GetPolicy(Guid id)
     {
-        // TODO: Handle null result
-        ValidationPolicyEntity? result = await _context
+        return await _context
             .ValidationPolicies
-            .FindAsync(id);
-
-        result.ThrowIfNull();
-
-        return result;
+            .GetAsync(id);
     }
 
     public async Task SaveReport(Guid repositoryId, RepositoryValidationReport report)
