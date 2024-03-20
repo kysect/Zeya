@@ -4,12 +4,23 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess.Github;
 
-public class LocalGithubRepository(GithubRepositoryName githubMetadata, string repositoryRootPath, string solutionSearchMask, IFileSystem fileSystem, DotnetSolutionModifierFactory solutionModifierFactory)
-    : ILocalRepository
+public class LocalGithubRepository(
+    GithubRepositoryName githubMetadata,
+    string repositoryRootPath,
+    string solutionSearchMask,
+    IGithubIntegrationService githubIntegrationService,
+    IFileSystem fileSystem,
+    DotnetSolutionModifierFactory solutionModifierFactory)
+    : IClonedLocalRepository
 {
-    public GithubRepositoryName GithubMetadata { get; } = githubMetadata;
+    public GithubRepositoryName GithubMetadata => githubMetadata;
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
     public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, solutionSearchMask, fileSystem, solutionModifierFactory);
+
+    public void CreatePullRequest(string message, string pullRequestTitle, string branch, string baseBranch)
+    {
+        githubIntegrationService.CreatePullRequest(githubMetadata, message, pullRequestTitle, branch, baseBranch);
+    }
 
     public string GetRepositoryName()
     {
