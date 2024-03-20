@@ -3,7 +3,6 @@ using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,11 +46,10 @@ public class PolicyValidationService(
         IValidationPolicyRepository repository = repositoryFactory.Create(repositoryInfo);
         ILocalRepository localGithubRepository = githubRepositoryProvider.InitializeRepository(repository);
 
-        // TODO:
-        if (localGithubRepository is not LocalGithubRepository githubRepository)
-            throw new NotImplementedException($"Repository with type {localGithubRepository} cannot be fixed");
+        if (localGithubRepository is not IClonedLocalRepository clonedLocalRepository)
+            throw new NotSupportedException($"Repository {localGithubRepository.GetType()} does not have remote. Cannot create PR.");
 
         // TODO: issues #89 No need to analyze, we already have report in database
-        policyRepositoryValidationService.CreatePullRequestWithFix(githubRepository, new ScenarioContent(policy.Content));
+        policyRepositoryValidationService.CreatePullRequestWithFix(clonedLocalRepository, new ScenarioContent(policy.Content));
     }
 }

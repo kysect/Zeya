@@ -2,7 +2,6 @@
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +25,7 @@ public class RepositoryValidationService(
         Fix(repository, repositoryValidationReport, validationRules);
     }
 
-    public void CreatePullRequestWithFix(LocalGithubRepository repository, ScenarioContent scenarioContent)
+    public void CreatePullRequestWithFix(IClonedLocalRepository repository, ScenarioContent scenarioContent)
     {
         repository.ThrowIfNull();
 
@@ -54,7 +53,7 @@ public class RepositoryValidationService(
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
-        githubIntegrationService.CreatePullRequest(repository.GithubMetadata, pullRequestMessage, pullRequestTitle, branchName, baseBranch);
+        repository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch);
     }
 
     public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, ScenarioContent scenarioContent)

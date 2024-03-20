@@ -74,6 +74,13 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         _logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
         _githubIntegrationService.CloneOrUpdate(githubRepositoryName);
         string repositoryRootPath = _localStoragePathFactory.GetPathToRepository(new GithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name));
-        return new LocalGithubRepository(githubRepositoryName, repositoryRootPath, LocalRepositorySolutionManager.DefaultMask, _fileSystem, _solutionModifierFactory);
+
+        return new LocalGithubRepository(
+            githubRepositoryName,
+            repositoryRootPath,
+            LocalRepositorySolutionManager.DefaultMask,
+            _githubIntegrationService,
+            _fileSystem,
+            _solutionModifierFactory);
     }
 }
