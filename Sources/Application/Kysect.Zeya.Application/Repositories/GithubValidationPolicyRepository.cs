@@ -1,8 +1,8 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Exceptions;
-using Kysect.Zeya.Common;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.Dtos;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 
 namespace Kysect.Zeya.Application.Repositories;
 
@@ -27,13 +27,10 @@ public class GithubValidationPolicyRepository : IValidationPolicyRepository
 
         _info = info;
 
-        // TODO: Move this to GithubRepositoryName
-        if (!info.Metadata.Contains('/'))
-            throw new ZeyaException("Repository does not contains '/'");
+        (string owner, string name) = GithubRepositoryName.Parse(info.Metadata);
 
-        string[] parts = info.Metadata.Split('/', 2);
-        Owner = parts[0];
-        Name = parts[1];
+        Owner = owner;
+        Name = name;
     }
 
     public ValidationPolicyRepositoryDto ToDto()
