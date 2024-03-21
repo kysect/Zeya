@@ -34,9 +34,8 @@ public class GithubIntegrationService : IGithubIntegrationService
             .GetRepositories(organization)
             .Result;
 
-        // TODO: remove this hack after fix https://github.com/kysect/GithubUtils/issues/41
         return githubRepositoryBranches
-            .Select(r => new GithubRepositoryName(organization, r.Name))
+            .Select(r => new GithubRepositoryName(r.Owner, r.Name))
             .ToList();
     }
 
