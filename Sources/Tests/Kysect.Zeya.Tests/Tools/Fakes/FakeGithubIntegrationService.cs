@@ -23,7 +23,7 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
     }
 
-    public IReadOnlyCollection<GithubRepositoryName> GetOrganizationRepositories(string organization)
+    public Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
     {
         throw new NotImplementedException();
     }
@@ -43,7 +43,7 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         throw new NotImplementedException();
     }
 
-    public void CreateFixBranch(GithubRepositoryName repositoryName, string branchName)
+    public Task CreateFixBranch(GithubRepositoryName repositoryName, string branchName)
     {
         throw new NotImplementedException();
     }
@@ -58,14 +58,14 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         throw new NotImplementedException();
     }
 
-    public void CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
+    public Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         throw new NotImplementedException();
     }
 
-    public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
+    public Task<bool> DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
     {
-        return BranchProtectionEnabled;
+        return Task.FromResult(BranchProtectionEnabled);
     }
 
     public RepositoryBranchProtection GetRepositoryBranchProtection(GithubRepositoryName githubRepositoryName, string branch)

@@ -56,9 +56,9 @@ public class GithubIntegrationServiceTests : IDisposable
     }
 
     [Fact(Skip = "Github has limit for requests")]
-    public void GetOrganizationRepositories_ForKysect_ReturnZeya()
+    public async Task GetOrganizationRepositories_ForKysect_ReturnZeya()
     {
-        IReadOnlyCollection<GithubRepositoryName> repositories = _githubIntegrationService.GetOrganizationRepositories("Kysect");
+        IReadOnlyCollection<GithubRepositoryName> repositories = await _githubIntegrationService.GetOrganizationRepositories("Kysect");
 
         repositories.Should().Contain(new GithubRepositoryName("Kysect", "Zeya"));
     }
@@ -85,9 +85,9 @@ public class GithubIntegrationServiceTests : IDisposable
     }
 
     [Fact]
-    public void DeleteBranchOnMerge_ReturnExpectedResult()
+    public async Task DeleteBranchOnMerge_ReturnExpectedResult()
     {
-        bool deleteBranchOnMerge = _githubIntegrationService.DeleteBranchOnMerge(_githubRepositoryName);
+        bool deleteBranchOnMerge = await _githubIntegrationService.DeleteBranchOnMerge(_githubRepositoryName);
 
         deleteBranchOnMerge.Should().BeFalse();
     }

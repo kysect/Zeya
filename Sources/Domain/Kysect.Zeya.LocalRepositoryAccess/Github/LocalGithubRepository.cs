@@ -17,9 +17,9 @@ public class LocalGithubRepository(
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
     public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, solutionSearchMask, fileSystem, solutionModifierFactory);
 
-    public void CreatePullRequest(string message, string pullRequestTitle, string branch, string baseBranch)
+    public Task CreatePullRequest(string message, string pullRequestTitle, string branch, string baseBranch)
     {
-        githubIntegrationService.CreatePullRequest(githubMetadata, message, pullRequestTitle, branch, baseBranch);
+        return githubIntegrationService.CreatePullRequest(githubMetadata, message, pullRequestTitle, branch, baseBranch);
     }
 
     public string GetRepositoryName()

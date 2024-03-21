@@ -4,7 +4,7 @@ namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class DummyGithubIntegrationService : IGithubIntegrationService
 {
-    public IReadOnlyCollection<GithubRepositoryName> GetOrganizationRepositories(string organization)
+    public Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
     {
         throw new NotImplementedException();
     }
@@ -18,12 +18,12 @@ public class DummyGithubIntegrationService : IGithubIntegrationService
         throw new NotImplementedException();
     }
 
-    public void CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
+    public Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         throw new NotImplementedException();
     }
 
-    public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
+    public Task<bool> DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
     {
         throw new NotImplementedException();
     }

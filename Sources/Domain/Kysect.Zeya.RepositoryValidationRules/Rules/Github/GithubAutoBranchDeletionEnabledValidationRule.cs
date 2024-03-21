@@ -31,7 +31,8 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
             return;
         }
 
-        if (!githubIntegrationService.DeleteBranchOnMerge(clonedGithubRepository.GithubMetadata))
+        var deleteBranchOnMerge = githubIntegrationService.DeleteBranchOnMerge(clonedGithubRepository.GithubMetadata).Result;
+        if (!deleteBranchOnMerge)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,

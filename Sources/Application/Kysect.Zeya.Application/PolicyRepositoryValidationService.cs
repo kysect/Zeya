@@ -25,7 +25,7 @@ public class RepositoryValidationService(
         Fix(repository, repositoryValidationReport, validationRules);
     }
 
-    public void CreatePullRequestWithFix(IClonedLocalRepository repository, string scenarioContent)
+    public async Task CreatePullRequestWithFix(IClonedLocalRepository repository, string scenarioContent)
     {
         repository.ThrowIfNull();
 
@@ -52,7 +52,7 @@ public class RepositoryValidationService(
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(fixedDiagnostics);
-        repository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch);
+        await repository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch);
     }
 
     public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, string scenarioContent)

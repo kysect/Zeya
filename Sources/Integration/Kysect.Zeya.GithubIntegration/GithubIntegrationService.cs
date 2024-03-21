@@ -27,12 +27,10 @@ public class GithubIntegrationService : IGithubIntegrationService
         _logger = logger.ThrowIfNull();
     }
 
-    public IReadOnlyCollection<GithubRepositoryName> GetOrganizationRepositories(string organization)
+    public async Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
     {
         var gitHubRepositoryDiscoveryService = new GitHubRepositoryDiscoveryService(_gitHubClient);
-        IReadOnlyList<GithubRepositoryBranch> githubRepositoryBranches = gitHubRepositoryDiscoveryService
-            .GetRepositories(organization)
-            .Result;
+        IReadOnlyList<GithubRepositoryBranch> githubRepositoryBranches = await gitHubRepositoryDiscoveryService.GetRepositories(organization);
 
         return githubRepositoryBranches
             .Select(r => new GithubRepositoryName(r.Owner, r.Name))
@@ -64,21 +62,23 @@ public class GithubIntegrationService : IGithubIntegrationService
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
-    public void CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
+    public async Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         repositoryName.ThrowIfNull();
         message.ThrowIfNull();
 
         // TODO: return PR info
-        // TODO: make it async
-        PullRequest pullRequest = _gitHubClient.Repository.PullRequest.Create(repositoryName.Owner, repositoryName.Name, new NewPullRequest(pullRequestTitle, branch, baseBranch) { Body = message }).Result;
+        PullRequest pullRequest = await _gitHubClient.Repository.PullRequest.Create(
+            repositoryName.Owner,
+            repositoryName.Name,
+            new NewPullRequest(pullRequestTitle, branch, baseBranch) { Body = message });
     }
 
-    public bool DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
+    public async Task<bool> DeleteBranchOnMerge(GithubRepositoryName githubRepositoryName)
     {
         githubRepositoryName.ThrowIfNull();
 
-        var repositoryInfo = _gitHubClient.Repository.Get(githubRepositoryName.Owner, githubRepositoryName.Name).Result;
+        var repositoryInfo = await _gitHubClient.Repository.Get(githubRepositoryName.Owner, githubRepositoryName.Name);
         return repositoryInfo.DeleteBranchOnMerge ?? false;
     }
 
