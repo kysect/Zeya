@@ -7,7 +7,7 @@ namespace Kysect.Zeya.Application;
 public interface IGithubRepositoryProvider
 {
     ILocalRepository InitializeRepository(IValidationPolicyRepository repository);
-    IReadOnlyCollection<LocalGithubRepository> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories);
+    Task<IReadOnlyCollection<LocalGithubRepository>> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories);
     LocalGithubRepository GetGithubRepository(string owner, string repository);
     ILocalRepository GetLocalRepository(string path);
 }

@@ -43,12 +43,12 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         };
     }
 
-    public IReadOnlyCollection<LocalGithubRepository> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)
+    public async Task<IReadOnlyCollection<LocalGithubRepository>> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)
     {
         var skipList = excludedRepositories.ToHashSet();
 
-        IReadOnlyCollection<GithubRepositoryName> githubRepositories = _githubIntegrationService
-            .GetOrganizationRepositories(organization)
+        IReadOnlyCollection<GithubRepositoryName> organizationRepositories = await _githubIntegrationService.GetOrganizationRepositories(organization);
+        IReadOnlyCollection<GithubRepositoryName> githubRepositories = organizationRepositories
             .Where(repository => !skipList.Contains(repository.Name))
             .ToList();
 

@@ -9,10 +9,10 @@ public class PolicyRepositoryValidationService(
     RepositoryValidationService policyRepositoryValidationService,
     ILogger<PolicyRepositoryValidationService> logger) : IPolicyRepositoryValidationService
 {
-    public void CreatePullRequestWithFix(GithubRepositoryNameDto repository, string scenario)
+    public async Task CreatePullRequestWithFix(GithubRepositoryNameDto repository, string scenario)
     {
         logger.LogTrace("Loading validation configuration");
-        policyRepositoryValidationService.CreatePullRequestWithFix(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenario);
+        await policyRepositoryValidationService.CreatePullRequestWithFix(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenario);
     }
 
     public void AnalyzerAndFix(GithubRepositoryNameDto repository, string scenario)
