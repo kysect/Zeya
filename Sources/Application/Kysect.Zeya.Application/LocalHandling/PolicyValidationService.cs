@@ -18,7 +18,6 @@ public class PolicyValidationService(
     public async Task Validate(Guid policyId)
     {
         ValidationPolicyEntity policy = await service.GetPolicy(policyId);
-        var scenarioContent = new ScenarioContent(policy.Content);
 
         IReadOnlyCollection<ValidationPolicyRepository> repositories = await context
             .ValidationPolicyRepositories
@@ -29,7 +28,7 @@ public class PolicyValidationService(
         {
             IValidationPolicyRepository repository = repositoryFactory.Create(validationPolicyRepository);
             ILocalRepository localGithubRepository = githubRepositoryProvider.InitializeRepository(repository);
-            RepositoryValidationReport report = policyRepositoryValidationService.AnalyzeSingleRepository(localGithubRepository, scenarioContent);
+            RepositoryValidationReport report = policyRepositoryValidationService.AnalyzeSingleRepository(localGithubRepository, policy.Content);
             await service.SaveReport(validationPolicyRepository.Id, report);
         }
     }
@@ -50,6 +49,6 @@ public class PolicyValidationService(
             throw new NotSupportedException($"Repository {localGithubRepository.GetType()} does not have remote. Cannot create PR.");
 
         // TODO: issues #89 No need to analyze, we already have report in database
-        policyRepositoryValidationService.CreatePullRequestWithFix(clonedLocalRepository, new ScenarioContent(policy.Content));
+        policyRepositoryValidationService.CreatePullRequestWithFix(clonedLocalRepository, policy.Content);
     }
 }

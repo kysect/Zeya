@@ -18,14 +18,14 @@ public class RepositoryValidationService(
     PullRequestMessageCreator pullRequestMessageCreator,
     ILogger<RepositoryValidationService> logger)
 {
-    public void AnalyzerAndFix(ILocalRepository repository, ScenarioContent scenarioContent)
+    public void AnalyzerAndFix(ILocalRepository repository, string scenarioContent)
     {
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
         RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenarioContent);
         Fix(repository, repositoryValidationReport, validationRules);
     }
 
-    public void CreatePullRequestWithFix(IClonedLocalRepository repository, ScenarioContent scenarioContent)
+    public void CreatePullRequestWithFix(IClonedLocalRepository repository, string scenarioContent)
     {
         repository.ThrowIfNull();
 
@@ -55,7 +55,7 @@ public class RepositoryValidationService(
         repository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch);
     }
 
-    public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, ScenarioContent scenarioContent)
+    public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, string scenarioContent)
     {
         repositories.ThrowIfNull();
 
@@ -80,7 +80,7 @@ public class RepositoryValidationService(
         return repositoryDiagnosticFixer.Fix(report, validationRules, repository);
     }
 
-    public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, ScenarioContent scenarioContent)
+    public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, string scenarioContent)
     {
         repository.ThrowIfNull();
 

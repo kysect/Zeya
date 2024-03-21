@@ -70,16 +70,16 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
     public void Analyze_ReturnExpectedResult()
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        var scenarioContent = _scenarioProvider.GetScenarioSourceCode("ValidationScenario.yaml");
-        RepositoryValidationReport repositoryValidationReport = _policyRepositoryValidationService.Analyze([localGithubRepository], new ScenarioContent(scenarioContent));
+        string scenarioContent = _scenarioProvider.GetScenarioSourceCode("ValidationScenario.yaml");
+        RepositoryValidationReport repositoryValidationReport = _policyRepositoryValidationService.Analyze([localGithubRepository], scenarioContent);
     }
 
     [Fact]
     public void AnalyzerAndFix_ReturnExpectedResult()
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        var scenarioContent = _scenarioProvider.GetScenarioSourceCode("ValidationScenario.yaml");
-        _policyRepositoryValidationService.AnalyzerAndFix(localGithubRepository, new ScenarioContent(scenarioContent));
+        string scenarioContent = _scenarioProvider.GetScenarioSourceCode("ValidationScenario.yaml");
+        _policyRepositoryValidationService.AnalyzerAndFix(localGithubRepository, scenarioContent);
     }
 
     public void Dispose()
