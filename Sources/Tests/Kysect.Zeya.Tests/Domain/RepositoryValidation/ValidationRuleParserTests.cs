@@ -21,8 +21,7 @@ public class ValidationRuleParserTests
         string path = fileSystem.Path.Combine("Tools", "Assets", "ValidationScenario.yaml");
 
         string content = fileSystem.File.ReadAllText(path);
-        var scenarioContent = new ScenarioContent(content);
-        IReadOnlyCollection<IValidationRule> rules = _validationRuleParser.GetValidationRules(scenarioContent);
+        IReadOnlyCollection<IValidationRule> rules = _validationRuleParser.GetValidationRules(content);
 
         rules.Should().HaveCount(14);
     }
