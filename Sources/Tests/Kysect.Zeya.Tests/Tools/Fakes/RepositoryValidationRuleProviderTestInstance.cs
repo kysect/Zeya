@@ -1,4 +1,5 @@
-﻿using Kysect.ScenarioLib.YamlParser;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.ScenarioLib.YamlParser;
 using Kysect.ScenarioLib;
 using Kysect.Zeya.RepositoryValidation;
 using System.IO.Abstractions;
@@ -8,12 +9,16 @@ namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public static class RepositoryValidationRuleProviderTestInstance
 {
-    public static RepositoryValidationRuleProvider Create()
+    public static ScenarioContentProvider CreateContentProvider(IFileSystem fileSystem)
     {
-        var fileSystem = new FileSystem();
-        var scenarioSourceProvider = new ScenarioContentProvider(fileSystem, fileSystem.Path.Combine("Tools", "Assets"));
+        fileSystem.ThrowIfNull();
+        return new ScenarioContentProvider(fileSystem, fileSystem.Path.Combine("Tools", "Assets"));
+    }
+
+    public static ValidationRuleParser Create()
+    {
         var yamlScenarioSourceCodeParser = new YamlScenarioContentParser();
         var scenarioStepReflectionParser = ScenarioContentStepReflectionDeserializer.Create(typeof(RuleDescription).Assembly);
-        return new RepositoryValidationRuleProvider(scenarioSourceProvider, new ScenarioContentDeserializer(yamlScenarioSourceCodeParser, scenarioStepReflectionParser));
+        return new ValidationRuleParser(new ScenarioContentDeserializer(yamlScenarioSourceCodeParser, scenarioStepReflectionParser));
     }
 }

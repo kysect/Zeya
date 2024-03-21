@@ -11,7 +11,7 @@ public static class DbSetExtensionMethods
         dbSet.ThrowIfNull();
         keyValues.ThrowIfNull();
 
-        T? result = await dbSet.FindAsync();
+        T? result = await dbSet.FindAsync(keyValues);
         return result ?? throw new ArgumentException($"Cannot find {typeof(T)} by key {keyValues.ToSingleString()}");
     }
 }
