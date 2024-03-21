@@ -9,7 +9,7 @@ namespace Kysect.Zeya.Application;
 
 // TODO: merge with PolicyRepositoryValidationService
 public class RepositoryValidationService(
-    RepositoryValidationRuleProvider validationRuleProvider,
+    ValidationRuleParser validationRuleParser,
     RepositoryValidator repositoryValidator,
     IRepositoryValidationReporter reporter,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer,
@@ -20,7 +20,7 @@ public class RepositoryValidationService(
 {
     public void AnalyzerAndFix(ILocalRepository repository, ScenarioContent scenarioContent)
     {
-        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenarioContent);
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
         RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenarioContent);
         Fix(repository, repositoryValidationReport, validationRules);
     }
@@ -37,9 +37,8 @@ public class RepositoryValidationService(
         string pullRequestTitle = "Fix warnings from Zeya";
         string commitMessage = "Apply Zeya code fixers";
 
-        // TODO: remove hardcoded value
         RepositoryValidationReport report = Analyze([repository], scenarioContent);
-        IReadOnlyCollection<IValidationRule> rules = validationRuleProvider.GetValidationRules(scenarioContent);
+        IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(scenarioContent);
 
         logger.LogInformation("Repositories analyzed, run fixers");
         gitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
@@ -85,7 +84,7 @@ public class RepositoryValidationService(
     {
         repository.ThrowIfNull();
 
-        IReadOnlyCollection<IValidationRule> validationRules = validationRuleProvider.GetValidationRules(scenarioContent);
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
 
         logger.LogDebug("Validate {Repository}", repository.GetRepositoryName());
         RepositoryValidationReport report = repositoryValidator.Validate(repository, validationRules);

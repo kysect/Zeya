@@ -5,13 +5,13 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
 
-public class RepositoryValidationRuleProviderTests
+public class ValidationRuleParserTests
 {
-    private readonly RepositoryValidationRuleProvider _repositoryValidationRuleProvider;
+    private readonly ValidationRuleParser _validationRuleParser;
 
-    public RepositoryValidationRuleProviderTests()
+    public ValidationRuleParserTests()
     {
-        _repositoryValidationRuleProvider = RepositoryValidationRuleProviderTestInstance.Create();
+        _validationRuleParser = RepositoryValidationRuleProviderTestInstance.Create();
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public class RepositoryValidationRuleProviderTests
 
         string content = fileSystem.File.ReadAllText(path);
         var scenarioContent = new ScenarioContent(content);
-        IReadOnlyCollection<IValidationRule> rules = _repositoryValidationRuleProvider.GetValidationRules(scenarioContent);
+        IReadOnlyCollection<IValidationRule> rules = _validationRuleParser.GetValidationRules(scenarioContent);
 
         rules.Should().HaveCount(14);
     }

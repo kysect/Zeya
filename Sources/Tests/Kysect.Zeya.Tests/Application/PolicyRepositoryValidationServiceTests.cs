@@ -1,6 +1,7 @@
 ﻿using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
+using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -17,16 +18,17 @@ namespace Kysect.Zeya.Tests.Application;
 
 public class PolicyRepositoryValidationServiceTests : IDisposable
 {
-    private readonly RepositoryValidationRuleProvider _repositoryValidationRuleProvider;
+    private readonly ValidationRuleParser _validationRuleParser;
     private readonly RepositoryValidationService _policyRepositoryValidationService;
     private readonly TestTemporaryDirectory _temporaryDirectory;
     private readonly GithubRepositoryProvider _githubRepositoryProvider;
+    private readonly IScenarioContentProvider _scenarioProvider;
 
     public PolicyRepositoryValidationServiceTests()
     {
         var fileSystem = new FileSystem();
 
-        _repositoryValidationRuleProvider = RepositoryValidationRuleProviderTestInstance.Create();
+        _validationRuleParser = RepositoryValidationRuleProviderTestInstance.Create();
         _temporaryDirectory = new TestTemporaryDirectory(fileSystem);
         string repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
         var localStoragePathFactory = new FakePathFormatStrategy(repositoriesDirectory);
@@ -44,9 +46,10 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
         var repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidator>();
         var repositoryValidationReporter = serviceProvider.GetRequiredService<IRepositoryValidationReporter>();
         var repositoryDiagnosticFixer = serviceProvider.GetRequiredService<RepositoryDiagnosticFixer>();
+        _scenarioProvider = RepositoryValidationRuleProviderTestInstance.CreateContentProvider(fileSystem);
 
         _policyRepositoryValidationService = new RepositoryValidationService(
-            _repositoryValidationRuleProvider,
+            _validationRuleParser,
             repositoryValidator,
             repositoryValidationReporter,
             repositoryDiagnosticFixer,
@@ -67,16 +70,16 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
     public void Analyze_ReturnExpectedResult()
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        ScenarioContent scenarioContent = _repositoryValidationRuleProvider.ReadScenario("ValidationScenario.yaml");
-        RepositoryValidationReport repositoryValidationReport = _policyRepositoryValidationService.Analyze([localGithubRepository], scenarioContent);
+        var scenarioContent = _scenarioProvider.GetScenarioSourceCode("ValidationScenario.yaml");
+        RepositoryValidationReport repositoryValidationReport = _policyRepositoryValidationService.Analyze([localGithubRepository], new ScenarioContent(scenarioContent));
     }
 
     [Fact]
     public void AnalyzerAndFix_ReturnExpectedResult()
     {
         LocalGithubRepository localGithubRepository = _githubRepositoryProvider.GetGithubRepository("Kysect", "Zeya");
-        ScenarioContent scenarioContent = _repositoryValidationRuleProvider.ReadScenario("ValidationScenario.yaml");
-        _policyRepositoryValidationService.AnalyzerAndFix(localGithubRepository, scenarioContent);
+        var scenarioContent = _scenarioProvider.GetScenarioSourceCode("ValidationScenario.yaml");
+        _policyRepositoryValidationService.AnalyzerAndFix(localGithubRepository, new ScenarioContent(scenarioContent));
     }
 
     public void Dispose()

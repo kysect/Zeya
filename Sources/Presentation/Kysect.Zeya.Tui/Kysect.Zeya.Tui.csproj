@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kysect.CommonLib" />
+    <PackageReference Include="Kysect.ScenarioLib.Abstractions" />
     <PackageReference Include="Kysect.TerminalUserInterface" />
   </ItemGroup>
 

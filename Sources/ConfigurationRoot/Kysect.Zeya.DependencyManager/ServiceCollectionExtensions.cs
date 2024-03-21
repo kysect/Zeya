@@ -142,7 +142,7 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection
             .AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>()
-            .AddSingleton<RepositoryValidationRuleProvider>()
+            .AddSingleton<ValidationRuleParser>()
             .AddSingleton<RepositoryValidator>()
             .AddSingleton<RepositoryDiagnosticFixer>()
             .AddSingleton<PullRequestMessageCreator>()

@@ -2,6 +2,7 @@
 using Kysect.Zeya.Application;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.Tests.Tools;
@@ -56,6 +57,6 @@ public class PolicyRepositoryServiceTests
             return _policyRepositoryService.AddGithubRepository(Guid.Empty, "Owner", "Repository", null);
         });
 
-        argumentException.Message.Should().Be("Policy not found");
+        argumentException.Message.Should().Be($"Cannot find {typeof(ValidationPolicyEntity).FullName} by key 00000000-0000-0000-0000-000000000000");
     }
 }
