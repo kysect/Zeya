@@ -2,7 +2,7 @@ using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var database = builder.AddPostgresContainer("zeya-db-server")
+var database = builder.AddPostgres("zeya-db-server")
     .AddDatabase("zeya-db");
 
 var apiService = builder.AddProject<Kysect_Zeya_WebService>("apiservice")
