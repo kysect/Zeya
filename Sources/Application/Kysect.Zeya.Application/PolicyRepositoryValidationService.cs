@@ -22,10 +22,10 @@ public class RepositoryValidationService(
     {
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
         RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenarioContent);
-        Fix(repository, repositoryValidationReport, validationRules);
+        Fix(repository, validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
     }
 
-    public async Task CreatePullRequestWithFix(IClonedLocalRepository repository, string scenarioContent)
+    public async Task CreatePullRequestWithFix(IClonedLocalRepository repository, string scenarioContent, IReadOnlyCollection<string> validationRuleCodeForFix)
     {
         repository.ThrowIfNull();
 
@@ -37,12 +37,11 @@ public class RepositoryValidationService(
         string pullRequestTitle = "Fix warnings from Zeya";
         string commitMessage = "Apply Zeya code fixers";
 
-        RepositoryValidationReport report = Analyze([repository], scenarioContent);
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(scenarioContent);
 
         logger.LogInformation("Repositories analyzed, run fixers");
         gitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
-        IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, report, rules);
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, rules, validationRuleCodeForFix);
 
         logger.LogInformation("Commit fixes");
         gitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
@@ -69,15 +68,14 @@ public class RepositoryValidationService(
         return report;
     }
 
-    public IReadOnlyCollection<IValidationRule> Fix(ILocalRepository repository, RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> validationRules)
+    public IReadOnlyCollection<IValidationRule> Fix(ILocalRepository repository, IReadOnlyCollection<IValidationRule> validationRules, IReadOnlyCollection<string> validationRuleCodeForFix)
     {
         repository.ThrowIfNull();
-        report.ThrowIfNull();
         validationRules.ThrowIfNull();
 
         // TODO: log fix result
         logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
-        return repositoryDiagnosticFixer.Fix(report, validationRules, repository);
+        return repositoryDiagnosticFixer.Fix(validationRules, repository, validationRuleCodeForFix);
     }
 
     public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, string scenarioContent)
