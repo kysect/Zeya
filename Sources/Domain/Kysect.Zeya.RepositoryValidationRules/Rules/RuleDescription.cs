@@ -9,7 +9,7 @@ public static class RuleDescription
         public const string ReadmeExists = "GHR0002";
         public const string BranchProtectionEnabled = "GHR0003";
         public const string AutoBranchDeletionEnabled = "GHR0004";
-        public const string BuildWorkflowEnabled = "GHR0005";
+        public const string ActionConfigured = "GHR0005";
     }
 
     public static class SourceCode

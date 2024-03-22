@@ -13,13 +13,9 @@
 
 - Name: Github.AutoBranchDeletionEnabled
 
-- Name: Github.BuildWorkflowEnabled
+- Name: Github.ActionConfigured
   Parameters:
-    MasterFile: Samples\build-test.yaml
-
-- Name: Github.BuildWorkflowEnabled
-  Parameters:
-    MasterFile: Samples\nuget-publish.yaml
+    Workflows: [Samples\build-test.yaml, Samples\nuget-publish.yaml]
 
 - Name: SourceCode.SourcesMustNotBeInRoot
   Parameters:

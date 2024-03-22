@@ -18,7 +18,7 @@ public class GithubWorkflowEnabledValidationRuleTests
     [Fact]
     public void Execute_NotGithubRepository_ReturnErrorAboutIncorrectRepository()
     {
-        var arguments = new GithubWorkflowEnabledValidationRule.Arguments("Master.yaml");
+        var arguments = new GithubWorkflowEnabledValidationRule.Arguments(["Master.yaml"]);
         var notGithubContext = _validationTestFixture.CreateLocalRepositoryValidationScenarioContext();
 
         _validationRule.Execute(notGithubContext, arguments);
@@ -31,7 +31,7 @@ public class GithubWorkflowEnabledValidationRuleTests
     [Fact]
     public void Execute_MissedMasterFile_ReturnErrorAboutMissedFile()
     {
-        var arguments = new GithubWorkflowEnabledValidationRule.Arguments("Master.yaml");
+        var arguments = new GithubWorkflowEnabledValidationRule.Arguments(["Master.yaml"]);
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
 
@@ -44,7 +44,7 @@ public class GithubWorkflowEnabledValidationRuleTests
     public void Execute_WorkflowFileIsNotExists_ReturnDiagnosticAboutMissedFile()
     {
         string masterYamlFilePath = "build.yaml";
-        var arguments = new GithubWorkflowEnabledValidationRule.Arguments(masterYamlFilePath);
+        var arguments = new GithubWorkflowEnabledValidationRule.Arguments([masterYamlFilePath]);
         _validationTestFixture.FileSystem.AddFile(masterYamlFilePath, new MockFileData(string.Empty));
 
         _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
@@ -64,7 +64,7 @@ public class GithubWorkflowEnabledValidationRuleTests
                                          - run
                                        """;
 
-        var arguments = new GithubWorkflowEnabledValidationRule.Arguments(masterYamlFilePath);
+        var arguments = new GithubWorkflowEnabledValidationRule.Arguments([masterYamlFilePath]);
         string repositoryWorkflowFilePath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, ".github", "workflows", "build.yaml");
 
         _validationTestFixture.FileSystem.AddFile(masterYamlFilePath, new MockFileData(masterYamlFileContent));
@@ -91,7 +91,7 @@ public class GithubWorkflowEnabledValidationRuleTests
                                          - run
                                        """;
 
-        var arguments = new GithubWorkflowEnabledValidationRule.Arguments(masterYamlFilePath);
+        var arguments = new GithubWorkflowEnabledValidationRule.Arguments([masterYamlFilePath]);
         string repositoryWorkflowFilePath = _validationTestFixture.FileSystem.Path.Combine(_validationTestFixture.CurrentPath, ".github", "workflows", "build.yaml");
 
         _validationTestFixture.FileSystem.AddFile(masterYamlFilePath, new MockFileData(masterYamlFileContent));
