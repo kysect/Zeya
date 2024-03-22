@@ -1,8 +1,8 @@
 ﻿@page "/validation-policies/create"
 @using Microsoft.AspNetCore.Components.Forms
 
-
-<h3>Create Validation policy</h3>
+<PageTitle>Create Validation policy</PageTitle>
+<h1>Create Validation policy</h1>
 
 <EditForm Model="@_formData" OnValidSubmit="@CreatePolicy">
     <DataAnnotationsValidator />
@@ -19,6 +19,6 @@
         <InputTextArea rows="4" id="rules" class="form-control" @bind-Value="_formData.Content" />
         <ValidationMessage For="@(() => _formData.Content)" />
     </div>
-
+    
     <button type="submit" class="btn btn-primary">Create</button>
 </EditForm>
