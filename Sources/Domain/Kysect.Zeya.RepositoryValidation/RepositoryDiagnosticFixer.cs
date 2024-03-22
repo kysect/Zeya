@@ -16,20 +16,20 @@ public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRul
         localRepository.ThrowIfNull();
         validationRuleCodeForFix.ThrowIfNull();
 
-        var fixedDiagnostics = new List<IValidationRule>();
+        var fixedRules = new List<IValidationRule>();
+        Dictionary<string, IValidationRule> validationRules = rules.ToDictionary(r => r.DiagnosticCode, r => r);
 
         foreach (string code in validationRuleCodeForFix)
         {
-            // TODO: rework this hack
-            IValidationRule? validationRule = rules.FirstOrDefault(r => r.DiagnosticCode == code);
-            if (validationRule is null)
+            if (!validationRules.TryGetValue(code, out IValidationRule? validationRule))
                 throw new DotnetProjectSystemException($"Rule {code} was not found");
+
 
             if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
                 logger.LogInformation("Apply code fixer for {Code}", code);
                 validationRuleFixerApplier.Apply(validationRule, localRepository);
-                fixedDiagnostics.Add(validationRule);
+                fixedRules.Add(validationRule);
             }
             else
             {
@@ -37,6 +37,6 @@ public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRul
             }
         }
 
-        return fixedDiagnostics;
+        return fixedRules;
     }
 }

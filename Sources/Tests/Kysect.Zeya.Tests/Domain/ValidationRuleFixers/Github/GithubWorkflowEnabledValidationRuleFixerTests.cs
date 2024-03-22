@@ -34,7 +34,7 @@ public class GithubWorkflowEnabledValidationRuleFixerTests
         _validationTestFixture.FileSystem.AddFile("build.yaml", new MockFileData(masterFileContent));
 
         ILocalRepository nonGitRepository = _validationTestFixture.CreateLocalRepository();
-        _fixer.Fix(new GithubWorkflowEnabledValidationRule.Arguments("build.yaml"), nonGitRepository);
+        _fixer.Fix(new GithubWorkflowEnabledValidationRule.Arguments(["build.yaml"]), nonGitRepository);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class GithubWorkflowEnabledValidationRuleFixerTests
         _validationTestFixture.FileSystem.AddFile("build.yaml", new MockFileData(masterFileContent));
         LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
 
-        _fixer.Fix(new GithubWorkflowEnabledValidationRule.Arguments("build.yaml"), localGithubRepository);
+        _fixer.Fix(new GithubWorkflowEnabledValidationRule.Arguments(["build.yaml"]), localGithubRepository);
 
         _validationTestFixture.FileSystemAsserts
             .File(_validationTestFixture.CurrentPath, ".github", "workflows", "build.yaml")

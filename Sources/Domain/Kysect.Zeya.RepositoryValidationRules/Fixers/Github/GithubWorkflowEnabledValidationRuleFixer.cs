@@ -23,11 +23,14 @@ public class GithubWorkflowEnabledValidationRuleFixer(
             return;
         }
 
-        IFileInfo masterFileInfo = fileSystem.FileInfo.New(rule.MasterFile);
-        string workflowPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
+        foreach (string workflow in rule.Workflows)
+        {
+            IFileInfo masterFileInfo = fileSystem.FileInfo.New(workflow);
+            string workflowPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
 
-        logger.LogInformation("Copy workflow from {Source} to {Target}", rule.MasterFile, workflowPath);
-        string masterFileContent = fileSystem.File.ReadAllText(rule.MasterFile);
-        localRepository.FileSystem.WriteAllText(workflowPath, masterFileContent);
+            logger.LogInformation("Copy workflow from {Source} to {Target}", workflow, workflowPath);
+            string masterFileContent = fileSystem.File.ReadAllText(workflow);
+            localRepository.FileSystem.WriteAllText(workflowPath, masterFileContent);
+        }
     }
 }

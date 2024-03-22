@@ -10,11 +10,11 @@ namespace Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 
 public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScenarioStepExecutor<GithubWorkflowEnabledValidationRule.Arguments>
 {
-    [ScenarioStep("Github.BuildWorkflowEnabled")]
+    [ScenarioStep("Github.ActionConfigured")]
     public record Arguments(
-        [property: Required] string MasterFile) : IValidationRule
+        [property: Required] IReadOnlyCollection<string> Workflows) : IValidationRule
     {
-        public string DiagnosticCode => RuleDescription.Github.BuildWorkflowEnabled;
+        public string DiagnosticCode => RuleDescription.Github.ActionConfigured;
         public const RepositoryValidationSeverity DefaultSeverity = RepositoryValidationSeverity.Warning;
     }
 
@@ -23,7 +23,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         context.ThrowIfNull();
         request.ThrowIfNull();
 
-        var repositoryValidationContext = context.GetValidationContext();
+        RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
 
         ILocalRepository localRepository = repositoryValidationContext.Repository;
         if (localRepository is not LocalGithubRepository clonedGithubRepository)
@@ -35,19 +35,29 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
             return;
         }
 
-        if (!fileSystem.File.Exists(request.MasterFile))
+        foreach (string workflow in request.Workflows)
+            AnalyzeWorkflow(repositoryValidationContext, clonedGithubRepository, request, workflow);
+    }
+
+    private void AnalyzeWorkflow(
+        RepositoryValidationContext repositoryValidationContext,
+        LocalGithubRepository repository,
+        Arguments request,
+        string workflow)
+    {
+        if (!fileSystem.File.Exists(workflow))
         {
             repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
                 request.DiagnosticCode,
-                $"Master file {request.MasterFile} missed",
+                $"Master file {workflow} missed",
                 Arguments.DefaultSeverity);
             return;
         }
-        IFileInfo masterFileInfo = fileSystem.FileInfo.New(request.MasterFile);
-        string masterFileContent = fileSystem.File.ReadAllText(request.MasterFile);
+        IFileInfo masterFileInfo = fileSystem.FileInfo.New(workflow);
+        string masterFileContent = fileSystem.File.ReadAllText(workflow);
 
-        var expectedPath = clonedGithubRepository.GetWorkflowPath(masterFileInfo.Name);
-        if (!localRepository.FileSystem.Exists(expectedPath))
+        var expectedPath = repository.GetWorkflowPath(masterFileInfo.Name);
+        if (!repository.FileSystem.Exists(expectedPath))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
                 request.DiagnosticCode,
@@ -56,7 +66,7 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
             return;
         }
 
-        string repositoryWorkflowFileContent = localRepository.FileSystem.ReadAllText(expectedPath);
+        string repositoryWorkflowFileContent = repository.FileSystem.ReadAllText(expectedPath);
         if (!string.Equals(masterFileContent, repositoryWorkflowFileContent))
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(

@@ -23,6 +23,6 @@ public class ValidationRuleParserTests
         string content = fileSystem.File.ReadAllText(path);
         IReadOnlyCollection<IValidationRule> rules = _validationRuleParser.GetValidationRules(content);
 
-        rules.Should().HaveCount(14);
+        rules.Should().HaveCount(13);
     }
 }
