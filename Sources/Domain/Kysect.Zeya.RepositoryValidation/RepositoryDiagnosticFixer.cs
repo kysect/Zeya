@@ -1,4 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +21,9 @@ public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRul
 
         foreach (string code in validationRuleCodeForFix)
         {
-            IValidationRule validationRule = validationRules[code];
+            if (!validationRules.TryGetValue(code, out IValidationRule? validationRule))
+                throw new DotnetProjectSystemException($"Rule {code} was not found");
+
 
             if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
