@@ -48,7 +48,12 @@ public class PolicyValidationService(
         if (localGithubRepository is not IClonedLocalRepository clonedLocalRepository)
             throw new NotSupportedException($"Repository {localGithubRepository.GetType()} does not have remote. Cannot create PR.");
 
-        // TODO: issues #89 No need to analyze, we already have report in database
-        await policyRepositoryValidationService.CreatePullRequestWithFix(clonedLocalRepository, policy.Content);
+        List<string> validationRuleIds = await context
+            .ValidationPolicyRepositoryDiagnostics
+            .Where(d => d.ValidationPolicyRepositoryId == repositoryId)
+            .Select(d => d.RuleId)
+            .ToListAsync();
+
+        await policyRepositoryValidationService.CreatePullRequestWithFix(clonedLocalRepository, policy.Content, validationRuleIds);
     }
 }

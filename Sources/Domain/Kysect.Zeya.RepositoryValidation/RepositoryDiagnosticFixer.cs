@@ -7,31 +7,33 @@ namespace Kysect.Zeya.RepositoryValidation;
 
 public class RepositoryDiagnosticFixer(IValidationRuleFixerApplier validationRuleFixerApplier, ILogger<RepositoryDiagnosticFixer> logger)
 {
-    public IReadOnlyCollection<IValidationRule> Fix(RepositoryValidationReport report, IReadOnlyCollection<IValidationRule> rules, ILocalRepository localRepository)
+    public IReadOnlyCollection<IValidationRule> Fix(
+        IReadOnlyCollection<IValidationRule> rules,
+        ILocalRepository localRepository,
+        IReadOnlyCollection<string> validationRuleCodeForFix)
     {
-        report.ThrowIfNull();
         rules.ThrowIfNull();
         localRepository.ThrowIfNull();
+        validationRuleCodeForFix.ThrowIfNull();
 
         var fixedDiagnostics = new List<IValidationRule>();
 
-        foreach (IGrouping<string, RepositoryValidationDiagnostic> grouping in report.Diagnostics.GroupBy(d => d.Code))
+        foreach (string code in validationRuleCodeForFix)
         {
-            RepositoryValidationDiagnostic diagnostic = grouping.First();
             // TODO: rework this hack
-            IValidationRule? validationRule = rules.FirstOrDefault(r => r.DiagnosticCode == diagnostic.Code);
+            IValidationRule? validationRule = rules.FirstOrDefault(r => r.DiagnosticCode == code);
             if (validationRule is null)
-                throw new DotnetProjectSystemException($"Rule {diagnostic.Code} was not found");
+                throw new DotnetProjectSystemException($"Rule {code} was not found");
 
             if (validationRuleFixerApplier.IsFixerRegistered(validationRule))
             {
-                logger.LogInformation("Apply code fixer for {Code}", diagnostic.Code);
+                logger.LogInformation("Apply code fixer for {Code}", code);
                 validationRuleFixerApplier.Apply(validationRule, localRepository);
                 fixedDiagnostics.Add(validationRule);
             }
             else
             {
-                logger.LogDebug("Fixer for {Code} is not available", diagnostic.Code);
+                logger.LogDebug("Fixer for {Code} is not available", code);
             }
         }
 

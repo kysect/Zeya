@@ -14,4 +14,12 @@ public record RepositoryValidationReport(IReadOnlyCollection<RepositoryValidatio
 
         return new RepositoryValidationReport(Diagnostics.Concat(other.Diagnostics).ToList(), RuntimeErrors.Concat(other.RuntimeErrors).ToList());
     }
+
+    public IReadOnlyCollection<string> GetAllDiagnosticRuleCodes()
+    {
+        return Diagnostics
+            .Select(d => d.Code)
+            .Distinct()
+            .ToList();
+    }
 }
