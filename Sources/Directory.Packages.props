@@ -4,8 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Aspire.Microsoft.Data.SqlClient" Version="8.0.0-preview.3.24105.21" />
-    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.3.24105.21" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.3.24105.21" />
+    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.4.24156.9" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.4.24156.9" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
     <PackageVersion Include="Kysect.DotnetProjectSystem" Version="0.1.14" />
     <PackageVersion Include="Kysect.GithubUtils" Version="1.2.1" />
@@ -65,6 +65,6 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.6.0-beta.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.7.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
-    <PackageVersion Include="Aspire.Hosting" Version="8.0.0-preview.3.24105.21" />
+    <PackageVersion Include="Aspire.Hosting" Version="8.0.0-preview.4.24156.9" />
   </ItemGroup>
 </Project>
