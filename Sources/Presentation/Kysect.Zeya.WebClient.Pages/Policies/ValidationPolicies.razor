@@ -3,7 +3,7 @@
 <PageTitle>Policies</PageTitle>
 <h1>Policies</h1>
 
-<FluentNavLink Href="/validation-policies/create" Icon="@(new Icons.Regular.Size20.WeatherPartlyCloudyDay())" IconColor="Color.Accent">Create</FluentNavLink>
+<FluentNavLink Href="/validation-policies/create" Icon="@(new Icons.Filled.Size48.Add())" IconColor="Color.Accent">Create</FluentNavLink>
 
 @if (_validationPolicies == null)
 {
@@ -11,28 +11,13 @@
 }
 else
 {
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Rules</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var policy in _validationPolicies)
-            {
-                <tr>
-                    <td>@policy.Name</td>
-                    @* TODO: think about how to display rules *@
-                    @* <td>@policy.Content</td> *@
-                    <td>
-                        <FluentButton Appearance="Appearance.Accent" @onclick="() => EditPolicy(policy.Id)">Edit</FluentButton>
-                        @* <button @onclick="() => DeletePolicy(policy.Id)">Delete</button> *@
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <FluentStack>
+        @foreach (var policy in _validationPolicies)
+        {
+            <FluentCard Width="300px" Height="200px">
+                <FluentLabel Typo="Typography.H3"> Policy @policy.Name </FluentLabel>
+                <FluentButton Appearance="Appearance.Accent" @onclick="() => EditPolicy(policy.Id)">Edit</FluentButton>
+            </FluentCard>
+        }
+    </FluentStack>
 }

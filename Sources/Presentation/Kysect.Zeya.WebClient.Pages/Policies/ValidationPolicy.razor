@@ -8,8 +8,16 @@
 }
 else
 {
-    <h3>Validation policy @_policy.Name</h3>
-    <p>@_policy.Content</p>
+    <FluentLabel Typo="Typography.H1"> Validation policy @_policy.Name </FluentLabel>
+    <FluentLabel Typo="Typography.H2"> Rules </FluentLabel>
+    <code style="white-space: pre;">
+        @_policy.Content
+    </code>
+
+    <FluentLabel Typo="Typography.H2"> Repositories </FluentLabel>
+    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-github-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add Github repository</FluentNavLink>
+    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-local-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add local repository</FluentNavLink>
+
     <table>
         <thead>
             <tr>
@@ -28,9 +36,7 @@ else
         </tbody>
     </table>
 
-    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-github-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add Github repository</FluentNavLink>
-    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-local-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add local repository</FluentNavLink>
-
+    <FluentLabel Typo="Typography.H2"> Validation </FluentLabel>
     <FluentButton Appearance="Appearance.Accent" @onclick="@RunValidation">Run validation</FluentButton>
 
     <table>
