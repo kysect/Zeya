@@ -56,4 +56,24 @@ public class PolicyValidationService(
 
         await policyRepositoryValidationService.CreatePullRequestWithFix(clonedLocalRepository, policy.Content, validationRuleIds);
     }
+
+    public async Task<string> PreviewChanges(Guid policyId, Guid repositoryId)
+    {
+        ValidationPolicyEntity policy = await service.GetPolicy(policyId);
+        ValidationPolicyRepository repositoryInfo = await context
+            .ValidationPolicyRepositories
+            .Where(r => r.ValidationPolicyId == policyId)
+            .Where(r => r.Id == repositoryId)
+            .SingleAsync();
+
+        IValidationPolicyRepository repository = repositoryFactory.Create(repositoryInfo);
+        ILocalRepository localGithubRepository = githubRepositoryProvider.InitializeRepository(repository);
+        List<string> validationRuleIds = await context
+            .ValidationPolicyRepositoryDiagnostics
+            .Where(d => d.ValidationPolicyRepositoryId == repositoryId)
+            .Select(d => d.RuleId)
+            .ToListAsync();
+
+        return policyRepositoryValidationService.PreviewChanges(localGithubRepository, policy.Content, validationRuleIds);
+    }
 }

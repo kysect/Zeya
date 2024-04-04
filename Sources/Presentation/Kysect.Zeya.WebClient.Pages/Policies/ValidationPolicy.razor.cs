@@ -19,6 +19,7 @@ public partial class ValidationPolicy
     private ValidationPolicyDto? _policy;
     private IReadOnlyCollection<ValidationPolicyRepositoryDto> _policyRepositories = new List<ValidationPolicyRepositoryDto>();
     private IReadOnlyCollection<RepositoryDiagnosticTableRow> _diagnosticsTable = new List<RepositoryDiagnosticTableRow>();
+    private string? _changesPreview;
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,5 +46,10 @@ public partial class ValidationPolicy
     public async Task CreateFix(Guid repositoryId)
     {
         await PolicyValidationService.CreateFix(PolicyId, repositoryId);
+    }
+
+    public async Task PreviewChanges(Guid repositoryId)
+    {
+        _changesPreview = await PolicyValidationService.PreviewChanges(PolicyId, repositoryId);
     }
 }

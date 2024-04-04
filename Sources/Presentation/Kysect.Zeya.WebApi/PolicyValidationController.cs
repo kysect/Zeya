@@ -28,4 +28,11 @@ public class PolicyValidationController : Controller
         await _policyValidationService.CreateFix(policyId, repositoryId);
         return Ok();
     }
+
+    [HttpPost("{PolicyId}/{RepositoryId}/PreviewChanges")]
+    public async Task<ActionResult<string>> PreviewChanges(Guid policyId, Guid repositoryId)
+    {
+        string diff = await _policyValidationService.PreviewChanges(policyId, repositoryId);
+        return Ok(diff);
+    }
 }

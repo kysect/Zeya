@@ -9,4 +9,7 @@ public interface IPolicyValidationService
 
     [Post("/Policies/{PolicyId}/{RepositoryId}/Fix")]
     Task CreateFix(Guid policyId, Guid repositoryId);
+
+    [Post("/Policies/{PolicyId}/{RepositoryId}/PreviewChanges")]
+    Task<string> PreviewChanges(Guid policyId, Guid repositoryId);
 }

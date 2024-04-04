@@ -54,6 +54,18 @@ public class RepositoryValidationService(
         await repository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch);
     }
 
+    public string PreviewChanges(ILocalRepository repository, string scenarioContent, IReadOnlyCollection<string> validationRuleCodeForFix)
+    {
+        repository.ThrowIfNull();
+
+        IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(scenarioContent);
+
+        logger.LogInformation("Repositories analyzed, run fixers");
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, rules, validationRuleCodeForFix);
+
+        return gitIntegrationService.GetDiff(repository.FileSystem.GetFullPath());
+    }
+
     public RepositoryValidationReport Analyze(IReadOnlyCollection<ILocalRepository> repositories, string scenarioContent)
     {
         repositories.ThrowIfNull();
