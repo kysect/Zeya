@@ -99,6 +99,36 @@ public class GitIntegrationServiceTests : IDisposable
         gitRepository.Head.Commits.First().Message.Trim().Should().Be("Commit message");
     }
 
+    [Fact]
+    public void GetDiff_AfterChanges_ReturnChanges()
+    {
+        string filePath = _fileSystem.Path.Combine(_repositoriesDirectory, "file.txt");
+        var expected = """
+                       diff --git a/file.txt b/file.txt
+                       new file mode 100644
+                       index 0000000..3b2e0ae
+                       --- /dev/null
+                       +++ b/file.txt
+                       @@ -0,0 +1 @@
+                       +Some changes qer
+                       \ No newline at end of file
+
+                       """;
+
+        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
+        using var gitRepository = new Repository(_repositoriesDirectory);
+
+        _fileSystem.File.WriteAllText(filePath, "Some changes qer");
+        string diff = _gitIntegrationService.GetDiff(_localRepository.FileSystem.GetFullPath());
+
+        // KB: git return unix end lines
+        expected = expected.NormalizeEndLines();
+        diff = diff.NormalizeEndLines();
+
+        diff.Should().Be(expected);
+    }
+
+
     public void Dispose()
     {
         _temporaryDirectory.Dispose();

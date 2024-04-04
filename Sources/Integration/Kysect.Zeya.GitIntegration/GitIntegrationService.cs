@@ -12,6 +12,15 @@ public class GitIntegrationService : IGitIntegrationService
         _commitAuthor = commitAuthor;
     }
 
+    public string GetDiff(string repositoryLocalPath)
+    {
+        using var repo = new Repository(repositoryLocalPath);
+
+        Patch patch = repo.Diff.Compare<Patch>(["*"], includeUntracked: true);
+
+        return patch.Content;
+    }
+
     public void CreateFixBranch(string repositoryLocalPath, string branchName)
     {
         using var repo = new Repository(repositoryLocalPath);

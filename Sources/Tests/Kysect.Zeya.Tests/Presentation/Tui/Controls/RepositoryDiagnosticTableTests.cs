@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.Dtos;
+using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tui.Controls;
 using Spectre.Console.Testing;
 
@@ -24,7 +25,7 @@ public class RepositoryDiagnosticTableTests
         string consoleOutput = console.Output;
 
         // TODO: need to report bug to Spectre.Console
-        consoleOutput = consoleOutput.Replace("\n", Environment.NewLine);
+        consoleOutput = consoleOutput.NormalizeEndLines();
         consoleOutput.Should().Be("""
                                   Repository         SRC0001  SRC0002
                                   Owner/Repository   Warning  Warning
