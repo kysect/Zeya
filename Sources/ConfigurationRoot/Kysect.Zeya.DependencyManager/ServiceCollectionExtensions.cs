@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaHttpService(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddZeyaRefit(new Uri("http://apiservice"));
+            .AddZeyaRefit(new Uri("https://apiservice"));
     }
 
     public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)

@@ -8,7 +8,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var uri = new Uri("http://localhost:5056/");
+var uri = new Uri("https://localhost:7062/");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = uri });
 builder.Services.AddZeyaRefit(uri);
 builder.Services.AddFluentUIComponents();
