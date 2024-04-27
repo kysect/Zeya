@@ -13,13 +13,20 @@ namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
+    private readonly IRepositoryFetcher _repositoryFetcher;
     private readonly GithubIntegrationCredential _credential;
     private readonly IGitHubClient _gitHubClient;
     private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
-    public GithubIntegrationService(GithubIntegrationCredential credential, IGitHubClient gitHubClient, ILocalStoragePathFactory pathFormatStrategy, ILogger<GithubIntegrationService> logger)
+    public GithubIntegrationService(
+        GithubIntegrationCredential credential,
+        IGitHubClient gitHubClient,
+        ILocalStoragePathFactory pathFormatStrategy,
+        IRepositoryFetcher repositoryFetcher,
+        ILogger<GithubIntegrationService> logger)
     {
+        _repositoryFetcher = repositoryFetcher;
         _credential = credential.ThrowIfNull();
 
         _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
@@ -41,12 +48,9 @@ public class GithubIntegrationService : IGithubIntegrationService
     {
         repositoryName.ThrowIfNull();
 
-        var repositoryFetchOptions = new RepositoryFetchOptions(_credential.GithubUsername, _credential.GithubToken);
-        var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
-
         var repository = new GithubRepository(repositoryName.Owner, repositoryName.Name);
         string pathToRepository = _pathFormatStrategy.GetPathToRepository(repository);
-        repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
+        _repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
     }
 
     public void PushCommitToRemote(string repositoryLocalPath, string branchName)

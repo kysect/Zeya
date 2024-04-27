@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
@@ -51,7 +52,9 @@ public class GithubIntegrationServiceTests : IDisposable
             githubIntegrationOptions.Credential,
             new GitHubClient(new ProductHeaderValue("Zeya")),
             localStoragePathFactory,
+            new RepositoryFetcher(new RepositoryFetchOptions(githubIntegrationOptions.Credential.GithubUsername, githubIntegrationOptions.Credential.GithubToken), serviceProvider.GetRequiredService<ILogger<RepositoryFetcher>>()),
             serviceProvider.GetRequiredService<ILogger<GithubIntegrationService>>());
+
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
     }
 

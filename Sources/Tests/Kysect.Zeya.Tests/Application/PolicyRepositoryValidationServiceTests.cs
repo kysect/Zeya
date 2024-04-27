@@ -1,6 +1,7 @@
 ﻿using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
+using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.DependencyManager;
@@ -46,6 +47,7 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
         var repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidator>();
         var repositoryValidationReporter = serviceProvider.GetRequiredService<IRepositoryValidationReporter>();
         var repositoryDiagnosticFixer = serviceProvider.GetRequiredService<RepositoryDiagnosticFixer>();
+        IRepositoryFetcher repositoryFetcher = serviceProvider.GetRequiredService<IRepositoryFetcher>();
         _scenarioProvider = RepositoryValidationRuleProviderTestInstance.CreateContentProvider(fileSystem);
 
         _policyRepositoryValidationService = new RepositoryValidationService(
@@ -63,7 +65,8 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
             serviceProvider.GetRequiredService<ILogger<GithubRepositoryProvider>>(),
             githubIntegrationService,
             localStoragePathFactory,
-            new DotnetSolutionModifierFactory(fileSystem, new SolutionFileContentParser(), new XmlDocumentSyntaxFormatter()));
+            new DotnetSolutionModifierFactory(fileSystem, new SolutionFileContentParser(), new XmlDocumentSyntaxFormatter()),
+            repositoryFetcher);
     }
 
     [Fact]
