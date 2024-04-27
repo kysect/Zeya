@@ -11,16 +11,18 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
 {
     private readonly ILocalStoragePathFactory _localStoragePathFactory;
     private readonly ILogger _logger;
-    private readonly GithubIntegrationCredential _options;
+    private readonly RepositoryFetcher _repositoryFetcher;
     public RepositoryBranchProtection RepositoryBranchProtection { get; set; }
     public bool BranchProtectionEnabled { get; set; }
 
     public FakeGithubIntegrationService(GithubIntegrationCredential githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger logger)
     {
-        _options = githubIntegrationOptions.ThrowIfNull();
+        GithubIntegrationCredential options = githubIntegrationOptions;
         _localStoragePathFactory = localStoragePathFactory;
         _logger = logger;
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
+        var repositoryFetchOptions = new RepositoryFetchOptions(options.GithubUsername, options.GithubToken);
+        _repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
     }
 
     public Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
@@ -32,12 +34,9 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
     {
         repositoryName.ThrowIfNull();
 
-        var repositoryFetchOptions = new RepositoryFetchOptions(_options.GithubUsername, _options.GithubToken);
-        var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
-
         var repository = new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name);
         string pathToRepository = _localStoragePathFactory.GetPathToRepository(repository);
-        repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
+        _repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
     }
 
     public void PushCommitToRemote(string repositoryLocalPath, string branchName)

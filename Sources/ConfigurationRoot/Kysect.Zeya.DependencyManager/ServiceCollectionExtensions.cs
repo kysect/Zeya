@@ -3,6 +3,7 @@ using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
+using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
@@ -22,7 +23,6 @@ using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.Tui.Controls;
-using Kysect.Zeya.WebApiClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,17 +55,11 @@ public static class ServiceCollectionExtensions
             .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
     }
 
-    public static IServiceCollection AddZeyaHttpService(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddZeyaRefit(new Uri("https://apiservice"));
-    }
-
     public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)
     {
         return serviceCollection
             .AddZeyaDotnetProjectSystemIntegration()
-            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
+            .AddZeyaGitIntegration()
             .AddZeyaGithubIntegration()
             .AddZeyaValidationRulesAndFixers()
             .AddZeyaScenarioExecuting()
@@ -101,6 +95,23 @@ public static class ServiceCollectionExtensions
             .AddDbContext<ZeyaDbContext>(options =>
             {
                 options.UseSqlite($"Data Source={databaseName}");
+            });
+    }
+
+    public static IServiceCollection AddZeyaGitIntegration(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
+            .AddSingleton<IRepositoryFetcher>(sp =>
+            {
+                IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
+                ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
+
+                GithubIntegrationCredential credential = githubOptions.Value.Credential;
+                var repositoryFetchOptions = new RepositoryFetchOptions(credential.GithubUsername, credential.GithubToken);
+                var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, logger);
+
+                return new ExceptionHandlerRepositoryFetcherDecorator(repositoryFetcher, logger);
             });
     }
 
