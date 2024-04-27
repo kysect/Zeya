@@ -1,4 +1,4 @@
-﻿using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
+﻿using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools.Fakes;
 

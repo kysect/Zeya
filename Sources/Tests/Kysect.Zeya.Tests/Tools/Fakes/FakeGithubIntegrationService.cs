@@ -1,6 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
-using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Microsoft.Extensions.Logging;
@@ -35,7 +35,9 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         var repositoryFetchOptions = new RepositoryFetchOptions(_options.GithubUsername, _options.GithubToken);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
 
-        repositoryFetcher.EnsureRepositoryUpdated(_localStoragePathFactory, new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name));
+        var repository = new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name);
+        string pathToRepository = _localStoragePathFactory.GetPathToRepository(repository);
+        repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
     }
 
     public void PushCommitToRemote(string repositoryLocalPath, string branchName)

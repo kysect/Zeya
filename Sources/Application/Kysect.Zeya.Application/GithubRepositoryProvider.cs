@@ -1,7 +1,7 @@
 ﻿using Kysect.CommonLib.Exceptions;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.GithubUtils.Models;
-using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
+using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
