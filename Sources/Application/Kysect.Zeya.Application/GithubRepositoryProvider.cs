@@ -81,7 +81,9 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         string repositoryName = remoteHttpsUrl.Split('/').Last();
         // TODO: This is kind of hack because we don't have access to cache directory path
         string repositoryPath = _localStoragePathFactory.GetPathToRepository(new GithubRepository("RemoteRepository", repositoryName));
-        _repositoryFetcher.EnsureRepositoryUpdated(repositoryPath, new CustomRemoteGitRepository(repositoryName, remoteHttpsUrl));
+
+        var gitRepository = new CustomRemoteGitRepository(repositoryName, remoteHttpsUrl);
+        _repositoryFetcher.EnsureRepositoryUpdated(repositoryPath, gitRepository);
 
         return new LocalRepository(
             repositoryPath,

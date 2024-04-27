@@ -1,0 +1,25 @@
+﻿@page "/validation-policies/{PolicyId:guid}/add-remote-repository"
+
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Add remote repository</PageTitle>
+<h1>Add remote repository</h1>
+
+<EditForm Model="@_formData" OnValidSubmit="@AddPolicyRepository">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="path">Remote HTTPS url</label>
+        <InputText id="path" class="form-control" @bind-Value="_formData.RemoteHttpsUrl" />
+        <ValidationMessage For="@(() => _formData.RemoteHttpsUrl)" />
+    </div>
+    
+    <div class="form-group">
+        <label for="mask">Solution path mask (default "*.sln")</label>
+        <InputText id="mask" class="form-control" @bind-Value="_formData.SolutionPathMask" />
+        <ValidationMessage For="@(() => _formData.SolutionPathMask)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
