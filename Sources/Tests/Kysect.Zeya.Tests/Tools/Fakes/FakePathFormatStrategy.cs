@@ -1,5 +1,5 @@
 ﻿using Kysect.GithubUtils.Models;
-using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
+using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 
 namespace Kysect.Zeya.Tests.Tools.Fakes;
 
@@ -12,7 +12,7 @@ public class FakePathFormatStrategy(string path) : ILocalStoragePathFactory
         return _path;
     }
 
-    public string GetPathToRepositoryWithBranch(GithubRepositoryBranch repositoryBranch)
+    public string GetPathToRepositoryWithBranch(GithubRepository repository, string branch)
     {
         return _path;
     }

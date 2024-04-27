@@ -2,7 +2,7 @@
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
-using Kysect.GithubUtils.Replication.RepositorySync.LocalStoragePathFactories;
+using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.DependencyManager;
