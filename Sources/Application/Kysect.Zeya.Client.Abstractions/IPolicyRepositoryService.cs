@@ -11,6 +11,9 @@ public interface IPolicyRepositoryService
     [Post("/Policies/{policyId}/Repositories/Local")]
     Task<ValidationPolicyRepositoryDto> AddLocalRepository(Guid policyId, string path, string? solutionPathMask);
 
+    [Post("/Policies/{policyId}/Repositories/Remote")]
+    Task<ValidationPolicyRepositoryDto> AddRemoteRepository(Guid policyId, string remoteHttpUrl, string? solutionPathMask);
+
     [Get("/Policies/{policyId}/Repositories")]
     Task<IReadOnlyCollection<ValidationPolicyRepositoryDto>> GetRepositories(Guid policyId);
 }
