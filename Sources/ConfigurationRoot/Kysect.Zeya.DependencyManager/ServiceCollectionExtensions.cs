@@ -98,7 +98,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaSqliteDbContext(this IServiceCollection serviceCollection, string databaseName = ":memory:")
     {
         return serviceCollection
-            .AddDbContextFactory<ZeyaDbContext>(options =>
+            .AddDbContext<ZeyaDbContext>(options =>
             {
                 options.UseSqlite($"Data Source={databaseName}");
             });
