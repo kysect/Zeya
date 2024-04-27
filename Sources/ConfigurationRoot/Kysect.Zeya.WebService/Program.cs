@@ -7,9 +7,17 @@ using Kysect.Zeya.WebService;
 var builder = WebApplication.CreateBuilder(args);
 
 // Aspire configuration
-builder
-    .AddServiceDefaults()
-    .AddNpgsqlDbContext<ZeyaDbContext>("zeya-db");
+builder.AddServiceDefaults();
+
+bool userSqlite = builder.Configuration.GetValue<bool>("UseSqlite");
+if (userSqlite)
+{
+    builder.Services.AddZeyaSqliteDbContext("Database.sqlite");
+}
+else
+{
+    builder.AddNpgsqlDbContext<ZeyaDbContext>("zeya-db");
+}
 
 // Add services to the container.
 builder.Services
