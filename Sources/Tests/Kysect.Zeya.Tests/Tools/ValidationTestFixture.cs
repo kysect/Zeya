@@ -3,6 +3,7 @@ using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
+using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application;
 using Kysect.Zeya.DependencyManager;
@@ -53,6 +54,12 @@ public class ValidationTestFixture
             .AddSingleton<DotnetSolutionModifierFactory>()
             .AddSingleton<SolutionFileContentParser>()
             .AddZeyaValidationRulesAndFixers()
+            .AddSingleton<IRepositoryFetcher>(sp =>
+            {
+                ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
+                var repositoryFetchOptions = new RepositoryFetchOptions("GithubUsername", "GithubToken");
+                return new RepositoryFetcher(repositoryFetchOptions, logger);
+            })
             .BuildServiceProvider();
 
         Formatter = _serviceProvider.GetRequiredService<XmlDocumentSyntaxFormatter>();

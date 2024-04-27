@@ -41,7 +41,13 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
             .AddZeyaScenarioExecuting()
             .AddZeyaValidationRulesAndFixers()
             .AddZeyaRepositoryValidation()
-            .AddSingleton(githubIntegrationService);
+            .AddSingleton(githubIntegrationService)
+            .AddSingleton<IRepositoryFetcher>(sp =>
+            {
+                ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
+                var repositoryFetchOptions = new RepositoryFetchOptions("GithubUsername", "GithubToken");
+                return new RepositoryFetcher(repositoryFetchOptions, logger);
+            });
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
         var repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidator>();
