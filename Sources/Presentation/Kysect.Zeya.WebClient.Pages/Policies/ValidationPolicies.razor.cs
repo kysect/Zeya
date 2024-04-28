@@ -1,8 +1,10 @@
 ﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kysect.Zeya.WebClient.Pages.Policies;
@@ -12,15 +14,22 @@ public partial class ValidationPolicies
     [Inject] private NavigationManager _navigationManager { get; set; } = null!;
     [Inject] private IPolicyService PolicyService { get; set; } = null!;
 
-    private IReadOnlyCollection<ValidationPolicyDto>? _validationPolicies;
+    private GridItemsProvider<ValidationPolicyDto> _policyProvider = null!;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        _validationPolicies = await PolicyService.GetPolicies();
+        _policyProvider = GridItemsProvider;
+        return Task.CompletedTask;
     }
 
     private void EditPolicy(Guid id)
     {
         _navigationManager.NavigateTo($"validation-policies/{id}");
+    }
+
+    public async ValueTask<GridItemsProviderResult<ValidationPolicyDto>> GridItemsProvider(GridItemsProviderRequest<ValidationPolicyDto> request)
+    {
+        IReadOnlyCollection<ValidationPolicyDto> policies = await PolicyService.GetPolicies();
+        return GridItemsProviderResult.From(policies.ToList(), policies.Count);
     }
 }

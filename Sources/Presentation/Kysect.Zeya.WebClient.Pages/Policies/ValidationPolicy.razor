@@ -1,4 +1,5 @@
 ﻿@page "/validation-policies/{PolicyId:guid}"
+@using Kysect.Zeya.Dtos
 
 <PageTitle>Validation Policy</PageTitle>
 
@@ -9,63 +10,72 @@
 else
 {
     <FluentLabel Typo="Typography.H1"> Validation policy @_policy.Name </FluentLabel>
-    <FluentLabel Typo="Typography.H2"> Rules </FluentLabel>
-    <code style="white-space: pre;">
-        @_policy.Content
-    </code>
+
+    <FluentAccordion>
+        <FluentAccordionItem Heading="Validation scenario">
+            <code style="white-space: pre;">
+                @_policy.Content
+            </code>
+        </FluentAccordionItem>
+    </FluentAccordion>
 
     <FluentLabel Typo="Typography.H2"> Repositories </FluentLabel>
-    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-github-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add Github repository</FluentNavLink>
-    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-local-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add local repository</FluentNavLink>
-    <FluentNavLink Href="@($"/validation-policies/{PolicyId}/add-remote-repository")" Icon="@(new Icons.Regular.Size20.Add())" IconColor="Color.Accent">Add remote repository</FluentNavLink>
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentButton IconStart="@(new Icons.Filled.Size24.Add())"
+                      Appearance="Appearance.Accent"
+                      OnClick="@(() => _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/add-github-repository"))">
+            Add Github repository
+        </FluentButton>
+        <FluentButton IconStart="@(new Icons.Filled.Size24.Add())"
+                      Appearance="Appearance.Accent"
+                      OnClick="@(() => _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/add-local-repository"))">
+            Add local repository
+        </FluentButton>
+        <FluentButton IconStart="@(new Icons.Filled.Size24.Add())"
+                      Appearance="Appearance.Accent"
+                      OnClick="@(() => _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/add-remote-repository"))">
+            Add remote repository
+        </FluentButton>
+    </FluentStack>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var repository in _policyRepositories)
-            {
-                <tr>
-                    <td>@repository.Name</td>
-                    <td>@repository.Type</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <FluentDataGrid Loading="true" ItemsProvider="_repositoryProvider" Virtualize="true" ItemSize="46" GenerateHeader="GenerateHeaderOption.Sticky" TGridItem="ValidationPolicyRepositoryDto">
+        <PropertyColumn Property="@(c => c.Id)" />
+        <PropertyColumn Property="@(c => c.Name)" />
+        <PropertyColumn Property="@(c => c.Type)" />
+    </FluentDataGrid>
 
     <FluentLabel Typo="Typography.H2"> Validation </FluentLabel>
     <FluentButton Appearance="Appearance.Accent" @onclick="@RunValidation">Run validation</FluentButton>
 
-    <table>
-        <thead>
-        <th>Repository name</th>
-        <th>Action</th>
-        @foreach (var ruleId in GetDiagnosticHeaders())
-        {
-            <th>@ruleId</th>
-        }
-        </thead>
-        <tbody>
-        @foreach (var repositoryDiagnostics in _diagnosticsTable)
-        {
-            <tr>
-                <td>@repositoryDiagnostics.RepositoryName</td>
-                <td>
+    @if (_diagnosticsTable.Any())
+    {
+        <table>
+            <thead>
+            <th>Repository name</th>
+            <th>Action</th>
+            @foreach (var ruleId in GetDiagnosticHeaders())
+            {
+                <th>@ruleId</th>
+            }
+            </thead>
+            <tbody>
+            @foreach (var repositoryDiagnostics in _diagnosticsTable)
+            {
+                <tr>
+                    <td>@repositoryDiagnostics.RepositoryName</td>
+                    <td>
                         <FluentButton Appearance="Appearance.Accent" @onclick="@(async () => await PreviewChanges(repositoryDiagnostics.Id))">Preview changes</FluentButton>
                         <FluentButton Appearance="Appearance.Accent" @onclick="@(async () => await CreateFix(repositoryDiagnostics.Id))">Create Fix</FluentButton>
-                </td>
-                @foreach (var ruleId in GetDiagnosticHeaders())
-                {
-                    <td>@repositoryDiagnostics.Diagnostics[ruleId]</td>
-                }
-            </tr>
-        }
-        </tbody>
-    </table>
+                    </td>
+                    @foreach (var ruleId in GetDiagnosticHeaders())
+                    {
+                        <td>@repositoryDiagnostics.Diagnostics[ruleId]</td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
 
     @if (_changesPreview is not null)
     {
