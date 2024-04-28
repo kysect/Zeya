@@ -30,6 +30,6 @@ public class RemoteHttpsValidationPolicyRepository : IValidationPolicyRepository
 
     public ValidationPolicyRepositoryDto ToDto()
     {
-        return new ValidationPolicyRepositoryDto(_info.Id, _info.ValidationPolicyId, _info.Metadata);
+        return new ValidationPolicyRepositoryDto(_info.Id, _info.ValidationPolicyId, _info.Metadata, _info.Type.ToString());
     }
 }
