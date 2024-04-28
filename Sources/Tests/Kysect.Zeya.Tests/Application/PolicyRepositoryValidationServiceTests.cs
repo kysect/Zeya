@@ -9,6 +9,7 @@ using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,7 +51,7 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
             });
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-        var repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidator>();
+        var repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidationProcessingAction>();
         var repositoryValidationReporter = serviceProvider.GetRequiredService<IRepositoryValidationReporter>();
         var repositoryDiagnosticFixer = serviceProvider.GetRequiredService<RepositoryDiagnosticFixer>();
         IRepositoryFetcher repositoryFetcher = serviceProvider.GetRequiredService<IRepositoryFetcher>();

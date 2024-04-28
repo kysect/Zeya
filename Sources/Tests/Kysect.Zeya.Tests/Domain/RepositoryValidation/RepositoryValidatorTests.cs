@@ -2,6 +2,7 @@
 using Kysect.ScenarioLib;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
 
@@ -10,14 +11,14 @@ namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
 public class RepositoryValidatorTests
 {
     private readonly ValidationTestFixture _validationTestFixture;
-    private readonly RepositoryValidator _repositoryValidator;
+    private readonly RepositoryValidationProcessingAction _validationProcessingAction;
 
     public RepositoryValidatorTests()
     {
         _validationTestFixture = new ValidationTestFixture();
 
         ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create();
-        _repositoryValidator = new RepositoryValidator(scenarioStepReflectionHandler, _validationTestFixture.GetLogger<RepositoryValidator>());
+        _validationProcessingAction = new RepositoryValidationProcessingAction(scenarioStepReflectionHandler, _validationTestFixture.GetLogger<RepositoryValidationProcessingAction>());
     }
 
     [Fact]
@@ -35,7 +36,7 @@ public class RepositoryValidatorTests
 
         ILocalRepository localRepository = _validationTestFixture.CreateLocalRepository();
 
-        RepositoryValidationReport repositoryValidationReport = _repositoryValidator.Validate(localRepository, rules);
+        RepositoryValidationReport repositoryValidationReport = _validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(rules));
 
         repositoryValidationReport
             .Diagnostics
