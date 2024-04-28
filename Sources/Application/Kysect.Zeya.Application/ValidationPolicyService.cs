@@ -29,7 +29,9 @@ public class ValidationPolicyService
     {
         report.ThrowIfNull();
 
-        IQueryable<ValidationPolicyRepositoryDiagnostic> oldPolicyDiagnostics = _context.ValidationPolicyRepositoryDiagnostics.Where(d => d.ValidationPolicyRepositoryId == repositoryId);
+        IQueryable<ValidationPolicyRepositoryDiagnostic> oldPolicyDiagnostics = _context
+            .ValidationPolicyRepositoryDiagnostics
+            .Where(d => d.ValidationPolicyRepositoryId == repositoryId);
         _context.ValidationPolicyRepositoryDiagnostics.RemoveRange(oldPolicyDiagnostics);
 
         var diagnostics = report
@@ -39,6 +41,23 @@ public class ValidationPolicyService
             .ToList();
 
         await _context.ValidationPolicyRepositoryDiagnostics.AddRangeAsync(diagnostics);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task SaveValidationActionMessages(Guid repositoryId, RepositoryValidationReport report)
+    {
+        report.ThrowIfNull();
+
+        var actionId = Guid.NewGuid();
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+
+        List<ValidationPolicyRepositoryActionMessage> messages = report
+            .RuntimeErrors
+            .Select(e => new ValidationPolicyRepositoryActionMessage(actionId, $"{e.Code}: {e.Message}"))
+            .ToList();
+
+        _context.ValidationPolicyRepositoryActions.Add(new ValidationPolicyRepositoryAction(actionId, repositoryId, "Validation", now));
+        _context.ValidationPolicyRepositoryActionMessages.AddRange(messages);
         await _context.SaveChangesAsync();
     }
 
