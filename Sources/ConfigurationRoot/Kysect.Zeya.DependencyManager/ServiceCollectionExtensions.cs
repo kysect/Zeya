@@ -100,7 +100,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>()
             .AddSingleton<ValidationRuleParser>()
             .AddSingleton<RepositoryValidationProcessingAction>()
-            .AddSingleton<RepositoryDiagnosticFixer>()
+            .AddSingleton<RepositoryFixProcessingAction>()
             .AddSingleton<PullRequestMessageCreator>()
             .AddScoped<RepositoryValidationService>()
             .AddScoped<ValidationPolicyRepositoryFactory>()

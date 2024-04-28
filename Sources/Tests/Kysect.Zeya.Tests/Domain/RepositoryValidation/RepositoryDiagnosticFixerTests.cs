@@ -2,6 +2,7 @@
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,13 @@ public class RepositoryDiagnosticFixerTests
 {
     private readonly ValidationTestFixture _validationTestFixture;
 
-    private readonly ILogger<RepositoryDiagnosticFixer> _logger;
+    private readonly ILogger<RepositoryFixProcessingAction> _logger;
     private readonly ILocalRepository _repository;
 
     public RepositoryDiagnosticFixerTests()
     {
         _validationTestFixture = new ValidationTestFixture();
-        _logger = _validationTestFixture.GetLogger<RepositoryDiagnosticFixer>();
+        _logger = _validationTestFixture.GetLogger<RepositoryFixProcessingAction>();
         _repository = _validationTestFixture.CreateLocalRepository();
     }
 
@@ -27,10 +28,10 @@ public class RepositoryDiagnosticFixerTests
     {
         var fixers = new Dictionary<Type, ValidationRuleFixerReflectionDecorator>();
         var validationRuleFixerApplier = new ValidationRuleFixerApplier(fixers);
-        var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
+        var repositoryDiagnosticFixer = new RepositoryFixProcessingAction(validationRuleFixerApplier, _logger);
 
         RepositoryValidationReport report = RepositoryValidationReport.Empty;
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(Array.Empty<IValidationRule>(), _repository, report.GetAllDiagnosticRuleCodes());
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Process(_repository, new RepositoryFixProcessingAction.Request(Array.Empty<IValidationRule>(), report.GetAllDiagnosticRuleCodes())).FixedRules;
 
         fixedRules.Should().BeEmpty();
     }
@@ -40,12 +41,12 @@ public class RepositoryDiagnosticFixerTests
     {
         var fixers = new Dictionary<Type, ValidationRuleFixerReflectionDecorator>();
         var validationRuleFixerApplier = new ValidationRuleFixerApplier(fixers);
-        var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
+        var repositoryDiagnosticFixer = new RepositoryFixProcessingAction(validationRuleFixerApplier, _logger);
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryValidationDiagnostic("CODE0001", "Repository", "Some error", RepositoryValidationSeverity.Warning)], []);
 
         var exception = Assert.Throws<DotnetProjectSystemException>(() =>
         {
-            repositoryDiagnosticFixer.Fix(Array.Empty<IValidationRule>(), _repository, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+            repositoryDiagnosticFixer.Process(_repository, new RepositoryFixProcessingAction.Request(Array.Empty<IValidationRule>(), repositoryValidationReport.GetAllDiagnosticRuleCodes()));
         });
 
         exception.Message.Should().Be("Rule CODE0001 was not found");
@@ -59,10 +60,10 @@ public class RepositoryDiagnosticFixerTests
 
         var fixers = new Dictionary<Type, ValidationRuleFixerReflectionDecorator>();
         var validationRuleFixerApplier = new ValidationRuleFixerApplier(fixers);
-        var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
+        var repositoryDiagnosticFixer = new RepositoryFixProcessingAction(validationRuleFixerApplier, _logger);
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryValidationDiagnostic(fakeValidationRule.DiagnosticCode, "Repository", "Some error", RepositoryValidationSeverity.Warning)], []);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(validationRules, _repository, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Process(_repository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes())).FixedRules;
 
         fixedRules.Should().BeEmpty();
     }
@@ -79,10 +80,10 @@ public class RepositoryDiagnosticFixerTests
             {fakeValidationRule.GetType(), new ValidationRuleFixerReflectionDecorator(fakeValidationRuleFixer)}
         };
         var validationRuleFixerApplier = new ValidationRuleFixerApplier(fixers);
-        var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
+        var repositoryDiagnosticFixer = new RepositoryFixProcessingAction(validationRuleFixerApplier, _logger);
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryValidationDiagnostic(fakeValidationRule.DiagnosticCode, "Repository", "Some error", RepositoryValidationSeverity.Warning)], []);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(validationRules, _repository, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Process(_repository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes())).FixedRules;
 
         fixedRules.Should().BeEquivalentTo([fakeValidationRule]);
         fakeValidationRuleFixer.FixCalls.Should().Be(1);
@@ -100,7 +101,7 @@ public class RepositoryDiagnosticFixerTests
             {fakeValidationRule.GetType(), new ValidationRuleFixerReflectionDecorator(fakeValidationRuleFixer)}
         };
         var validationRuleFixerApplier = new ValidationRuleFixerApplier(fixers);
-        var repositoryDiagnosticFixer = new RepositoryDiagnosticFixer(validationRuleFixerApplier, _logger);
+        var repositoryDiagnosticFixer = new RepositoryFixProcessingAction(validationRuleFixerApplier, _logger);
         var repositoryValidationReport = new RepositoryValidationReport(
             [
                 new RepositoryValidationDiagnostic(fakeValidationRule.DiagnosticCode, "Repository", "Some error", RepositoryValidationSeverity.Warning),
@@ -108,7 +109,7 @@ public class RepositoryDiagnosticFixerTests
             ],
             []);
 
-        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Fix(validationRules, _repository, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        IReadOnlyCollection<IValidationRule> fixedRules = repositoryDiagnosticFixer.Process(_repository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes())).FixedRules;
 
         fixedRules.Should().BeEquivalentTo([fakeValidationRule]);
         fakeValidationRuleFixer.FixCalls.Should().Be(1);
