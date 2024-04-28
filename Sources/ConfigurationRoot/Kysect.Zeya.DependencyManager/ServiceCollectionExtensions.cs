@@ -2,8 +2,6 @@
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
-using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
-using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
@@ -15,10 +13,6 @@ using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
-using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration;
-using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Kysect.Zeya.Tui;
@@ -27,8 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Octokit;
 using Serilog;
 using Serilog.Extensions.Logging;
 using Spectre.Console;
@@ -47,12 +39,6 @@ public static class ServiceCollectionExtensions
 
         return serviceCollection
             .AddSingleton(config);
-    }
-
-    public static IServiceCollection AddZeyaConfiguration(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
     }
 
     public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)
@@ -96,48 +82,6 @@ public static class ServiceCollectionExtensions
             {
                 options.UseSqlite($"Data Source={databaseName}");
             });
-    }
-
-    public static IServiceCollection AddZeyaGitIntegration(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
-            .AddSingleton<IRepositoryFetcher>(sp =>
-            {
-                IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
-                ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
-
-                GithubIntegrationCredential credential = githubOptions.Value.Credential;
-                var repositoryFetchOptions = new RepositoryFetchOptions(credential.GithubUsername, credential.GithubToken);
-                var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, logger);
-
-                return new ExceptionHandlerRepositoryFetcherDecorator(repositoryFetcher, logger);
-            });
-    }
-
-    public static IServiceCollection AddZeyaGithubIntegration(this IServiceCollection serviceCollection)
-    {
-        serviceCollection.AddSingleton(sp =>
-        {
-            IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
-            return githubOptions.Value.Credential;
-        });
-
-        serviceCollection.AddSingleton<ILocalStoragePathFactory>(sp =>
-        {
-            var githubIntegrationOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
-            return new UseOwnerAndRepoForFolderNameStrategy(githubIntegrationOptions.Value.CacheDirectoryPath);
-        });
-
-        serviceCollection.AddSingleton<IGitHubClient>(sp =>
-        {
-            var credentials = sp.GetRequiredService<GithubIntegrationCredential>();
-            return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(credentials.GithubToken) };
-        });
-
-        return serviceCollection
-            .AddSingleton<IGithubIntegrationService, GithubIntegrationService>()
-            .AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>();
     }
 
     public static IServiceCollection AddZeyaDotnetProjectSystemIntegration(this IServiceCollection serviceCollection)

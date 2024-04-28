@@ -57,7 +57,7 @@ public class ValidationTestFixture
             .AddSingleton<IRepositoryFetcher>(sp =>
             {
                 ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
-                var repositoryFetchOptions = new RepositoryFetchOptions("GithubUsername", "GithubToken");
+                var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth("GithubUsername", "GithubToken");
                 return new RepositoryFetcher(repositoryFetchOptions, logger);
             })
             .BuildServiceProvider();

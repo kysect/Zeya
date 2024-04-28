@@ -30,7 +30,7 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(IWebApiMarker).Assembly);
 
 builder.Services
-    .AddZeyaConfiguration()
+    .AddZeyaGitConfiguration()
     .AddZeyaLocalHandlingService();
 
 WebApplication app = builder.Build();
