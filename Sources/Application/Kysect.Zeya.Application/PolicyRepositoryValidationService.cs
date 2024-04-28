@@ -12,7 +12,7 @@ public class RepositoryValidationService(
     ValidationRuleParser validationRuleParser,
     RepositoryValidationProcessingAction validationProcessingAction,
     IRepositoryValidationReporter reporter,
-    RepositoryDiagnosticFixer repositoryDiagnosticFixer,
+    RepositoryFixProcessingAction repositoryDiagnosticFixer,
     IGitIntegrationService gitIntegrationService,
     IGithubIntegrationService githubIntegrationService,
     PullRequestMessageCreator pullRequestMessageCreator,
@@ -22,7 +22,7 @@ public class RepositoryValidationService(
     {
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
         RepositoryValidationReport repositoryValidationReport = Analyze([repository], scenarioContent);
-        Fix(repository, validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        repositoryDiagnosticFixer.Process(repository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes()));
     }
 
     public async Task CreatePullRequestWithFix(IClonedLocalRepository repository, string scenarioContent, IReadOnlyCollection<string> validationRuleCodeForFix)
@@ -41,7 +41,7 @@ public class RepositoryValidationService(
 
         logger.LogInformation("Repositories analyzed, run fixers");
         gitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
-        IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, rules, validationRuleCodeForFix);
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Process(repository, new RepositoryFixProcessingAction.Request(rules, validationRuleCodeForFix)).FixedRules;
 
         logger.LogInformation("Commit fixes");
         gitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
@@ -61,7 +61,7 @@ public class RepositoryValidationService(
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(scenarioContent);
 
         logger.LogInformation("Repositories analyzed, run fixers");
-        IReadOnlyCollection<IValidationRule> fixedDiagnostics = Fix(repository, rules, validationRuleCodeForFix);
+        repositoryDiagnosticFixer.Process(repository, new RepositoryFixProcessingAction.Request(rules, validationRuleCodeForFix));
 
         return gitIntegrationService.GetDiff(repository.FileSystem.GetFullPath());
     }
@@ -83,15 +83,5 @@ public class RepositoryValidationService(
         }
 
         return report;
-    }
-
-    public IReadOnlyCollection<IValidationRule> Fix(ILocalRepository repository, IReadOnlyCollection<IValidationRule> validationRules, IReadOnlyCollection<string> validationRuleCodeForFix)
-    {
-        repository.ThrowIfNull();
-        validationRules.ThrowIfNull();
-
-        // TODO: log fix result
-        logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
-        return repositoryDiagnosticFixer.Fix(validationRules, repository, validationRuleCodeForFix);
     }
 }
