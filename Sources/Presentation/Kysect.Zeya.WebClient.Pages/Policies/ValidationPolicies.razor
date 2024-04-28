@@ -1,23 +1,21 @@
 ﻿@page "/validation-policies"
+@using Kysect.Zeya.Dtos
 
 <PageTitle>Policies</PageTitle>
 <h1>Policies</h1>
 
-<FluentNavLink Href="/validation-policies/create" Icon="@(new Icons.Filled.Size48.Add())" IconColor="Color.Accent">Create</FluentNavLink>
+<FluentStack Orientation="Orientation.Horizontal">
+    <FluentButton IconStart="@(new Icons.Filled.Size24.Add())"
+                  Appearance="Appearance.Accent"
+                  OnClick="@(() => _navigationManager.NavigateTo("/validation-policies/create"))">
+        Create
+    </FluentButton>
+</FluentStack>
 
-@if (_validationPolicies == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <FluentStack>
-        @foreach (var policy in _validationPolicies)
-        {
-            <FluentCard Width="300px" Height="200px">
-                <FluentLabel Typo="Typography.H3"> Policy @policy.Name </FluentLabel>
-                <FluentButton Appearance="Appearance.Accent" @onclick="() => EditPolicy(policy.Id)">Edit</FluentButton>
-            </FluentCard>
-        }
-    </FluentStack>
-}
+<FluentDataGrid Loading="true" ItemsProvider="_policyProvider" Virtualize="true" ItemSize="46" GenerateHeader="GenerateHeaderOption.Sticky" TGridItem="ValidationPolicyDto">
+    <PropertyColumn Title="ID" Property="@(c => c.Id)" />
+    <PropertyColumn Property="@(c => c.Name)" />
+    <TemplateColumn Title="Actions" Align="@Align.End">
+        <FluentButton aria-label="Edit" IconEnd="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Accent" OnClick="() => EditPolicy(context.Id)" />
+    </TemplateColumn>
+</FluentDataGrid>
