@@ -2,11 +2,15 @@
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Application.LocalHandling;
 
 public class PolicyRepositoryValidationService(
+    ValidationRuleParser validationRuleParser,
+    RepositoryValidationProcessingAction validationProcessingAction,
+    IRepositoryValidationReporter reporter,
     IGithubRepositoryProvider githubRepositoryProvider,
     RepositoryValidationService policyRepositoryValidationService,
     ILogger<PolicyRepositoryValidationService> logger) : IPolicyRepositoryValidationService
@@ -29,6 +33,11 @@ public class PolicyRepositoryValidationService(
     public void Analyze(GithubRepositoryNameDto repository, string scenario)
     {
         logger.LogTrace("Loading validation configuration");
-        policyRepositoryValidationService.AnalyzeSingleRepository(githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name), scenario);
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
+        LocalGithubRepository localRepository = githubRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
+
+        logger.LogDebug("Validate {Repository}", localRepository.GetRepositoryName());
+        RepositoryValidationReport report = validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(validationRules));
+        reporter.Report(report);
     }
 }

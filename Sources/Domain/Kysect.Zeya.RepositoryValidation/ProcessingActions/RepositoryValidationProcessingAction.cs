@@ -4,21 +4,24 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions;
 
-public class RepositoryValidator(IScenarioStepHandler scenarioStepHandler, ILogger<RepositoryValidator> logger)
+public class RepositoryValidationProcessingAction(IScenarioStepHandler scenarioStepHandler, ILogger<RepositoryValidationProcessingAction> logger)
+    : IRepositoryProcessingAction<RepositoryValidationProcessingAction.Request, RepositoryValidationReport>
 {
-    public RepositoryValidationReport Validate(ILocalRepository repository, IReadOnlyCollection<IValidationRule> rules)
+    public record Request(IReadOnlyCollection<IValidationRule> Rules);
+
+    public RepositoryValidationReport Process(ILocalRepository repository, Request request)
     {
         repository.ThrowIfNull();
-        rules.ThrowIfNull();
+        request.ThrowIfNull();
 
         var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.GetRepositoryName());
         var repositoryValidationContext = new RepositoryValidationContext(repository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 
         var reflectionAttributeFinder = new ReflectionAttributeFinder();
-        foreach (IValidationRule scenarioStep in rules)
+        foreach (IValidationRule scenarioStep in request.Rules)
         {
             var attributeFromType = reflectionAttributeFinder.GetAttributeFromInstance<ScenarioStepAttribute>(scenarioStep);
             logger.LogDebug($"Validate via rule {attributeFromType.ScenarioName}");

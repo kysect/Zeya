@@ -4,16 +4,22 @@ using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Application.LocalHandling;
 
 public class PolicyValidationService(
+    ValidationRuleParser validationRuleParser,
+    RepositoryValidationProcessingAction validationProcessingAction,
+    IRepositoryValidationReporter reporter,
     ValidationPolicyService service,
     IGithubRepositoryProvider githubRepositoryProvider,
     RepositoryValidationService policyRepositoryValidationService,
     ValidationPolicyRepositoryFactory repositoryFactory,
-    ZeyaDbContext context) : IPolicyValidationService
+    ZeyaDbContext context,
+    ILogger<PolicyValidationService> logger) : IPolicyValidationService
 {
     public async Task Validate(Guid policyId)
     {
@@ -24,11 +30,17 @@ public class PolicyValidationService(
             .Where(r => r.ValidationPolicyId == policyId)
             .ToListAsync();
 
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(policy.Content);
+
         foreach (ValidationPolicyRepository validationPolicyRepository in repositories)
         {
             IValidationPolicyRepository repository = repositoryFactory.Create(validationPolicyRepository);
             ILocalRepository localGithubRepository = githubRepositoryProvider.InitializeRepository(repository);
-            RepositoryValidationReport report = policyRepositoryValidationService.AnalyzeSingleRepository(localGithubRepository, policy.Content);
+
+            logger.LogDebug("Validate {Repository}", localGithubRepository.GetRepositoryName());
+            RepositoryValidationReport report = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
+            reporter.Report(report);
+
             await service.SaveReport(validationPolicyRepository.Id, report);
             await service.SaveValidationActionMessages(validationPolicyRepository.Id, report);
         }

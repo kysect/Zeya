@@ -3,14 +3,14 @@ using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Application;
 
-// TODO: merge with PolicyRepositoryValidationService
 public class RepositoryValidationService(
     ValidationRuleParser validationRuleParser,
-    RepositoryValidator repositoryValidator,
+    RepositoryValidationProcessingAction validationProcessingAction,
     IRepositoryValidationReporter reporter,
     RepositoryDiagnosticFixer repositoryDiagnosticFixer,
     IGitIntegrationService gitIntegrationService,
@@ -72,9 +72,14 @@ public class RepositoryValidationService(
 
         logger.LogInformation("Start repositories validation");
         RepositoryValidationReport report = RepositoryValidationReport.Empty;
-        foreach (ILocalRepository githubRepository in repositories)
+        IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
+
+        foreach (ILocalRepository repository in repositories)
         {
-            report = report.Compose(AnalyzeSingleRepository(githubRepository, scenarioContent));
+            logger.LogDebug("Validate {Repository}", repository.GetRepositoryName());
+            RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(repository, new RepositoryValidationProcessingAction.Request(validationRules));
+            reporter.Report(report);
+            report = report.Compose(repositoryValidationReport);
         }
 
         return report;
@@ -88,18 +93,5 @@ public class RepositoryValidationService(
         // TODO: log fix result
         logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
         return repositoryDiagnosticFixer.Fix(validationRules, repository, validationRuleCodeForFix);
-    }
-
-    public RepositoryValidationReport AnalyzeSingleRepository(ILocalRepository repository, string scenarioContent)
-    {
-        repository.ThrowIfNull();
-
-        IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenarioContent);
-
-        logger.LogDebug("Validate {Repository}", repository.GetRepositoryName());
-        RepositoryValidationReport report = repositoryValidator.Validate(repository, validationRules);
-
-        reporter.Report(report);
-        return report;
     }
 }
