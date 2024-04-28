@@ -10,6 +10,9 @@ public class ZeyaDbContext : DbContext
     public DbSet<ValidationPolicyRepository> ValidationPolicyRepositories { get; set; } = null!;
     public DbSet<ValidationPolicyRepositoryDiagnostic> ValidationPolicyRepositoryDiagnostics { get; set; } = null!;
 
+    public DbSet<ValidationPolicyRepositoryAction> ValidationPolicyRepositoryActions { get; set; } = null!;
+    public DbSet<ValidationPolicyRepositoryActionMessage> ValidationPolicyRepositoryActionMessages { get; set; } = null!;
+
     public ZeyaDbContext(DbContextOptions<ZeyaDbContext> options) : base(options)
     {
     }
@@ -20,5 +23,11 @@ public class ZeyaDbContext : DbContext
 
         modelBuilder.Entity<ValidationPolicyRepositoryDiagnostic>()
             .HasKey(c => new { c.ValidationPolicyRepositoryId, c.RuleId });
+
+        modelBuilder.Entity<ValidationPolicyRepositoryAction>()
+            .HasKey(c => c.ActionId);
+
+        modelBuilder.Entity<ValidationPolicyRepositoryActionMessage>()
+            .HasNoKey();
     }
 }

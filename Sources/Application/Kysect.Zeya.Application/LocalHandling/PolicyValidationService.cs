@@ -30,6 +30,7 @@ public class PolicyValidationService(
             ILocalRepository localGithubRepository = githubRepositoryProvider.InitializeRepository(repository);
             RepositoryValidationReport report = policyRepositoryValidationService.AnalyzeSingleRepository(localGithubRepository, policy.Content);
             await service.SaveReport(validationPolicyRepository.Id, report);
+            await service.SaveValidationActionMessages(validationPolicyRepository.Id, report);
         }
     }
 
