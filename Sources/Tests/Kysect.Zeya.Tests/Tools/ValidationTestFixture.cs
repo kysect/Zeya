@@ -74,7 +74,7 @@ public class ValidationTestFixture
 
     public ILocalRepository CreateLocalRepository()
     {
-        return RepositoryProvider.GetLocalRepository(CurrentPath);
+        return RepositoryProvider.GetLocalRepository(CurrentPath, LocalRepositorySolutionManager.DefaultMask);
     }
 
     public ScenarioContext CreateGithubRepositoryValidationScenarioContext()
