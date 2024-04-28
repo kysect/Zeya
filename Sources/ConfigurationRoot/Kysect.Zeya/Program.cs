@@ -19,7 +19,7 @@ public static class Program
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection
             .AddAppSettingsConfiguration()
-            .AddZeyaConfiguration()
+            .AddZeyaGitConfiguration()
             .AddZeyaConsoleLogging()
             .AddZeyaSqliteDbContext("Database.sql")
             .AddZeyaLocalHandlingService()

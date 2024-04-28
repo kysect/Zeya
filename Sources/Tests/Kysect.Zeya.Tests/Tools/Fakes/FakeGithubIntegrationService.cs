@@ -21,7 +21,7 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         _localStoragePathFactory = localStoragePathFactory;
         _logger = logger;
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
-        var repositoryFetchOptions = new RepositoryFetchOptions(options.GithubUsername, options.GithubToken);
+        var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth(options.GithubUsername, options.GithubToken);
         _repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
     }
 
