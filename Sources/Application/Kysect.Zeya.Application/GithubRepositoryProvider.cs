@@ -41,40 +41,24 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
     {
         return repository switch
         {
-            GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(new GithubRepositoryName(githubRepository.Owner, githubRepository.Name)),
-            LocalValidationPolicyRepository localRepository => GetLocalRepository(localRepository.Path),
-            RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository => CreateRemoteRepositoryCache(remoteHttpsValidationPolicyRepository.RemoteHttpsUrl),
+            GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(new GithubRepositoryName(githubRepository.Owner, githubRepository.Name), repository.SolutionPathMask),
+            LocalValidationPolicyRepository localRepository => GetLocalRepository(localRepository.Path, repository.SolutionPathMask),
+            RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository => CreateRemoteRepositoryCache(remoteHttpsValidationPolicyRepository.RemoteHttpsUrl, repository.SolutionPathMask),
             _ => throw SwitchDefaultExceptions.OnUnexpectedType(repository)
         };
     }
 
-    public async Task<IReadOnlyCollection<LocalGithubRepository>> GetGithubOrganizationRepositories(string organization, IReadOnlyCollection<string> excludedRepositories)
-    {
-        var skipList = excludedRepositories.ToHashSet();
-
-        IReadOnlyCollection<GithubRepositoryName> organizationRepositories = await _githubIntegrationService.GetOrganizationRepositories(organization);
-        IReadOnlyCollection<GithubRepositoryName> githubRepositories = organizationRepositories
-            .Where(repository => !skipList.Contains(repository.Name))
-            .ToList();
-
-        var result = githubRepositories
-            .Select(CreateGithubRepositoryAccessor)
-            .ToList();
-
-        return result;
-    }
-
     public LocalGithubRepository GetGithubRepository(string owner, string repository)
     {
-        return CreateGithubRepositoryAccessor(new GithubRepositoryName(owner, repository));
+        return CreateGithubRepositoryAccessor(new GithubRepositoryName(owner, repository), LocalRepositorySolutionManager.DefaultMask);
     }
 
-    public ILocalRepository GetLocalRepository(string path)
+    public ILocalRepository GetLocalRepository(string path, string solutionSearchMask)
     {
-        return new LocalRepository(path, LocalRepositorySolutionManager.DefaultMask, _fileSystem, _solutionModifierFactory);
+        return new LocalRepository(path, solutionSearchMask, _fileSystem, _solutionModifierFactory);
     }
 
-    private ILocalRepository CreateRemoteRepositoryCache(string remoteHttpsUrl)
+    private ILocalRepository CreateRemoteRepositoryCache(string remoteHttpsUrl, string solutionSearchMask)
     {
         _logger.LogInformation("Loading repository {RemoteHttpsUrl}", remoteHttpsUrl);
 
@@ -87,13 +71,12 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
 
         return new LocalRepository(
             repositoryPath,
-            // TODO: this value should pass as argument
-            LocalRepositorySolutionManager.DefaultMask,
+            solutionSearchMask,
             _fileSystem,
             _solutionModifierFactory);
     }
 
-    private LocalGithubRepository CreateGithubRepositoryAccessor(GithubRepositoryName githubRepositoryName)
+    private LocalGithubRepository CreateGithubRepositoryAccessor(GithubRepositoryName githubRepositoryName, string solutionSearchMask)
     {
         _logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
         _githubIntegrationService.CloneOrUpdate(githubRepositoryName);
@@ -102,8 +85,7 @@ public class GithubRepositoryProvider : IGithubRepositoryProvider
         return new LocalGithubRepository(
             githubRepositoryName,
             repositoryRootPath,
-            // TODO: this value should pass as argument
-            LocalRepositorySolutionManager.DefaultMask,
+            solutionSearchMask,
             _githubIntegrationService,
             _fileSystem,
             _solutionModifierFactory);
