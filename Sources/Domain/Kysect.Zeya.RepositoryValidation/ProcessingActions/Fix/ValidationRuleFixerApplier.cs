@@ -3,7 +3,7 @@ using Kysect.CommonLib.Reflection;
 using Kysect.Zeya.LocalRepositoryAccess;
 using System.Reflection;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 
 public class ValidationRuleFixerApplier(Dictionary<Type, ValidationRuleFixerReflectionDecorator> fixers) : IValidationRuleFixerApplier
 {

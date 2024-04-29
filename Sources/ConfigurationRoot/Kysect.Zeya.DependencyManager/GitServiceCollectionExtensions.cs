@@ -2,7 +2,7 @@
 using Kysect.CommonLib.Exceptions;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
-using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
@@ -73,6 +73,6 @@ public static class GitServiceCollectionExtensions
 
         return serviceCollection
             .AddSingleton<IGithubIntegrationService, GithubIntegrationService>()
-            .AddSingleton<IGithubRepositoryProvider, GithubRepositoryProvider>();
+            .AddSingleton<LocalRepositoryProvider>();
     }
 }

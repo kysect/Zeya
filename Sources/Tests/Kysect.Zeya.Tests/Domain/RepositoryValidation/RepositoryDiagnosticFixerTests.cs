@@ -2,7 +2,7 @@
 using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.ProcessingActions;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 using Kysect.Zeya.Tests.Tools;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.Logging;

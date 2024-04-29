@@ -3,7 +3,7 @@ using Kysect.DotnetProjectSystem.Tools;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.RepositoryValidation.ProcessingActions;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 
 public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validationRuleFixerApplier, ILogger<RepositoryFixProcessingAction> logger)
     : IRepositoryProcessingAction<RepositoryFixProcessingAction.Request, RepositoryFixProcessingAction.Response>
@@ -20,7 +20,7 @@ public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validatio
         logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
 
         var fixedRules = new List<IValidationRule>();
-        Dictionary<string, IValidationRule> validationRules = request.Rules.ToDictionary(r => r.DiagnosticCode, r => r);
+        var validationRules = request.Rules.ToDictionary(r => r.DiagnosticCode, r => r);
 
         foreach (string code in request.ValidationRuleCodeForFix)
         {
