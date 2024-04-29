@@ -22,7 +22,7 @@ public class LoggerRepositoryValidationReporterTests
     {
         var reporter = _loggerRepositoryValidationReporter;
 
-        reporter.Report(new RepositoryValidationReport([], []));
+        reporter.Report(new RepositoryValidationReport([], []), "Repository");
         IReadOnlyCollection<string> logLines = _logger.Build();
 
         logLines.Should().HaveCount(0);
@@ -33,7 +33,7 @@ public class LoggerRepositoryValidationReporterTests
     {
         var reporter = _loggerRepositoryValidationReporter;
 
-        reporter.Report(new RepositoryValidationReport([], [new RepositoryValidationDiagnostic("ERR01", "Repository", "Error message", RepositoryValidationSeverity.Error)]));
+        reporter.Report(new RepositoryValidationReport([], [new RepositoryValidationDiagnostic("ERR01", "Error message", RepositoryValidationSeverity.Error)]), "Repository");
         IReadOnlyCollection<string> logLines = _logger.Build();
 
         logLines.Should().HaveCount(2);
@@ -46,7 +46,7 @@ public class LoggerRepositoryValidationReporterTests
     {
         var reporter = _loggerRepositoryValidationReporter;
 
-        reporter.Report(new RepositoryValidationReport([new RepositoryValidationDiagnostic("RUL01", "Repository", "Diagnostic message", RepositoryValidationSeverity.Error)], []));
+        reporter.Report(new RepositoryValidationReport([new RepositoryValidationDiagnostic("RUL01", "Diagnostic message", RepositoryValidationSeverity.Error)], []), "Repository");
         IReadOnlyCollection<string> logLines = _logger.Build();
 
         logLines.Should().HaveCount(1);

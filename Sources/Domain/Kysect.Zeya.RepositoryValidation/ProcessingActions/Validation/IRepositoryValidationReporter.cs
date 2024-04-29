@@ -2,5 +2,5 @@
 
 public interface IRepositoryValidationReporter
 {
-    void Report(RepositoryValidationReport repositoryValidationReport);
+    void Report(RepositoryValidationReport repositoryValidationReport, string repositoryName);
 }

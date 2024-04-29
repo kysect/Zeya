@@ -44,7 +44,7 @@ public class PolicyValidationService(
 
             logger.LogDebug("Validate {Repository}", localGithubRepository.GetRepositoryName());
             RepositoryValidationReport report = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-            reporter.Report(report);
+            reporter.Report(report, localGithubRepository.GetRepositoryName());
 
             await service.SaveReport(validationPolicyRepository.Id, report);
             await service.SaveValidationActionMessages(validationPolicyRepository.Id, report);

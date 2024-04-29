@@ -38,8 +38,7 @@ public class ValidationTestFixture
     {
         FileSystem = new MockFileSystem();
         CurrentPath = FileSystem.Path.GetFullPath(".");
-        // TODO: get name from the repository
-        DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts("MockRepository");
+        DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts();
         FileSystemAsserts = new FileSystemAsserts(FileSystem);
 
         _serviceProvider = new ServiceCollection()

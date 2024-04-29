@@ -41,8 +41,8 @@ public class ValidationPolicyServiceTests
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
-        var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
-        var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
+        var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
+        var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
 
         await _validationPolicyService.SaveReport(repository.Id, report);
@@ -57,7 +57,7 @@ public class ValidationPolicyServiceTests
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
-        var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
+        var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { validationDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
 
@@ -75,8 +75,8 @@ public class ValidationPolicyServiceTests
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepositoryDto firstRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
         ValidationPolicyRepositoryDto secondRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository2", null);
-        var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Repository", "Message", RepositoryValidationSeverity.Warning);
-        var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Repository", "Message", RepositoryValidationSeverity.Warning);
+        var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
+        var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
         var expected = new List<RepositoryDiagnosticTableRow>
             {

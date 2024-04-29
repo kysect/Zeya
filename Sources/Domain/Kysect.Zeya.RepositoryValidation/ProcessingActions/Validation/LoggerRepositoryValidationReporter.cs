@@ -6,7 +6,7 @@ namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidationReporter> logger) : IRepositoryValidationReporter
 {
-    public void Report(RepositoryValidationReport repositoryValidationReport)
+    public void Report(RepositoryValidationReport repositoryValidationReport, string repositoryName)
     {
         repositoryValidationReport.ThrowIfNull();
 
@@ -14,12 +14,12 @@ public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidati
         {
             logger.LogWarning("Some analyzers finished with errors");
             foreach (RepositoryValidationDiagnostic diagnostic in repositoryValidationReport.RuntimeErrors)
-                logger.LogTabWarning(1, $"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
+                logger.LogTabWarning(1, $"{repositoryName}: [{diagnostic.Code}] {diagnostic.Message}");
         }
 
         foreach (var diagnostic in repositoryValidationReport.Diagnostics)
         {
-            logger.LogInformation($"{diagnostic.Repository}: [{diagnostic.Code}] {diagnostic.Message}");
+            logger.LogInformation($"{repositoryName}: [{diagnostic.Code}] {diagnostic.Message}");
         }
     }
 }
