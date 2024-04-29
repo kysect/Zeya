@@ -17,7 +17,7 @@ public class RepositoryValidationProcessingAction(IScenarioStepHandler scenarioS
         request.ThrowIfNull();
 
         logger.LogDebug("Validate {Repository}", repository.GetRepositoryName());
-        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector(repository.GetRepositoryName());
+        var repositoryDiagnosticCollector = new RepositoryDiagnosticCollector();
         var repositoryValidationContext = new RepositoryValidationContext(repository, repositoryDiagnosticCollector);
         var scenarioContext = RepositoryValidationContextExtensions.CreateScenarioContext(repositoryValidationContext);
 

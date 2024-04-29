@@ -6,11 +6,7 @@ namespace Kysect.Zeya.Tests.Tools.Asserts;
 
 public class RepositoryDiagnosticCollectorAsserts
 {
-    private readonly RepositoryDiagnosticCollector _collector;
-    public RepositoryDiagnosticCollectorAsserts(string repository)
-    {
-        _collector = new RepositoryDiagnosticCollector(repository);
-    }
+    private readonly RepositoryDiagnosticCollector _collector = new();
 
     public RepositoryDiagnosticCollector GetCollector()
     {

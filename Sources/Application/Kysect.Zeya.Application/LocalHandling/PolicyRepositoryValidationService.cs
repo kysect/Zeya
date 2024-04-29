@@ -25,7 +25,7 @@ public class PolicyRepositoryValidationService(
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
         LocalGithubRepository localGithubRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
         RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        reporter.Report(repositoryValidationReport);
+        reporter.Report(repositoryValidationReport, localGithubRepository.GetRepositoryName());
         IReadOnlyCollection<string> validationRuleCodeForFix = repositoryValidationReport.GetAllDiagnosticRuleCodes();
 
 
@@ -43,7 +43,7 @@ public class PolicyRepositoryValidationService(
         LocalGithubRepository localGithubRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
         RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        reporter.Report(repositoryValidationReport);
+        reporter.Report(repositoryValidationReport, localGithubRepository.GetRepositoryName());
         repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes()));
     }
 
@@ -55,6 +55,6 @@ public class PolicyRepositoryValidationService(
 
         logger.LogDebug("Validate {Repository}", localRepository.GetRepositoryName());
         RepositoryValidationReport report = validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        reporter.Report(report);
+        reporter.Report(report, localRepository.GetRepositoryName());
     }
 }
