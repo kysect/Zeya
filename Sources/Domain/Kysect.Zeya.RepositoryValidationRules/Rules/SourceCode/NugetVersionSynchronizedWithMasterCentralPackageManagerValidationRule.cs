@@ -35,9 +35,8 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
 
         if (!fileSystem.File.Exists(request.MasterFile))
         {
-            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
-                request.DiagnosticCode,
-                $"Master file {request.MasterFile} for checking CPM was not found.");
+            string message = $"Master file {request.MasterFile} for checking CPM was not found.";
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(request.DiagnosticCode, message, RepositoryValidationSeverity.RuntimeError);
             return;
         }
 

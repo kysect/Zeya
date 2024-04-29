@@ -25,9 +25,8 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
         RepositoryValidationContext repositoryValidationContext = context.GetValidationContext();
         if (repositoryValidationContext.Repository is not LocalGithubRepository clonedGithubRepository)
         {
-            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
-                request.DiagnosticCode,
-                $"Skip {request.DiagnosticCode} because repository do not have GitHub metadata.");
+            string message = $"Skip {request.DiagnosticCode} because repository do not have GitHub metadata.";
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(request.DiagnosticCode, message, RepositoryValidationSeverity.RuntimeError);
 
             return;
         }

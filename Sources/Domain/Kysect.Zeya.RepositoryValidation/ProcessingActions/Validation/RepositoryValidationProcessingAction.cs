@@ -29,6 +29,6 @@ public class RepositoryValidationProcessingAction(IScenarioStepHandler scenarioS
             scenarioStepHandler.Handle(scenarioContext, scenarioStep);
         }
 
-        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics(), repositoryValidationContext.DiagnosticCollector.GetRuntimeErrors());
+        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
     }
 }

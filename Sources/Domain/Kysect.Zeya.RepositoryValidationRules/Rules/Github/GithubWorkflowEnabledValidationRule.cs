@@ -29,10 +29,8 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
         ILocalRepository localRepository = repositoryValidationContext.Repository;
         if (localRepository is not LocalGithubRepository clonedGithubRepository)
         {
-            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
-                request.DiagnosticCode,
-                $"Cannot apply github validation rule on non github repository",
-                Arguments.DefaultSeverity);
+            string message = $"Cannot apply github validation rule on non github repository";
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(request.DiagnosticCode, message, RepositoryValidationSeverity.RuntimeError);
             return;
         }
 
@@ -48,10 +46,8 @@ public class GithubWorkflowEnabledValidationRule(IFileSystem fileSystem) : IScen
     {
         if (!fileSystem.File.Exists(workflow))
         {
-            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
-                request.DiagnosticCode,
-                $"Master file {workflow} missed",
-                Arguments.DefaultSeverity);
+            string message = $"Master file {workflow} missed";
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(request.DiagnosticCode, message, RepositoryValidationSeverity.RuntimeError);
             return;
         }
         IFileInfo masterFileInfo = fileSystem.FileInfo.New(workflow);

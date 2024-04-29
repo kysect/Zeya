@@ -43,7 +43,7 @@ public class ValidationPolicyServiceTests
         ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
-        var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
+        var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic });
 
         await _validationPolicyService.SaveReport(repository.Id, report);
 
@@ -59,7 +59,7 @@ public class ValidationPolicyServiceTests
         ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
         var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
-        var report = new RepositoryValidationReport(new[] { validationDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
+        var report = new RepositoryValidationReport(new[] { validationDiagnostic });
 
         await _validationPolicyService.SaveReport(repository.Id, report);
 
@@ -77,7 +77,7 @@ public class ValidationPolicyServiceTests
         ValidationPolicyRepositoryDto secondRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository2", null);
         var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
-        var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic }, Array.Empty<RepositoryValidationDiagnostic>());
+        var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic });
         var expected = new List<RepositoryDiagnosticTableRow>
             {
                 new RepositoryDiagnosticTableRow(firstRepository.Id, "Owner/Repository", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" }),
