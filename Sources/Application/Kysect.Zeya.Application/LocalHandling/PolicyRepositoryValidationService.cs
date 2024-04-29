@@ -3,8 +3,9 @@ using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.ProcessingActions;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Application.LocalHandling;

@@ -3,6 +3,7 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.IO.Abstractions;
 

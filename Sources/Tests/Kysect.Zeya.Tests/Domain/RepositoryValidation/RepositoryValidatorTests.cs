@@ -2,7 +2,7 @@
 using Kysect.ScenarioLib;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
-using Kysect.Zeya.RepositoryValidation.ProcessingActions;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
 

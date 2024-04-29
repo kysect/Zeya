@@ -1,6 +1,6 @@
 ﻿using Kysect.Zeya.LocalRepositoryAccess;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 public class RepositoryValidationContext
 {

@@ -2,6 +2,7 @@
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.Logging;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;

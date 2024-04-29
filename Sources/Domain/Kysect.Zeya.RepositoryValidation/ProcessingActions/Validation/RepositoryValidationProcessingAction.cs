@@ -4,7 +4,7 @@ using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.RepositoryValidation.ProcessingActions;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 public class RepositoryValidationProcessingAction(IScenarioStepHandler scenarioStepHandler, ILogger<RepositoryValidationProcessingAction> logger)
     : IRepositoryProcessingAction<RepositoryValidationProcessingAction.Request, RepositoryValidationReport>
