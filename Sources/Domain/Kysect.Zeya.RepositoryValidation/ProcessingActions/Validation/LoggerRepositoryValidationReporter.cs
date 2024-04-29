@@ -17,7 +17,7 @@ public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidati
                 logger.LogTabWarning(1, $"{repositoryName}: [{diagnostic.Code}] {diagnostic.Message}");
         }
 
-        foreach (var diagnostic in repositoryValidationReport.Diagnostics)
+        foreach (var diagnostic in repositoryValidationReport.ValidationMessage)
         {
             logger.LogInformation($"{repositoryName}: [{diagnostic.Code}] {diagnostic.Message}");
         }

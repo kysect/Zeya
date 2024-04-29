@@ -2,6 +2,7 @@
 
 public enum ValidationPolicyRepositoryDiagnosticSeverity
 {
+    RuntimeError,
     Error,
     Warning,
     Message

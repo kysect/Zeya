@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 namespace Kysect.Zeya.Tests.Tools.Asserts;
@@ -36,13 +37,20 @@ public class RepositoryDiagnosticCollectorAsserts
 
     public RepositoryDiagnosticCollectorAsserts ShouldHaveErrorCount(int count)
     {
-        _collector.GetRuntimeErrors().Count.Should().Be(count);
+        _collector
+            .GetDiagnostics()
+            .Where(d => d.Severity == RepositoryValidationSeverity.RuntimeError)
+            .Should()
+            .HaveCount(count);
         return this;
     }
 
     public RepositoryDiagnosticCollectorAsserts ShouldHaveError(int index, string diagnosticCode, string message)
     {
-        RepositoryValidationDiagnostic diagnostic = _collector.GetRuntimeErrors().ElementAt(index - 1);
+        RepositoryValidationDiagnostic diagnostic = _collector
+            .GetDiagnostics()
+            .Where(d => d.Severity == RepositoryValidationSeverity.RuntimeError)
+            .ElementAt(index - 1);
         diagnostic.Code.Should().Be(diagnosticCode);
         diagnostic.Message.Should().Be(message);
         return this;

@@ -27,9 +27,8 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
 
         if (repositoryValidationContext.Repository is not LocalGithubRepository clonedGithubRepository)
         {
-            repositoryValidationContext.DiagnosticCollector.AddRuntimeError(
-                request.DiagnosticCode,
-                $"Cannot apply github validation rule on non github repository");
+            string message = $"Cannot apply github validation rule on non github repository";
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(request.DiagnosticCode, message, RepositoryValidationSeverity.RuntimeError);
 
             return;
         }
