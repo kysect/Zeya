@@ -15,6 +15,7 @@ using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Kysect.Zeya.Tui;
 using Kysect.Zeya.Tui.Controls;
@@ -101,8 +102,8 @@ public static class ServiceCollectionExtensions
             .AddSingleton<ValidationRuleParser>()
             .AddSingleton<RepositoryValidationProcessingAction>()
             .AddSingleton<RepositoryFixProcessingAction>()
+            .AddSingleton<RepositoryCreatePullRequestProcessingAction>()
             .AddSingleton<PullRequestMessageCreator>()
-            .AddScoped<RepositoryValidationService>()
             .AddScoped<ValidationPolicyRepositoryFactory>()
             .AddScoped<ValidationPolicyService>();
 

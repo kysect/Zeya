@@ -5,7 +5,7 @@ using Kysect.DotnetProjectSystem.Xml;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
@@ -27,7 +27,7 @@ public class ValidationTestFixture
     public XmlDocumentSyntaxFormatter Formatter { get; }
     public MockFileSystem FileSystem { get; }
     public string CurrentPath { get; }
-    public GithubRepositoryProvider RepositoryProvider { get; }
+    public LocalRepositoryProvider RepositoryProvider { get; }
     public SolutionFileStructureBuilderFactory SolutionFileStructureBuilderFactory { get; }
 
     public RepositoryDiagnosticCollectorAsserts DiagnosticCollectorAsserts { get; }
@@ -49,7 +49,7 @@ public class ValidationTestFixture
             .AddSingleton<IFileSystem>(FileSystem)
             .AddSingleton<IGithubIntegrationService, DummyGithubIntegrationService>()
             .AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(CurrentPath))
-            .AddSingleton<GithubRepositoryProvider>()
+            .AddSingleton<LocalRepositoryProvider>()
             .AddSingleton<SolutionFileStructureBuilderFactory>()
             .AddSingleton<DotnetSolutionModifierFactory>()
             .AddSingleton<SolutionFileContentParser>()
@@ -63,7 +63,7 @@ public class ValidationTestFixture
             .BuildServiceProvider();
 
         Formatter = _serviceProvider.GetRequiredService<XmlDocumentSyntaxFormatter>();
-        RepositoryProvider = _serviceProvider.GetRequiredService<GithubRepositoryProvider>();
+        RepositoryProvider = _serviceProvider.GetRequiredService<LocalRepositoryProvider>();
         SolutionFileStructureBuilderFactory = _serviceProvider.GetRequiredService<SolutionFileStructureBuilderFactory>();
     }
 
