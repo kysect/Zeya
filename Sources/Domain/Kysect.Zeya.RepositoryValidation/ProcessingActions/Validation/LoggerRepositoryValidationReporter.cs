@@ -2,7 +2,7 @@
 using Kysect.CommonLib.Logging;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidationReporter> logger) : IRepositoryValidationReporter
 {

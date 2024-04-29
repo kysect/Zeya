@@ -4,7 +4,7 @@ using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.DataAccess.EntityFramework.Tools;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.ModelMapping;
-using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kysect.Zeya.Application;

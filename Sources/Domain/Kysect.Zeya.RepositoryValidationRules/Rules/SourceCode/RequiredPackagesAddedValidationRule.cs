@@ -4,6 +4,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;

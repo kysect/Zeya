@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.Collections.Extensions;
-using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 namespace Kysect.Zeya.Tests.Tools.Asserts;
 

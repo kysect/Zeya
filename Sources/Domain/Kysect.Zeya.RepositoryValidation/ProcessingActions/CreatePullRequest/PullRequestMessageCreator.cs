@@ -3,7 +3,7 @@ using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.Common;
 using System.Text;
 
-namespace Kysect.Zeya.RepositoryValidation;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 
 public class PullRequestMessageCreator
 {

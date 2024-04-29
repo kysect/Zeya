@@ -4,7 +4,7 @@ using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.RepositoryValidation.ProcessingActions;
+namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 
 public class RepositoryCreatePullRequestProcessingAction(
     IGitIntegrationService gitIntegrationService,
@@ -22,9 +22,7 @@ public class RepositoryCreatePullRequestProcessingAction(
 
         // TODO:
         if (repository is not IClonedLocalRepository clonedLocalRepository)
-        {
             throw new ArgumentException("Repository should be cloned");
-        }
 
         // TODO: handle that branch already exists
         // TODO: remove hardcoded value
