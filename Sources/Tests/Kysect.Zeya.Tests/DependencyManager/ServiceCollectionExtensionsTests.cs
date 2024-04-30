@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.DependencyInjection;
-using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.DependencyManager;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,11 +25,9 @@ public class ServiceCollectionExtensionsTests
         serviceCollection
             .AddZeyaConsoleLogging()
             .AddZeyaSqliteDbContext("Database.sql")
-            .AddZeyaLocalHandlingService()
-            .AddZeyaTerminalUserInterface();
+            .AddZeyaLocalHandlingService();
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(serviceProviderOptions);
-        TuiMenuNavigator tuiMenuNavigator = serviceProvider.GetRequiredService<TuiMenuNavigator>();
     }
 
     private static IServiceCollection AddTestZeyaConfiguration(IServiceCollection serviceCollection)
