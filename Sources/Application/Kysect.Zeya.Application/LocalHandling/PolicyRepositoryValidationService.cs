@@ -13,7 +13,6 @@ namespace Kysect.Zeya.Application.LocalHandling;
 public class PolicyRepositoryValidationService(
     ValidationRuleParser validationRuleParser,
     RepositoryValidationProcessingAction validationProcessingAction,
-    IRepositoryValidationReporter reporter,
     LocalRepositoryProvider localRepositoryProvider,
     RepositoryFixProcessingAction repositoryDiagnosticFixer,
     RepositoryCreatePullRequestProcessingAction createPullRequestProcessingAction,
@@ -25,7 +24,6 @@ public class PolicyRepositoryValidationService(
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
         LocalGithubRepository localGithubRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
         RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        reporter.Report(repositoryValidationReport, localGithubRepository.GetRepositoryName());
         IReadOnlyCollection<string> validationRuleCodeForFix = repositoryValidationReport.GetAllDiagnosticRuleCodes();
 
 
@@ -43,7 +41,6 @@ public class PolicyRepositoryValidationService(
         LocalGithubRepository localGithubRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
         RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        reporter.Report(repositoryValidationReport, localGithubRepository.GetRepositoryName());
         repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes()));
     }
 
@@ -53,8 +50,6 @@ public class PolicyRepositoryValidationService(
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
         LocalGithubRepository localRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
 
-        logger.LogDebug("Validate {Repository}", localRepository.GetRepositoryName());
         RepositoryValidationReport report = validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        reporter.Report(report, localRepository.GetRepositoryName());
     }
 }

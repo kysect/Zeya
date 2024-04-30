@@ -17,7 +17,6 @@ public class PolicyValidationService(
     ValidationRuleParser validationRuleParser,
     RepositoryValidationProcessingAction validationProcessingAction,
     RepositoryCreatePullRequestProcessingAction createPullRequestProcessingAction,
-    IRepositoryValidationReporter reporter,
     ValidationPolicyService service,
     LocalRepositoryProvider localRepositoryProvider,
     ValidationPolicyRepositoryFactory repositoryFactory,
@@ -42,9 +41,7 @@ public class PolicyValidationService(
             IValidationPolicyRepository repository = repositoryFactory.Create(validationPolicyRepository);
             ILocalRepository localGithubRepository = localRepositoryProvider.InitializeRepository(repository);
 
-            logger.LogDebug("Validate {Repository}", localGithubRepository.GetRepositoryName());
             RepositoryValidationReport report = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-            reporter.Report(report, localGithubRepository.GetRepositoryName());
 
             await service.SaveReport(validationPolicyRepository.Id, report);
             await service.SaveValidationActionMessages(validationPolicyRepository.Id, report);

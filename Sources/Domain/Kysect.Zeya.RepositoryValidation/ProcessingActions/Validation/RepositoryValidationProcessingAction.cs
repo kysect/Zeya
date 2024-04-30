@@ -6,7 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
-public class RepositoryValidationProcessingAction(IScenarioStepHandler scenarioStepHandler, ILogger<RepositoryValidationProcessingAction> logger)
+public class RepositoryValidationProcessingAction(
+    IScenarioStepHandler scenarioStepHandler,
+    LoggerRepositoryValidationReporter reporter,
+    ILogger<RepositoryValidationProcessingAction> logger)
     : IRepositoryProcessingAction<RepositoryValidationProcessingAction.Request, RepositoryValidationReport>
 {
     public record Request(IReadOnlyCollection<IValidationRule> Rules);
@@ -29,6 +32,8 @@ public class RepositoryValidationProcessingAction(IScenarioStepHandler scenarioS
             scenarioStepHandler.Handle(scenarioContext, scenarioStep);
         }
 
-        return new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
+        var report = new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
+        reporter.Report(report, repository.GetRepositoryName());
+        return report;
     }
 }
