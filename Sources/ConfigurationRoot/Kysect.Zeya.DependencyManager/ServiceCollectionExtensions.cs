@@ -99,7 +99,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaRepositoryValidation(this IServiceCollection serviceCollection)
     {
         serviceCollection
-            .AddSingleton<IRepositoryValidationReporter, LoggerRepositoryValidationReporter>()
+            .AddSingleton<LoggerRepositoryValidationReporter>()
             .AddSingleton<ValidationRuleParser>()
             .AddSingleton<RepositoryValidationProcessingAction>()
             .AddSingleton<RepositoryFixProcessingAction>()

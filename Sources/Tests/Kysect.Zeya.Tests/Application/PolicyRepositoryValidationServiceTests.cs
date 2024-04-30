@@ -53,7 +53,6 @@ public class PolicyRepositoryValidationServiceTests : IDisposable
 
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
         _repositoryValidator = serviceProvider.GetRequiredService<RepositoryValidationProcessingAction>();
-        var repositoryValidationReporter = serviceProvider.GetRequiredService<IRepositoryValidationReporter>();
         _repositoryDiagnosticFixer = serviceProvider.GetRequiredService<RepositoryFixProcessingAction>();
         IRepositoryFetcher repositoryFetcher = serviceProvider.GetRequiredService<IRepositoryFetcher>();
         _scenarioProvider = RepositoryValidationRuleProviderTestInstance.CreateContentProvider(fileSystem);

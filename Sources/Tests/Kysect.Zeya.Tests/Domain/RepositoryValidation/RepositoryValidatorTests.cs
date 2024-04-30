@@ -5,6 +5,7 @@ using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
 
@@ -18,7 +19,8 @@ public class RepositoryValidatorTests
         _validationTestFixture = new ValidationTestFixture();
 
         ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create();
-        _validationProcessingAction = new RepositoryValidationProcessingAction(scenarioStepReflectionHandler, _validationTestFixture.GetLogger<RepositoryValidationProcessingAction>());
+        ILogger<RepositoryValidationProcessingAction> logger = _validationTestFixture.GetLogger<RepositoryValidationProcessingAction>();
+        _validationProcessingAction = new RepositoryValidationProcessingAction(scenarioStepReflectionHandler, new LoggerRepositoryValidationReporter(logger), logger);
     }
 
     [Fact]
