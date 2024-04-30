@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
@@ -14,7 +14,7 @@ public class PolicyServiceTests
     public PolicyServiceTests()
     {
         ZeyaDbContext dbContext = ZeyaDbContextTestProvider.CreateContext();
-        _client = new PolicyService(new ValidationPolicyService(dbContext), dbContext);
+        _client = new PolicyService(new ValidationPolicyDatabaseQueries(dbContext), dbContext);
     }
 
     [Fact]

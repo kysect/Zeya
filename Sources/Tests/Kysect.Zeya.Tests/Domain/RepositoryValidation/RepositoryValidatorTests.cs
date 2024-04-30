@@ -20,7 +20,7 @@ public class RepositoryValidatorTests
 
         ScenarioStepReflectionHandler scenarioStepReflectionHandler = ScenarioStepReflectionHandlerTestInstance.Create();
         ILogger<RepositoryValidationProcessingAction> logger = _validationTestFixture.GetLogger<RepositoryValidationProcessingAction>();
-        _validationProcessingAction = new RepositoryValidationProcessingAction(scenarioStepReflectionHandler, new LoggerRepositoryValidationReporter(logger), logger);
+        _validationProcessingAction = new RepositoryValidationProcessingAction(scenarioStepReflectionHandler, new LoggerRepositoryValidationReporter(_validationTestFixture.GetLogger<LoggerRepositoryValidationReporter>()), logger);
     }
 
     [Fact]

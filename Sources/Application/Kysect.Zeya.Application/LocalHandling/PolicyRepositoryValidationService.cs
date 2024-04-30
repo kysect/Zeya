@@ -23,14 +23,10 @@ public class PolicyRepositoryValidationService(
         logger.LogTrace("Loading validation configuration");
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
         LocalGithubRepository localGithubRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
+
         RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-        IReadOnlyCollection<string> validationRuleCodeForFix = repositoryValidationReport.GetAllDiagnosticRuleCodes();
-
-
-        logger.LogInformation("Repositories analyzed, run fixers");
-        IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(scenario);
-        IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleCodeForFix)).FixedRules;
-        createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingAction.Request(rules, validationRuleCodeForFix, fixedDiagnostics));
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes())).FixedRules;
+        createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes(), fixedDiagnostics));
 
         return Task.CompletedTask;
     }
@@ -40,6 +36,7 @@ public class PolicyRepositoryValidationService(
         logger.LogTrace("Loading validation configuration");
         LocalGithubRepository localGithubRepository = localRepositoryProvider.GetGithubRepository(repository.Owner, repository.Name);
         IReadOnlyCollection<IValidationRule> validationRules = validationRuleParser.GetValidationRules(scenario);
+
         RepositoryValidationReport repositoryValidationReport = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
         repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes()));
     }

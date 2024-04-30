@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.DataAccess.Abstractions;
@@ -11,18 +11,18 @@ using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Application;
 
-public class ValidationPolicyServiceTests
+public class ValidationPolicyDatabaseQueriesTests
 {
-    private readonly ValidationPolicyService _validationPolicyService;
+    private readonly ValidationPolicyDatabaseQueries _validationPolicyDatabaseQueries;
     private readonly PolicyRepositoryService _policyRepositoryService;
     private readonly PolicyService _policyService;
 
-    public ValidationPolicyServiceTests()
+    public ValidationPolicyDatabaseQueriesTests()
     {
         ZeyaDbContext context = ZeyaDbContextTestProvider.CreateContext();
-        _validationPolicyService = new ValidationPolicyService(context);
+        _validationPolicyDatabaseQueries = new ValidationPolicyDatabaseQueries(context);
         _policyRepositoryService = new PolicyRepositoryService(new ValidationPolicyRepositoryFactory(), context);
-        _policyService = new PolicyService(_validationPolicyService, context);
+        _policyService = new PolicyService(_validationPolicyDatabaseQueries, context);
     }
 
     [Fact]
@@ -45,9 +45,9 @@ public class ValidationPolicyServiceTests
         var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic });
 
-        await _validationPolicyService.SaveReport(repository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(repository.Id, report);
 
-        IReadOnlyCollection<string> rules = await _validationPolicyService.GetAllRulesForPolicy(repository.ValidationPolicyId);
+        IReadOnlyCollection<string> rules = await _validationPolicyDatabaseQueries.GetAllRulesForPolicy(repository.ValidationPolicyId);
 
         rules.Should().BeEquivalentTo("SRC0001", "SRC0002");
     }
@@ -61,9 +61,9 @@ public class ValidationPolicyServiceTests
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { validationDiagnostic });
 
-        await _validationPolicyService.SaveReport(repository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(repository.Id, report);
 
-        IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic> diagnostics = await _validationPolicyService.GetDiagnostics(repository.Id);
+        IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic> diagnostics = await _validationPolicyDatabaseQueries.GetDiagnostics(repository.Id);
 
         diagnostics.Should().HaveCount(1);
         diagnostics.First().Should().BeEquivalentTo(expected);
@@ -84,10 +84,10 @@ public class ValidationPolicyServiceTests
                 new RepositoryDiagnosticTableRow(secondRepository.Id, "Owner/Repository2", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" })
             };
 
-        await _validationPolicyService.SaveReport(firstRepository.Id, report);
-        await _validationPolicyService.SaveReport(secondRepository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(firstRepository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(secondRepository.Id, report);
 
-        IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticsTable = await _validationPolicyService.GetDiagnosticsTable(validationPolicyEntity.Id);
+        IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticsTable = await _validationPolicyDatabaseQueries.GetDiagnosticsTable(validationPolicyEntity.Id);
         diagnosticsTable.Should().BeEquivalentTo(expected);
     }
 }

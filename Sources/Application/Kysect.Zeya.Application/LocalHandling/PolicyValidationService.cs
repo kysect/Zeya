@@ -1,4 +1,5 @@
-﻿using Kysect.Zeya.Application.Repositories;
+﻿using Kysect.Zeya.Application.DatabaseQueries;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
@@ -17,7 +18,7 @@ public class PolicyValidationService(
     ValidationRuleParser validationRuleParser,
     RepositoryValidationProcessingAction validationProcessingAction,
     RepositoryCreatePullRequestProcessingAction createPullRequestProcessingAction,
-    ValidationPolicyService service,
+    ValidationPolicyDatabaseQueries databaseQueries,
     LocalRepositoryProvider localRepositoryProvider,
     ValidationPolicyRepositoryFactory repositoryFactory,
     RepositoryFixProcessingAction repositoryDiagnosticFixer,
@@ -27,7 +28,7 @@ public class PolicyValidationService(
 {
     public async Task Validate(Guid policyId)
     {
-        ValidationPolicyEntity policy = await service.GetPolicy(policyId);
+        ValidationPolicyEntity policy = await databaseQueries.GetPolicy(policyId);
 
         IReadOnlyCollection<ValidationPolicyRepository> repositories = await context
             .ValidationPolicyRepositories
@@ -43,14 +44,14 @@ public class PolicyValidationService(
 
             RepositoryValidationReport report = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
 
-            await service.SaveReport(validationPolicyRepository.Id, report);
-            await service.SaveValidationActionMessages(validationPolicyRepository.Id, report);
+            await databaseQueries.SaveReport(validationPolicyRepository.Id, report);
+            await databaseQueries.SaveValidationActionMessages(validationPolicyRepository.Id, report);
         }
     }
 
     public async Task CreateFix(Guid policyId, Guid repositoryId)
     {
-        ValidationPolicyEntity policy = await service.GetPolicy(policyId);
+        ValidationPolicyEntity policy = await databaseQueries.GetPolicy(policyId);
         ValidationPolicyRepository repositoryInfo = await context
             .ValidationPolicyRepositories
             .Where(r => r.ValidationPolicyId == policyId)
@@ -77,7 +78,7 @@ public class PolicyValidationService(
 
     public async Task<string> PreviewChanges(Guid policyId, Guid repositoryId)
     {
-        ValidationPolicyEntity policy = await service.GetPolicy(policyId);
+        ValidationPolicyEntity policy = await databaseQueries.GetPolicy(policyId);
         ValidationPolicyRepository repositoryInfo = await context
             .ValidationPolicyRepositories
             .Where(r => r.ValidationPolicyId == policyId)
