@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
@@ -19,7 +19,7 @@ public class AddPolicyCommandTests : IDisposable
     public AddPolicyCommandTests()
     {
         ZeyaDbContext dbContext = ZeyaDbContextTestProvider.CreateContext();
-        var validationPolicyService = new ValidationPolicyService(dbContext);
+        var validationPolicyService = new ValidationPolicyDatabaseQueries(dbContext);
         _mockFileSystem = new MockFileSystem();
         _console = new TestConsole();
         _policyService = new PolicyService(validationPolicyService, dbContext);

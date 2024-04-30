@@ -1,4 +1,5 @@
-﻿using Kysect.Zeya.Client.Abstractions;
+﻿using Kysect.Zeya.Application.DatabaseQueries;
+using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
@@ -9,12 +10,12 @@ namespace Kysect.Zeya.Application.LocalHandling;
 
 public class PolicyService : IPolicyService
 {
-    private readonly ValidationPolicyService _service;
+    private readonly ValidationPolicyDatabaseQueries _databaseQueries;
     private readonly ZeyaDbContext _context;
 
-    public PolicyService(ValidationPolicyService service, ZeyaDbContext context)
+    public PolicyService(ValidationPolicyDatabaseQueries databaseQueries, ZeyaDbContext context)
     {
-        _service = service;
+        _databaseQueries = databaseQueries;
         _context = context;
     }
 
@@ -30,7 +31,7 @@ public class PolicyService : IPolicyService
     public async Task<ValidationPolicyDto> GetPolicy(Guid id)
     {
 
-        ValidationPolicyEntity policy = await _service.GetPolicy(id);
+        ValidationPolicyEntity policy = await _databaseQueries.GetPolicy(id);
         return new ValidationPolicyDto(policy.Id, policy.Name, policy.Content);
     }
 
@@ -42,6 +43,6 @@ public class PolicyService : IPolicyService
 
     public async Task<IReadOnlyCollection<RepositoryDiagnosticTableRow>> GetDiagnosticsTable(Guid policyId)
     {
-        return await _service.GetDiagnosticsTable(policyId);
+        return await _databaseQueries.GetDiagnosticsTable(policyId);
     }
 }

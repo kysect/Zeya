@@ -8,7 +8,7 @@ using Kysect.ScenarioLib.YamlParser;
 using Kysect.TerminalUserInterface.Commands;
 using Kysect.TerminalUserInterface.DependencyInjection;
 using Kysect.TerminalUserInterface.Navigation;
-using Kysect.Zeya.Application;
+using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
@@ -106,7 +106,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<RepositoryCreatePullRequestProcessingAction>()
             .AddSingleton<PullRequestMessageCreator>()
             .AddScoped<ValidationPolicyRepositoryFactory>()
-            .AddScoped<ValidationPolicyService>();
+            .AddScoped<ValidationPolicyDatabaseQueries>();
 
         return serviceCollection;
     }

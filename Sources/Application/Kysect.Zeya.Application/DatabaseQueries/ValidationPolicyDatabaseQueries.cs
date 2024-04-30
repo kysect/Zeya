@@ -7,13 +7,13 @@ using Kysect.Zeya.ModelMapping;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Kysect.Zeya.Application;
+namespace Kysect.Zeya.Application.DatabaseQueries;
 
-public class ValidationPolicyService
+public class ValidationPolicyDatabaseQueries
 {
     private readonly ZeyaDbContext _context;
 
-    public ValidationPolicyService(ZeyaDbContext context)
+    public ValidationPolicyDatabaseQueries(ZeyaDbContext context)
     {
         _context = context;
     }
@@ -51,7 +51,7 @@ public class ValidationPolicyService
         var actionId = Guid.NewGuid();
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
-        List<ValidationPolicyRepositoryActionMessage> messages = report
+        var messages = report
             .RuntimeErrors
             .Select(e => new ValidationPolicyRepositoryActionMessage(actionId, $"{e.Code}: {e.Message}"))
             .ToList();
