@@ -5,9 +5,6 @@ using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.ScenarioLib.YamlParser;
-using Kysect.TerminalUserInterface.Commands;
-using Kysect.TerminalUserInterface.DependencyInjection;
-using Kysect.TerminalUserInterface.Navigation;
 using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
@@ -18,15 +15,12 @@ using Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
-using Kysect.Zeya.Tui;
-using Kysect.Zeya.Tui.Controls;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
-using Spectre.Console;
 using System.IO.Abstractions;
 using System.Reflection;
 
@@ -141,33 +135,11 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IValidationRuleFixerApplier>(sp => ValidationRuleFixerApplier.Create(sp, validationRuleFixerAssembly));
     }
 
-    public static IServiceCollection AddZeyaTerminalUserInterface(this IServiceCollection serviceCollection)
-    {
-        Assembly[] consoleCommandAssemblies = new[] { typeof(IRootMenu).Assembly };
-
-        serviceCollection
-            .AddSingleton(AnsiConsole.Console)
-            .AddScoped<PolicySelectorControl>()
-            .AddScoped<RepositoryNameInputControl>()
-            .AddUserActionSelectionMenus(consoleCommandAssemblies)
-            .AddSingleton(CreateUserActionSelectionMenuNavigator);
-
-        return serviceCollection;
-    }
-
     public static IServiceCollection AddZeyaLocalServerApiClients(this IServiceCollection serviceCollection)
     {
         return serviceCollection
             .AddScoped<IPolicyService, PolicyService>()
             .AddScoped<IPolicyRepositoryService, PolicyRepositoryService>()
-            .AddScoped<IPolicyValidationService, PolicyValidationService>()
-            .AddScoped<IPolicyRepositoryValidationService, PolicyRepositoryValidationService>();
-    }
-
-    private static TuiMenuNavigator CreateUserActionSelectionMenuNavigator(IServiceProvider serviceProvider)
-    {
-        ILogger<TuiMenuNavigator> logger = serviceProvider.GetRequiredService<ILogger<TuiMenuNavigator>>();
-        ICommandExecutor commandExecutor = serviceProvider.GetRequiredService<ICommandExecutor>();
-        return TuiMenuNavigator.Create<IRootMenu>(commandExecutor, logger);
+            .AddScoped<IPolicyValidationService, PolicyValidationService>();
     }
 }

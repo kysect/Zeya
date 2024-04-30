@@ -26,12 +26,4 @@ public static class TestLoggerProvider
                     });
             });
     }
-
-    public static ILogger<T> GetLogger<T>()
-    {
-        return new ServiceCollection()
-            .AddZeyaTestLogging()
-            .BuildServiceProvider()
-            .GetRequiredService<ILogger<T>>();
-    }
 }

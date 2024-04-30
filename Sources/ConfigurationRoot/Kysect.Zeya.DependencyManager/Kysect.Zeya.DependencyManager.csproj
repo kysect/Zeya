@@ -20,12 +20,26 @@
     <ProjectReference Include="..\..\Application\Kysect.Zeya.Application\Kysect.Zeya.Application.csproj" />
     <ProjectReference Include="..\..\Integration\Kysect.Zeya.GithubIntegration\Kysect.Zeya.GithubIntegration.csproj" />
     <ProjectReference Include="..\..\Integration\Kysect.Zeya.GitIntegration\Kysect.Zeya.GitIntegration.csproj" />
-    <ProjectReference Include="..\..\Presentation\Kysect.Zeya.Tui\Kysect.Zeya.Tui.csproj" />
     <ProjectReference Include="..\..\Presentation\Kysect.Zeya.WebApiClient\Kysect.Zeya.WebApiClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\build-test.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\Demo-validation.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\MasterDirectory.Packages.props">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\nuget-publish.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

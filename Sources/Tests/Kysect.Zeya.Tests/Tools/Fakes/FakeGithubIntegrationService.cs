@@ -44,21 +44,6 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         throw new NotImplementedException();
     }
 
-    public Task CreateFixBranch(GithubRepositoryName repositoryName, string branchName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CreateCommitWithFix(GithubRepositoryName repositoryName, string commitMessage)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void PushCommitToRemote(GithubRepositoryName repositoryName, string branchName)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         throw new NotImplementedException();
