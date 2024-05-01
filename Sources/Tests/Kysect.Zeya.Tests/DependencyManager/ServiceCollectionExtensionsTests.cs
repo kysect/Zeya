@@ -1,5 +1,4 @@
-﻿using Kysect.CommonLib.DependencyInjection;
-using Kysect.Zeya.DependencyManager;
+﻿using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +38,6 @@ public class ServiceCollectionExtensionsTests
 
         return serviceCollection
             .AddSingleton(config)
-            .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
+            .AddZeyaGitConfiguration();
     }
 }

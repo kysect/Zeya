@@ -2,7 +2,7 @@
 
 namespace Kysect.Zeya.DependencyManager;
 
-public class GitIntegrationCredential
+public class GitIntegrationCredentialOptions
 {
     [Required]
     public GitCredentialType AuthType { get; init; } = GitCredentialType.UserPassword;

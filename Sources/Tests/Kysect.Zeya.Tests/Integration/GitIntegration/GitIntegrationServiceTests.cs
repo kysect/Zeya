@@ -28,7 +28,7 @@ public class GitIntegrationServiceTests : IDisposable
 
         var validationTestFixture = new ValidationTestFixture();
         _gitIntegrationService = new GitIntegrationService(
-            validationTestFixture.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor);
+            validationTestFixture.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor);
         _repositoryFetcher = validationTestFixture.GetRequiredService<IRepositoryFetcher>();
         _githubRepositoryName = new GithubRepository("Kysect", "Zeya");
     }

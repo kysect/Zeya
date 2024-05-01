@@ -32,23 +32,28 @@ public static class TestServiceCollectionExtensions
 
     public static IServiceCollection AddZeyaTestGitConfiguration(this IServiceCollection serviceCollection)
     {
-        var githubIntegrationOptions = new GithubIntegrationOptions()
+        var gitEnvironmentOptions = new GitEnvironmentOptions()
         {
             CommitAuthor = new GitCommitAuthor()
             {
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
             },
-            Credential = new GitIntegrationCredential()
-            {
-                GithubUsername = "Name",
-                GithubToken = "token"
-            }
         };
 
+        var gitIntegrationCredentialOptions = new GitIntegrationCredentialOptions()
+        {
+            AuthType = GitCredentialType.UserPassword,
+            GithubUsername = "Name",
+            GithubToken = "token"
+        };
+
+        var gitRepositoryCredentialOptions = new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.GithubUsername, gitIntegrationCredentialOptions.GithubToken);
+
         return serviceCollection
-            .AddSingleton<IOptions<GithubIntegrationOptions>>(new OptionsWrapper<GithubIntegrationOptions>(githubIntegrationOptions))
-            .AddSingleton(sp => sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.Credential);
+            .AddSingleton<IOptions<GitEnvironmentOptions>>(new OptionsWrapper<GitEnvironmentOptions>(gitEnvironmentOptions))
+            .AddSingleton<IOptions<GitIntegrationCredentialOptions>>(new OptionsWrapper<GitIntegrationCredentialOptions>(gitIntegrationCredentialOptions))
+            .AddSingleton(gitRepositoryCredentialOptions);
     }
 
     public static IServiceCollection AddZeyaTestGitIntegration(this IServiceCollection serviceCollection)
