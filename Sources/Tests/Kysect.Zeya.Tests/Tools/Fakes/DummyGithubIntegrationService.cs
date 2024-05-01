@@ -4,15 +4,6 @@ namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class DummyGithubIntegrationService : IGithubIntegrationService
 {
-    public Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CloneOrUpdate(GithubRepositoryName repositoryName)
-    {
-    }
-
     public void PushCommitToRemote(string repositoryLocalPath, string branchName)
     {
         throw new NotImplementedException();

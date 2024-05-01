@@ -1,8 +1,5 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
-using Kysect.GithubUtils.Replication.OrganizationsSync.RepositoryDiscovering;
-using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
@@ -13,44 +10,21 @@ namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
-    private readonly IRepositoryFetcher _repositoryFetcher;
     private readonly GithubIntegrationCredential _credential;
     private readonly IGitHubClient _gitHubClient;
-    private readonly ILocalStoragePathFactory _pathFormatStrategy;
     private readonly ILogger _logger;
 
     public GithubIntegrationService(
         GithubIntegrationCredential credential,
         IGitHubClient gitHubClient,
         ILocalStoragePathFactory pathFormatStrategy,
-        IRepositoryFetcher repositoryFetcher,
         ILogger<GithubIntegrationService> logger)
     {
-        _repositoryFetcher = repositoryFetcher;
         _credential = credential.ThrowIfNull();
 
-        _pathFormatStrategy = pathFormatStrategy.ThrowIfNull();
+        pathFormatStrategy.ThrowIfNull();
         _gitHubClient = gitHubClient.ThrowIfNull();
         _logger = logger.ThrowIfNull();
-    }
-
-    public async Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
-    {
-        var gitHubRepositoryDiscoveryService = new GitHubRepositoryDiscoveryService(_gitHubClient);
-        IReadOnlyList<GithubRepositoryBranch> githubRepositoryBranches = await gitHubRepositoryDiscoveryService.GetRepositories(organization);
-
-        return githubRepositoryBranches
-            .Select(r => new GithubRepositoryName(r.Owner, r.Name))
-            .ToList();
-    }
-
-    public void CloneOrUpdate(GithubRepositoryName repositoryName)
-    {
-        repositoryName.ThrowIfNull();
-
-        var repository = new GithubRepository(repositoryName.Owner, repositoryName.Name);
-        string pathToRepository = _pathFormatStrategy.GetPathToRepository(repository);
-        _repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
     }
 
     public void PushCommitToRemote(string repositoryLocalPath, string branchName)

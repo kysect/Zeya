@@ -26,7 +26,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution")
             .Save(_validationTestFixture.CurrentPath);
 
-        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(1)
@@ -40,7 +40,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(string.Empty));
 
-        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -61,7 +61,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(directoryPackageFileContent));
 
-        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
@@ -82,7 +82,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(masterFileContent));
 
-        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
@@ -105,7 +105,7 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
             .Save(_validationTestFixture.CurrentPath);
         _validationTestFixture.FileSystem.AddFile(_directoryPackageMasterPropsPath, new MockFileData(masterFileContent));
 
-        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _requiredPackagesAddedValidationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)

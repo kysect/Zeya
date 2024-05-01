@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
@@ -52,39 +51,9 @@ public class GithubIntegrationServiceTests : IDisposable
             githubIntegrationOptions.Credential,
             new GitHubClient(new ProductHeaderValue("Zeya")),
             localStoragePathFactory,
-            new RepositoryFetcher(RepositoryFetchOptions.CreateWithUserPasswordAuth(githubIntegrationOptions.Credential.GithubUsername, githubIntegrationOptions.Credential.GithubToken), serviceProvider.GetRequiredService<ILogger<RepositoryFetcher>>()),
             serviceProvider.GetRequiredService<ILogger<GithubIntegrationService>>());
 
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
-    }
-
-    [Fact(Skip = "Github has limit for requests")]
-    public async Task GetOrganizationRepositories_ForKysect_ReturnZeya()
-    {
-        IReadOnlyCollection<GithubRepositoryName> repositories = await _githubIntegrationService.GetOrganizationRepositories("Kysect");
-
-        repositories.Should().Contain(new GithubRepositoryName("Kysect", "Zeya"));
-    }
-
-    [Fact]
-    public void CloneOrUpdate_NewRepository_GitDirectoryCreated()
-    {
-        var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
-
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
-
-        _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
-    }
-
-    [Fact]
-    public void CloneOrUpdate_SecondCall_DoNotThrowException()
-    {
-        var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
-
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
-
-        _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
     }
 
     [Fact]

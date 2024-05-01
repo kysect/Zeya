@@ -24,7 +24,7 @@ public class CentralPackageManagerEnabledValidationRuleTests
             .Create("Solution")
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -44,7 +44,7 @@ public class CentralPackageManagerEnabledValidationRuleTests
             .AddDirectoryPackagesProps(directoryBuildPropsFile)
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
