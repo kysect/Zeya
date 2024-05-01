@@ -7,7 +7,8 @@ using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 
-public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationService githubIntegrationService) : IScenarioStepExecutor<GithubBranchProtectionEnabledValidationRule.Arguments>
+public class GithubBranchProtectionEnabledValidationRule
+    : IScenarioStepExecutor<GithubBranchProtectionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.BranchProtectionEnabled")]
     public record Arguments(
@@ -34,7 +35,7 @@ public class GithubBranchProtectionEnabledValidationRule(IGithubIntegrationServi
         }
 
         string branch = ValidationConstants.DefaultBranch;
-        RepositoryBranchProtection repositoryBranchProtection = githubIntegrationService.GetRepositoryBranchProtection(clonedGithubRepository.GithubMetadata, branch);
+        RepositoryBranchProtection repositoryBranchProtection = clonedGithubRepository.GitHubIntegrationService.GetRepositoryBranchProtection(clonedGithubRepository.GithubMetadata, branch);
 
         if (request.PullRequestReviewRequired && !repositoryBranchProtection.PullRequestReviewsRequired)
         {

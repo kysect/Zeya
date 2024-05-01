@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Exceptions;
+using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.DataAccess.Abstractions;
 
 namespace Kysect.Zeya.Application.Repositories;

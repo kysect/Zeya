@@ -32,7 +32,6 @@ public class GithubIntegrationServiceTests : IDisposable
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
         _githubIntegrationService = new GithubIntegrationService(
             new GitHubClient(new ProductHeaderValue("Zeya")),
-            localStoragePathFactory,
             serviceProvider.GetRequiredService<ILogger<GithubIntegrationService>>());
 
         _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");

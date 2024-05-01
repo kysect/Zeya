@@ -11,16 +11,12 @@ public class LocalGithubRepository(
     IGithubIntegrationService githubIntegrationService,
     IFileSystem fileSystem,
     DotnetSolutionModifierFactory solutionModifierFactory)
-    : IClonedLocalRepository
+    : ILocalRepository
 {
     public GithubRepositoryName GithubMetadata => githubMetadata;
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(repositoryRootPath, fileSystem);
     public LocalRepositorySolutionManager SolutionManager { get; } = new LocalRepositorySolutionManager(repositoryRootPath, solutionSearchMask, fileSystem, solutionModifierFactory);
-
-    public Task CreatePullRequest(string message, string pullRequestTitle, string branch, string baseBranch)
-    {
-        return githubIntegrationService.CreatePullRequest(githubMetadata, message, pullRequestTitle, branch, baseBranch);
-    }
+    public IGithubIntegrationService GitHubIntegrationService { get; } = githubIntegrationService;
 
     public string GetRepositoryName()
     {

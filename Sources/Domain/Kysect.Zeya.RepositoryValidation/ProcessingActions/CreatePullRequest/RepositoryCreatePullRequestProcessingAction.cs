@@ -1,6 +1,7 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
@@ -20,8 +21,8 @@ public class RepositoryCreatePullRequestProcessingAction(
         request.ThrowIfNull();
 
         // TODO:
-        if (repository is not IClonedLocalRepository clonedLocalRepository)
-            throw new ArgumentException("Repository should be cloned");
+        if (repository is not LocalGithubRepository clonedLocalRepository)
+            throw new ArgumentException("Repository should be LocalGithubRepository");
 
         // TODO: handle that branch already exists
         // TODO: remove hardcoded value
@@ -42,7 +43,8 @@ public class RepositoryCreatePullRequestProcessingAction(
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(request.FixedDiagnostics);
-        clonedLocalRepository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch).Wait();
+        clonedLocalRepository.GitHubIntegrationService.CreatePullRequest(clonedLocalRepository.GithubMetadata, pullRequestMessage, pullRequestTitle, branchName, baseBranch);
+
         return new RepositoryProcessingResponse<Response>("Create Pull Request", new Response(), []);
     }
 }

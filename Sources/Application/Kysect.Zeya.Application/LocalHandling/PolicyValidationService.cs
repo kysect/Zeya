@@ -60,9 +60,6 @@ public class PolicyValidationService(
         IValidationPolicyRepository repository = repositoryFactory.Create(repositoryInfo);
         ILocalRepository localGithubRepository = localRepositoryProvider.InitializeRepository(repository);
 
-        if (localGithubRepository is not IClonedLocalRepository clonedLocalRepository)
-            throw new NotSupportedException($"Repository {localGithubRepository.GetType()} does not have remote. Cannot create PR.");
-
         List<string> validationRuleIds = await context
             .ValidationPolicyRepositoryDiagnostics
             .Where(d => d.ValidationPolicyRepositoryId == repositoryId)
@@ -71,11 +68,11 @@ public class PolicyValidationService(
 
         logger.LogInformation("Repositories analyzed, run fixers");
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(policy.Content);
-        var fixResponse = repositoryDiagnosticFixer.Process(clonedLocalRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
+        var fixResponse = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, fixResponse);
 
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = fixResponse.Value.FixedRules;
-        var createPullRequestResponse = createPullRequestProcessingAction.Process(clonedLocalRepository, new RepositoryCreatePullRequestProcessingAction.Request(rules, validationRuleIds, fixedDiagnostics));
+        var createPullRequestResponse = createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingAction.Request(rules, validationRuleIds, fixedDiagnostics));
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, createPullRequestResponse);
     }
 

@@ -15,7 +15,7 @@ public class GithubAutoBranchDeletionEnabledValidationRuleTests
     {
         _validationTestFixture = new ValidationTestFixture();
         _fakeGithubIntegrationService = _validationTestFixture.GetRequiredService<FakeGithubIntegrationService>();
-        _validationRule = new GithubAutoBranchDeletionEnabledValidationRule(_fakeGithubIntegrationService);
+        _validationRule = new GithubAutoBranchDeletionEnabledValidationRule();
     }
 
     [Fact]

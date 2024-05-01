@@ -1,25 +1,17 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Microsoft.Extensions.Logging;
 using Octokit;
 
 namespace Kysect.Zeya.GithubIntegration;
 
-public class GithubIntegrationService : IGithubIntegrationService
+public class GithubIntegrationService(
+    IGitHubClient gitHubClient,
+    ILogger<GithubIntegrationService> logger)
+    : IGithubIntegrationService
 {
-    private readonly IGitHubClient _gitHubClient;
-    private readonly ILogger _logger;
-
-    public GithubIntegrationService(
-        IGitHubClient gitHubClient,
-        ILocalStoragePathFactory pathFormatStrategy,
-        ILogger<GithubIntegrationService> logger)
-    {
-        pathFormatStrategy.ThrowIfNull();
-        _gitHubClient = gitHubClient.ThrowIfNull();
-        _logger = logger.ThrowIfNull();
-    }
+    private readonly IGitHubClient _gitHubClient = gitHubClient.ThrowIfNull();
+    private readonly ILogger _logger = logger.ThrowIfNull();
 
     public async Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {

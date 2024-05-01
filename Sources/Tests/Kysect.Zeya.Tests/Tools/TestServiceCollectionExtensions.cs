@@ -1,6 +1,7 @@
 ﻿using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
@@ -66,7 +67,8 @@ public static class TestServiceCollectionExtensions
         return serviceCollection
             .AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(currentPath))
             .AddSingleton<FakeGithubIntegrationService>()
-            .AddSingleton<IGithubIntegrationService, DummyGithubIntegrationService>()
+            .AddSingleton<IGithubIntegrationService, FakeGithubIntegrationService>(sp => sp.GetRequiredService<FakeGithubIntegrationService>())
+            .AddSingleton<IGithubIntegrationServiceFactory, GithubIntegrationServiceFactory>()
             .AddSingleton<LocalRepositoryProvider>();
     }
 }
