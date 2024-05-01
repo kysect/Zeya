@@ -1,5 +1,6 @@
 ﻿using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
@@ -22,7 +23,7 @@ public class PolicyValidationService(
     LocalRepositoryProvider localRepositoryProvider,
     ValidationPolicyRepositoryFactory repositoryFactory,
     RepositoryFixProcessingAction repositoryDiagnosticFixer,
-    IGitIntegrationService gitIntegrationService,
+    IGitIntegrationServiceFactory gitIntegrationServiceFactory,
     ZeyaDbContext context,
     ILogger<PolicyValidationService> logger) : IPolicyValidationService
 {
@@ -59,6 +60,7 @@ public class PolicyValidationService(
 
         IValidationPolicyRepository repository = repositoryFactory.Create(repositoryInfo);
         ILocalRepository localGithubRepository = localRepositoryProvider.InitializeRepository(repository);
+        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(repository);
 
         List<string> validationRuleIds = await context
             .ValidationPolicyRepositoryDiagnostics
@@ -72,7 +74,7 @@ public class PolicyValidationService(
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, fixResponse);
 
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = fixResponse.Value.FixedRules;
-        var createPullRequestResponse = createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingActionRequest(rules, validationRuleIds, fixedDiagnostics));
+        var createPullRequestResponse = createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingActionRequest(gitIntegrationService, rules, validationRuleIds, fixedDiagnostics));
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, createPullRequestResponse);
     }
 
@@ -87,6 +89,8 @@ public class PolicyValidationService(
 
         IValidationPolicyRepository repository = repositoryFactory.Create(repositoryInfo);
         ILocalRepository localGithubRepository = localRepositoryProvider.InitializeRepository(repository);
+        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(repository);
+
         List<string> validationRuleIds = await context
             .ValidationPolicyRepositoryDiagnostics
             .Where(d => d.ValidationPolicyRepositoryId == repositoryId)

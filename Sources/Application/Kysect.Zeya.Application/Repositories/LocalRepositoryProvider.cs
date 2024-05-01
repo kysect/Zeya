@@ -2,6 +2,7 @@
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
+using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
@@ -15,7 +16,7 @@ namespace Kysect.Zeya.Application.Repositories;
 public class LocalRepositoryProvider(
     IFileSystem fileSystem,
     ILogger<LocalRepositoryProvider> logger,
-    IGitIntegrationService gitIntegrationService,
+    IGitIntegrationServiceFactory gitIntegrationServiceFactory,
     IGithubIntegrationServiceFactory githubIntegrationServiceFactory,
     ILocalStoragePathFactory localStoragePathFactory,
     DotnetSolutionModifierFactory solutionModifierFactory)
@@ -26,7 +27,7 @@ public class LocalRepositoryProvider(
         {
             GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(githubRepository),
             LocalValidationPolicyRepository localRepository => GetLocalRepository(localRepository.Path, repository.SolutionPathMask),
-            RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository => CreateRemoteRepositoryCache(remoteHttpsValidationPolicyRepository.RemoteHttpsUrl, repository.SolutionPathMask),
+            RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository => CreateRemoteRepositoryCache(remoteHttpsValidationPolicyRepository),
             _ => throw SwitchDefaultExceptions.OnUnexpectedType(repository)
         };
     }
@@ -36,9 +37,13 @@ public class LocalRepositoryProvider(
         return new LocalRepository(path, solutionSearchMask, fileSystem, solutionModifierFactory);
     }
 
-    private ILocalRepository CreateRemoteRepositoryCache(string remoteHttpsUrl, string solutionSearchMask)
+    private ILocalRepository CreateRemoteRepositoryCache(RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository)
     {
-        logger.LogInformation("Loading repository {RemoteHttpsUrl}", remoteHttpsUrl);
+        logger.LogInformation("Loading repository {RemoteHttpsUrl}", remoteHttpsValidationPolicyRepository.RemoteHttpsUrl);
+
+        string remoteHttpsUrl = remoteHttpsValidationPolicyRepository.RemoteHttpsUrl;
+        string solutionSearchMask = remoteHttpsValidationPolicyRepository.SolutionPathMask;
+        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(remoteHttpsValidationPolicyRepository);
 
         string repositoryName = remoteHttpsUrl.Split('/').Last();
         // TODO: This is kind of hack because we don't have access to cache directory path
@@ -61,6 +66,7 @@ public class LocalRepositoryProvider(
         logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
 
         string pathToRepository = localStoragePathFactory.GetPathToRepository(repository);
+        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(githubRepository);
         gitIntegrationService.EnsureRepositoryUpdated(pathToRepository, repository);
         IGithubIntegrationService integrationService = githubIntegrationServiceFactory.GetService(githubRepository);
 

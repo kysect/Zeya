@@ -3,6 +3,7 @@ using Kysect.CommonLib.Exceptions;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -33,7 +34,11 @@ public static class GitServiceCollectionExtensions
     {
         return serviceCollection
             .AddSingleton(CreateRepositoryFetcher)
-            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor, sp.GetRequiredService<IRepositoryFetcher>()))
+            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(
+                sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor,
+                sp.GetRequiredService<IRepositoryFetcher>(),
+                sp.GetRequiredService<GitRepositoryCredentialOptions>()))
+            .AddSingleton<IGitIntegrationServiceFactory, GitIntegrationServiceFactory>()
             ;
     }
 

@@ -1,6 +1,7 @@
 ﻿using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
@@ -66,7 +67,11 @@ public static class TestServiceCollectionExtensions
                     var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth("GithubUsername", "GithubToken");
                     return new RepositoryFetcher(repositoryFetchOptions, logger);
                 })
-                .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor, sp.GetRequiredService<IRepositoryFetcher>()))
+                .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(
+                    sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor,
+                    sp.GetRequiredService<IRepositoryFetcher>(),
+                    sp.GetRequiredService<GitRepositoryCredentialOptions>()))
+                .AddSingleton<IGitIntegrationServiceFactory, GitIntegrationServiceFactory>()
             ;
     }
 
