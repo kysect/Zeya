@@ -35,7 +35,7 @@ public class RepositoryFixProcessingActionTests
     public void Fix_ForEmptyReport_ReturnNoFixedRules()
     {
         var report = RepositoryValidationReport.Empty;
-        var request = new RepositoryFixProcessingAction.Request(Array.Empty<IValidationRule>(), report.GetAllDiagnosticRuleCodes());
+        var request = new RepositoryFixProcessingActionRequest(Array.Empty<IValidationRule>(), report.GetAllDiagnosticRuleCodes());
 
         var response = _repositoryDiagnosticFixer.Process(_repository, request);
         IReadOnlyCollection<IValidationRule> fixedRules = response.Value.FixedRules;
@@ -47,7 +47,7 @@ public class RepositoryFixProcessingActionTests
     public void Fix_DiagnosticWithoutRule_ThrowException()
     {
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryProcessingMessage("CODE0001", "Some error", RepositoryValidationSeverity.Warning)]);
-        var request = new RepositoryFixProcessingAction.Request(Array.Empty<IValidationRule>(), repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        var request = new RepositoryFixProcessingActionRequest(Array.Empty<IValidationRule>(), repositoryValidationReport.GetAllDiagnosticRuleCodes());
 
         _repositoryDiagnosticFixer
             .Invoking(f => f.Process(_repository, request))
@@ -62,7 +62,7 @@ public class RepositoryFixProcessingActionTests
         var fakeValidationRule = new FakeValidationRule();
         IValidationRule[] validationRules = [fakeValidationRule];
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryProcessingMessage(fakeValidationRule.DiagnosticCode, "Some error", RepositoryValidationSeverity.Warning)]);
-        var request = new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        var request = new RepositoryFixProcessingActionRequest(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
 
         var response = _repositoryDiagnosticFixer.Process(_repository, request);
         IReadOnlyCollection<IValidationRule> fixedRules = response.Value.FixedRules;
@@ -79,7 +79,7 @@ public class RepositoryFixProcessingActionTests
 
         _fixers[fakeValidationRule.GetType()] = new ValidationRuleFixerReflectionDecorator(fakeValidationRuleFixer);
         var repositoryValidationReport = new RepositoryValidationReport([new RepositoryProcessingMessage(fakeValidationRule.DiagnosticCode, "Some error", RepositoryValidationSeverity.Warning)]);
-        var request = new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        var request = new RepositoryFixProcessingActionRequest(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
 
         var response = _repositoryDiagnosticFixer.Process(_repository, request);
         IReadOnlyCollection<IValidationRule> fixedRules = response.Value.FixedRules;
@@ -101,7 +101,7 @@ public class RepositoryFixProcessingActionTests
             new RepositoryProcessingMessage(fakeValidationRule.DiagnosticCode, "Some error", RepositoryValidationSeverity.Warning),
             new RepositoryProcessingMessage(fakeValidationRule.DiagnosticCode, "Some error", RepositoryValidationSeverity.Warning)
         ]);
-        var request = new RepositoryFixProcessingAction.Request(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
+        var request = new RepositoryFixProcessingActionRequest(validationRules, repositoryValidationReport.GetAllDiagnosticRuleCodes());
 
         var response = _repositoryDiagnosticFixer.Process(_repository, request);
         IReadOnlyCollection<IValidationRule> fixedRules = response.Value.FixedRules;

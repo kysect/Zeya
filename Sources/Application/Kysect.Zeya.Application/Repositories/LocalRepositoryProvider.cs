@@ -2,9 +2,9 @@
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
-using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Microsoft.Extensions.Logging;
@@ -15,10 +15,10 @@ namespace Kysect.Zeya.Application.Repositories;
 public class LocalRepositoryProvider(
     IFileSystem fileSystem,
     ILogger<LocalRepositoryProvider> logger,
+    IGitIntegrationService gitIntegrationService,
     IGithubIntegrationServiceFactory githubIntegrationServiceFactory,
     ILocalStoragePathFactory localStoragePathFactory,
-    DotnetSolutionModifierFactory solutionModifierFactory,
-    IRepositoryFetcher repositoryFetcher)
+    DotnetSolutionModifierFactory solutionModifierFactory)
 {
     public ILocalRepository InitializeRepository(IValidationPolicyRepository repository)
     {
@@ -45,7 +45,7 @@ public class LocalRepositoryProvider(
         string repositoryPath = localStoragePathFactory.GetPathToRepository(new GithubRepository("RemoteRepository", repositoryName));
 
         var gitRepository = new CustomRemoteGitRepository(repositoryName, remoteHttpsUrl);
-        repositoryFetcher.EnsureRepositoryUpdated(repositoryPath, gitRepository);
+        gitIntegrationService.EnsureRepositoryUpdated(repositoryPath, gitRepository);
 
         return new LocalRepository(
             repositoryPath,
@@ -61,7 +61,7 @@ public class LocalRepositoryProvider(
         logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
 
         string pathToRepository = localStoragePathFactory.GetPathToRepository(repository);
-        repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
+        gitIntegrationService.EnsureRepositoryUpdated(pathToRepository, repository);
         IGithubIntegrationService integrationService = githubIntegrationServiceFactory.GetService(githubRepository);
 
         return new LocalGithubRepository(

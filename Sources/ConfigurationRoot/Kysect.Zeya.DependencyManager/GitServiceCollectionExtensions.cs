@@ -32,8 +32,9 @@ public static class GitServiceCollectionExtensions
     public static IServiceCollection AddZeyaGitIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor))
-            .AddSingleton(CreateRepositoryFetcher);
+            .AddSingleton(CreateRepositoryFetcher)
+            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor, sp.GetRequiredService<IRepositoryFetcher>()))
+            ;
     }
 
     private static IRepositoryFetcher CreateRepositoryFetcher(IServiceProvider sp)

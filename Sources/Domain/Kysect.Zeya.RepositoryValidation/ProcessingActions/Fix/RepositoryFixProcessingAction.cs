@@ -5,13 +5,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 
-public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validationRuleFixerApplier, ILogger<RepositoryFixProcessingAction> logger)
-    : IRepositoryProcessingAction<RepositoryFixProcessingAction.Request, RepositoryFixProcessingAction.Response>
-{
-    public record Request(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix);
-    public record Response(IReadOnlyCollection<IValidationRule> FixedRules);
+public record RepositoryFixProcessingActionRequest(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix);
+public record RepositoryFixProcessingActionResponse(IReadOnlyCollection<IValidationRule> FixedRules);
 
-    public RepositoryProcessingResponse<Response> Process(ILocalRepository repository, Request request)
+public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validationRuleFixerApplier, ILogger<RepositoryFixProcessingAction> logger)
+    : IRepositoryProcessingAction<RepositoryFixProcessingActionRequest, RepositoryFixProcessingActionResponse>
+{
+    public RepositoryProcessingResponse<RepositoryFixProcessingActionResponse> Process(ILocalRepository repository, RepositoryFixProcessingActionRequest request)
     {
         repository.ThrowIfNull();
         request.ThrowIfNull();
@@ -40,6 +40,6 @@ public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validatio
         }
 
         // TODO: Return info about fixed rules
-        return new RepositoryProcessingResponse<Response>("Fix diagnostics", new Response(fixedRules), []);
+        return new RepositoryProcessingResponse<RepositoryFixProcessingActionResponse>("Fix diagnostics", new RepositoryFixProcessingActionResponse(fixedRules), []);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Kysect.Zeya.GitIntegration.Abstraction;
+﻿using Kysect.GithubUtils.Models;
+using Kysect.GithubUtils.Replication.RepositorySync;
+using Kysect.Zeya.GitIntegration.Abstraction;
 using LibGit2Sharp;
 
 namespace Kysect.Zeya.GitIntegration;
@@ -6,10 +8,17 @@ namespace Kysect.Zeya.GitIntegration;
 public class GitIntegrationService : IGitIntegrationService
 {
     private readonly GitCommitAuthor? _commitAuthor;
+    private readonly IRepositoryFetcher _fetcher;
 
-    public GitIntegrationService(GitCommitAuthor? commitAuthor)
+    public GitIntegrationService(GitCommitAuthor? commitAuthor, IRepositoryFetcher fetcher)
     {
         _commitAuthor = commitAuthor;
+        _fetcher = fetcher;
+    }
+
+    public string EnsureRepositoryUpdated(string targetPath, IRemoteGitRepository remoteRepository)
+    {
+        return _fetcher.EnsureRepositoryUpdated(targetPath, remoteRepository);
     }
 
     public void PushCommitToRemote(string repositoryLocalPath, string branchName, GitRepositoryCredentialOptions gitRepositoryCredentialOptions)

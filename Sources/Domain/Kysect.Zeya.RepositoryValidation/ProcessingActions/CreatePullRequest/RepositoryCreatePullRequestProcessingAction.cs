@@ -6,16 +6,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 
+public record RepositoryCreatePullRequestProcessingActionRequest(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix, IReadOnlyCollection<IValidationRule> FixedDiagnostics);
+public record RepositoryCreatePullRequestProcessingActionResponse();
+
 public class RepositoryCreatePullRequestProcessingAction(
     IGitIntegrationService gitIntegrationService,
     PullRequestMessageCreator pullRequestMessageCreator,
     GitRepositoryCredentialOptions gitRepositoryCredentialOptions,
-    ILogger<RepositoryCreatePullRequestProcessingAction> logger) : IRepositoryProcessingAction<RepositoryCreatePullRequestProcessingAction.Request, RepositoryCreatePullRequestProcessingAction.Response>
+    ILogger<RepositoryCreatePullRequestProcessingAction> logger)
+    : IRepositoryProcessingAction<RepositoryCreatePullRequestProcessingActionRequest, RepositoryCreatePullRequestProcessingActionResponse>
 {
-    public record Request(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix, IReadOnlyCollection<IValidationRule> FixedDiagnostics);
-    public record Response();
-
-    public RepositoryProcessingResponse<Response> Process(ILocalRepository repository, Request request)
+    public RepositoryProcessingResponse<RepositoryCreatePullRequestProcessingActionResponse> Process(ILocalRepository repository, RepositoryCreatePullRequestProcessingActionRequest request)
     {
         repository.ThrowIfNull();
         request.ThrowIfNull();
@@ -45,6 +46,6 @@ public class RepositoryCreatePullRequestProcessingAction(
         string pullRequestMessage = pullRequestMessageCreator.Create(request.FixedDiagnostics);
         clonedLocalRepository.GitHubIntegrationService.CreatePullRequest(clonedLocalRepository.GithubMetadata, pullRequestMessage, pullRequestTitle, branchName, baseBranch);
 
-        return new RepositoryProcessingResponse<Response>("Create Pull Request", new Response(), []);
+        return new RepositoryProcessingResponse<RepositoryCreatePullRequestProcessingActionResponse>("Create Pull Request", new RepositoryCreatePullRequestProcessingActionResponse(), []);
     }
 }
