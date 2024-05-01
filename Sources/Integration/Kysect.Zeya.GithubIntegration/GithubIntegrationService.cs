@@ -1,45 +1,24 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Octokit;
-using Repository = LibGit2Sharp.Repository;
 
 namespace Kysect.Zeya.GithubIntegration;
 
 public class GithubIntegrationService : IGithubIntegrationService
 {
-    private readonly GithubIntegrationCredential _credential;
     private readonly IGitHubClient _gitHubClient;
     private readonly ILogger _logger;
 
     public GithubIntegrationService(
-        GithubIntegrationCredential credential,
         IGitHubClient gitHubClient,
         ILocalStoragePathFactory pathFormatStrategy,
         ILogger<GithubIntegrationService> logger)
     {
-        _credential = credential.ThrowIfNull();
-
         pathFormatStrategy.ThrowIfNull();
         _gitHubClient = gitHubClient.ThrowIfNull();
         _logger = logger.ThrowIfNull();
-    }
-
-    public void PushCommitToRemote(string repositoryLocalPath, string branchName)
-    {
-        using var repo = new Repository(repositoryLocalPath);
-
-        Remote? remote = repo.Network.Remotes["origin"];
-        string pushRefSpec = $"refs/heads/{branchName}";
-
-        var pushOptions = new PushOptions
-        {
-            CredentialsProvider = (url, usernameFromUrl, types) => new UsernamePasswordCredentials() { Username = _credential.GithubUsername, Password = _credential.GithubToken }
-        };
-
-        repo.Network.Push(remote, [pushRefSpec], pushOptions);
     }
 
     public async Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)

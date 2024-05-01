@@ -12,6 +12,21 @@ public class GitIntegrationService : IGitIntegrationService
         _commitAuthor = commitAuthor;
     }
 
+    public void PushCommitToRemote(string repositoryLocalPath, string branchName, GitRepositoryCredential gitRepositoryCredential)
+    {
+        using var repo = new Repository(repositoryLocalPath);
+
+        Remote? remote = repo.Network.Remotes["origin"];
+        string pushRefSpec = $"refs/heads/{branchName}";
+
+        var pushOptions = new PushOptions
+        {
+            CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials { Username = gitRepositoryCredential.Username, Password = gitRepositoryCredential.Password }
+        };
+
+        repo.Network.Push(remote, [pushRefSpec], pushOptions);
+    }
+
     public string GetDiff(string repositoryLocalPath)
     {
         using var repo = new Repository(repositoryLocalPath);

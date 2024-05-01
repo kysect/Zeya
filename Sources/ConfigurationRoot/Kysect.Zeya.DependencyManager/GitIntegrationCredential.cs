@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Kysect.Zeya.GithubIntegration;
+namespace Kysect.Zeya.DependencyManager;
 
-public class GithubIntegrationCredential
+public class GitIntegrationCredential
 {
     [Required]
     public GitCredentialType AuthType { get; init; } = GitCredentialType.UserPassword;

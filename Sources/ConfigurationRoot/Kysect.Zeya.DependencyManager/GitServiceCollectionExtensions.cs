@@ -20,13 +20,19 @@ public static class GitServiceCollectionExtensions
     {
         // TODO: Maybe we need to split these settings or rename
         return serviceCollection
-            .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions");
+            .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions")
+            .AddSingleton(sp =>
+            {
+                var githubIntegrationOptions = sp.GetRequiredService<GithubIntegrationOptions>();
+                return new GitRepositoryCredential(githubIntegrationOptions.Credential.GithubUsername, githubIntegrationOptions.Credential.GithubToken);
+            });
     }
 
     public static IServiceCollection AddZeyaGitIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
+            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(
+                sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
             .AddSingleton(CreateRepositoryFetcher);
     }
 
@@ -35,13 +41,13 @@ public static class GitServiceCollectionExtensions
         IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
         ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
 
-        GithubIntegrationCredential credential = githubOptions.Value.Credential;
+        GitIntegrationCredential credential = githubOptions.Value.Credential;
         RepositoryFetchOptions repositoryFetchOptions = CreateRepositoryFetchOptions(credential);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, logger);
         return new ExceptionHandlerRepositoryFetcherDecorator(repositoryFetcher, logger);
     }
 
-    private static RepositoryFetchOptions CreateRepositoryFetchOptions(GithubIntegrationCredential credential)
+    private static RepositoryFetchOptions CreateRepositoryFetchOptions(GitIntegrationCredential credential)
     {
         return credential.AuthType switch
         {
@@ -67,7 +73,7 @@ public static class GitServiceCollectionExtensions
 
         serviceCollection.AddSingleton<IGitHubClient>(sp =>
         {
-            var credentials = sp.GetRequiredService<GithubIntegrationCredential>();
+            var credentials = sp.GetRequiredService<GitIntegrationCredential>();
             return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(credentials.GithubToken) };
         });
 

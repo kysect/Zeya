@@ -2,7 +2,6 @@
 using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.DependencyManager;
-using Kysect.Zeya.GithubIntegration;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.Tests.Tools.Fakes;
@@ -39,7 +38,7 @@ public static class TestServiceCollectionExtensions
                 GithubUsername = "Name",
                 GithubMail = "Name@null.com",
             },
-            Credential = new GithubIntegrationCredential()
+            Credential = new GitIntegrationCredential()
             {
                 GithubUsername = "Name",
                 GithubToken = "token"
