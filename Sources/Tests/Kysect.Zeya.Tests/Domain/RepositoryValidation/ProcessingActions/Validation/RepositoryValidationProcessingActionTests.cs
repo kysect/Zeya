@@ -38,10 +38,10 @@ public class RepositoryValidationProcessingActionTests
 
         ILocalRepository localRepository = _validationTestFixture.CreateLocalRepository();
 
-        RepositoryValidationReport repositoryValidationReport = _validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(rules));
+        var response = _validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(rules));
 
-        repositoryValidationReport
-            .Diagnostics
+        response
+            .Messages
             .Should()
             .HaveCount(2);
     }

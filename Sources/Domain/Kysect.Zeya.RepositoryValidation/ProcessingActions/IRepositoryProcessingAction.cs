@@ -4,5 +4,12 @@ namespace Kysect.Zeya.RepositoryValidation.ProcessingActions;
 
 public interface IRepositoryProcessingAction<TRequest, TResponse>
 {
-    TResponse Process(ILocalRepository repository, TRequest request);
+    RepositoryProcessingResponse<TResponse> Process(ILocalRepository repository, TRequest request);
 }
+
+public record RepositoryProcessingResponse<T>(
+    string ActionName,
+    T Value,
+    IReadOnlyCollection<RepositoryProcessingMessage> Messages);
+
+public record RepositoryProcessingMessage(string Code, string Message, RepositoryValidationSeverity Severity);

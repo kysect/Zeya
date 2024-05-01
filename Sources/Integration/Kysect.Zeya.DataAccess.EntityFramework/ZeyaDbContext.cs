@@ -28,6 +28,6 @@ public class ZeyaDbContext : DbContext
             .HasKey(c => c.ActionId);
 
         modelBuilder.Entity<ValidationPolicyRepositoryActionMessage>()
-            .HasNoKey();
+            .HasKey(c => c.ActionMessageId);
     }
 }

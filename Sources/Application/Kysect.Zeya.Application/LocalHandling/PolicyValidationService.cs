@@ -42,10 +42,9 @@ public class PolicyValidationService(
             IValidationPolicyRepository repository = repositoryFactory.Create(validationPolicyRepository);
             ILocalRepository localGithubRepository = localRepositoryProvider.InitializeRepository(repository);
 
-            RepositoryValidationReport report = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
-
-            await databaseQueries.SaveReport(validationPolicyRepository.Id, report);
-            await databaseQueries.SaveValidationActionMessages(validationPolicyRepository.Id, report);
+            var response = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
+            await databaseQueries.SaveValidationResults(validationPolicyRepository.Id, response.Messages);
+            await databaseQueries.SaveProcessingActionResult(validationPolicyRepository.Id, response);
         }
     }
 
@@ -72,8 +71,12 @@ public class PolicyValidationService(
 
         logger.LogInformation("Repositories analyzed, run fixers");
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(policy.Content);
-        IReadOnlyCollection<IValidationRule> fixedDiagnostics = repositoryDiagnosticFixer.Process(clonedLocalRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds)).FixedRules;
-        createPullRequestProcessingAction.Process(clonedLocalRepository, new RepositoryCreatePullRequestProcessingAction.Request(rules, validationRuleIds, fixedDiagnostics));
+        var fixResponse = repositoryDiagnosticFixer.Process(clonedLocalRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
+        await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, fixResponse);
+
+        IReadOnlyCollection<IValidationRule> fixedDiagnostics = fixResponse.Value.FixedRules;
+        var createPullRequestResponse = createPullRequestProcessingAction.Process(clonedLocalRepository, new RepositoryCreatePullRequestProcessingAction.Request(rules, validationRuleIds, fixedDiagnostics));
+        await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, createPullRequestResponse);
     }
 
     public async Task<string> PreviewChanges(Guid policyId, Guid repositoryId)
@@ -94,7 +97,8 @@ public class PolicyValidationService(
             .ToListAsync();
 
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(policy.Content);
-        repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
+        var response = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
+        await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, response);
         return gitIntegrationService.GetDiff(localGithubRepository.FileSystem.GetFullPath());
     }
 }

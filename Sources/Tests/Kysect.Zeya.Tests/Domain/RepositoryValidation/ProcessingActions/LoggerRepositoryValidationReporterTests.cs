@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.Logging;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Microsoft.Extensions.Logging;
 
@@ -33,7 +34,7 @@ public class LoggerRepositoryValidationReporterTests
     {
         var reporter = _loggerRepositoryValidationReporter;
 
-        reporter.Report(new RepositoryValidationReport([new RepositoryValidationDiagnostic("ERR01", "Error message", RepositoryValidationSeverity.RuntimeError)]), "Repository");
+        reporter.Report(new RepositoryValidationReport([new RepositoryProcessingMessage("ERR01", "Error message", RepositoryValidationSeverity.RuntimeError)]), "Repository");
         IReadOnlyCollection<string> logLines = _logger.Build();
 
         logLines.Should().HaveCount(2);
@@ -46,7 +47,7 @@ public class LoggerRepositoryValidationReporterTests
     {
         var reporter = _loggerRepositoryValidationReporter;
 
-        reporter.Report(new RepositoryValidationReport([new RepositoryValidationDiagnostic("RUL01", "Diagnostic message", RepositoryValidationSeverity.Error)]), "Repository");
+        reporter.Report(new RepositoryValidationReport([new RepositoryProcessingMessage("RUL01", "Diagnostic message", RepositoryValidationSeverity.Error)]), "Repository");
         IReadOnlyCollection<string> logLines = _logger.Build();
 
         logLines.Should().HaveCount(1);
