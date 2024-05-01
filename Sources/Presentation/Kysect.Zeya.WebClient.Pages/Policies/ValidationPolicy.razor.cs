@@ -57,6 +57,11 @@ public partial class ValidationPolicy
         _changesPreview = await PolicyValidationService.PreviewChanges(PolicyId, repositoryId);
     }
 
+    public void NavigateToDetailPage(Guid repositoryId)
+    {
+        _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/repository/{repositoryId}");
+    }
+
     public async ValueTask<GridItemsProviderResult<ValidationPolicyRepositoryDto>> GridItemsProvider(GridItemsProviderRequest<ValidationPolicyRepositoryDto> request)
     {
         var repositories = await PolicyRepositoryService.GetRepositories(PolicyId);

@@ -1,7 +1,6 @@
 ﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Refit;
 
 namespace Kysect.Zeya.WebApi;
 
@@ -44,7 +43,14 @@ public class ValidationPolicyRepositoryController : Controller
         return Ok(result);
     }
 
-    [HttpGet("/Policies/{policyId}/Repository/{repositoryId}")]
+    [HttpGet("/Policies/{policyId}/Repositories/{repositoryId}")]
+    public async Task<ActionResult<ValidationPolicyRepositoryDto>> GetRepository(Guid policyId, Guid repositoryId)
+    {
+        ValidationPolicyRepositoryDto result = await _policyService.GetRepository(policyId, repositoryId);
+        return Ok(result);
+    }
+
+    [HttpGet("/Policies/{policyId}/Repositories/{repositoryId}/GetActions")]
     public async Task<ActionResult<IReadOnlyCollection<ValidationPolicyRepositoryActionDto>>> GetActions(Guid policyId, Guid repositoryId)
     {
         IReadOnlyCollection<ValidationPolicyRepositoryActionDto> result = await _policyService.GetActions(policyId, repositoryId);

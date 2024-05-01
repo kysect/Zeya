@@ -27,6 +27,12 @@ public class PolicyRepositoryService(
             .ToList();
     }
 
+    public async Task<ValidationPolicyRepositoryDto> GetRepository(Guid policyId, Guid repositoryId)
+    {
+        ValidationPolicyRepository repository = await context.ValidationPolicyRepositories.GetAsync(repositoryId);
+        return repositoryFactory.Create(repository).ToDto();
+    }
+
     public async Task<ValidationPolicyRepositoryDto> AddGithubRepository(Guid policyId, string githubOwner, string githubRepository, string? solutionPathMask)
     {
         ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);

@@ -1,4 +1,4 @@
-﻿@page "/validation-policies/{PolicyId:guid}"
+@page "/validation-policies/{PolicyId:guid}"
 @using Kysect.Zeya.Dtos
 
 <PageTitle>Validation Policy</PageTitle>
@@ -42,6 +42,9 @@ else
         <PropertyColumn Property="@(c => c.Id)" />
         <PropertyColumn Property="@(c => c.Name)" />
         <PropertyColumn Property="@(c => c.Type)" />
+        <TemplateColumn Title="Actions" Align="@Align.End">
+            <FluentButton aria-label="Details" IconEnd="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Accent" OnClick="() => NavigateToDetailPage(context.Id)" />
+        </TemplateColumn>
     </FluentDataGrid>
 
     <FluentLabel Typo="Typography.H2"> Validation </FluentLabel>

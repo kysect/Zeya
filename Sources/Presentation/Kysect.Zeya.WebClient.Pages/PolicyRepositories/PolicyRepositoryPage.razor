@@ -1,0 +1,27 @@
+﻿@page "/validation-policies/{PolicyId:guid}/repository/{RepositoryId:guid}"
+
+@if (_policy is null || _repository is null || _actions is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <PageTitle>Repository @_repository.Name</PageTitle>
+
+    if (!_actions.Any())
+    {
+        <FluentLabel Typo="Typography.H2"> No history for this repository </FluentLabel>
+    }
+    else
+    {
+        <FluentLabel Typo="Typography.H2"> Executed actions logs </FluentLabel>
+
+        foreach (var action in _actions)
+        {
+            <FluentLabel Typo="Typography.H1"> Action @action.Title (@action.PerformedAt.LocalDateTime) </FluentLabel>
+            <code style="white-space: pre;">
+                @action.Messages.Aggregate("", (acc, msg) => acc + msg + "\n")
+            </code>
+        }
+    }
+}
