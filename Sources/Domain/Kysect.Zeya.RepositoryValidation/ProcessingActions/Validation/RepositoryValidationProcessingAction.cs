@@ -6,16 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
+public record RepositoryValidationProcessingActionRequest(IReadOnlyCollection<IValidationRule> Rules);
+public record RepositoryValidationProcessingActionResponse();
+
 public class RepositoryValidationProcessingAction(
     IScenarioStepHandler scenarioStepHandler,
     LoggerRepositoryValidationReporter reporter,
     ILogger<RepositoryValidationProcessingAction> logger)
-    : IRepositoryProcessingAction<RepositoryValidationProcessingAction.Request, RepositoryValidationProcessingAction.Response>
+    : IRepositoryProcessingAction<RepositoryValidationProcessingActionRequest, RepositoryValidationProcessingActionResponse>
 {
-    public record Request(IReadOnlyCollection<IValidationRule> Rules);
-    public record Response();
-
-    public RepositoryProcessingResponse<Response> Process(ILocalRepository repository, Request request)
+    public RepositoryProcessingResponse<RepositoryValidationProcessingActionResponse> Process(ILocalRepository repository, RepositoryValidationProcessingActionRequest request)
     {
         repository.ThrowIfNull();
         request.ThrowIfNull();
@@ -35,6 +35,6 @@ public class RepositoryValidationProcessingAction(
 
         var report = new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
         reporter.Report(report, repository.GetRepositoryName());
-        return new RepositoryProcessingResponse<Response>("Validation", new Response(), repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
+        return new RepositoryProcessingResponse<RepositoryValidationProcessingActionResponse>("Validation", new RepositoryValidationProcessingActionResponse(), repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
     }
 }

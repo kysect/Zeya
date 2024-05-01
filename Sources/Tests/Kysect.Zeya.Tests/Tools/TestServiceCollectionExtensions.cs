@@ -4,6 +4,7 @@ using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
+using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,12 +60,14 @@ public static class TestServiceCollectionExtensions
     public static IServiceCollection AddZeyaTestGitIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IRepositoryFetcher>(sp =>
-            {
-                ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
-                var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth("GithubUsername", "GithubToken");
-                return new RepositoryFetcher(repositoryFetchOptions, logger);
-            });
+                .AddSingleton<IRepositoryFetcher>(sp =>
+                {
+                    ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
+                    var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth("GithubUsername", "GithubToken");
+                    return new RepositoryFetcher(repositoryFetchOptions, logger);
+                })
+                .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor, sp.GetRequiredService<IRepositoryFetcher>()))
+            ;
     }
 
     public static IServiceCollection AddZeyaTestGithubIntegration(this IServiceCollection serviceCollection, string currentPath)

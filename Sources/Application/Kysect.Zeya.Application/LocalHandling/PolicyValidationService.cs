@@ -42,7 +42,7 @@ public class PolicyValidationService(
             IValidationPolicyRepository repository = repositoryFactory.Create(validationPolicyRepository);
             ILocalRepository localGithubRepository = localRepositoryProvider.InitializeRepository(repository);
 
-            var response = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingAction.Request(validationRules));
+            var response = validationProcessingAction.Process(localGithubRepository, new RepositoryValidationProcessingActionRequest(validationRules));
             await databaseQueries.SaveValidationResults(validationPolicyRepository.Id, response.Messages);
             await databaseQueries.SaveProcessingActionResult(validationPolicyRepository.Id, response);
         }
@@ -68,11 +68,11 @@ public class PolicyValidationService(
 
         logger.LogInformation("Repositories analyzed, run fixers");
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(policy.Content);
-        var fixResponse = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
+        var fixResponse = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingActionRequest(rules, validationRuleIds));
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, fixResponse);
 
         IReadOnlyCollection<IValidationRule> fixedDiagnostics = fixResponse.Value.FixedRules;
-        var createPullRequestResponse = createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingAction.Request(rules, validationRuleIds, fixedDiagnostics));
+        var createPullRequestResponse = createPullRequestProcessingAction.Process(localGithubRepository, new RepositoryCreatePullRequestProcessingActionRequest(rules, validationRuleIds, fixedDiagnostics));
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, createPullRequestResponse);
     }
 
@@ -94,7 +94,7 @@ public class PolicyValidationService(
             .ToListAsync();
 
         IReadOnlyCollection<IValidationRule> rules = validationRuleParser.GetValidationRules(policy.Content);
-        var response = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingAction.Request(rules, validationRuleIds));
+        var response = repositoryDiagnosticFixer.Process(localGithubRepository, new RepositoryFixProcessingActionRequest(rules, validationRuleIds));
         await databaseQueries.SaveProcessingActionResult(repositoryInfo.Id, response);
         return gitIntegrationService.GetDiff(localGithubRepository.FileSystem.GetFullPath());
     }

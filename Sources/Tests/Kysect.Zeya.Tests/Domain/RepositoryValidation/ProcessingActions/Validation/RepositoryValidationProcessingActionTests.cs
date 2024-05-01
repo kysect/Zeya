@@ -38,7 +38,7 @@ public class RepositoryValidationProcessingActionTests
 
         ILocalRepository localRepository = _validationTestFixture.CreateLocalRepository();
 
-        var response = _validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingAction.Request(rules));
+        var response = _validationProcessingAction.Process(localRepository, new RepositoryValidationProcessingActionRequest(rules));
 
         response
             .Messages
