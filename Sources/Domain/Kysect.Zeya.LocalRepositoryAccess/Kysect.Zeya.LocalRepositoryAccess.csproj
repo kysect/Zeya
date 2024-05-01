@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.Common\Kysect.Zeya.Common.csproj" />
     <ProjectReference Include="..\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.GitIntegration.Abstraction\Kysect.Zeya.GitIntegration.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

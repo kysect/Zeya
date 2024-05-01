@@ -6,13 +6,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 
-public record RepositoryCreatePullRequestProcessingActionRequest(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix, IReadOnlyCollection<IValidationRule> FixedDiagnostics);
+public record RepositoryCreatePullRequestProcessingActionRequest(
+    IGitIntegrationService GitIntegrationService,
+    IReadOnlyCollection<IValidationRule> Rules,
+    IReadOnlyCollection<string> ValidationRuleCodeForFix,
+    IReadOnlyCollection<IValidationRule> FixedDiagnostics);
 public record RepositoryCreatePullRequestProcessingActionResponse();
 
 public class RepositoryCreatePullRequestProcessingAction(
-    IGitIntegrationService gitIntegrationService,
     PullRequestMessageCreator pullRequestMessageCreator,
-    GitRepositoryCredentialOptions gitRepositoryCredentialOptions,
     ILogger<RepositoryCreatePullRequestProcessingAction> logger)
     : IRepositoryProcessingAction<RepositoryCreatePullRequestProcessingActionRequest, RepositoryCreatePullRequestProcessingActionResponse>
 {
@@ -34,13 +36,13 @@ public class RepositoryCreatePullRequestProcessingAction(
         string commitMessage = "Apply Zeya code fixers";
 
 
-        gitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
+        request.GitIntegrationService.CreateFixBranch(repository.FileSystem.GetFullPath(), branchName);
 
         logger.LogInformation("Commit fixes");
-        gitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
+        request.GitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
 
         logger.LogInformation("Push changes to remote");
-        gitIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName, gitRepositoryCredentialOptions);
+        request.GitIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName);
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(request.FixedDiagnostics);
