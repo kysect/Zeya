@@ -21,7 +21,7 @@ public class SourcesMustNotBeInRootValidationRuleTests
     [Fact]
     public void Validate_EmptySolution_ReturnDiagnosticAboutMissedDirectory()
     {
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -36,7 +36,7 @@ public class SourcesMustNotBeInRootValidationRuleTests
             .Create("Solution")
             .Save(solutionDirectoryPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)
@@ -51,7 +51,7 @@ public class SourcesMustNotBeInRootValidationRuleTests
         DirectoryExtensions.EnsureDirectoryExists(_validationTestFixture.FileSystem, solutionDirectoryPath);
         _validationTestFixture.SolutionFileStructureBuilderFactory.Create("Solution").Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), _arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), _arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveErrorCount(0)

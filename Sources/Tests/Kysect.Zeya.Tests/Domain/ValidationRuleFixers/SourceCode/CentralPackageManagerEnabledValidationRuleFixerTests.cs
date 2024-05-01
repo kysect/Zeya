@@ -1,6 +1,5 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
 using Kysect.DotnetProjectSystem.Tools;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.SourceCode;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
@@ -60,7 +59,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
             .AddProject(new ProjectFileStructureBuilder(projectName, originalProjectContent))
             .Save(_validationTestFixture.CurrentPath);
 
-        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        var localGithubRepository = _validationTestFixture.CreateLocalRepository();
         _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), localGithubRepository);
 
         _validationTestFixture.FileSystemAsserts
@@ -118,7 +117,7 @@ public class CentralPackageManagerEnabledValidationRuleFixerTests
             .AddProject(new ProjectFileStructureBuilder(projectName2, originalProjectContent))
             .Save(_validationTestFixture.CurrentPath);
 
-        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        var localGithubRepository = _validationTestFixture.CreateLocalRepository();
         _fixer.Fix(new CentralPackageManagerEnabledValidationRule.Arguments(), localGithubRepository);
 
         _validationTestFixture.FileSystemAsserts

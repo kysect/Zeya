@@ -61,12 +61,14 @@ public class LocalRepositoryProvider(
     private LocalGithubRepository CreateGithubRepositoryAccessor(GithubRepositoryName githubRepositoryName, string solutionSearchMask)
     {
         logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
-        githubIntegrationService.CloneOrUpdate(githubRepositoryName);
-        string repositoryRootPath = localStoragePathFactory.GetPathToRepository(new GithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name));
+
+        var repository = new GithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
+        string pathToRepository = localStoragePathFactory.GetPathToRepository(repository);
+        repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
 
         return new LocalGithubRepository(
             githubRepositoryName,
-            repositoryRootPath,
+            pathToRepository,
             solutionSearchMask,
             githubIntegrationService,
             fileSystem,

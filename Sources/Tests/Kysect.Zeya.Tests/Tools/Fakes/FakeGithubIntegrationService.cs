@@ -1,42 +1,15 @@
-﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
-using Kysect.GithubUtils.Replication.RepositorySync;
-using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GithubIntegration.Abstraction;
-using Microsoft.Extensions.Logging;
+﻿using Kysect.Zeya.GithubIntegration.Abstraction;
 
 namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class FakeGithubIntegrationService : IGithubIntegrationService
 {
-    private readonly ILocalStoragePathFactory _localStoragePathFactory;
-    private readonly ILogger _logger;
-    private readonly RepositoryFetcher _repositoryFetcher;
     public RepositoryBranchProtection RepositoryBranchProtection { get; set; }
     public bool BranchProtectionEnabled { get; set; }
 
-    public FakeGithubIntegrationService(GithubIntegrationCredential githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger<FakeGithubIntegrationService> logger)
+    public FakeGithubIntegrationService()
     {
-        GithubIntegrationCredential options = githubIntegrationOptions.ThrowIfNull();
-        _localStoragePathFactory = localStoragePathFactory;
-        _logger = logger;
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
-        var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth(options.GithubUsername, options.GithubToken);
-        _repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, _logger);
-    }
-
-    public Task<IReadOnlyCollection<GithubRepositoryName>> GetOrganizationRepositories(string organization)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CloneOrUpdate(GithubRepositoryName repositoryName)
-    {
-        repositoryName.ThrowIfNull();
-
-        var repository = new GithubUtils.Models.GithubRepository(repositoryName.Owner, repositoryName.Name);
-        string pathToRepository = _localStoragePathFactory.GetPathToRepository(repository);
-        _repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
     }
 
     public void PushCommitToRemote(string repositoryLocalPath, string branchName)

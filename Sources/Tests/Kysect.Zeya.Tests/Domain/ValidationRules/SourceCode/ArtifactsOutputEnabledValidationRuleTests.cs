@@ -25,7 +25,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
             .Create("Solution")
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -42,7 +42,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
             .AddDirectoryBuildProps(new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty()))
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -66,7 +66,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
             .AddDirectoryBuildProps(directoryBuildPropsContent)
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)
@@ -90,7 +90,7 @@ public class ArtifactsOutputEnabledValidationRuleTests
             .AddDirectoryBuildProps(directoryBuildPropsContent)
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);

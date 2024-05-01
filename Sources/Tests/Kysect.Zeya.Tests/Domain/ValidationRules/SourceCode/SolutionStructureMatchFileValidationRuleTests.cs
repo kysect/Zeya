@@ -27,7 +27,7 @@ public class SolutionStructureMatchFileValidationRuleTests
             .AddProject(new ProjectFileStructureBuilder("FirstProject"))
             .Save(_validationTestFixture.CurrentPath);
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(0);
@@ -47,7 +47,7 @@ public class SolutionStructureMatchFileValidationRuleTests
         _validationTestFixture.FileSystem.AddFile("Solution.sln", new MockFileData(solutionFileContent));
         _validationTestFixture.FileSystem.AddFile(projectPath, new MockFileData(string.Empty));
 
-        _validationRule.Execute(_validationTestFixture.CreateGithubRepositoryValidationScenarioContext(), arguments);
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
 
         _validationTestFixture.DiagnosticCollectorAsserts
             .ShouldHaveDiagnosticCount(1)

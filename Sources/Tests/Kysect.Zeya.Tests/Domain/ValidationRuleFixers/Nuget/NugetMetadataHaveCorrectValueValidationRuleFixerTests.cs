@@ -1,5 +1,4 @@
 ﻿using Kysect.DotnetProjectSystem.Tools;
-using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidationRules.Fixers.Nuget;
 using Kysect.Zeya.RepositoryValidationRules.Rules.Nuget;
 using Kysect.Zeya.Tests.Tools;
@@ -33,7 +32,7 @@ public class NugetMetadataHaveCorrectValueValidationRuleFixerTests
             .Create("Solution")
             .Save(_validationTestFixture.CurrentPath);
 
-        LocalGithubRepository localGithubRepository = _validationTestFixture.CreateGithubRepository();
+        var localGithubRepository = _validationTestFixture.CreateLocalRepository();
         _fixer.Fix(arguments, localGithubRepository);
 
         _validationTestFixture.FileSystemAsserts

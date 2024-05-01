@@ -3,6 +3,7 @@ using Kysect.DotnetProjectSystem.Xml;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.DependencyManager;
+using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using Kysect.DotnetProjectSystem.SolutionModification;
 
 namespace Kysect.Zeya.Tests.Tools;
 
@@ -27,7 +29,6 @@ public class ValidationTestFixture
 
     public RepositoryDiagnosticCollectorAsserts DiagnosticCollectorAsserts { get; }
     public FileSystemAsserts FileSystemAsserts { get; }
-
 
     public ValidationTestFixture()
     {
@@ -62,7 +63,13 @@ public class ValidationTestFixture
 
     public LocalGithubRepository CreateGithubRepository()
     {
-        return RepositoryProvider.GetGithubRepository("owner", "name");
+        return new LocalGithubRepository(
+            new GithubRepositoryName("owner", "name"),
+            CurrentPath,
+            LocalRepositorySolutionManager.DefaultMask,
+            GetRequiredService<IGithubIntegrationService>(),
+            FileSystem,
+            GetRequiredService<DotnetSolutionModifierFactory>());
     }
 
     public ILocalRepository CreateLocalRepository()
