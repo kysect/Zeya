@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
@@ -8,8 +7,8 @@ namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 
 public class RepositoryCreatePullRequestProcessingAction(
     IGitIntegrationService gitIntegrationService,
-    IGithubIntegrationService githubIntegrationService,
     PullRequestMessageCreator pullRequestMessageCreator,
+    GitRepositoryCredential gitRepositoryCredential,
     ILogger<RepositoryCreatePullRequestProcessingAction> logger) : IRepositoryProcessingAction<RepositoryCreatePullRequestProcessingAction.Request, RepositoryCreatePullRequestProcessingAction.Response>
 {
     public record Request(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix, IReadOnlyCollection<IValidationRule> FixedDiagnostics);
@@ -39,7 +38,7 @@ public class RepositoryCreatePullRequestProcessingAction(
         gitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
 
         logger.LogInformation("Push changes to remote");
-        githubIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName);
+        gitIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName, gitRepositoryCredential);
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(request.FixedDiagnostics);

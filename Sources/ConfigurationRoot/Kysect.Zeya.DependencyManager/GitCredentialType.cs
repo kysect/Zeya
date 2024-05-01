@@ -1,4 +1,4 @@
-﻿namespace Kysect.Zeya.GithubIntegration;
+﻿namespace Kysect.Zeya.DependencyManager;
 
 public enum GitCredentialType
 {

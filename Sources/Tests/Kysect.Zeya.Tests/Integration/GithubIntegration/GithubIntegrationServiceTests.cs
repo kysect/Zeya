@@ -4,10 +4,8 @@ using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using System.IO.Abstractions;
-using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.Tests.Tools.Fakes;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration.Abstraction;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Kysect.Zeya.Tests.Integration.GithubIntegration;
@@ -31,24 +29,8 @@ public class GithubIntegrationServiceTests : IDisposable
             .AddZeyaTestLogging()
             .BuildServiceProvider();
 
-
-        var githubIntegrationOptions = new GithubIntegrationOptions()
-        {
-            CommitAuthor = new GitCommitAuthor()
-            {
-                GithubUsername = "Name",
-                GithubMail = "Name@null.com",
-            },
-            Credential = new GithubIntegrationCredential()
-            {
-                GithubUsername = "Name",
-                GithubToken = "token"
-            }
-        };
-
         var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
         _githubIntegrationService = new GithubIntegrationService(
-            githubIntegrationOptions.Credential,
             new GitHubClient(new ProductHeaderValue("Zeya")),
             localStoragePathFactory,
             serviceProvider.GetRequiredService<ILogger<GithubIntegrationService>>());
