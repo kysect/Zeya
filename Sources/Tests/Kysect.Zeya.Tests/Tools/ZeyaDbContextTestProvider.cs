@@ -12,7 +12,7 @@ public static class ZeyaDbContextTestProvider
             .AddZeyaSqliteDbContext(Guid.NewGuid().ToString())
             .BuildServiceProvider();
 
-        ServiceInitialize.InitializeDatabase(serviceProvider).Wait();
+        ServiceInitialize.InitializeDatabase(serviceProvider, userSqlite: true).Wait();
         return serviceProvider.GetRequiredService<ZeyaDbContext>();
     }
 }

@@ -1,4 +1,3 @@
-using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.DependencyManager;
@@ -6,17 +5,14 @@ using System.IO.Abstractions;
 
 namespace Kysect.Zeya.WebService;
 
-public class WebServiceStartupConfigurator
+public class WebServiceStartupConfigurator(IServiceScope serviceScope)
 {
-    public async Task Config(WebApplication app)
+    public async Task InitializeDatabase(bool userSqlite)
     {
-        app.ThrowIfNull();
-
-        using IServiceScope serviceScope = app.Services.CreateScope();
-
         // TODO: this is hack for preventing error in case when service run before postgresql is ready. Need to rework this is future
         await Task.Delay(TimeSpan.FromMilliseconds(200));
-        await ServiceInitialize.InitializeDatabase(serviceScope.ServiceProvider);
+
+        await ServiceInitialize.InitializeDatabase(serviceScope.ServiceProvider, userSqlite);
         await AddDefaultPolicy(serviceScope);
     }
 
