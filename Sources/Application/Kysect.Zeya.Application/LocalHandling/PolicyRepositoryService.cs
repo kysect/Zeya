@@ -69,4 +69,29 @@ public class PolicyRepositoryService(
 
         return repositoryFactory.Create(repository).ToDto();
     }
+
+    public async Task<IReadOnlyCollection<ValidationPolicyRepositoryActionDto>> GetActions(Guid policyId, Guid repositoryId)
+    {
+        ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);
+
+        var actionMessages = await context
+            .ValidationPolicyRepositoryActions
+            .Join(context.ValidationPolicyRepositoryActionMessages,
+                r => r.ActionId,
+                d => d.ActionId,
+                (a, m) => new { Action = a, Message = m })
+            .Where(t => t.Action.ValidationPolicyRepositoryId == repositoryId)
+            .ToListAsync();
+
+        List<ValidationPolicyRepositoryActionDto> result = new();
+        foreach (var actionMessageGroup in actionMessages.GroupBy(a => a.Message.ActionId))
+        {
+            var sampleValue = actionMessageGroup.First();
+            List<string> messages = actionMessageGroup.Select(m => m.Message.Message).ToList();
+            var dto = new ValidationPolicyRepositoryActionDto(sampleValue.Action.ActionId, sampleValue.Action.Title, sampleValue.Action.PerformedAt, messages);
+            result.Add(dto);
+        }
+
+        return result;
+    }
 }
