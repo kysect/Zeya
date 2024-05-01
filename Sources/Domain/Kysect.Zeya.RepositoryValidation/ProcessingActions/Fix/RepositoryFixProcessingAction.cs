@@ -11,12 +11,11 @@ public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validatio
     public record Request(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix);
     public record Response(IReadOnlyCollection<IValidationRule> FixedRules);
 
-    public Response Process(ILocalRepository repository, Request request)
+    public RepositoryProcessingResponse<Response> Process(ILocalRepository repository, Request request)
     {
         repository.ThrowIfNull();
         request.ThrowIfNull();
 
-        // TODO: log fix result
         logger.LogInformation("Run fixer for {Repository}", repository.GetRepositoryName());
 
         var fixedRules = new List<IValidationRule>();
@@ -40,6 +39,7 @@ public class RepositoryFixProcessingAction(IValidationRuleFixerApplier validatio
             }
         }
 
-        return new Response(fixedRules);
+        // TODO: Return info about fixed rules
+        return new RepositoryProcessingResponse<Response>("Fix diagnostics", new Response(fixedRules), []);
     }
 }

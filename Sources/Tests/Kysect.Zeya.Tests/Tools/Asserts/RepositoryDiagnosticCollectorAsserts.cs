@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 namespace Kysect.Zeya.Tests.Tools.Asserts;
@@ -16,7 +17,7 @@ public class RepositoryDiagnosticCollectorAsserts
 
     public RepositoryDiagnosticCollectorAsserts ShouldHaveDiagnosticCount(int count)
     {
-        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _collector.GetDiagnostics();
+        IReadOnlyCollection<RepositoryProcessingMessage> diagnostics = _collector.GetDiagnostics();
         diagnostics.Count.Should().Be(count, "Founded diagnostics: " + diagnostics.ToSingleString(d => d.Message));
         return this;
     }
@@ -25,11 +26,11 @@ public class RepositoryDiagnosticCollectorAsserts
     {
         index.Should().BeGreaterThan(0);
 
-        IReadOnlyCollection<RepositoryValidationDiagnostic> diagnostics = _collector.GetDiagnostics();
+        IReadOnlyCollection<RepositoryProcessingMessage> diagnostics = _collector.GetDiagnostics();
         if (diagnostics.Count < index)
             Assert.Fail($"Diagnostic does not contains {index} diagnostics, diagnostic count {diagnostics.Count}");
 
-        RepositoryValidationDiagnostic diagnostic = diagnostics.ElementAt(index - 1);
+        RepositoryProcessingMessage diagnostic = diagnostics.ElementAt(index - 1);
         diagnostic.Code.Should().Be(diagnosticCode);
         diagnostic.Message.Should().Be(message);
         return this;
@@ -47,7 +48,7 @@ public class RepositoryDiagnosticCollectorAsserts
 
     public RepositoryDiagnosticCollectorAsserts ShouldHaveError(int index, string diagnosticCode, string message)
     {
-        RepositoryValidationDiagnostic diagnostic = _collector
+        RepositoryProcessingMessage diagnostic = _collector
             .GetDiagnostics()
             .Where(d => d.Severity == RepositoryValidationSeverity.RuntimeError)
             .ElementAt(index - 1);

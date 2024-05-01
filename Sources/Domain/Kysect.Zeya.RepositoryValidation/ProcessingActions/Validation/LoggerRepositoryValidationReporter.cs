@@ -13,7 +13,7 @@ public class LoggerRepositoryValidationReporter(ILogger<LoggerRepositoryValidati
         if (repositoryValidationReport.RuntimeErrors.Any())
         {
             logger.LogWarning("Some analyzers finished with errors");
-            foreach (RepositoryValidationDiagnostic diagnostic in repositoryValidationReport.RuntimeErrors)
+            foreach (RepositoryProcessingMessage diagnostic in repositoryValidationReport.RuntimeErrors)
                 logger.LogTabWarning(1, $"{repositoryName}: [{diagnostic.Code}] {diagnostic.Message}");
         }
 

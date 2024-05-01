@@ -6,6 +6,7 @@ using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.RepositoryValidation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Kysect.Zeya.Tests.Tools;
 
@@ -41,11 +42,11 @@ public class ValidationPolicyDatabaseQueriesTests
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
-        var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
-        var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
-        var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic });
+        var firstDiagnostic = new RepositoryProcessingMessage("SRC0001", "Message", RepositoryValidationSeverity.Warning);
+        var secondDiagnostic = new RepositoryProcessingMessage("SRC0002", "Message", RepositoryValidationSeverity.Warning);
+        RepositoryProcessingMessage[] repositoryProcessingMessages = new[] { firstDiagnostic, secondDiagnostic };
 
-        await _validationPolicyDatabaseQueries.SaveReport(repository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(repository.Id, repositoryProcessingMessages);
 
         IReadOnlyCollection<string> rules = await _validationPolicyDatabaseQueries.GetAllRulesForPolicy(repository.ValidationPolicyId);
 
@@ -57,11 +58,11 @@ public class ValidationPolicyDatabaseQueriesTests
     {
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepositoryDto repository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
-        var validationDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
+        var validationDiagnostic = new RepositoryProcessingMessage("SRC0001", "Message", RepositoryValidationSeverity.Warning);
         var expected = new ValidationPolicyRepositoryDiagnostic(repository.Id, "SRC0001", ValidationPolicyRepositoryDiagnosticSeverity.Warning);
-        var report = new RepositoryValidationReport(new[] { validationDiagnostic });
+        RepositoryProcessingMessage[] repositoryProcessingMessages = new[] { validationDiagnostic };
 
-        await _validationPolicyDatabaseQueries.SaveReport(repository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(repository.Id, repositoryProcessingMessages);
 
         IReadOnlyCollection<ValidationPolicyRepositoryDiagnostic> diagnostics = await _validationPolicyDatabaseQueries.GetDiagnostics(repository.Id);
 
@@ -75,8 +76,8 @@ public class ValidationPolicyDatabaseQueriesTests
         ValidationPolicyDto validationPolicyEntity = await _policyService.CreatePolicy("Policy", "Content");
         ValidationPolicyRepositoryDto firstRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository", null);
         ValidationPolicyRepositoryDto secondRepository = await _policyRepositoryService.AddGithubRepository(validationPolicyEntity.Id, "Owner", "Repository2", null);
-        var firstDiagnostic = new RepositoryValidationDiagnostic("SRC0001", "Message", RepositoryValidationSeverity.Warning);
-        var secondDiagnostic = new RepositoryValidationDiagnostic("SRC0002", "Message", RepositoryValidationSeverity.Warning);
+        var firstDiagnostic = new RepositoryProcessingMessage("SRC0001", "Message", RepositoryValidationSeverity.Warning);
+        var secondDiagnostic = new RepositoryProcessingMessage("SRC0002", "Message", RepositoryValidationSeverity.Warning);
         var report = new RepositoryValidationReport(new[] { firstDiagnostic, secondDiagnostic });
         var expected = new List<RepositoryDiagnosticTableRow>
             {
@@ -84,8 +85,8 @@ public class ValidationPolicyDatabaseQueriesTests
                 new RepositoryDiagnosticTableRow(secondRepository.Id, "Owner/Repository2", new Dictionary<string, string> { ["SRC0001"] = "Warning", ["SRC0002"] = "Warning" })
             };
 
-        await _validationPolicyDatabaseQueries.SaveReport(firstRepository.Id, report);
-        await _validationPolicyDatabaseQueries.SaveReport(secondRepository.Id, report);
+        await _validationPolicyDatabaseQueries.SaveReport(firstRepository.Id, report.Diagnostics);
+        await _validationPolicyDatabaseQueries.SaveReport(secondRepository.Id, report.Diagnostics);
 
         IReadOnlyCollection<RepositoryDiagnosticTableRow> diagnosticsTable = await _validationPolicyDatabaseQueries.GetDiagnosticsTable(validationPolicyEntity.Id);
         diagnosticsTable.Should().BeEquivalentTo(expected);

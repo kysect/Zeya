@@ -10,11 +10,12 @@ public class RepositoryValidationProcessingAction(
     IScenarioStepHandler scenarioStepHandler,
     LoggerRepositoryValidationReporter reporter,
     ILogger<RepositoryValidationProcessingAction> logger)
-    : IRepositoryProcessingAction<RepositoryValidationProcessingAction.Request, RepositoryValidationReport>
+    : IRepositoryProcessingAction<RepositoryValidationProcessingAction.Request, RepositoryValidationProcessingAction.Response>
 {
     public record Request(IReadOnlyCollection<IValidationRule> Rules);
+    public record Response();
 
-    public RepositoryValidationReport Process(ILocalRepository repository, Request request)
+    public RepositoryProcessingResponse<Response> Process(ILocalRepository repository, Request request)
     {
         repository.ThrowIfNull();
         request.ThrowIfNull();
@@ -34,6 +35,6 @@ public class RepositoryValidationProcessingAction(
 
         var report = new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
         reporter.Report(report, repository.GetRepositoryName());
-        return report;
+        return new RepositoryProcessingResponse<Response>("Validation", new Response(), repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
     }
 }

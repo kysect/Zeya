@@ -2,14 +2,14 @@
 
 public class RepositoryDiagnosticCollector
 {
-    private readonly List<RepositoryValidationDiagnostic> _diagnostics = new List<RepositoryValidationDiagnostic>();
+    private readonly List<RepositoryProcessingMessage> _diagnostics = new List<RepositoryProcessingMessage>();
 
     public void AddDiagnostic(string code, string message, RepositoryValidationSeverity severity)
     {
-        _diagnostics.Add(new RepositoryValidationDiagnostic(code, message, severity));
+        _diagnostics.Add(new RepositoryProcessingMessage(code, message, severity));
     }
 
-    public IReadOnlyCollection<RepositoryValidationDiagnostic> GetDiagnostics()
+    public IReadOnlyCollection<RepositoryProcessingMessage> GetDiagnostics()
     {
         return _diagnostics;
     }

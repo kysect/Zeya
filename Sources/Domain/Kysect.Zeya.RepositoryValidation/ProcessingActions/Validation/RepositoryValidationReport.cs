@@ -3,12 +3,12 @@ using System.Diagnostics.Contracts;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
-public record RepositoryValidationReport(IReadOnlyCollection<RepositoryValidationDiagnostic> Diagnostics)
+public record RepositoryValidationReport(IReadOnlyCollection<RepositoryProcessingMessage> Diagnostics)
 {
     public static RepositoryValidationReport Empty { get; } = new RepositoryValidationReport([]);
 
-    public IReadOnlyCollection<RepositoryValidationDiagnostic> RuntimeErrors => Diagnostics.Where(d => d.Severity == RepositoryValidationSeverity.RuntimeError).ToList();
-    public IReadOnlyCollection<RepositoryValidationDiagnostic> ValidationMessage => Diagnostics.Where(d => d.Severity != RepositoryValidationSeverity.RuntimeError).ToList();
+    public IReadOnlyCollection<RepositoryProcessingMessage> RuntimeErrors => Diagnostics.Where(d => d.Severity == RepositoryValidationSeverity.RuntimeError).ToList();
+    public IReadOnlyCollection<RepositoryProcessingMessage> ValidationMessage => Diagnostics.Where(d => d.Severity != RepositoryValidationSeverity.RuntimeError).ToList();
 
     [Pure]
     public RepositoryValidationReport Compose(RepositoryValidationReport other)

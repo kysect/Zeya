@@ -15,7 +15,7 @@ public class RepositoryCreatePullRequestProcessingAction(
     public record Request(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix, IReadOnlyCollection<IValidationRule> FixedDiagnostics);
     public record Response();
 
-    public Response Process(ILocalRepository repository, Request request)
+    public RepositoryProcessingResponse<Response> Process(ILocalRepository repository, Request request)
     {
         repository.ThrowIfNull();
         request.ThrowIfNull();
@@ -44,6 +44,6 @@ public class RepositoryCreatePullRequestProcessingAction(
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(request.FixedDiagnostics);
         clonedLocalRepository.CreatePullRequest(pullRequestMessage, pullRequestTitle, branchName, baseBranch).Wait();
-        return new Response();
+        return new RepositoryProcessingResponse<Response>("Create Pull Request", new Response(), []);
     }
 }

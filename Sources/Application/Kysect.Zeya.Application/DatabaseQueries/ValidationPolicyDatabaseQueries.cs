@@ -1,10 +1,11 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.Collections.Extensions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.DataAccess.EntityFramework.Tools;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.ModelMapping;
-using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
+using Kysect.Zeya.RepositoryValidation.ProcessingActions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kysect.Zeya.Application.DatabaseQueries;
@@ -25,17 +26,19 @@ public class ValidationPolicyDatabaseQueries
             .GetAsync(id);
     }
 
-    public async Task SaveReport(Guid repositoryId, RepositoryValidationReport report)
+    public async Task SaveValidationResults(Guid repositoryId, IReadOnlyCollection<RepositoryProcessingMessage> repositoryProcessingMessages)
     {
-        report.ThrowIfNull();
+        await SaveReport(repositoryId, repositoryProcessingMessages);
+    }
 
+    public async Task SaveReport(Guid repositoryId, IReadOnlyCollection<RepositoryProcessingMessage> repositoryProcessingMessages)
+    {
         IQueryable<ValidationPolicyRepositoryDiagnostic> oldPolicyDiagnostics = _context
             .ValidationPolicyRepositoryDiagnostics
             .Where(d => d.ValidationPolicyRepositoryId == repositoryId);
         _context.ValidationPolicyRepositoryDiagnostics.RemoveRange(oldPolicyDiagnostics);
 
-        var diagnostics = report
-            .Diagnostics
+        List<ValidationPolicyRepositoryDiagnostic> diagnostics = repositoryProcessingMessages
             .Select(d => new ValidationPolicyRepositoryDiagnostic(repositoryId, d.Code, RepositoryValidationSeverityMapping.ToApplicationModel(d.Severity)))
             .DistinctBy(d => d.RuleId)
             .ToList();
@@ -44,19 +47,21 @@ public class ValidationPolicyDatabaseQueries
         await _context.SaveChangesAsync();
     }
 
-    public async Task SaveValidationActionMessages(Guid repositoryId, RepositoryValidationReport report)
+    public async Task SaveProcessingActionResult<T>(Guid repositoryId, RepositoryProcessingResponse<T> response)
     {
-        report.ThrowIfNull();
+        response.ThrowIfNull();
+        if (response.Messages.IsEmpty())
+            return;
 
         var actionId = Guid.NewGuid();
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
-        var messages = report
-            .RuntimeErrors
-            .Select(e => new ValidationPolicyRepositoryActionMessage(actionId, $"{e.Code}: {e.Message}"))
+        var validationPolicyRepositoryAction = new ValidationPolicyRepositoryAction(actionId, repositoryId, response.ActionName, now);
+        List<ValidationPolicyRepositoryActionMessage> messages = response.Messages
+            .Select(e => new ValidationPolicyRepositoryActionMessage(Guid.NewGuid(), actionId, $"{e.Code}: {e.Message}"))
             .ToList();
 
-        _context.ValidationPolicyRepositoryActions.Add(new ValidationPolicyRepositoryAction(actionId, repositoryId, "Validation", now));
+        _context.ValidationPolicyRepositoryActions.Add(validationPolicyRepositoryAction);
         _context.ValidationPolicyRepositoryActionMessages.AddRange(messages);
         await _context.SaveChangesAsync();
     }
