@@ -17,6 +17,9 @@ public interface IPolicyRepositoryService
     [Get("/Policies/{policyId}/Repositories")]
     Task<IReadOnlyCollection<ValidationPolicyRepositoryDto>> GetRepositories(Guid policyId);
 
-    [Get("/Policies/{policyId}/Repository/{repositoryId}")]
+    [Get("/Policies/{policyId}/Repositories/{repositoryId}")]
+    Task<ValidationPolicyRepositoryDto> GetRepository(Guid policyId, Guid repositoryId);
+
+    [Get("/Policies/{policyId}/Repositories/{repositoryId}/GetActions")]
     Task<IReadOnlyCollection<ValidationPolicyRepositoryActionDto>> GetActions(Guid policyId, Guid repositoryId);
 }
