@@ -47,7 +47,10 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapDefaultEndpoints();
 
-var webServiceStartupConfigurator = new WebServiceStartupConfigurator();
-await webServiceStartupConfigurator.Config(app);
+using (IServiceScope serviceScope = app.Services.CreateScope())
+{
+    var webServiceStartupConfigurator = new WebServiceStartupConfigurator(serviceScope);
+    await webServiceStartupConfigurator.InitializeDatabase(userSqlite);
+}
 
 await app.RunAsync();
