@@ -9,7 +9,7 @@ namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 public class RepositoryCreatePullRequestProcessingAction(
     IGitIntegrationService gitIntegrationService,
     PullRequestMessageCreator pullRequestMessageCreator,
-    GitRepositoryCredential gitRepositoryCredential,
+    GitRepositoryCredentialOptions gitRepositoryCredentialOptions,
     ILogger<RepositoryCreatePullRequestProcessingAction> logger) : IRepositoryProcessingAction<RepositoryCreatePullRequestProcessingAction.Request, RepositoryCreatePullRequestProcessingAction.Response>
 {
     public record Request(IReadOnlyCollection<IValidationRule> Rules, IReadOnlyCollection<string> ValidationRuleCodeForFix, IReadOnlyCollection<IValidationRule> FixedDiagnostics);
@@ -39,7 +39,7 @@ public class RepositoryCreatePullRequestProcessingAction(
         gitIntegrationService.CreateCommitWithFix(repository.FileSystem.GetFullPath(), commitMessage);
 
         logger.LogInformation("Push changes to remote");
-        gitIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName, gitRepositoryCredential);
+        gitIntegrationService.PushCommitToRemote(repository.FileSystem.GetFullPath(), branchName, gitRepositoryCredentialOptions);
 
         logger.LogInformation("Create PR");
         string pullRequestMessage = pullRequestMessageCreator.Create(request.FixedDiagnostics);

@@ -19,62 +19,54 @@ public static class GitServiceCollectionExtensions
 {
     public static IServiceCollection AddZeyaGitConfiguration(this IServiceCollection serviceCollection)
     {
-        // TODO: Maybe we need to split these settings or rename
         return serviceCollection
-            .AddOptionsWithValidation<GithubIntegrationOptions>("GithubIntegrationOptions")
+            .AddOptionsWithValidation<GitEnvironmentOptions>("GitEnvironmentOptions")
+            .AddOptionsWithValidation<GitIntegrationCredentialOptions>("GitIntegrationCredentialOptions")
             .AddSingleton(sp =>
             {
-                var githubIntegrationOptions = sp.GetRequiredService<GithubIntegrationOptions>();
-                return new GitRepositoryCredential(githubIntegrationOptions.Credential.GithubUsername, githubIntegrationOptions.Credential.GithubToken);
+                var gitIntegrationCredentialOptions = sp.GetRequiredService<GitIntegrationCredentialOptions>();
+                return new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.GithubUsername, gitIntegrationCredentialOptions.GithubToken);
             });
     }
 
     public static IServiceCollection AddZeyaGitIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(
-                sp.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor))
+            .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor))
             .AddSingleton(CreateRepositoryFetcher);
     }
 
     private static IRepositoryFetcher CreateRepositoryFetcher(IServiceProvider sp)
     {
-        IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
+        IOptions<GitIntegrationCredentialOptions> credentialOptions = sp.GetRequiredService<IOptions<GitIntegrationCredentialOptions>>();
         ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
 
-        GitIntegrationCredential credential = githubOptions.Value.Credential;
-        RepositoryFetchOptions repositoryFetchOptions = CreateRepositoryFetchOptions(credential);
+        RepositoryFetchOptions repositoryFetchOptions = CreateRepositoryFetchOptions(credentialOptions.Value);
         var repositoryFetcher = new RepositoryFetcher(repositoryFetchOptions, logger);
         return new ExceptionHandlerRepositoryFetcherDecorator(repositoryFetcher, logger);
     }
 
-    private static RepositoryFetchOptions CreateRepositoryFetchOptions(GitIntegrationCredential credential)
+    private static RepositoryFetchOptions CreateRepositoryFetchOptions(GitIntegrationCredentialOptions credentialOptions)
     {
-        return credential.AuthType switch
+        return credentialOptions.AuthType switch
         {
-            GitCredentialType.UserPassword => RepositoryFetchOptions.CreateWithUserPasswordAuth(credential.GithubUsername, credential.GithubToken),
-            GitCredentialType.HeaderBased => RepositoryFetchOptions.CreateHeaderBasedAuth(credential.GithubToken),
-            _ => throw SwitchDefaultExceptions.OnUnexpectedValue(credential.AuthType)
+            GitCredentialType.UserPassword => RepositoryFetchOptions.CreateWithUserPasswordAuth(credentialOptions.GithubUsername, credentialOptions.GithubToken),
+            GitCredentialType.HeaderBased => RepositoryFetchOptions.CreateHeaderBasedAuth(credentialOptions.GithubToken),
+            _ => throw SwitchDefaultExceptions.OnUnexpectedValue(credentialOptions.AuthType)
         };
     }
 
     public static IServiceCollection AddZeyaGithubIntegration(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton(sp =>
-        {
-            IOptions<GithubIntegrationOptions> githubOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
-            return githubOptions.Value.Credential;
-        });
-
         serviceCollection.AddSingleton<ILocalStoragePathFactory>(sp =>
         {
-            var githubIntegrationOptions = sp.GetRequiredService<IOptions<GithubIntegrationOptions>>();
-            return new UseOwnerAndRepoForFolderNameStrategy(githubIntegrationOptions.Value.CacheDirectoryPath);
+            var gitEnvironmentOptions = sp.GetRequiredService<IOptions<GitEnvironmentOptions>>();
+            return new UseOwnerAndRepoForFolderNameStrategy(gitEnvironmentOptions.Value.CacheDirectoryPath);
         });
 
         serviceCollection.AddSingleton<IGitHubClient>(sp =>
         {
-            var credentials = sp.GetRequiredService<GitIntegrationCredential>();
+            var credentials = sp.GetRequiredService<GitIntegrationCredentialOptions>();
             return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(credentials.GithubToken) };
         });
 

@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Kysect.Zeya.DependencyManager;
 
-public class GithubIntegrationOptions
+public class GitEnvironmentOptions
 {
-    public GitCommitAuthor? CommitAuthor { get; init; }
-
-    [Required]
-    public GitIntegrationCredential Credential { get; init; } = null!;
     [Required]
     public string CacheDirectoryPath { get; init; } = null!;
+    public GitCommitAuthor? CommitAuthor { get; init; }
 }
