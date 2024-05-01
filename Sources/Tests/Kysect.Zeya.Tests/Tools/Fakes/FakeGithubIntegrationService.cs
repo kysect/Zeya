@@ -12,11 +12,6 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
         RepositoryBranchProtection = new RepositoryBranchProtection(false, false);
     }
 
-    public void PushCommitToRemote(string repositoryLocalPath, string branchName)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         throw new NotImplementedException();

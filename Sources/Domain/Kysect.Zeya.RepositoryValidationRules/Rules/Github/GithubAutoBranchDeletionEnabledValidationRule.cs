@@ -1,13 +1,12 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.ScenarioLib.Abstractions;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
 namespace Kysect.Zeya.RepositoryValidationRules.Rules.Github;
 
-public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationService githubIntegrationService)
+public class GithubAutoBranchDeletionEnabledValidationRule()
     : IScenarioStepExecutor<GithubAutoBranchDeletionEnabledValidationRule.Arguments>
 {
     [ScenarioStep("Github.AutoBranchDeletionEnabled")]
@@ -31,7 +30,7 @@ public class GithubAutoBranchDeletionEnabledValidationRule(IGithubIntegrationSer
             return;
         }
 
-        var deleteBranchOnMerge = githubIntegrationService.DeleteBranchOnMerge(clonedGithubRepository.GithubMetadata).Result;
+        var deleteBranchOnMerge = clonedGithubRepository.GitHubIntegrationService.DeleteBranchOnMerge(clonedGithubRepository.GithubMetadata).Result;
         if (!deleteBranchOnMerge)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(

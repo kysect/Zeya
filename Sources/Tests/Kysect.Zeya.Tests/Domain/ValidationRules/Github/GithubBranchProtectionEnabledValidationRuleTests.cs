@@ -15,7 +15,7 @@ public class GithubBranchProtectionEnabledValidationRuleTests
     {
         _validationTestFixture = new ValidationTestFixture();
         _fakeGithubIntegrationService = _validationTestFixture.GetRequiredService<FakeGithubIntegrationService>();
-        _validationRule = new GithubBranchProtectionEnabledValidationRule(_fakeGithubIntegrationService);
+        _validationRule = new GithubBranchProtectionEnabledValidationRule();
     }
 
     [Fact]

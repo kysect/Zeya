@@ -4,11 +4,6 @@ namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class DummyGithubIntegrationService : IGithubIntegrationService
 {
-    public void PushCommitToRemote(string repositoryLocalPath, string branchName)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task CreatePullRequest(GithubRepositoryName repositoryName, string message, string pullRequestTitle, string branch, string baseBranch)
     {
         throw new NotImplementedException();

@@ -4,7 +4,7 @@ using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 
-namespace Kysect.Zeya.Application.Repositories;
+namespace Kysect.Zeya.Application.Repositories.Github;
 
 public class GithubValidationPolicyRepository : IValidationPolicyRepository
 {

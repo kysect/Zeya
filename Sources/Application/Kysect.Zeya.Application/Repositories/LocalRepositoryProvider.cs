@@ -3,6 +3,7 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
+using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
@@ -14,7 +15,7 @@ namespace Kysect.Zeya.Application.Repositories;
 public class LocalRepositoryProvider(
     IFileSystem fileSystem,
     ILogger<LocalRepositoryProvider> logger,
-    IGithubIntegrationService githubIntegrationService,
+    IGithubIntegrationServiceFactory githubIntegrationServiceFactory,
     ILocalStoragePathFactory localStoragePathFactory,
     DotnetSolutionModifierFactory solutionModifierFactory,
     IRepositoryFetcher repositoryFetcher)
@@ -23,16 +24,11 @@ public class LocalRepositoryProvider(
     {
         return repository switch
         {
-            GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(new GithubRepositoryName(githubRepository.Owner, githubRepository.Name), repository.SolutionPathMask),
+            GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(githubRepository),
             LocalValidationPolicyRepository localRepository => GetLocalRepository(localRepository.Path, repository.SolutionPathMask),
             RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository => CreateRemoteRepositoryCache(remoteHttpsValidationPolicyRepository.RemoteHttpsUrl, repository.SolutionPathMask),
             _ => throw SwitchDefaultExceptions.OnUnexpectedType(repository)
         };
-    }
-
-    public LocalGithubRepository GetGithubRepository(string owner, string repository)
-    {
-        return CreateGithubRepositoryAccessor(new GithubRepositoryName(owner, repository), LocalRepositorySolutionManager.DefaultMask);
     }
 
     public ILocalRepository GetLocalRepository(string path, string solutionSearchMask)
@@ -58,19 +54,21 @@ public class LocalRepositoryProvider(
             solutionModifierFactory);
     }
 
-    private LocalGithubRepository CreateGithubRepositoryAccessor(GithubRepositoryName githubRepositoryName, string solutionSearchMask)
+    private LocalGithubRepository CreateGithubRepositoryAccessor(GithubValidationPolicyRepository githubRepository)
     {
+        var githubRepositoryName = new GithubRepositoryName(githubRepository.Owner, githubRepository.Name);
+        var repository = new GithubRepository(githubRepository.Owner, githubRepository.Name);
         logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
 
-        var repository = new GithubRepository(githubRepositoryName.Owner, githubRepositoryName.Name);
         string pathToRepository = localStoragePathFactory.GetPathToRepository(repository);
         repositoryFetcher.EnsureRepositoryUpdated(pathToRepository, repository);
+        IGithubIntegrationService integrationService = githubIntegrationServiceFactory.GetService(githubRepository);
 
         return new LocalGithubRepository(
             githubRepositoryName,
             pathToRepository,
-            solutionSearchMask,
-            githubIntegrationService,
+            githubRepository.SolutionPathMask,
+            integrationService,
             fileSystem,
             solutionModifierFactory);
     }
