@@ -3,7 +3,7 @@ using Kysect.Zeya.Common;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 
-namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
+namespace Kysect.Zeya.Tests.Domain.RepositoryValidation.ProcessingActions;
 
 public class PullRequestMessageCreatorTests
 {

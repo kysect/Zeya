@@ -7,14 +7,14 @@ using Kysect.Zeya.RepositoryValidationRules.Rules.SourceCode;
 using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
+namespace Kysect.Zeya.Tests.Domain.RepositoryValidation.ProcessingActions.Validation;
 
-public class RepositoryValidatorTests
+public class RepositoryValidationProcessingActionTests
 {
     private readonly ValidationTestFixture _validationTestFixture;
     private readonly RepositoryValidationProcessingAction _validationProcessingAction;
 
-    public RepositoryValidatorTests()
+    public RepositoryValidationProcessingActionTests()
     {
         _validationTestFixture = new ValidationTestFixture();
 
