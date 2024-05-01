@@ -4,7 +4,7 @@ using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Microsoft.Extensions.Logging;
 
-namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
+namespace Kysect.Zeya.Tests.Domain.RepositoryValidation.ProcessingActions;
 
 public class LoggerRepositoryValidationReporterTests
 {

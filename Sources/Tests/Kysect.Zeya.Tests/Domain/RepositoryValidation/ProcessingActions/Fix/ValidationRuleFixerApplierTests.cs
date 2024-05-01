@@ -4,7 +4,7 @@ using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Kysect.Zeya.Tests.Domain.RepositoryValidation;
+namespace Kysect.Zeya.Tests.Domain.RepositoryValidation.ProcessingActions.Fix;
 
 public class ValidationRuleFixerApplierTests
 {
