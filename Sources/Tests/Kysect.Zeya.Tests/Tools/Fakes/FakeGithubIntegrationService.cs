@@ -15,7 +15,7 @@ public class FakeGithubIntegrationService : IGithubIntegrationService
     public RepositoryBranchProtection RepositoryBranchProtection { get; set; }
     public bool BranchProtectionEnabled { get; set; }
 
-    public FakeGithubIntegrationService(GithubIntegrationCredential githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger logger)
+    public FakeGithubIntegrationService(GithubIntegrationCredential githubIntegrationOptions, ILocalStoragePathFactory localStoragePathFactory, ILogger<FakeGithubIntegrationService> logger)
     {
         GithubIntegrationCredential options = githubIntegrationOptions.ThrowIfNull();
         _localStoragePathFactory = localStoragePathFactory;

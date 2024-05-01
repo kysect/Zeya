@@ -16,11 +16,7 @@ using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Extensions.Logging;
 using System.IO.Abstractions;
 using System.Reflection;
 
@@ -28,48 +24,20 @@ namespace Kysect.Zeya.DependencyManager;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAppSettingsConfiguration(this IServiceCollection serviceCollection)
-    {
-        IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        return serviceCollection
-            .AddSingleton(config);
-    }
-
     public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)
     {
-        return serviceCollection
-            .AddZeyaDotnetProjectSystemIntegration()
+        serviceCollection
+            .AddZeyaGitConfiguration()
             .AddZeyaGitIntegration()
-            .AddZeyaGithubIntegration()
-            .AddZeyaValidationRulesAndFixers()
-            .AddZeyaScenarioExecuting()
-            .AddZeyaRepositoryValidation()
-            .AddZeyaLocalServerApiClients();
-    }
+            .AddZeyaGithubIntegration();
 
-    public static IServiceCollection AddZeyaConsoleLogging(this IServiceCollection serviceCollection)
-    {
         return serviceCollection
-            .AddLogging(b =>
-            {
-                b
-                    .AddFilter(null, LogLevel.Trace)
-                    .AddSimpleConsole(options =>
-                    {
-                        options.IncludeScopes = false;
-                        options.SingleLine = true;
-                        options.TimestampFormat = "HH:mm:ss";
-                    })
-                    .AddProvider(
-                        new SerilogLoggerProvider(
-                            new LoggerConfiguration()
-                                .WriteTo.File(path: "Zeya.log", rollingInterval: RollingInterval.Day)
-                                .MinimumLevel.Verbose()
-                                .CreateLogger()));
-            });
+            .AddSingleton<IFileSystem, FileSystem>()
+            .AddZeyaDotnetProjectSystemIntegration()
+            .AddZeyaValidationRulesAndFixers(typeof(RuleDescription).Assembly)
+            .AddZeyaRepositoryValidation()
+            .AddZeyaScenarioExecuting(typeof(RuleDescription).Assembly)
+            .AddZeyaLocalServerApiClients();
     }
 
     public static IServiceCollection AddZeyaSqliteDbContext(this IServiceCollection serviceCollection, string databaseName = ":memory:")
@@ -84,7 +52,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaDotnetProjectSystemIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IFileSystem, FileSystem>()
             .AddSingleton<XmlDocumentSyntaxFormatter>()
             .AddSingleton<DotnetSolutionModifierFactory>()
             .AddSingleton<SolutionFileContentParser>();
@@ -105,34 +72,21 @@ public static class ServiceCollectionExtensions
         return serviceCollection;
     }
 
-    public static IServiceCollection AddZeyaScenarioExecuting(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaScenarioExecuting(this IServiceCollection serviceCollection, Assembly assembly)
     {
-        Assembly[] validationRuleAssembly = new[]
-        {
-            typeof(RuleDescription).Assembly
-        };
-
-        // TODO: customize scenario directory path
-
         return serviceCollection
-            .AddSingleton<IScenarioContentProvider>(sp => new ScenarioContentProvider(sp.GetRequiredService<IFileSystem>(), "Samples"))
             .AddSingleton<IScenarioContentParser, YamlScenarioContentParser>()
-            .AddSingleton<IScenarioContentStepDeserializer, ScenarioContentStepReflectionDeserializer>(_ => ScenarioContentStepReflectionDeserializer.Create(validationRuleAssembly))
+            .AddSingleton<IScenarioContentStepDeserializer, ScenarioContentStepReflectionDeserializer>(_ => ScenarioContentStepReflectionDeserializer.Create(assembly))
             .AddSingleton<IScenarioContentDeserializer, ScenarioContentDeserializer>()
-            .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, validationRuleAssembly));
+            .AddSingleton<IScenarioStepHandler, ScenarioStepReflectionHandler>(sp => ScenarioStepReflectionHandler.Create(sp, assembly));
     }
 
-    public static IServiceCollection AddZeyaValidationRulesAndFixers(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaValidationRulesAndFixers(this IServiceCollection serviceCollection, Assembly assembly)
     {
-        Assembly[] validationRuleFixerAssembly = new[]
-        {
-            typeof(RuleDescription).Assembly
-        };
-
         return serviceCollection
-            .AddAllImplementationOf<IScenarioStepExecutor>(validationRuleFixerAssembly)
-            .AddAllImplementationOf<IValidationRuleFixer>(validationRuleFixerAssembly)
-            .AddSingleton<IValidationRuleFixerApplier>(sp => ValidationRuleFixerApplier.Create(sp, validationRuleFixerAssembly));
+            .AddAllImplementationOf<IScenarioStepExecutor>(assembly)
+            .AddAllImplementationOf<IValidationRuleFixer>(assembly)
+            .AddSingleton<IValidationRuleFixerApplier>(sp => ValidationRuleFixerApplier.Create(sp, assembly));
     }
 
     public static IServiceCollection AddZeyaLocalServerApiClients(this IServiceCollection serviceCollection)

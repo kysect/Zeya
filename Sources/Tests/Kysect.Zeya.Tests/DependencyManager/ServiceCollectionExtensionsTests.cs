@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.DependencyInjection;
 using Kysect.Zeya.DependencyManager;
+using Kysect.Zeya.Tests.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO.Abstractions;
@@ -23,7 +24,7 @@ public class ServiceCollectionExtensionsTests
         AddTestZeyaConfiguration(serviceCollection);
 
         serviceCollection
-            .AddZeyaConsoleLogging()
+            .AddZeyaTestLogging()
             .AddZeyaSqliteDbContext("Database.sql")
             .AddZeyaLocalHandlingService();
 

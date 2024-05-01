@@ -1,16 +1,11 @@
 ﻿using FluentAssertions;
-using Kysect.DotnetProjectSystem.Parsing;
-using Kysect.DotnetProjectSystem.SolutionModification;
-using Kysect.DotnetProjectSystem.Xml;
+using Kysect.GithubUtils.Models;
+using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.Zeya.DependencyManager;
-using Kysect.Zeya.GithubIntegration;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
-using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.Tests.Tools;
-using Kysect.Zeya.Tests.Tools.Fakes;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.IO.Abstractions;
 using Repository = LibGit2Sharp.Repository;
 
@@ -22,36 +17,19 @@ public class GitIntegrationServiceTests : IDisposable
     private readonly IGitIntegrationService _gitIntegrationService;
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
-    private readonly GithubRepositoryName _githubRepositoryName;
-    private readonly LocalRepository _localRepository;
-    private readonly FakeGithubIntegrationService _githubIntegrationService;
+    private readonly IRepositoryFetcher _repositoryFetcher;
+    private readonly GithubRepository _githubRepositoryName;
 
     public GitIntegrationServiceTests()
     {
-        ILogger logger = TestLoggerProvider.GetLogger();
         _fileSystem = new FileSystem();
         _temporaryDirectory = new TestTemporaryDirectory(_fileSystem);
         _repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
 
-        var githubIntegrationOptions = new GithubIntegrationOptions()
-        {
-            CommitAuthor = new GitCommitAuthor()
-            {
-                GithubUsername = "Name",
-                GithubMail = "Name@null.com",
-            },
-            Credential = new GithubIntegrationCredential()
-            {
-                GithubToken = "token",
-                GithubUsername = "Name",
-            }
-        };
-        var localStoragePathFactory = new FakePathFormatStrategy(_repositoriesDirectory);
-        _gitIntegrationService = new GitIntegrationService(githubIntegrationOptions.CommitAuthor);
-        _githubIntegrationService = new FakeGithubIntegrationService(githubIntegrationOptions.Credential, localStoragePathFactory, logger);
-        _githubRepositoryName = new GithubRepositoryName("Kysect", "Zeya");
-        var dotnetSolutionModifierFactory = new DotnetSolutionModifierFactory(_fileSystem, new SolutionFileContentParser(), new XmlDocumentSyntaxFormatter());
-        _localRepository = new LocalRepository(_repositoriesDirectory, LocalRepositorySolutionManager.DefaultMask, _fileSystem, dotnetSolutionModifierFactory);
+        var validationTestFixture = new ValidationTestFixture();
+        _gitIntegrationService = new GitIntegrationService(validationTestFixture.GetRequiredService<IOptions<GithubIntegrationOptions>>().Value.CommitAuthor);
+        _repositoryFetcher = validationTestFixture.GetRequiredService<IRepositoryFetcher>();
+        _githubRepositoryName = new GithubRepository("Kysect", "Zeya");
     }
 
     [Fact]
@@ -59,7 +37,7 @@ public class GitIntegrationServiceTests : IDisposable
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
 
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
+        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
 
         _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
     }
@@ -69,8 +47,8 @@ public class GitIntegrationServiceTests : IDisposable
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
 
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
+        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
 
         _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
     }
@@ -78,11 +56,11 @@ public class GitIntegrationServiceTests : IDisposable
     [Fact]
     public void CreateFixBranch_OnMasterBranch_ChangeToNewBranch()
     {
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
+        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         gitRepository.Head.FriendlyName.Should().Be("master");
-        _gitIntegrationService.CreateFixBranch(_localRepository.FileSystem.GetFullPath(), "new-branch");
+        _gitIntegrationService.CreateFixBranch(_repositoriesDirectory, "new-branch");
 
         gitRepository.Head.FriendlyName.Should().Be("new-branch");
     }
@@ -90,11 +68,11 @@ public class GitIntegrationServiceTests : IDisposable
     [Fact]
     public void CreateCommitWithFix_OnMasterBranch_ChangeLastCommit()
     {
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
+        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.Create(_fileSystem.Path.Combine(_repositoriesDirectory, "file.txt")).Dispose();
-        _gitIntegrationService.CreateCommitWithFix(_localRepository.FileSystem.GetFullPath(), "Commit message");
+        _gitIntegrationService.CreateCommitWithFix(_repositoriesDirectory, "Commit message");
 
         gitRepository.Head.Commits.First().Message.Trim().Should().Be("Commit message");
     }
@@ -115,11 +93,11 @@ public class GitIntegrationServiceTests : IDisposable
 
                        """;
 
-        _githubIntegrationService.CloneOrUpdate(_githubRepositoryName);
+        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.WriteAllText(filePath, "Some changes qer");
-        string diff = _gitIntegrationService.GetDiff(_localRepository.FileSystem.GetFullPath());
+        string diff = _gitIntegrationService.GetDiff(_repositoriesDirectory);
 
         // KB: git return unix end lines
         expected = expected.NormalizeEndLines();
@@ -127,7 +105,6 @@ public class GitIntegrationServiceTests : IDisposable
 
         diff.Should().Be(expected);
     }
-
 
     public void Dispose()
     {

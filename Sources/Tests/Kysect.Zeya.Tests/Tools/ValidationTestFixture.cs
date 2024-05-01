@@ -1,18 +1,13 @@
 ﻿using Kysect.DotnetProjectSystem.FileStructureBuilding;
-using Kysect.DotnetProjectSystem.Parsing;
-using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.DotnetProjectSystem.Xml;
-using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
-using Kysect.GithubUtils.Replication.RepositorySync;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.DependencyManager;
-using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
+using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Kysect.Zeya.Tests.Tools.Asserts;
-using Kysect.Zeya.Tests.Tools.Fakes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
@@ -43,22 +38,21 @@ public class ValidationTestFixture
 
         _serviceProvider = new ServiceCollection()
             .AddZeyaTestLogging()
-            // TODO: Use same method with the Configuration root
-            .AddSingleton<XmlDocumentSyntaxFormatter>()
-            .AddSingleton<IFileSystem>(FileSystem)
-            .AddSingleton<IGithubIntegrationService, DummyGithubIntegrationService>()
-            .AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(CurrentPath))
-            .AddSingleton<LocalRepositoryProvider>()
+            .AddZeyaSqliteDbContext(Guid.NewGuid().ToString())
+            //.AddSingleton(ZeyaDbContextTestProvider.CreateContext())
             .AddSingleton<SolutionFileStructureBuilderFactory>()
-            .AddSingleton<DotnetSolutionModifierFactory>()
-            .AddSingleton<SolutionFileContentParser>()
-            .AddZeyaValidationRulesAndFixers()
-            .AddSingleton<IRepositoryFetcher>(sp =>
-            {
-                ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
-                var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth("GithubUsername", "GithubToken");
-                return new RepositoryFetcher(repositoryFetchOptions, logger);
-            })
+
+            .AddZeyaTestGitConfiguration()
+            .AddZeyaTestGitIntegration()
+            .AddZeyaTestGithubIntegration(CurrentPath)
+
+            .AddSingleton<IFileSystem>(FileSystem)
+            .AddZeyaDotnetProjectSystemIntegration()
+            .AddZeyaValidationRulesAndFixers(typeof(RuleDescription).Assembly)
+            .AddZeyaRepositoryValidation()
+            .AddZeyaScenarioExecuting(typeof(RuleDescription).Assembly)
+            .AddZeyaLocalServerApiClients()
+
             .BuildServiceProvider();
 
         Formatter = _serviceProvider.GetRequiredService<XmlDocumentSyntaxFormatter>();
