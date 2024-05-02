@@ -4,5 +4,6 @@ public enum ValidationPolicyRepositoryType
 {
     Github = 1,
     Local = 2,
-    RemoteHttps = 3
+    Ado = 3,
+    RemoteHttps = 4
 }

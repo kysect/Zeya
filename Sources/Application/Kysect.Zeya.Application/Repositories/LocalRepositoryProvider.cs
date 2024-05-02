@@ -2,11 +2,14 @@
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
+using Kysect.Zeya.AdoIntegration.Abstraction;
+using Kysect.Zeya.Application.Repositories.Ado;
 using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.LocalRepositoryAccess.Ado;
 using Kysect.Zeya.LocalRepositoryAccess.Github;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
@@ -18,6 +21,7 @@ public class LocalRepositoryProvider(
     ILogger<LocalRepositoryProvider> logger,
     IGitIntegrationServiceFactory gitIntegrationServiceFactory,
     IGithubIntegrationServiceFactory githubIntegrationServiceFactory,
+    IAdoIntegrationServiceFactory adoIntegrationServiceFactory,
     ILocalStoragePathFactory localStoragePathFactory,
     DotnetSolutionModifierFactory solutionModifierFactory)
 {
@@ -27,6 +31,7 @@ public class LocalRepositoryProvider(
         {
             GithubValidationPolicyRepository githubRepository => CreateGithubRepositoryAccessor(githubRepository),
             LocalValidationPolicyRepository localRepository => GetLocalRepository(localRepository.Path, repository.SolutionPathMask),
+            AdoValidationPolicyRepository adoRepository => CreateLocalAdoRepository(adoRepository),
             RemoteHttpsValidationPolicyRepository remoteHttpsValidationPolicyRepository => CreateRemoteRepositoryCache(remoteHttpsValidationPolicyRepository),
             _ => throw SwitchDefaultExceptions.OnUnexpectedType(repository)
         };
@@ -42,7 +47,6 @@ public class LocalRepositoryProvider(
         logger.LogInformation("Loading repository {RemoteHttpsUrl}", remoteHttpsValidationPolicyRepository.RemoteHttpsUrl);
 
         string remoteHttpsUrl = remoteHttpsValidationPolicyRepository.RemoteHttpsUrl;
-        string solutionSearchMask = remoteHttpsValidationPolicyRepository.SolutionPathMask;
         IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(remoteHttpsValidationPolicyRepository);
 
         string repositoryName = remoteHttpsUrl.Split('/').Last();
@@ -54,7 +58,7 @@ public class LocalRepositoryProvider(
 
         return new LocalRepository(
             repositoryPath,
-            solutionSearchMask,
+            remoteHttpsValidationPolicyRepository.SolutionPathMask,
             fileSystem,
             solutionModifierFactory);
     }
@@ -75,6 +79,30 @@ public class LocalRepositoryProvider(
             pathToRepository,
             githubRepository.SolutionPathMask,
             integrationService,
+            fileSystem,
+            solutionModifierFactory);
+    }
+
+    private LocalAdoRepository CreateLocalAdoRepository(AdoValidationPolicyRepository adoRepository)
+    {
+        logger.LogInformation("Loading repository {RemoteHttpsUrl}", adoRepository.RemoteHttpsUrl);
+
+        string remoteHttpsUrl = adoRepository.RemoteHttpsUrl;
+        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(adoRepository);
+        IAdoIntegrationService adoIntegrationService = adoIntegrationServiceFactory.GetService(adoRepository);
+
+        string repositoryName = remoteHttpsUrl.Split('/').Last();
+        // TODO: This is kind of hack because we don't have access to cache directory path
+        string repositoryPath = localStoragePathFactory.GetPathToRepository(new GithubRepository("RemoteRepository", repositoryName));
+
+        var gitRepository = new CustomRemoteGitRepository(repositoryName, remoteHttpsUrl);
+        gitIntegrationService.EnsureRepositoryUpdated(repositoryPath, gitRepository);
+
+        return new LocalAdoRepository(
+            repositoryPath,
+            adoRepository.RemoteHttpsUrl,
+            adoRepository.SolutionPathMask,
+            adoIntegrationService,
             fileSystem,
             solutionModifierFactory);
     }

@@ -46,6 +46,7 @@ public class ValidationTestFixture
             .AddZeyaTestGitConfiguration()
             .AddZeyaTestGitIntegration()
             .AddZeyaTestGithubIntegration(CurrentPath)
+            .AddZeyaTestAdoIntegration()
 
             .AddSingleton<IFileSystem>(FileSystem)
             .AddZeyaDotnetProjectSystemIntegration()
