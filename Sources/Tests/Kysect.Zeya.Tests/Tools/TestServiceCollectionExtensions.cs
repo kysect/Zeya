@@ -93,7 +93,7 @@ public static class TestServiceCollectionExtensions
     public static IServiceCollection AddZeyaTestAdoIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>()
+            .AddSingleton<IAdoIntegrationService, DummyAdoIntegrationService>()
             .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>();
     }
 }

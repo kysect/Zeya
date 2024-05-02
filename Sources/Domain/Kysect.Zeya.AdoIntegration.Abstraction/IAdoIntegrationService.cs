@@ -2,4 +2,5 @@
 
 public interface IAdoIntegrationService
 {
+    bool BuildValidationEnabled(string organization, string repository);
 }

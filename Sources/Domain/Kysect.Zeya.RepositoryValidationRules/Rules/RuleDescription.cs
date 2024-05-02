@@ -12,6 +12,11 @@ public static class RuleDescription
         public const string ActionConfigured = "GHR0005";
     }
 
+    public static class Ado
+    {
+        public const string BuildValidationEnabled = "ADO0001";
+    }
+
     public static class SourceCode
     {
         public const string SourcesMustNotBeInRoot = "SRC00001";
