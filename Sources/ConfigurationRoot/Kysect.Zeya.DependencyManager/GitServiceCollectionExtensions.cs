@@ -88,7 +88,12 @@ public static class GitServiceCollectionExtensions
     public static IServiceCollection AddZeyaAdoIntegration(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>()
+            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>(sp =>
+            {
+                // TODO: we need to add a new option for ADO token
+                var credentials = sp.GetRequiredService<IOptions<GitIntegrationCredentialOptions>>();
+                return new AdoIntegrationService(credentials.Value.GithubToken);
+            })
             .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>();
     }
 }
