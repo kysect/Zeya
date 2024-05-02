@@ -48,6 +48,20 @@ public class PolicyRepositoryService(
         return repositoryFactory.Create(repository).ToDto();
     }
 
+    public async Task<ValidationPolicyRepositoryDto> AddAdoRepository(Guid policyId, string remoteHttpUrl, string? solutionPathMask)
+    {
+        ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);
+
+        if (solutionPathMask is null)
+            solutionPathMask = LocalRepositorySolutionManager.DefaultMask;
+
+        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Ado, remoteHttpUrl, solutionPathMask);
+        context.ValidationPolicyRepositories.Add(repository);
+        await context.SaveChangesAsync();
+
+        return repositoryFactory.Create(repository).ToDto();
+    }
+
     public async Task<ValidationPolicyRepositoryDto> AddRemoteRepository(Guid policyId, string remoteHttpUrl, string? solutionPathMask)
     {
         ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);
