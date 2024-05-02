@@ -33,6 +33,11 @@ else
         </FluentButton>
         <FluentButton IconStart="@(new Icons.Filled.Size24.Add())"
                       Appearance="Appearance.Accent"
+                      OnClick="@(() => _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/add-ado-repository"))">
+            Add Azure DevOps repository
+        </FluentButton>
+        <FluentButton IconStart="@(new Icons.Filled.Size24.Add())"
+                      Appearance="Appearance.Accent"
                       OnClick="@(() => _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/add-remote-repository"))">
             Add remote repository
         </FluentButton>

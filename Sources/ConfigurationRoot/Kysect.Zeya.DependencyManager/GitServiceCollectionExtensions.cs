@@ -28,8 +28,8 @@ public static class GitServiceCollectionExtensions
             .AddOptionsWithValidation<GitIntegrationCredentialOptions>("GitIntegrationCredentialOptions")
             .AddSingleton(sp =>
             {
-                var gitIntegrationCredentialOptions = sp.GetRequiredService<GitIntegrationCredentialOptions>();
-                return new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.GithubUsername, gitIntegrationCredentialOptions.GithubToken);
+                var gitIntegrationCredentialOptions = sp.GetRequiredService<IOptions<GitIntegrationCredentialOptions>>();
+                return new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.Value.GithubUsername, gitIntegrationCredentialOptions.Value.GithubToken);
             });
     }
 
@@ -75,8 +75,8 @@ public static class GitServiceCollectionExtensions
 
         serviceCollection.AddSingleton<IGitHubClient>(sp =>
         {
-            var credentials = sp.GetRequiredService<GitIntegrationCredentialOptions>();
-            return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(credentials.GithubToken) };
+            var credentials = sp.GetRequiredService<IOptions<GitIntegrationCredentialOptions>>();
+            return new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(credentials.Value.GithubToken) };
         });
 
         return serviceCollection
