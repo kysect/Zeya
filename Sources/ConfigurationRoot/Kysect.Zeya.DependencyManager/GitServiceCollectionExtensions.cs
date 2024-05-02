@@ -2,7 +2,10 @@
 using Kysect.CommonLib.Exceptions;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
+using Kysect.Zeya.AdoIntegration;
+using Kysect.Zeya.AdoIntegration.Abstraction;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Application.Repositories.Ado;
 using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration;
@@ -80,5 +83,12 @@ public static class GitServiceCollectionExtensions
             .AddSingleton<IGithubIntegrationService, GithubIntegrationService>()
             .AddSingleton<IGithubIntegrationServiceFactory, GithubIntegrationServiceFactory>()
             .AddSingleton<LocalRepositoryProvider>();
+    }
+
+    public static IServiceCollection AddZeyaAdoIntegration(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>()
+            .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>();
     }
 }

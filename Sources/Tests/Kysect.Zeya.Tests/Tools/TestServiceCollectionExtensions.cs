@@ -1,6 +1,9 @@
 ﻿using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.GithubUtils.Replication.RepositorySync;
+using Kysect.Zeya.AdoIntegration.Abstraction;
+using Kysect.Zeya.AdoIntegration;
 using Kysect.Zeya.Application.Repositories;
+using Kysect.Zeya.Application.Repositories.Ado;
 using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.DependencyManager;
@@ -82,6 +85,15 @@ public static class TestServiceCollectionExtensions
             .AddSingleton<FakeGithubIntegrationService>()
             .AddSingleton<IGithubIntegrationService, FakeGithubIntegrationService>(sp => sp.GetRequiredService<FakeGithubIntegrationService>())
             .AddSingleton<IGithubIntegrationServiceFactory, GithubIntegrationServiceFactory>()
+            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>()
+            .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>()
             .AddSingleton<LocalRepositoryProvider>();
+    }
+
+    public static IServiceCollection AddZeyaTestAdoIntegration(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>()
+            .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>();
     }
 }

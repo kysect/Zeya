@@ -29,7 +29,8 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddZeyaGitConfiguration()
             .AddZeyaGitIntegration()
-            .AddZeyaGithubIntegration();
+            .AddZeyaGithubIntegration()
+            .AddZeyaAdoIntegration();
 
         return serviceCollection
             .AddSingleton<IFileSystem, FileSystem>()
