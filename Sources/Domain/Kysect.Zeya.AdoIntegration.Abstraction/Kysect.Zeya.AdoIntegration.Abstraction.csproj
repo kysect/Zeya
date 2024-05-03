@@ -2,4 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kysect.Zeya.Common\Kysect.Zeya.Common.csproj" />
+  </ItemGroup>
 </Project>

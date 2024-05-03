@@ -23,26 +23,17 @@ public class LocalAdoRepository : ILocalRepository
         SolutionManager = new LocalRepositorySolutionManager(repositoryRootPath, solutionSearchMask, fileSystem, solutionModifierFactory);
         AdoIntegrationService = adoIntegrationServiceIntegrationService;
 
-        // TODO: Need to rework this hack in future
-        string[] parts = _remoteHttpsUrl.Split("/_git/");
-        if (parts.Length != 2)
-            throw new ArgumentException($"Invalid ADO repository path: {_remoteHttpsUrl}");
-
-        Organization = parts[0];
-        RepositoryName = parts[1];
+        RepositoryUrlParts = AdoRepositoryUrl.Parse(_remoteHttpsUrl);
     }
 
     public LocalRepositoryFileSystem FileSystem => new LocalRepositoryFileSystem(_repositoryRootPath, _fileSystem);
     public LocalRepositorySolutionManager SolutionManager { get; }
     public IAdoIntegrationService AdoIntegrationService { get; }
 
-    public string RemoteHttpsUrl => _remoteHttpsUrl;
-    public string Organization { get; }
-    public string RepositoryName { get; }
-
+    public AdoRepositoryUrl RepositoryUrlParts { get; }
 
     public string GetRepositoryName()
     {
-        return RepositoryName;
+        return RepositoryUrlParts.Repository;
     }
 }
