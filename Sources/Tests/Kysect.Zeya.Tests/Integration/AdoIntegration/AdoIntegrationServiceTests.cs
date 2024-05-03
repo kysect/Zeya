@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Kysect.Zeya.AdoIntegration;
+using Kysect.Zeya.AdoIntegration.Abstraction;
 
 namespace Kysect.Zeya.Tests.Integration.AdoIntegration;
 
@@ -14,9 +15,11 @@ public class AdoIntegrationServiceTests
     }
 
     [Fact(Skip = "Need token")]
-    public void BuildValidationEnabled_ForRepositoryWithEnabledBuildValidation_ReturnTrue()
+    public async Task BuildValidationEnabled_ForRepositoryWithEnabledBuildValidation_ReturnTrue()
     {
-        bool buildValidationEnabled = _adoIntegrationService.BuildValidationEnabled("https://dev.azure.com/inredikawb", "Fluda");
+        var repositoryUrlParts = AdoRepositoryUrl.Parse("https://dev.azure.com/inredikawb/Fluda/_git/Fluda");
+
+        bool buildValidationEnabled = await _adoIntegrationService.BuildValidationEnabled(repositoryUrlParts);
 
         buildValidationEnabled.Should().BeTrue();
     }

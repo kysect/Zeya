@@ -1,6 +1,8 @@
-﻿namespace Kysect.Zeya.AdoIntegration.Abstraction;
+﻿using System.Threading.Tasks;
+
+namespace Kysect.Zeya.AdoIntegration.Abstraction;
 
 public interface IAdoIntegrationService
 {
-    bool BuildValidationEnabled(string organization, string repository);
+    Task<bool> BuildValidationEnabled(AdoRepositoryUrl repositoryUrl);
 }

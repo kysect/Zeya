@@ -4,7 +4,7 @@ namespace Kysect.Zeya.Tests.Tools.Fakes;
 
 public class DummyAdoIntegrationService : IAdoIntegrationService
 {
-    public bool BuildValidationEnabled(string organization, string repository)
+    public Task<bool> BuildValidationEnabled(AdoRepositoryUrl repositoryUrl)
     {
         throw new NotImplementedException();
     }
