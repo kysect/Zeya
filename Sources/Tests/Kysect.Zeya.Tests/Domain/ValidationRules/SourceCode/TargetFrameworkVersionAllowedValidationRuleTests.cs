@@ -47,4 +47,45 @@ public class TargetFrameworkVersionAllowedValidationRuleTests
         else
             _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(0);
     }
+
+    [Fact]
+    public void Execute_ProjectWithoutTargetFramework_ReturnDiagnostic()
+    {
+        var arguments = new TargetFrameworkVersionAllowedValidationRule.Arguments("net8", null, null);
+
+        var projectFileContent = DotnetProjectFile.CreateEmpty();
+
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .AddProject(new ProjectFileStructureBuilder("Project")
+                .SetContent(projectFileContent))
+            .Save(_validationTestFixture.CurrentPath);
+
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
+
+        _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0);
+        _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(1);
+    }
+
+    [Fact]
+    public void Execute_CorrectTargetFrameworkInProps_NoDiagnostics()
+    {
+        var arguments = new TargetFrameworkVersionAllowedValidationRule.Arguments("net8", null, null);
+
+        var projectFileContent = DotnetProjectFile.CreateEmpty();
+        var directoryBuildPropsFile = new DirectoryBuildPropsFile(DotnetProjectFile.CreateEmpty());
+        directoryBuildPropsFile.File.Properties.AddProperty("TargetFramework", "net8");
+
+        _validationTestFixture.SolutionFileStructureBuilderFactory
+            .Create("Solution")
+            .AddProject(new ProjectFileStructureBuilder("Project")
+                .SetContent(projectFileContent))
+            .AddDirectoryBuildProps(directoryBuildPropsFile)
+            .Save(_validationTestFixture.CurrentPath);
+
+        _validationRule.Execute(_validationTestFixture.CreateLocalRepositoryValidationScenarioContext(), arguments);
+
+        _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveErrorCount(0);
+        _validationTestFixture.DiagnosticCollectorAsserts.ShouldHaveDiagnosticCount(0);
+    }
 }
