@@ -30,7 +30,7 @@ public class AdoBuildValidationEnabledValidationRule
             return;
         }
 
-        bool buildValidationEnabled = adoRepository.AdoIntegrationService.BuildValidationEnabled(adoRepository.Organization, adoRepository.RepositoryName);
+        bool buildValidationEnabled = adoRepository.AdoIntegrationService.BuildValidationEnabled(adoRepository.RepositoryUrlParts.OrganizationUrl, adoRepository.RepositoryUrlParts.Project);
         if (!buildValidationEnabled)
         {
             repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
