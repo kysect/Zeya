@@ -44,15 +44,38 @@ public class TargetFrameworkVersionAllowedValidationRule()
 
         foreach ((string key, DotnetCsprojFile value) in solutionModifier.Projects)
         {
-            var targetFramework = value.File.Properties.GetProperty("TargetFramework");
-
-            if (!allowedTargetFrameworks.Contains(targetFramework.Value))
+            DotnetProjectProperty? targetFramework = value.File.Properties.FindProperty("TargetFramework");
+            if (targetFramework is not null)
             {
-                repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
-                    request.DiagnosticCode,
-                    $"Framework versions {targetFramework} is not allowed but used in {key}.",
-                    Arguments.DefaultSeverity);
+                if (!allowedTargetFrameworks.Contains(targetFramework.Value.Value))
+                {
+                    repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
+                        request.DiagnosticCode,
+                        $"TargetFramework {targetFramework} is not allowed but used in {key}.",
+                        Arguments.DefaultSeverity);
+                }
+
+                continue;
             }
+
+            DotnetProjectProperty? propsFileTargetFramework = solutionModifier.GetOrCreateDirectoryBuildPropsModifier().File.Properties.FindProperty("TargetFramework");
+            if (propsFileTargetFramework is not null)
+            {
+                if (!allowedTargetFrameworks.Contains(propsFileTargetFramework.Value.Value))
+                {
+                    repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
+                        request.DiagnosticCode,
+                        $"TargetFramework {targetFramework} from Directory.Build.props is not allowed but used in {key}.",
+                        Arguments.DefaultSeverity);
+                }
+
+                continue;
+            }
+
+            repositoryValidationContext.DiagnosticCollector.AddDiagnostic(
+                request.DiagnosticCode,
+                $"TargetFramework is not specified for project {key}.",
+                Arguments.DefaultSeverity);
         }
     }
 }
