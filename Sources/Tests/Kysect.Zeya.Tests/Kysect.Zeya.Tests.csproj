@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Kysect.Zeya.Application\Kysect.Zeya.Application.csproj" />
     <ProjectReference Include="..\..\ConfigurationRoot\Kysect.Zeya.DependencyManager\Kysect.Zeya.DependencyManager.csproj" />
+    <ProjectReference Include="..\..\Domain\Kysect.Zeya.RepositoryDependencies\Kysect.Zeya.RepositoryDependencies.csproj" />
   </ItemGroup>
 
   <ItemGroup>
