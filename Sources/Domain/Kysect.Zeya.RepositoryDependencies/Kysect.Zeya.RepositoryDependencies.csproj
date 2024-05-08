@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kysect.Zeya.Common\Kysect.Zeya.Common.csproj" />
+    <ProjectReference Include="..\Kysect.Zeya.LocalRepositoryAccess\Kysect.Zeya.LocalRepositoryAccess.csproj" />
   </ItemGroup>
 
 </Project>
