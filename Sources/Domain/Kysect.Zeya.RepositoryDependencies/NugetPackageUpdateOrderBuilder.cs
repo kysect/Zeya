@@ -54,7 +54,7 @@ public class NugetPackageUpdateOrderBuilder
             {
                 if (!nugetPackageLocations.TryGetValue(dependency, out ILocalRepository? otherRepository))
                 {
-                    _logger.LogWarning($"Dependency {dependency} of {nugetPackageName} is not found in any repository.");
+                    _logger.LogTrace($"Dependency {dependency} of {nugetPackageName} is not found in any repository.");
                     continue;
                 }
 
