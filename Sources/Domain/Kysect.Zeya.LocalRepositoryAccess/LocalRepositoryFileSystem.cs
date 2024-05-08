@@ -1,4 +1,5 @@
-﻿using Kysect.CommonLib.FileSystem;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.FileSystem;
 using System.IO.Abstractions;
 
 namespace Kysect.Zeya.LocalRepositoryAccess;
@@ -10,25 +11,35 @@ public class LocalRepositoryFileSystem(string repositoryRootPath, IFileSystem fi
         return repositoryRootPath;
     }
 
-    public bool Exists(string partialPath)
+    public bool Exists(string path)
     {
-        return fileSystem.File.Exists(GetFullPathToFile(partialPath));
+        path.ThrowIfNull();
+
+        return fileSystem.File.Exists(GetFullPathToFile(path));
     }
 
-    public string ReadAllText(string partialPath)
+    public string ReadAllText(string path)
     {
-        return fileSystem.File.ReadAllText(GetFullPathToFile(partialPath));
+        path.ThrowIfNull();
+
+        return fileSystem.File.ReadAllText(GetFullPathToFile(path));
     }
 
-    public void WriteAllText(string partialPath, string content)
+    public void WriteAllText(string path, string content)
     {
-        string fullPathToFile = GetFullPathToFile(partialPath);
-        DirectoryExtensions.EnsureParentDirectoryExists(fileSystem, fullPathToFile);
+        path.ThrowIfNull();
+        content.ThrowIfNull();
+
+        string fullPathToFile = GetFullPathToFile(path);
+        fileSystem.EnsureParentDirectoryExists(fullPathToFile);
         fileSystem.File.WriteAllText(fullPathToFile, content);
     }
 
-    private string GetFullPathToFile(string partialPath)
+    private string GetFullPathToFile(string path)
     {
-        return fileSystem.Path.Combine(GetFullPath(), partialPath);
+        string fullPath = GetFullPath();
+        if (path.StartsWith(fullPath))
+            return path;
+        return fileSystem.Path.Combine(fullPath, path);
     }
 }
