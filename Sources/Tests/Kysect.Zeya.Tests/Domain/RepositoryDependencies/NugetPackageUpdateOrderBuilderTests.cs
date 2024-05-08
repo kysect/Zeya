@@ -4,7 +4,7 @@ using Kysect.CommonLib.Graphs;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryDependencies;
-using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearcher;
+using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearchers;
 using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryDependencies;
@@ -39,7 +39,7 @@ public class NugetPackageUpdateOrderBuilderTests
         var nugetRepositoryClient = new NugetRepositoryClient();
         _repositoryProjects = new Dictionary<string, List<string>>();
         var fakeNuGetPackagesSearcher = new FakeNuGetPackagesSearcher(_repositoryProjects);
-        _nugetPackageUpdateOrderBuilder = new NugetPackageUpdateOrderBuilder(nugetRepositoryClient, fakeNuGetPackagesSearcher, TestLoggerProvider.GetLogger());
+        _nugetPackageUpdateOrderBuilder = new NugetPackageUpdateOrderBuilder(nugetRepositoryClient, fakeNuGetPackagesSearcher, validationTestFixture.GetLogger<NugetPackageUpdateOrderBuilder>());
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class NugetPackageUpdateOrderBuilderTests
 
         _repositoryProjects["Kysect.Zeya"] = ["Kysect.Zeya"];
 
-        List<GraphLink<string>> dependencyLinks = await _nugetPackageUpdateOrderBuilder.Build(new List<ILocalRepository>()
+        IReadOnlyCollection<GraphLink<string>> dependencyLinks = await _nugetPackageUpdateOrderBuilder.Build(new List<ILocalRepository>()
         {
             _localRepositoryProvider.GetLocalRepository("Kysect.Editorconfig", "*"),
             _localRepositoryProvider.GetLocalRepository("Kysect.CommonLib", "*"),

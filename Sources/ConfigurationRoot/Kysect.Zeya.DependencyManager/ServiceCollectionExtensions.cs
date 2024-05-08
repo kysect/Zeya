@@ -10,6 +10,8 @@ using Kysect.Zeya.Application.LocalHandling;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.RepositoryDependencies;
+using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearchers;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
@@ -70,6 +72,11 @@ public static class ServiceCollectionExtensions
             .AddScoped<ValidationPolicyRepositoryFactory>()
             .AddScoped<ValidationPolicyDatabaseQueries>();
 
+        serviceCollection
+            .AddSingleton<INuGetPackagesSearcher, NuGetPackagesSearcher>()
+            .AddSingleton<NugetRepositoryClient>()
+            .AddSingleton<NugetPackageUpdateOrderBuilder>();
+
         return serviceCollection;
     }
 
@@ -95,6 +102,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddScoped<IPolicyService, PolicyService>()
             .AddScoped<IPolicyRepositoryService, PolicyRepositoryService>()
-            .AddScoped<IPolicyValidationService, PolicyValidationService>();
+            .AddScoped<IPolicyValidationService, PolicyValidationService>()
+            .AddScoped<IRepositoryDependenciesService, RepositoryDependenciesService>();
     }
 }

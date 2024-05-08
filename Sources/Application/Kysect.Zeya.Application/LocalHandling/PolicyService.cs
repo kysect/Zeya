@@ -30,7 +30,6 @@ public class PolicyService : IPolicyService
 
     public async Task<ValidationPolicyDto> GetPolicy(Guid id)
     {
-
         ValidationPolicyEntity policy = await _databaseQueries.GetPolicy(id);
         return new ValidationPolicyDto(policy.Id, policy.Name, policy.Content);
     }

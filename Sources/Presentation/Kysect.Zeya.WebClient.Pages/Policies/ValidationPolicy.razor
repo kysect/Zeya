@@ -54,6 +54,7 @@ else
 
     <FluentLabel Typo="Typography.H2"> Validation </FluentLabel>
     <FluentButton Appearance="Appearance.Accent" @onclick="@RunValidation">Run validation</FluentButton>
+    <FluentButton Appearance="Appearance.Accent" @onclick="@LoadDependencyTree">Generate dependency tree</FluentButton>
 
     @if (_diagnosticsTable.Any())
     {
@@ -90,5 +91,11 @@ else
         <code style="white-space: pre;">
             @_changesPreview
         </code>
+    }
+
+    @if (_dependencyTree is not null)
+    {
+        <FluentLabel Typo="Typography.H2"> Dependency tree </FluentLabel>
+        <img src='https://g.gravizo.com/svg?@_dependencyTree' alt="Dependency tree diagram"/>
     }
 }
