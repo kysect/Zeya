@@ -2,7 +2,7 @@
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.CommonLib.Graphs;
 using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearcher;
+using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearchers;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +16,14 @@ public class NugetPackageUpdateOrderBuilder
     private readonly NugetRepositoryClient _nugetRepositoryClient;
     private readonly ILogger _logger;
 
-    public NugetPackageUpdateOrderBuilder(NugetRepositoryClient nugetRepositoryClient, INuGetPackagesSearcher nuGetPackagesSearcher, ILogger logger)
+    public NugetPackageUpdateOrderBuilder(NugetRepositoryClient nugetRepositoryClient, INuGetPackagesSearcher nuGetPackagesSearcher, ILogger<NugetPackageUpdateOrderBuilder> logger)
     {
         _nugetRepositoryClient = nugetRepositoryClient;
         _nuGetPackagesSearcher = nuGetPackagesSearcher;
         _logger = logger;
     }
 
-    public async Task<List<GraphLink<string>>> Build(IReadOnlyCollection<ILocalRepository> repositories)
+    public async Task<IReadOnlyCollection<GraphLink<string>>> Build(IReadOnlyCollection<ILocalRepository> repositories)
     {
         repositories.ThrowIfNull();
 

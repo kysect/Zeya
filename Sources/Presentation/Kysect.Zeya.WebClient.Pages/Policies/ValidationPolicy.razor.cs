@@ -18,10 +18,12 @@ public partial class ValidationPolicy
     [Inject] private IPolicyService PolicyService { get; set; } = null!;
     [Inject] private IPolicyRepositoryService PolicyRepositoryService { get; set; } = null!;
     [Inject] private IPolicyValidationService PolicyValidationService { get; set; } = null!;
+    [Inject] private IRepositoryDependenciesService RepositoryDependenciesService { get; set; } = null!;
 
     private ValidationPolicyDto? _policy;
     private IReadOnlyCollection<RepositoryDiagnosticTableRow> _diagnosticsTable = new List<RepositoryDiagnosticTableRow>();
     private string? _changesPreview;
+    private string? _dependencyTree;
 
     private GridItemsProvider<ValidationPolicyRepositoryDto> _repositoryProvider = null!;
 
@@ -45,6 +47,7 @@ public partial class ValidationPolicy
     public async Task RunValidation()
     {
         await PolicyValidationService.Validate(PolicyId);
+        StateHasChanged();
     }
 
     public async Task CreateFix(Guid repositoryId)
@@ -60,6 +63,12 @@ public partial class ValidationPolicy
     public void NavigateToDetailPage(Guid repositoryId)
     {
         _navigationManager.NavigateTo($"/validation-policies/{PolicyId}/repository/{repositoryId}");
+    }
+
+    public async Task LoadDependencyTree()
+    {
+        _dependencyTree = await RepositoryDependenciesService.GetRepositoryDependenciesTree(PolicyId);
+        StateHasChanged();
     }
 
     public async ValueTask<GridItemsProviderResult<ValidationPolicyRepositoryDto>> GridItemsProvider(GridItemsProviderRequest<ValidationPolicyRepositoryDto> request)

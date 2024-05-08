@@ -1,7 +1,7 @@
 ﻿using Kysect.Zeya.LocalRepositoryAccess;
 using System.Collections.Generic;
 
-namespace Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearcher;
+namespace Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearchers;
 
 public interface INuGetPackagesSearcher
 {

@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.GithubIntegration.Abstraction\Kysect.Zeya.GithubIntegration.Abstraction.csproj" />
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.GitIntegration.Abstraction\Kysect.Zeya.GitIntegration.Abstraction.csproj" />
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.LocalRepositoryAccess\Kysect.Zeya.LocalRepositoryAccess.csproj" />
+    <ProjectReference Include="..\..\Domain\Kysect.Zeya.RepositoryDependencies\Kysect.Zeya.RepositoryDependencies.csproj" />
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.RepositoryValidationRules\Kysect.Zeya.RepositoryValidationRules.csproj" />
     <ProjectReference Include="..\..\Domain\Kysect.Zeya.RepositoryValidation\Kysect.Zeya.RepositoryValidation.csproj" />
     <ProjectReference Include="..\..\Integration\Kysect.Zeya.DataAccess.EntityFramework\Kysect.Zeya.DataAccess.EntityFramework.csproj" />
