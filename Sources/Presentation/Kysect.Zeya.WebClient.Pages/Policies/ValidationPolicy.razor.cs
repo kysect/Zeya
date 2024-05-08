@@ -21,6 +21,7 @@ public partial class ValidationPolicy
     [Inject] private IRepositoryDependenciesService RepositoryDependenciesService { get; set; } = null!;
 
     private ValidationPolicyDto? _policy;
+    private IReadOnlyCollection<ValidationPolicyRepositoryDto> _repositories = new List<ValidationPolicyRepositoryDto>();
     private IReadOnlyCollection<RepositoryDiagnosticTableRow> _diagnosticsTable = new List<RepositoryDiagnosticTableRow>();
     private string? _changesPreview;
     private string? _dependencyTree;
@@ -32,6 +33,7 @@ public partial class ValidationPolicy
         await base.OnInitializedAsync();
 
         _policy = await PolicyService.GetPolicy(PolicyId);
+        _repositories = await PolicyRepositoryService.GetRepositories(PolicyId);
         _diagnosticsTable = await PolicyService.GetDiagnosticsTable(PolicyId);
         _repositoryProvider = GridItemsProvider;
     }
@@ -71,9 +73,9 @@ public partial class ValidationPolicy
         StateHasChanged();
     }
 
-    public async ValueTask<GridItemsProviderResult<ValidationPolicyRepositoryDto>> GridItemsProvider(GridItemsProviderRequest<ValidationPolicyRepositoryDto> request)
+    public ValueTask<GridItemsProviderResult<ValidationPolicyRepositoryDto>> GridItemsProvider(GridItemsProviderRequest<ValidationPolicyRepositoryDto> request)
     {
-        var repositories = await PolicyRepositoryService.GetRepositories(PolicyId);
-        return GridItemsProviderResult.From(repositories.ToList(), repositories.Count);
+        IReadOnlyCollection<ValidationPolicyRepositoryDto> repositories = _repositories;
+        return ValueTask.FromResult(GridItemsProviderResult.From(repositories.ToList(), repositories.Count));
     }
 }

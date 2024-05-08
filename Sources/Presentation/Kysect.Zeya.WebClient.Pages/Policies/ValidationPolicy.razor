@@ -43,7 +43,7 @@ else
         </FluentButton>
     </FluentStack>
 
-    <FluentDataGrid Loading="true" ItemsProvider="_repositoryProvider" Virtualize="true" ItemSize="46" GenerateHeader="GenerateHeaderOption.Sticky" TGridItem="ValidationPolicyRepositoryDto">
+    <FluentDataGrid ItemsProvider="_repositoryProvider" Virtualize="false" ItemSize="46" GenerateHeader="GenerateHeaderOption.Sticky" TGridItem="ValidationPolicyRepositoryDto">
         <PropertyColumn Property="@(c => c.Id)" />
         <PropertyColumn Property="@(c => c.Name)" />
         <PropertyColumn Property="@(c => c.Type)" />
@@ -58,8 +58,8 @@ else
 
     @if (_diagnosticsTable.Any())
     {
-        <table>
-            <thead>
+        <table class="table">
+            <thead class="thead-dark">
             <th>Repository name</th>
             <th>Action</th>
             @foreach (var ruleId in GetDiagnosticHeaders())
@@ -78,7 +78,7 @@ else
                     </td>
                     @foreach (var ruleId in GetDiagnosticHeaders())
                     {
-                        <td>@repositoryDiagnostics.Diagnostics[ruleId]</td>
+                        <td>@repositoryDiagnostics.Diagnostics.GetValueOrDefault(ruleId, "")</td>
                     }
                 </tr>
             }
@@ -95,7 +95,7 @@ else
 
     @if (_dependencyTree is not null)
     {
-        <FluentLabel Typo="Typography.H2"> Dependency tree </FluentLabel>
+        <FluentLabel Typo="Typography.H2"> Repositories dependencies </FluentLabel>
         <img src='https://g.gravizo.com/svg?@_dependencyTree' alt="Dependency tree diagram"/>
     }
 }
