@@ -18,6 +18,7 @@ using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 using Kysect.Zeya.RepositoryValidationRules.Rules;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO.Abstractions;
 using System.Reflection;
@@ -26,13 +27,13 @@ namespace Kysect.Zeya.DependencyManager;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection
             .AddZeyaGitConfiguration()
-            .AddZeyaGitIntegration()
-            .AddZeyaGithubIntegration()
-            .AddZeyaAdoIntegration();
+            .AddZeyaGitIntegration(configuration)
+            .AddZeyaGithubIntegration(configuration)
+            .AddZeyaAdoIntegration(configuration);
 
         return serviceCollection
             .AddSingleton<IFileSystem, FileSystem>()

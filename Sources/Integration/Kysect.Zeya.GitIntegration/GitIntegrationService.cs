@@ -35,7 +35,7 @@ public class GitIntegrationService : IGitIntegrationService
 
         var pushOptions = new PushOptions
         {
-            CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials { Username = _gitRepositoryCredentialOptions.Username, Password = _gitRepositoryCredentialOptions.Password }
+            CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials { Password = _gitRepositoryCredentialOptions.Password }
         };
 
         repo.Network.Push(remote, [pushRefSpec], pushOptions);
