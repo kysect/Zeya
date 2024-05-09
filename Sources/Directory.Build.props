@@ -3,7 +3,10 @@
     <UseArtifactsOutput>true</UseArtifactsOutput>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Kysect.Editorconfig" />
+    <PackageReference Include="Kysect.Editorconfig">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="TestableIO.System.IO.Abstractions.Analyzers" />
   </ItemGroup>
 </Project>
