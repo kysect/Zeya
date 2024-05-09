@@ -1,3 +1,3 @@
 ﻿namespace Kysect.Zeya.GitIntegration.Abstraction;
 
-public record GitRepositoryCredentialOptions(string Username, string Password);
+public record GitRepositoryCredentialOptions(string Password);

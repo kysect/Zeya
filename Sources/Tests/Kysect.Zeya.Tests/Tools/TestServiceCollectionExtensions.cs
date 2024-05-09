@@ -53,7 +53,7 @@ public static class TestServiceCollectionExtensions
             GithubToken = "token"
         };
 
-        var gitRepositoryCredentialOptions = new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.GithubUsername, gitIntegrationCredentialOptions.GithubToken);
+        var gitRepositoryCredentialOptions = new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.GithubToken);
 
         return serviceCollection
             .AddSingleton<IOptions<GitEnvironmentOptions>>(new OptionsWrapper<GitEnvironmentOptions>(gitEnvironmentOptions))

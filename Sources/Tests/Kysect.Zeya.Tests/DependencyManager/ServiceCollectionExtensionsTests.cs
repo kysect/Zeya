@@ -20,24 +20,19 @@ public class ServiceCollectionExtensionsTests
     {
         var serviceProviderOptions = new ServiceProviderOptions() { ValidateOnBuild = true, ValidateScopes = true };
         IServiceCollection serviceCollection = new ServiceCollection();
-        AddTestZeyaConfiguration(serviceCollection);
-
-        serviceCollection
-            .AddZeyaTestLogging()
-            .AddZeyaSqliteDbContext("Database.sql")
-            .AddZeyaLocalHandlingService();
-
-        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(serviceProviderOptions);
-    }
-
-    private static IServiceCollection AddTestZeyaConfiguration(IServiceCollection serviceCollection)
-    {
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile(FileSystem.Path.Combine("DependencyManager", "appsettings.json"))
             .Build();
 
-        return serviceCollection
+        serviceCollection
             .AddSingleton(config)
             .AddZeyaGitConfiguration();
+
+        serviceCollection
+            .AddZeyaTestLogging()
+            .AddZeyaSqliteDbContext("Database.sql")
+            .AddZeyaLocalHandlingService(config);
+
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(serviceProviderOptions);
     }
 }
