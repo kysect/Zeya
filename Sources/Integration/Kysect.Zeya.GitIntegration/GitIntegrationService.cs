@@ -64,7 +64,7 @@ public class GitIntegrationService : IGitIntegrationService
         Commands.Stage(repo, "*");
 
         Signature author = _commitAuthor is not null
-            ? new Signature(_commitAuthor.GithubUsername, _commitAuthor.GithubMail, DateTimeOffset.Now)
+            ? new Signature(_commitAuthor.AuthorName, _commitAuthor.AuthorMail, DateTimeOffset.Now)
             : repo.Config.BuildSignature(DateTimeOffset.UtcNow);
 
         repo.Commit(commitMessage, author, author);
