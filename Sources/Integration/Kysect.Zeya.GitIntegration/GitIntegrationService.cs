@@ -9,16 +9,16 @@ public class GitIntegrationService : IGitIntegrationService
 {
     private readonly GitCommitAuthor? _commitAuthor;
     private readonly IRepositoryFetcher _fetcher;
-    private readonly GitRepositoryCredentialOptions _gitRepositoryCredentialOptions;
+    private readonly RemoteGitHostCredential _remoteGitHostCredential;
 
     public GitIntegrationService(
         GitCommitAuthor? commitAuthor,
         IRepositoryFetcher fetcher,
-        GitRepositoryCredentialOptions gitRepositoryCredentialOptions)
+        RemoteGitHostCredential remoteGitHostCredential)
     {
         _commitAuthor = commitAuthor;
         _fetcher = fetcher;
-        _gitRepositoryCredentialOptions = gitRepositoryCredentialOptions;
+        _remoteGitHostCredential = remoteGitHostCredential;
     }
 
     public string EnsureRepositoryUpdated(string targetPath, IRemoteGitRepository remoteRepository)
@@ -35,7 +35,7 @@ public class GitIntegrationService : IGitIntegrationService
 
         var pushOptions = new PushOptions
         {
-            CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials { Password = _gitRepositoryCredentialOptions.Password }
+            CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials { Username = _remoteGitHostCredential.Username, Password = _remoteGitHostCredential.Token }
         };
 
         repo.Network.Push(remote, [pushRefSpec], pushOptions);

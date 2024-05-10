@@ -1,19 +1,14 @@
-﻿using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
-using Kysect.GithubUtils.Replication.RepositorySync;
+﻿using Kysect.CommonLib.BaseTypes.Extensions;
+using Kysect.CommonLib.DependencyInjection;
+using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.Zeya.AdoIntegration.Abstraction;
-using Kysect.Zeya.AdoIntegration;
 using Kysect.Zeya.Application.Repositories;
-using Kysect.Zeya.Application.Repositories.Ado;
-using Kysect.Zeya.Application.Repositories.Git;
-using Kysect.Zeya.Application.Repositories.Github;
-using Kysect.Zeya.DependencyManager;
 using Kysect.Zeya.GithubIntegration.Abstraction;
-using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.Tests.Tools.Fakes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Kysect.Zeya.Tests.Tools;
 
@@ -35,65 +30,30 @@ public static class TestServiceCollectionExtensions
             });
     }
 
-    public static IServiceCollection AddZeyaTestGitConfiguration(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddZeyaTestRemoteHostIntegration(this IServiceCollection serviceCollection, IConfiguration configuration, string currentPath)
     {
-        var gitEnvironmentOptions = new GitEnvironmentOptions()
-        {
-            CommitAuthor = new GitCommitAuthor()
-            {
-                GithubUsername = "Name",
-                GithubMail = "Name@null.com",
-            },
-        };
+        configuration.ThrowIfNull();
 
-        var gitIntegrationCredentialOptions = new GitIntegrationCredentialOptions()
-        {
-            AuthType = GitCredentialType.UserPassword,
-            GithubUsername = "Name",
-            GithubToken = "token"
-        };
+        RemoteGitHostCredential githubCredential = configuration.GetSection("RemoteHosts").GetSection("Github").GetRequired<RemoteGitHostCredential>();
+        RemoteGitHostCredential adoCredentials = configuration.GetSection("RemoteHosts").GetSection("AzureDevOps").GetRequired<RemoteGitHostCredential>();
+        //GitEnvironmentOptions gitEnvironmentOptions = configuration.GetSection("GitEnvironmentOptions").GetRequired<GitEnvironmentOptions>();
 
-        var gitRepositoryCredentialOptions = new GitRepositoryCredentialOptions(gitIntegrationCredentialOptions.GithubToken);
-
-        return serviceCollection
-            .AddSingleton<IOptions<GitEnvironmentOptions>>(new OptionsWrapper<GitEnvironmentOptions>(gitEnvironmentOptions))
-            .AddSingleton<IOptions<GitIntegrationCredentialOptions>>(new OptionsWrapper<GitIntegrationCredentialOptions>(gitIntegrationCredentialOptions))
-            .AddSingleton(gitRepositoryCredentialOptions);
-    }
-
-    public static IServiceCollection AddZeyaTestGitIntegration(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-                .AddSingleton<IRepositoryFetcher>(sp =>
-                {
-                    ILogger<IRepositoryFetcher> logger = sp.GetRequiredService<ILogger<IRepositoryFetcher>>();
-                    var repositoryFetchOptions = RepositoryFetchOptions.CreateWithUserPasswordAuth("GithubUsername", "GithubToken");
-                    return new RepositoryFetcher(repositoryFetchOptions, logger);
-                })
-                .AddSingleton<IGitIntegrationService>(sp => new GitIntegrationService(
-                    sp.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor,
-                    sp.GetRequiredService<IRepositoryFetcher>(),
-                    sp.GetRequiredService<GitRepositoryCredentialOptions>()))
-                .AddSingleton<IGitIntegrationServiceFactory, GitIntegrationServiceFactory>()
-            ;
-    }
-
-    public static IServiceCollection AddZeyaTestGithubIntegration(this IServiceCollection serviceCollection, string currentPath)
-    {
-        return serviceCollection
-            .AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(currentPath))
+        serviceCollection
             .AddSingleton<FakeGithubIntegrationService>()
-            .AddSingleton<IGithubIntegrationService, FakeGithubIntegrationService>(sp => sp.GetRequiredService<FakeGithubIntegrationService>())
-            .AddSingleton<IGithubIntegrationServiceFactory, GithubIntegrationServiceFactory>()
-            .AddSingleton<IAdoIntegrationService, AdoIntegrationService>()
-            .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>()
-            .AddSingleton<LocalRepositoryProvider>();
-    }
+            .AddSingleton<IGithubIntegrationService, FakeGithubIntegrationService>(sp => sp.GetRequiredService<FakeGithubIntegrationService>());
 
-    public static IServiceCollection AddZeyaTestAdoIntegration(this IServiceCollection serviceCollection)
-    {
-        return serviceCollection
-            .AddSingleton<IAdoIntegrationService, DummyAdoIntegrationService>()
-            .AddSingleton<IAdoIntegrationServiceFactory, AdoIntegrationServiceFactory>();
+        serviceCollection.AddSingleton<IAdoIntegrationService, DummyAdoIntegrationService>();
+
+        serviceCollection.AddSingleton<ILocalStoragePathFactory>(new FakePathFormatStrategy(currentPath));
+        serviceCollection.AddSingleton<LocalRepositoryProvider>();
+        serviceCollection.AddSingleton<IRemoteHostIntegrationServiceFactory, RemoteHostIntegrationServiceFactory>(sp =>
+        {
+            var adoIntegrationService = sp.GetRequiredService<IAdoIntegrationService>();
+            var githubIntegrationService = sp.GetRequiredService<IGithubIntegrationService>();
+            var gitIntegrationServiceFactory = sp.GetRequiredService<IGitIntegrationServiceFactory>();
+            return new RemoteHostIntegrationServiceFactory(adoIntegrationService, githubIntegrationService, gitIntegrationServiceFactory, adoCredentials, githubCredential);
+        });
+
+        return serviceCollection;
     }
 }

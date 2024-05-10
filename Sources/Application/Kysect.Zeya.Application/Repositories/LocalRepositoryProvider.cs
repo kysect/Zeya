@@ -4,7 +4,6 @@ using Kysect.GithubUtils.Models;
 using Kysect.GithubUtils.Replication.OrganizationsSync.LocalStoragePathFactories;
 using Kysect.Zeya.AdoIntegration.Abstraction;
 using Kysect.Zeya.Application.Repositories.Ado;
-using Kysect.Zeya.Application.Repositories.Git;
 using Kysect.Zeya.Application.Repositories.Github;
 using Kysect.Zeya.GithubIntegration.Abstraction;
 using Kysect.Zeya.GitIntegration.Abstraction;
@@ -19,9 +18,7 @@ namespace Kysect.Zeya.Application.Repositories;
 public class LocalRepositoryProvider(
     IFileSystem fileSystem,
     ILogger<LocalRepositoryProvider> logger,
-    IGitIntegrationServiceFactory gitIntegrationServiceFactory,
-    IGithubIntegrationServiceFactory githubIntegrationServiceFactory,
-    IAdoIntegrationServiceFactory adoIntegrationServiceFactory,
+    IRemoteHostIntegrationServiceFactory remoteHostIntegrationServiceFactory,
     ILocalStoragePathFactory localStoragePathFactory,
     DotnetSolutionModifierFactory solutionModifierFactory)
 {
@@ -47,7 +44,7 @@ public class LocalRepositoryProvider(
         logger.LogInformation("Loading repository {RemoteHttpsUrl}", remoteHttpsValidationPolicyRepository.RemoteHttpsUrl);
 
         string remoteHttpsUrl = remoteHttpsValidationPolicyRepository.RemoteHttpsUrl;
-        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(remoteHttpsValidationPolicyRepository);
+        IGitIntegrationService gitIntegrationService = remoteHostIntegrationServiceFactory.GetGitService(remoteHttpsValidationPolicyRepository);
 
         string repositoryName = remoteHttpsUrl.Split('/').Last();
         // TODO: This is kind of hack because we don't have access to cache directory path
@@ -70,9 +67,9 @@ public class LocalRepositoryProvider(
         logger.LogInformation("Loading repository {Repository}", githubRepositoryName.FullName);
 
         string pathToRepository = localStoragePathFactory.GetPathToRepository(repository);
-        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(githubRepository);
+        IGitIntegrationService gitIntegrationService = remoteHostIntegrationServiceFactory.GetGitService(githubRepository);
         gitIntegrationService.EnsureRepositoryUpdated(pathToRepository, repository);
-        IGithubIntegrationService integrationService = githubIntegrationServiceFactory.GetService(githubRepository);
+        IGithubIntegrationService integrationService = remoteHostIntegrationServiceFactory.GetGithubService(githubRepository);
 
         return new LocalGithubRepository(
             githubRepositoryName,
@@ -88,8 +85,8 @@ public class LocalRepositoryProvider(
         logger.LogInformation("Loading repository {RemoteHttpsUrl}", adoRepository.RemoteHttpsUrl);
 
         string remoteHttpsUrl = adoRepository.RemoteHttpsUrl;
-        IGitIntegrationService gitIntegrationService = gitIntegrationServiceFactory.GetService(adoRepository);
-        IAdoIntegrationService adoIntegrationService = adoIntegrationServiceFactory.GetService(adoRepository);
+        IGitIntegrationService gitIntegrationService = remoteHostIntegrationServiceFactory.GetGitService(adoRepository);
+        IAdoIntegrationService adoIntegrationService = remoteHostIntegrationServiceFactory.GetAdoService(adoRepository);
 
         string repositoryName = remoteHttpsUrl.Split('/').Last();
         // TODO: This is kind of hack because we don't have access to cache directory path

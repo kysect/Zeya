@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using Kysect.DotnetProjectSystem.SolutionModification;
+using Microsoft.Extensions.Configuration;
 
 namespace Kysect.Zeya.Tests.Tools;
 
@@ -36,6 +37,7 @@ public class ValidationTestFixture
         CurrentPath = FileSystem.Path.GetFullPath(".");
         DiagnosticCollectorAsserts = new RepositoryDiagnosticCollectorAsserts();
         FileSystemAsserts = new FileSystemAsserts(FileSystem);
+        IConfiguration configuration = TestConfigurationProvider.Create();
 
         _serviceProvider = new ServiceCollection()
             .AddZeyaTestLogging()
@@ -43,10 +45,8 @@ public class ValidationTestFixture
             //.AddSingleton(ZeyaDbContextTestProvider.CreateContext())
             .AddSingleton<SolutionFileStructureBuilderFactory>()
 
-            .AddZeyaTestGitConfiguration()
-            .AddZeyaTestGitIntegration()
-            .AddZeyaTestGithubIntegration(CurrentPath)
-            .AddZeyaTestAdoIntegration()
+            .AddZeyaGitIntegration(configuration)
+            .AddZeyaTestRemoteHostIntegration(configuration, CurrentPath)
 
             .AddSingleton<IFileSystem>(FileSystem)
             .AddZeyaDotnetProjectSystemIntegration()
