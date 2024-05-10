@@ -25,7 +25,6 @@ public class NugetVersionSynchronizedWithMasterCentralPackageManagerValidationRu
         DirectoryPackagesPropsFile directoryPackagesPropsFile = solutionModifier.GetOrCreateDirectoryPackagePropsModifier();
         if (!fileSystem.File.Exists(rule.MasterFile))
         {
-            // TODO: after this error validation should finish as failed
             logger.LogError("Master file {File} for checking CPM was not found.", rule.MasterFile);
             return;
         }
