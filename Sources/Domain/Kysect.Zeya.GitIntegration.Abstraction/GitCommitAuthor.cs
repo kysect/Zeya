@@ -5,7 +5,7 @@ namespace Kysect.Zeya.GitIntegration.Abstraction;
 public class GitCommitAuthor
 {
     [Required]
-    public string GithubUsername { get; init; } = null!;
+    public string AuthorName { get; init; } = null!;
     [Required]
-    public string GithubMail { get; init; } = null!;
+    public string AuthorMail { get; init; } = null!;
 }
