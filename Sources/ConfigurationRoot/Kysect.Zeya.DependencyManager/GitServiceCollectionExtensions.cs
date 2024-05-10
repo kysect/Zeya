@@ -37,11 +37,13 @@ public static class GitServiceCollectionExtensions
         RemoteGitHostCredential adoCredentials = configuration.GetSection("RemoteHosts").GetSection("AzureDevOps").GetRequired<RemoteGitHostCredential>();
         GitEnvironmentOptions gitEnvironmentOptions = configuration.GetSection("GitEnvironmentOptions").GetRequired<GitEnvironmentOptions>();
 
+        adoCredentials.HostUrl.ThrowIfNull();
+
         serviceCollection
             .AddSingleton<IGitHubClient>(sp => new GitHubClient(new ProductHeaderValue("Zeya")) { Credentials = new Credentials(githubCredential.Token) })
             .AddSingleton<IGithubIntegrationService, GithubIntegrationService>();
 
-        serviceCollection.AddSingleton<IAdoIntegrationService, AdoIntegrationService>(sp => new AdoIntegrationService(adoCredentials.Token));
+        serviceCollection.AddSingleton<IAdoIntegrationService, AdoIntegrationService>(sp => new AdoIntegrationService(adoCredentials.Token, adoCredentials.HostUrl));
 
         serviceCollection.AddSingleton<ILocalStoragePathFactory>(sp => new UseOwnerAndRepoForFolderNameStrategy(gitEnvironmentOptions.CacheDirectoryPath));
         serviceCollection.AddSingleton<LocalRepositoryProvider>();

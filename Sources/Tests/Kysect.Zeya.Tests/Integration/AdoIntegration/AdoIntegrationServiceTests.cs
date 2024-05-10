@@ -11,7 +11,7 @@ public class AdoIntegrationServiceTests
     public AdoIntegrationServiceTests()
     {
         string personalAccessToken = "";
-        _adoIntegrationService = new AdoIntegrationService(personalAccessToken);
+        _adoIntegrationService = new AdoIntegrationService(personalAccessToken, "https://dev.azure.com/");
     }
 
     [Fact(Skip = "Need token")]

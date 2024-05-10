@@ -10,9 +10,21 @@
     <ValidationSummary />
 
     <div class="form-group">
-        <label for="path">Remote HTTPS url</label>
-        <InputText id="path" class="form-control" @bind-Value="_formData.RemoteHttpsUrl" />
-        <ValidationMessage For="@(() => _formData.RemoteHttpsUrl)" />
+        <label for="collection">Collection</label>
+        <InputText id="collection" class="form-control" @bind-Value="_formData.Collection" />
+        <ValidationMessage For="@(() => _formData.Collection)" />
+    </div>
+    
+    <div class="form-group">
+        <label for="project">Project</label>
+        <InputText id="project" class="form-control" @bind-Value="_formData.Project" />
+        <ValidationMessage For="@(() => _formData.Project)" />
+    </div>
+    
+    <div class="form-group">
+        <label for="repository">Repository</label>
+        <InputText id="repository" class="form-control" @bind-Value="_formData.Repository" />
+        <ValidationMessage For="@(() => _formData.Repository)" />
     </div>
     
     <div class="form-group">

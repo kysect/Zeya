@@ -1,4 +1,5 @@
-﻿using Kysect.Zeya.Application.Repositories;
+﻿using Kysect.Zeya.AdoIntegration.Abstraction;
+using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
@@ -48,18 +49,19 @@ public class PolicyRepositoryService(
         return repositoryFactory.Create(repository).ToDto();
     }
 
-    public async Task<ValidationPolicyRepositoryDto> AddAdoRepository(Guid policyId, string remoteHttpUrl, string? solutionPathMask)
+    public async Task<ValidationPolicyRepositoryDto> AddAdoRepository(Guid policyId, string collection, string project, string repository, string? solutionPathMask)
     {
         ValidationPolicyEntity policy = await context.ValidationPolicies.GetAsync(policyId);
 
         if (solutionPathMask is null)
             solutionPathMask = LocalRepositorySolutionManager.DefaultMask;
 
-        var repository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Ado, remoteHttpUrl, solutionPathMask);
-        context.ValidationPolicyRepositories.Add(repository);
+        var adoRepositoryUrl = new AdoRepositoryUrl(collection, project, repository);
+        var policyRepository = new ValidationPolicyRepository(Guid.NewGuid(), policyId, ValidationPolicyRepositoryType.Ado, adoRepositoryUrl.Serialize(), solutionPathMask);
+        context.ValidationPolicyRepositories.Add(policyRepository);
         await context.SaveChangesAsync();
 
-        return repositoryFactory.Create(repository).ToDto();
+        return repositoryFactory.Create(policyRepository).ToDto();
     }
 
     public async Task<ValidationPolicyRepositoryDto> AddRemoteRepository(Guid policyId, string remoteHttpUrl, string? solutionPathMask)

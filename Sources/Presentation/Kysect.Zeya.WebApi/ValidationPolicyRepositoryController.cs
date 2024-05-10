@@ -30,9 +30,9 @@ public class ValidationPolicyRepositoryController : Controller
     }
 
     [HttpPost("{policyId}/Repositories/Ado")]
-    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddAdoRepository(Guid policyId, string remoteHttpUrl, string? solutionPathMask)
+    public async Task<ActionResult<ValidationPolicyRepositoryDto>> AddAdoRepository(Guid policyId, string collection, string project, string repository, string? solutionPathMask)
     {
-        ValidationPolicyRepositoryDto result = await _policyService.AddAdoRepository(policyId, remoteHttpUrl, solutionPathMask);
+        ValidationPolicyRepositoryDto result = await _policyService.AddAdoRepository(policyId, collection, project, repository, solutionPathMask);
         return Ok(result);
     }
 
