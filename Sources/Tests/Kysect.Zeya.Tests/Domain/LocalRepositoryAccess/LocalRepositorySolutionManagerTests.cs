@@ -61,7 +61,7 @@ public class LocalRepositorySolutionManagerTests
             _localRepositorySolutionManager.GetSolution();
         });
 
-        zeyaException.Message.Should().Be($"Repository {_repositoryRootPath} has more than one solution file.");
+        zeyaException.Message.Should().Be($"Repository {_repositoryRootPath} has more than one solution file. Specify solution mask for selecting correct solution.");
     }
 
     [Fact]

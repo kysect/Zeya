@@ -20,9 +20,8 @@ public class LocalRepositorySolutionManager(string repositoryPath, string soluti
         if (solutions.Count == 0)
             throw new ZeyaException($"Repository {repositoryPath} does not contains .sln files");
 
-        // TODO: investigate this path
         if (solutions.Count > 1)
-            throw new ZeyaException($"Repository {repositoryPath} has more than one solution file.");
+            throw new ZeyaException($"Repository {repositoryPath} has more than one solution file. Specify solution mask for selecting correct solution.");
 
         return solutions.Single();
     }
