@@ -1,11 +1,7 @@
 ﻿using FluentAssertions;
 using Kysect.GithubUtils.Models;
-using Kysect.GithubUtils.Replication.RepositorySync;
-using Kysect.Zeya.DependencyManager;
-using Kysect.Zeya.GitIntegration;
 using Kysect.Zeya.GitIntegration.Abstraction;
 using Kysect.Zeya.Tests.Tools;
-using Microsoft.Extensions.Options;
 using System.IO.Abstractions;
 using Repository = LibGit2Sharp.Repository;
 
@@ -17,7 +13,6 @@ public class GitIntegrationServiceTests : IDisposable
     private readonly IGitIntegrationService _gitIntegrationService;
     private readonly string _repositoriesDirectory;
     private readonly FileSystem _fileSystem;
-    private readonly IRepositoryFetcher _repositoryFetcher;
     private readonly GithubRepository _githubRepositoryName;
 
     public GitIntegrationServiceTests()
@@ -27,11 +22,8 @@ public class GitIntegrationServiceTests : IDisposable
         _repositoriesDirectory = _temporaryDirectory.GetTemporaryDirectory();
 
         var validationTestFixture = new ValidationTestFixture();
-        _gitIntegrationService = new GitIntegrationService(
-            validationTestFixture.GetRequiredService<IOptions<GitEnvironmentOptions>>().Value.CommitAuthor,
-            validationTestFixture.GetRequiredService<IRepositoryFetcher>(),
-            validationTestFixture.GetRequiredService<GitRepositoryCredentialOptions>());
-        _repositoryFetcher = validationTestFixture.GetRequiredService<IRepositoryFetcher>();
+        IGitIntegrationServiceFactory gitIntegrationServiceFactory = validationTestFixture.GetRequiredService<IGitIntegrationServiceFactory>();
+        _gitIntegrationService = gitIntegrationServiceFactory.CreateGitIntegration(new RemoteGitHostCredential());
         _githubRepositoryName = new GithubRepository("Kysect", "Zeya");
     }
 
@@ -40,7 +32,7 @@ public class GitIntegrationServiceTests : IDisposable
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
 
-        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _gitIntegrationService.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
 
         _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
     }
@@ -50,8 +42,8 @@ public class GitIntegrationServiceTests : IDisposable
     {
         var gitDirectory = _fileSystem.Path.Combine(_repositoriesDirectory, ".git");
 
-        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
-        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _gitIntegrationService.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _gitIntegrationService.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
 
         _fileSystem.Directory.Exists(gitDirectory).Should().BeTrue();
     }
@@ -59,7 +51,7 @@ public class GitIntegrationServiceTests : IDisposable
     [Fact]
     public void CreateFixBranch_OnMasterBranch_ChangeToNewBranch()
     {
-        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _gitIntegrationService.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         gitRepository.Head.FriendlyName.Should().Be("master");
@@ -71,7 +63,7 @@ public class GitIntegrationServiceTests : IDisposable
     [Fact]
     public void CreateCommitWithFix_OnMasterBranch_ChangeLastCommit()
     {
-        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _gitIntegrationService.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.Create(_fileSystem.Path.Combine(_repositoriesDirectory, "file.txt")).Dispose();
@@ -96,7 +88,7 @@ public class GitIntegrationServiceTests : IDisposable
 
                        """;
 
-        _repositoryFetcher.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
+        _gitIntegrationService.EnsureRepositoryUpdated(_repositoriesDirectory, _githubRepositoryName);
         using var gitRepository = new Repository(_repositoriesDirectory);
 
         _fileSystem.File.WriteAllText(filePath, "Some changes qer");

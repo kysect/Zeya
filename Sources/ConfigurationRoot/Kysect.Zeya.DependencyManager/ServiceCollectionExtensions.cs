@@ -30,10 +30,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddZeyaLocalHandlingService(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection
-            .AddZeyaGitConfiguration()
             .AddZeyaGitIntegration(configuration)
-            .AddZeyaGithubIntegration(configuration)
-            .AddZeyaAdoIntegration(configuration);
+            .AddZeyaRemoteHostIntegration(configuration);
 
         return serviceCollection
             .AddSingleton<IFileSystem, FileSystem>()
