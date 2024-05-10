@@ -28,7 +28,7 @@ public class RepositoryDependenciesService(
             .Select(localRepositoryProvider.InitializeRepository)
             .ToList();
 
-        IReadOnlyCollection<GraphLink<string>> graphLinks = await nugetPackageUpdateOrderBuilder.Build(localRepositories);
+        IReadOnlyCollection<GraphLink<string>> graphLinks = nugetPackageUpdateOrderBuilder.Build(localRepositories);
         return new PlantUmlRepositoryDependencyVisualization().ConvertToString(graphLinks);
     }
 }

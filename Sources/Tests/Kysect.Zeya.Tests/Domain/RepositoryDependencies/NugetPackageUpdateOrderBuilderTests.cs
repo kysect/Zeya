@@ -1,49 +1,33 @@
 ﻿using FluentAssertions;
-using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Graphs;
+using Kysect.DotnetProjectSystem.FileStructureBuilding;
+using Kysect.DotnetProjectSystem.Parsing;
+using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryDependencies;
-using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearchers;
 using Kysect.Zeya.Tests.Tools;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryDependencies;
 
-public class FakeNuGetPackagesSearcher : INuGetPackagesSearcher
-{
-    public Dictionary<string, List<string>> RepositoryProjects { get; }
-
-    public FakeNuGetPackagesSearcher(Dictionary<string, List<string>> repositoryProjects)
-    {
-        RepositoryProjects = repositoryProjects;
-    }
-
-    public IReadOnlyCollection<string> GetContainingProjectNames(ILocalRepository repository)
-    {
-        repository.ThrowIfNull();
-        return RepositoryProjects[repository.GetRepositoryName()];
-    }
-}
-
 public class NugetPackageUpdateOrderBuilderTests
 {
     private readonly NugetPackageUpdateOrderBuilder _nugetPackageUpdateOrderBuilder;
-    private readonly Dictionary<string, List<string>> _repositoryProjects;
     private readonly LocalRepositoryProvider _localRepositoryProvider;
+    private readonly SolutionFileStructureBuilderFactory _solutionFileStructureBuilderFactory;
 
     public NugetPackageUpdateOrderBuilderTests()
     {
         var validationTestFixture = new ValidationTestFixture();
         _localRepositoryProvider = validationTestFixture.GetRequiredService<LocalRepositoryProvider>();
 
-        var nugetRepositoryClient = new NugetRepositoryClient();
-        _repositoryProjects = new Dictionary<string, List<string>>();
-        var fakeNuGetPackagesSearcher = new FakeNuGetPackagesSearcher(_repositoryProjects);
-        _nugetPackageUpdateOrderBuilder = new NugetPackageUpdateOrderBuilder(nugetRepositoryClient, fakeNuGetPackagesSearcher, validationTestFixture.GetLogger<NugetPackageUpdateOrderBuilder>());
+        var solutionFileContentParser = new SolutionFileContentParser();
+        _nugetPackageUpdateOrderBuilder = new NugetPackageUpdateOrderBuilder(solutionFileContentParser, validationTestFixture.GetLogger<NugetPackageUpdateOrderBuilder>());
+        _solutionFileStructureBuilderFactory = validationTestFixture.GetRequiredService<SolutionFileStructureBuilderFactory>();
     }
 
     [Fact]
-    public async Task Build_ForKysectRepositories_ReturnExpectedResult()
+    public void Build_ForKysectRepositories_ReturnExpectedResult()
     {
         var expectedLinks = new List<GraphLink<string>>()
         {
@@ -54,34 +38,47 @@ public class NugetPackageUpdateOrderBuilderTests
             new("Kysect.CommonLib", "Kysect.DotnetProjectSystem"),
         };
 
-        _repositoryProjects["Kysect.Editorconfig"] =
-        [
-            "Kysect.Editorconfig",
-        ];
+        ILocalRepository editorConfigRepository = _localRepositoryProvider.GetLocalRepository("Kysect.Editorconfig", "*.sln");
+        var editorConfigRepositoryPackages = DirectoryPackagesPropsFile.CreateEmpty();
+        _solutionFileStructureBuilderFactory.Create("Kysect.Editorconfig")
+                .AddProject(new ProjectFileStructureBuilder("Kysect.Editorconfig"))
+                .AddDirectoryPackagesProps(editorConfigRepositoryPackages)
+                .Save(editorConfigRepository.FileSystem.GetFullPath());
 
-        _repositoryProjects["Kysect.CommonLib"] =
-        [
-            "Kysect.CommonLib",
-            "Kysect.CommonLib.DependencyInjection"
-        ];
+        ILocalRepository commonLibRepository = _localRepositoryProvider.GetLocalRepository("Kysect.CommonLib", "*.sln");
+        var commonLibRepositoryPackages = DirectoryPackagesPropsFile.CreateEmpty();
+        commonLibRepositoryPackages.Versions.AddPackageVersion("Kysect.Editorconfig", "1.0.0");
+        _solutionFileStructureBuilderFactory.Create("Kysect.CommonLib")
+            .AddProject(new ProjectFileStructureBuilder("Kysect.CommonLib"))
+            .AddProject(new ProjectFileStructureBuilder("Kysect.CommonLib.DependencyInjection"))
+            .AddDirectoryPackagesProps(commonLibRepositoryPackages)
+            .Save(commonLibRepository.FileSystem.GetFullPath());
 
-        _repositoryProjects["Kysect.GithubUtils"] = ["Kysect.GithubUtils"];
+        ILocalRepository githubUtilsRepository = _localRepositoryProvider.GetLocalRepository("Kysect.GithubUtils", "*.sln");
+        var githubUtilsRepositoryPackages = DirectoryPackagesPropsFile.CreateEmpty();
+        githubUtilsRepositoryPackages.Versions.AddPackageVersion("Kysect.Editorconfig", "1.0.0");
+        githubUtilsRepositoryPackages.Versions.AddPackageVersion("Kysect.CommonLib", "1.0.0");
+        _solutionFileStructureBuilderFactory.Create("Kysect.GithubUtils")
+            .AddProject(new ProjectFileStructureBuilder("Kysect.GithubUtils"))
+            .AddDirectoryPackagesProps(githubUtilsRepositoryPackages)
+            .Save(githubUtilsRepository.FileSystem.GetFullPath());
 
-        _repositoryProjects["Kysect.DotnetProjectSystem"] =
-        [
-            "Kysect.DotnetProjectSystem",
-            "Kysect.DotnetProjectSystem.Tests"
-        ];
+        ILocalRepository dotnetProjectSystemRepository = _localRepositoryProvider.GetLocalRepository("Kysect.DotnetProjectSystem", "*.sln");
+        var dotnetProjectSystemRepositoryPackages = DirectoryPackagesPropsFile.CreateEmpty();
+        dotnetProjectSystemRepositoryPackages.Versions.AddPackageVersion("Kysect.Editorconfig", "1.0.0");
+        dotnetProjectSystemRepositoryPackages.Versions.AddPackageVersion("Kysect.CommonLib", "1.0.0");
+        _solutionFileStructureBuilderFactory.Create("Kysect.DotnetProjectSystem")
+            .AddProject(new ProjectFileStructureBuilder("Kysect.DotnetProjectSystem"))
+            .AddProject(new ProjectFileStructureBuilder("Kysect.DotnetProjectSystem.Tests"))
+            .AddDirectoryPackagesProps(dotnetProjectSystemRepositoryPackages)
+            .Save(dotnetProjectSystemRepository.FileSystem.GetFullPath());
 
-        _repositoryProjects["Kysect.Zeya"] = ["Kysect.Zeya"];
-
-        IReadOnlyCollection<GraphLink<string>> dependencyLinks = await _nugetPackageUpdateOrderBuilder.Build(new List<ILocalRepository>()
+        IReadOnlyCollection<GraphLink<string>> dependencyLinks = _nugetPackageUpdateOrderBuilder.Build(new List<ILocalRepository>()
         {
-            _localRepositoryProvider.GetLocalRepository("Kysect.Editorconfig", "*"),
-            _localRepositoryProvider.GetLocalRepository("Kysect.CommonLib", "*"),
-            _localRepositoryProvider.GetLocalRepository("Kysect.GithubUtils", "*"),
-            _localRepositoryProvider.GetLocalRepository("Kysect.DotnetProjectSystem", "*"),
-            _localRepositoryProvider.GetLocalRepository("Kysect.Zeya", "*"),
+            editorConfigRepository,
+            commonLibRepository,
+            githubUtilsRepository,
+            dotnetProjectSystemRepository,
         });
 
         dependencyLinks.Should().BeEquivalentTo(expectedLinks);
