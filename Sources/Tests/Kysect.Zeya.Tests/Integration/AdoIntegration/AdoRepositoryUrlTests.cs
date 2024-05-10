@@ -6,13 +6,32 @@ namespace Kysect.Zeya.Tests.Integration.AdoIntegration;
 public class AdoRepositoryUrlTests
 {
     [Fact]
-    public void Parse_ForFullUrlString_ReturnExpectedParts()
+    public void Serialize_ForSimpleInstance_ReturnExpectedValue()
     {
-        AdoRepositoryUrl expected = new("https://dev.azure.com/SomeOrg", "SomeProject", "RepoName");
-        const string input = "https://dev.azure.com/SomeOrg/SomeProject/_git/RepoName";
+        AdoRepositoryUrl value = new("SomeCollection", "SomeProject", "RepoName");
+        const string expected = "SomeCollection/SomeProject/RepoName";
 
-        AdoRepositoryUrl adoRepositoryUrl = AdoRepositoryUrl.Parse(input);
+        value.Serialize().Should().Be(expected);
+    }
 
-        adoRepositoryUrl.Should().Be(expected);
+    [Fact]
+    public void ToFullLink_ForSimpleInstance_ReturnExpectedValue()
+    {
+        AdoRepositoryUrl value = new("SomeCollection", "SomeProject", "RepoName");
+        string hostUrl = "https://dev.azure.com/";
+        const string expected = "https://dev.azure.com/SomeCollection/SomeProject/_git/RepoName";
+
+        value.ToFullLink(hostUrl).Should().Be(expected);
+    }
+
+    [Fact]
+    public void Parse_ForSimpleInstance_ReturnExpectedValue()
+    {
+        AdoRepositoryUrl expected = new("SomeCollection", "SomeProject", "RepoName");
+        const string input = "SomeCollection/SomeProject/RepoName";
+
+        AdoRepositoryUrl actual = AdoRepositoryUrl.Parse(input);
+
+        actual.Should().Be(expected);
     }
 }

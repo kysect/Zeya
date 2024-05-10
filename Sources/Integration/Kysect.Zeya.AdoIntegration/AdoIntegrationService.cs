@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace Kysect.Zeya.AdoIntegration;
 
 public class AdoIntegrationService(
-    string personalAccessToken)
+    string personalAccessToken,
+    string hostUrl)
     : IAdoIntegrationService
 {
     public async Task<bool> BuildValidationEnabled(AdoRepositoryUrl repositoryUrl)
@@ -47,7 +48,8 @@ public class AdoIntegrationService(
 
     private VssConnection CreateConnection(AdoRepositoryUrl repositoryUrl)
     {
-        var baseUrl = new Uri(repositoryUrl.OrganizationUrl);
+        var organizationUrl = $"{hostUrl}{repositoryUrl.Collection}";
+        var baseUrl = new Uri(organizationUrl);
         var credentials = new VssBasicCredential(string.Empty, personalAccessToken);
         return new VssConnection(baseUrl, credentials);
     }

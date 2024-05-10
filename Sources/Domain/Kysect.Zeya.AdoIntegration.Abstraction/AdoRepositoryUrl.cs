@@ -3,25 +3,30 @@ using System;
 
 namespace Kysect.Zeya.AdoIntegration.Abstraction;
 
-public record struct AdoRepositoryUrl(string OrganizationUrl, string Project, string Repository)
+public record struct AdoRepositoryUrl(string Collection, string Project, string Repository)
 {
-    public static AdoRepositoryUrl Parse(string projectUrl)
+    public static AdoRepositoryUrl Parse(string serialized)
     {
-        projectUrl.ThrowIfNull();
+        serialized.ThrowIfNull();
 
-        // TODO: Need to think about better implementation
-        string[] parts = projectUrl.Split("/_git/");
-        if (parts.Length != 2)
-            throw new ArgumentException($"Invalid ADO repository path: {projectUrl}");
+        string[] nameParts = serialized.Split("/", 3);
+        if (nameParts.Length != 3)
+            throw new ArgumentException($"Invalid ADO repository path: {serialized}");
 
-        int lastIndexOf = parts[0].LastIndexOf('/');
-        if (lastIndexOf == -1)
-            throw new ArgumentException($"Invalid ADO repository path: {projectUrl}");
+        return new AdoRepositoryUrl(nameParts[0], nameParts[1], nameParts[2]);
+    }
 
-        string organization = parts[0].Substring(0, lastIndexOf);
-        string project = parts[0].Substring(lastIndexOf + 1, parts[0].Length - lastIndexOf - 1);
-        string repositoryName = parts[1];
+    public readonly string Serialize()
+    {
+        return $"{Collection}/{Project}/{Repository}";
+    }
 
-        return new AdoRepositoryUrl(organization, project, repositoryName);
+    public readonly string ToFullLink(string host)
+    {
+        host.ThrowIfNull();
+        if (!host.EndsWith("/"))
+            throw new ArgumentException($"HostUrl must end with '/'. Actual value: {host}");
+
+        return $"{host}{Collection}/{Project}/_git/{Repository}";
     }
 }
