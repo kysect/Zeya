@@ -11,7 +11,6 @@ using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.RepositoryDependencies;
-using Kysect.Zeya.RepositoryDependencies.NuGetPackagesSearchers;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
@@ -72,7 +71,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<ValidationPolicyDatabaseQueries>();
 
         serviceCollection
-            .AddSingleton<INuGetPackagesSearcher, NuGetPackagesSearcher>()
             .AddSingleton<NugetRepositoryClient>()
             .AddSingleton<NugetPackageUpdateOrderBuilder>();
 
