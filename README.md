@@ -79,21 +79,17 @@ Install dependencies:
 ```bash
 winget install Microsoft.DotNet.AspNetCore.8
 winget install Docker.DockerDesktop
-winget install GitHub.cli
 dotnet workload install aspire
 ```
 
 Configure settings:
 - Add a GitHub token to the user secrets: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
-Install Github Actions via user secrets:
-
 ```bash
 dotnet user-secrets init --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
-dotnet user-secrets set "GithubIntegrationOptions:Credential:GithubToken" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+dotnet user-secrets set "RemoteHosts:Github:Token" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+dotnet user-secrets set "RemoteHosts:AzureDevOps:Token" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
 ```
-
-
 
 Solution can be built using the `dotnet` command line tool or Visual Studio.
 
