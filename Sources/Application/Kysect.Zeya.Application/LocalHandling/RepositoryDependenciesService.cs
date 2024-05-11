@@ -6,6 +6,7 @@ using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.Dtos;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryDependencies;
+using Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 using Kysect.Zeya.RepositoryDependencies.Visualization;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ namespace Kysect.Zeya.Application.LocalHandling;
 public class RepositoryDependenciesService(
     ValidationPolicyRepositoryFactory repositoryFactory,
     LocalRepositoryProvider localRepositoryProvider,
+    SolutionPackageDataCollector solutionPackageDataCollector,
     NugetPackageUpdateOrderBuilder nugetPackageUpdateOrderBuilder,
     ValidationPolicyDatabaseQueries databaseQueries,
     ZeyaDbContext context) : IRepositoryDependenciesService
@@ -31,7 +33,8 @@ public class RepositoryDependenciesService(
             .ToList();
 
         IReadOnlyCollection<string> repositoriesWithDiagnostics = await GetRepositoriesWithDiagnostics(policyId);
-        IReadOnlyCollection<RepositoryDependencyLink> graphLinks = await nugetPackageUpdateOrderBuilder.CreateDependencyLinks(localRepositories);
+        IReadOnlyCollection<SolutionPackageAnalyzerContextItem> solutionPackageAnalyzerContextItems = await solutionPackageDataCollector.Collect(localRepositories);
+        IReadOnlyCollection<RepositoryDependencyLink> graphLinks = nugetPackageUpdateOrderBuilder.CreateDependencyLinks(localRepositories, solutionPackageAnalyzerContextItems);
         return new PlantUmlRepositoryDependencyVisualization().ConvertToString(graphLinks, repositoriesWithDiagnostics);
     }
 

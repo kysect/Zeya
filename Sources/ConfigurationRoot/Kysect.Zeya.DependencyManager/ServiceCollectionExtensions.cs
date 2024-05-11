@@ -11,7 +11,7 @@ using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
 using Kysect.Zeya.RepositoryDependencies;
-using Kysect.Zeya.RepositoryDependencies.PackageSources;
+using Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 using Kysect.Zeya.RepositoryValidation;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.CreatePullRequest;
 using Kysect.Zeya.RepositoryValidation.ProcessingActions.Fix;
@@ -74,6 +74,7 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddSingleton<PackageRepositoryClient>()
             .AddSingleton<IPackageRepositoryClient, PackageRepositoryClient>()
+            .AddSingleton<SolutionPackageDataCollector>()
             .AddSingleton<NugetPackageUpdateOrderBuilder>();
 
         return serviceCollection;
