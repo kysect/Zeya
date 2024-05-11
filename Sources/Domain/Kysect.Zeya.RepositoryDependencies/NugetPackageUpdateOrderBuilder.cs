@@ -66,42 +66,48 @@ public class NugetPackageUpdateOrderBuilder(
     public IReadOnlyCollection<ActionPlanStep> CreateFixingActionPlan(IReadOnlyCollection<ILocalRepository> repositories, IReadOnlyCollection<string> repositoriesWithDiagnostics, IReadOnlyCollection<RepositoryDependencyLink> links)
     {
         List<ActionPlanStep> result = [];
-        List<RepositoryDependencyLink> currentLinks = links.ToList();
         List<ILocalRepository> notVisitedRepositories = repositories.ToList();
+        List<RepositoryDependencyLink> currentLinks = links.ToList();
 
+        Dictionary<string, HashSet<string>> notUpdatedInternalReferences = new();
         while (notVisitedRepositories.Any())
         {
-            List<GraphLink<string>> graphLinks = links.Select(l => new GraphLink<string>(l.From, l.To)).ToList();
+            List<GraphLink<string>> graphLinks = currentLinks.Select(l => new GraphLink<string>(l.From, l.To)).ToList();
             List<string> repositoryNames = notVisitedRepositories.Select(r => r.GetRepositoryName()).ToList();
 
             GraphBuildResult<string, ILocalRepository> graph = GraphBuilder.Build(repositoryNames, graphLinks, GraphValueResolverCreator.Create(notVisitedRepositories, r => r.GetRepositoryName()));
 
-            Dictionary<string, List<string>> notUpdatedInternalReferences = new();
             foreach (GraphNode<string, ILocalRepository> graphRoot in graph.Roots)
             {
-                notVisitedRepositories.RemoveAll(r => r.GetRepositoryName() == graphRoot.Value.GetRepositoryName());
-                graphLinks.RemoveAll(l => l.From == graphRoot.Value.GetRepositoryName());
-
-                if (!notUpdatedInternalReferences.TryGetValue(graphRoot.Id, out List<string>? notUpdatedReferencesForCurrent))
-                    notUpdatedReferencesForCurrent = [];
-
-                if (!repositoriesWithDiagnostics.Contains(graphRoot.Id))
+                bool currentRepositoryContainsDiagnostic = repositoriesWithDiagnostics.Contains(graphRoot.Id);
+                if (!notUpdatedInternalReferences.TryGetValue(graphRoot.Id, out var notUpdatedReferencesForCurrent))
                 {
-                    if (notUpdatedReferencesForCurrent.Any())
-                        result.Add(new ActionPlanStep(graphRoot.Value, false, notUpdatedReferencesForCurrent));
-                    continue;
+                    notUpdatedReferencesForCurrent = [];
+                    notUpdatedInternalReferences[graphRoot.Id] = notUpdatedReferencesForCurrent;
                 }
 
-                result.Add(new ActionPlanStep(graphRoot.Value, true, notUpdatedReferencesForCurrent));
-                foreach (GraphNode<string, ILocalRepository> dependantNodes in graphRoot.DirectChildren)
+                foreach (GraphNode<string, ILocalRepository> dependantNode in graphRoot.DirectChildren)
                 {
-                    if (!notUpdatedInternalReferences.TryGetValue(dependantNodes.Id, out List<string>? notUpdatedReferencesForDependant))
+                    if (!notUpdatedInternalReferences.TryGetValue(dependantNode.Id, out var notUpdatedReferencesForDependant))
                     {
                         notUpdatedReferencesForDependant = [];
-                        notUpdatedInternalReferences[dependantNodes.Id] = notUpdatedReferencesForDependant;
+                        notUpdatedInternalReferences[dependantNode.Id] = notUpdatedReferencesForDependant;
                     }
-                    notUpdatedReferencesForDependant.Add(graphRoot.Id);
+
+                    if (currentRepositoryContainsDiagnostic)
+                        notUpdatedReferencesForDependant.Add(graphRoot.Id);
+
+                    // TODO: do it in better way. Collection can contain duplicates
+                    RepositoryDependencyLink dependencyLink = links.First(l => l.From == graphRoot.Id && l.To == dependantNode.Id);
+                    if (!dependencyLink.IsActual)
+                        notUpdatedReferencesForDependant.Add(graphRoot.Id);
                 }
+
+                notVisitedRepositories.RemoveAll(r => r.GetRepositoryName() == graphRoot.Value.GetRepositoryName());
+                currentLinks.RemoveAll(l => l.From == graphRoot.Value.GetRepositoryName());
+
+                if (currentRepositoryContainsDiagnostic || !notUpdatedReferencesForCurrent.IsEmpty())
+                    result.Add(new ActionPlanStep(graphRoot.Value, currentRepositoryContainsDiagnostic, notUpdatedReferencesForCurrent));
             }
         }
 
