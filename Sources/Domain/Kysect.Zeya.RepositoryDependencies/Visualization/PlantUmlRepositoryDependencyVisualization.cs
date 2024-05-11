@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using Kysect.CommonLib.Graphs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +8,10 @@ namespace Kysect.Zeya.RepositoryDependencies.Visualization;
 // TODO: I hope this class will be replaced with library for PlantUML
 public class PlantUmlRepositoryDependencyVisualization
 {
-    public string ConvertToString(IReadOnlyCollection<GraphLink<string>> graphLinks, IReadOnlyCollection<string> repositoriesWithDiagnostics)
+    public string ConvertToString(IReadOnlyCollection<RepositoryDependencyLink> graphLinks, IReadOnlyCollection<string> repositoriesWithDiagnostics)
     {
         const string orangeColorCode = "%23F80";
+        const string redColorCode = "%23F22";
         graphLinks.ThrowIfNull();
 
         var builder = new StringBuilder();
@@ -37,8 +37,17 @@ public class PlantUmlRepositoryDependencyVisualization
             }
         }
 
-        foreach ((string? from, string? to) in graphLinks)
-            builder.AppendLine($"{from} --> {to};");
+        foreach ((string? from, string? to, bool isActual) in graphLinks)
+        {
+            if (isActual)
+            {
+                builder.AppendLine($"{from} --> {to};");
+            }
+            else
+            {
+                builder.AppendLine($"{from} --> {to} {redColorCode};");
+            }
+        }
 
         builder.AppendLine("@enduml;");
         // TODO: Add other symbols replacing and use display name

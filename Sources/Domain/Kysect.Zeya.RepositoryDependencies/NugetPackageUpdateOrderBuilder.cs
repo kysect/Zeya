@@ -1,23 +1,28 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
-using Kysect.CommonLib.Graphs;
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.Zeya.LocalRepositoryAccess;
+using Kysect.Zeya.RepositoryDependencies.PackageSources;
 using Microsoft.Extensions.Logging;
+using NuGet.Versioning;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Kysect.Zeya.RepositoryDependencies;
 
+public record RepositoryDependencyLink(string From, string To, bool IsActual);
+
 public class NugetPackageUpdateOrderBuilder(
     SolutionFileContentParser solutionFileContentParser,
+    IPackageRepositoryClient packageRepositoryClient,
     ILogger<NugetPackageUpdateOrderBuilder> logger)
 {
     private readonly ILogger _logger = logger;
 
-    public IReadOnlyCollection<GraphLink<string>> Build(IReadOnlyCollection<ILocalRepository> repositories)
+    public async Task<IReadOnlyCollection<RepositoryDependencyLink>> Build(IReadOnlyCollection<ILocalRepository> repositories)
     {
         repositories.ThrowIfNull();
 
@@ -25,7 +30,7 @@ public class NugetPackageUpdateOrderBuilder(
 
         Dictionary<string, ILocalRepository> nugetPackageLocations = GetPackageToRepositoryMapping(repositories);
 
-        HashSet<GraphLink<string>> repositoryLinks = new();
+        HashSet<RepositoryDependencyLink> repositoryLinks = new();
         foreach (ILocalRepository localRepository in repositories)
         {
             DotnetSolutionModifier dotnetSolutionModifier = localRepository.SolutionManager.GetSolution().GetSolutionModifier();
@@ -41,8 +46,17 @@ public class NugetPackageUpdateOrderBuilder(
                 if (localRepository.GetRepositoryName() == otherRepository.GetRepositoryName())
                     continue;
 
-                var graphLink = new GraphLink<string>(otherRepository.GetRepositoryName(), localRepository.GetRepositoryName());
-                repositoryLinks.Add(graphLink);
+                NuGetVersion? latestVersion = await packageRepositoryClient.TryGetLastVersion(projectPackageVersion.Name);
+                if (latestVersion is null)
+                {
+                    _logger.LogTrace($"Skip project {projectPackageVersion.Name} skipped. Information in package sources not found.");
+                    continue;
+                }
+
+                // TODO: Possible case when one dependency is actual and another is not
+                var currentVersion = NuGetVersion.Parse(projectPackageVersion.Version);
+                bool isActual = latestVersion == currentVersion;
+                repositoryLinks.Add(new RepositoryDependencyLink(otherRepository.GetRepositoryName(), localRepository.GetRepositoryName(), isActual));
             }
         }
 
