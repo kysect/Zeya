@@ -18,49 +18,44 @@ Samples of rules:
 
 All rules documented in the [Docs/Validation-rules.md](Docs/Validation-rules.md).
 
-## How to use
+## How to build
 
-1. Create a yaml file with a validation scenario
-2. Run the Zeya application with the path to the yaml file as an argument and Github repository information
-3. Get the result of the validation
-4. Fix the problems found in the repositories
-5. Run the Zeya application again to check the result
+Step 1. Install dependencies:
 
-Yaml file example:
-
-```yaml
-- Name: Github.RepositoryLicense
-  Parameters:
-    OwnerName: Kysect
-    Year: 2024
-    LicenseType: MIT
-
-- Name: Github.BranchProtectionEnabled
-  Parameters:
-    PullRequestReviewRequired: true
-    ConversationResolutionRequired: true
-- Name: Github.AutoBranchDeletionEnabled
-
-- Name: Github.BuildWorkflowEnabled
-  Parameters:
-    MasterFile: Samples\build-test.yaml
-- Name: Github.BuildWorkflowEnabled
-  Parameters:
-    MasterFile: Samples\nuget-publish.yaml
-
-- Name: SourceCode.CentralPackageManagerEnabled
-- Name: SourceCode.ArtifactsOutputEnabled
-- Name: SourceCode.RequiredPackagesAdded
-  Parameters:
-    Packages: ["Kysect.Editorconfig"]
-
-- Name: Nuget.MetadataSpecified
-  Parameters:
-    RequiredKeyValues:
-      DebugType: portable
-      IncludeSymbols: true
-      SymbolPackageFormat: snupkg
+```bash
+winget install Microsoft.DotNet.AspNetCore.8
+# Now this dependency is optional
+winget install Docker.DockerDesktop
+dotnet workload install aspire
 ```
+
+Step 2. Create a personal access token for GitHub and Azure DevOps (optional). 
+- Add a GitHub token to the user secrets: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+
+Step 3. Add a token to the user secrets:
+
+```bash
+dotnet user-secrets init --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+dotnet user-secrets set "RemoteHosts:Github:Token" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+dotnet user-secrets set "RemoteHosts:AzureDevOps:Token" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
+```
+
+Step 4. Build the solution. Solution can be built using the `dotnet` command line tool or Visual Studio.
+
+```bash
+dotnet build Sources/Kysect.Zeya.sln
+```
+
+## How to run demo
+
+1. Build solution and run Kysect.Zeya.WebAppHost. Aspire will open:
+   1. Console
+   2. Aspire Dashboard
+   3. Zeya Web UI
+2. In Web UI go to the `Validation policies` tab and open Demo policy by clicking on '✏️' button.
+3. Add GitHub repository to policy by clicking on 'Add Github repository' button. You can add Kysect/Zeya repository.
+4. Start validation by clicking on 'Run validation' button.
+5. Refresh the page to see the result of the validation.
 
 ## How this works
 
@@ -71,38 +66,3 @@ Yaml file example:
    - For each rule in the scenario, a check is performed
    - If the check report about some problem, a diagnostic message is created
 4. Fixers are applied to the repository if available
-
-## How to build
-
-Install dependencies:
-
-```bash
-winget install Microsoft.DotNet.AspNetCore.8
-winget install Docker.DockerDesktop
-dotnet workload install aspire
-```
-
-Configure settings:
-- Add a GitHub token to the user secrets: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-
-```bash
-dotnet user-secrets init --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
-dotnet user-secrets set "RemoteHosts:Github:Token" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
-dotnet user-secrets set "RemoteHosts:AzureDevOps:Token" "ghp_***" --project Sources/ConfigurationRoot/Kysect.Zeya.WebService
-```
-
-Solution can be built using the `dotnet` command line tool or Visual Studio.
-
-```bash
-dotnet build Sources/Kysect.Zeya.sln
-```
-
-## Fixers
-
-Fixers are a set of rules that can be applied to the repository to fix problems. Some samples of fixers:
-
-- Automatically update .NET version
-- Add or update Nuget metadata values to Directory.Build.props
-- Add UseArtifactsOutput property to Directory.Build.props
-- Create Directory.Packages.props files and remove versions from .csproj
-- Add Nuget package using to Directory.Build.props
