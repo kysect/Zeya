@@ -31,7 +31,7 @@ public class RepositoryDependenciesService(
             .ToList();
 
         IReadOnlyCollection<string> repositoriesWithDiagnostics = await GetRepositoriesWithDiagnostics(policyId);
-        IReadOnlyCollection<RepositoryDependencyLink> graphLinks = await nugetPackageUpdateOrderBuilder.Build(localRepositories);
+        IReadOnlyCollection<RepositoryDependencyLink> graphLinks = await nugetPackageUpdateOrderBuilder.CreateDependencyLinks(localRepositories);
         return new PlantUmlRepositoryDependencyVisualization().ConvertToString(graphLinks, repositoriesWithDiagnostics);
     }
 
