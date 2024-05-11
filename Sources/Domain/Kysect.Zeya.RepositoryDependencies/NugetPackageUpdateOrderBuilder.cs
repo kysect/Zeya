@@ -1,16 +1,12 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
 using Kysect.CommonLib.Graphs;
-using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Projects;
-using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.Zeya.LocalRepositoryAccess;
-using Kysect.Zeya.RepositoryDependencies.PackageSources;
+using Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 using Microsoft.Extensions.Logging;
-using NuGet.Versioning;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Kysect.Zeya.RepositoryDependencies;
 
@@ -18,47 +14,49 @@ public record RepositoryDependencyLink(string From, string To, bool IsActual);
 public record ActionPlanStep(ILocalRepository Repository, bool FixRequired, IReadOnlyCollection<string> NotUpdatedInternalReferences);
 
 public class NugetPackageUpdateOrderBuilder(
-    SolutionFileContentParser solutionFileContentParser,
-    IPackageRepositoryClient packageRepositoryClient,
     ILogger<NugetPackageUpdateOrderBuilder> logger)
 {
     private readonly ILogger _logger = logger;
 
-    public async Task<IReadOnlyCollection<RepositoryDependencyLink>> CreateDependencyLinks(IReadOnlyCollection<ILocalRepository> repositories)
+    public IReadOnlyCollection<RepositoryDependencyLink> CreateDependencyLinks(IReadOnlyCollection<ILocalRepository> repositories, IReadOnlyCollection<SolutionPackageAnalyzerContextItem> solutionPackageAnalyzerContextItems)
     {
         repositories.ThrowIfNull();
+        solutionPackageAnalyzerContextItems.ThrowIfNull();
 
         _logger.LogInformation($"Building dependency graph for repositories: {repositories.ToSingleString(r => r.GetRepositoryName())}");
 
-        Dictionary<string, ILocalRepository> nugetPackageLocations = GetPackageToRepositoryMapping(repositories);
+        Dictionary<string, ILocalRepository> nugetPackageLocations =
+            solutionPackageAnalyzerContextItems
+            .SelectMany(i => i.DeclaredPackages.Select(p => new { i.Repository, p.Name }))
+            .ToDictionary(t => t.Name, t => t.Repository);
+
+        Dictionary<string, string> packageToVersionMapping = solutionPackageAnalyzerContextItems
+            .SelectMany(i => i.DeclaredPackages)
+            .ToDictionary(p => p.Name, p => p.Version);
 
         HashSet<RepositoryDependencyLink> repositoryLinks = new();
-        foreach (ILocalRepository localRepository in repositories)
+        foreach (SolutionPackageAnalyzerContextItem solutionPackageAnalyzerContextItem in solutionPackageAnalyzerContextItems)
         {
-            DotnetSolutionModifier dotnetSolutionModifier = localRepository.SolutionManager.GetSolution().GetSolutionModifier();
-            IReadOnlyCollection<ProjectPackageVersion> solutionPackages = dotnetSolutionModifier.GetOrCreateDirectoryPackagePropsModifier().Versions.GetPackageVersions();
-            foreach (ProjectPackageVersion projectPackageVersion in solutionPackages)
+            foreach (ProjectPackageVersion projectPackageVersion in solutionPackageAnalyzerContextItem.DependencyPackages)
             {
                 if (!nugetPackageLocations.TryGetValue(projectPackageVersion.Name, out ILocalRepository? otherRepository))
                 {
-                    _logger.LogTrace($"Dependency {projectPackageVersion} of {localRepository} is not found in any repository.");
+                    _logger.LogTrace($"Dependency {projectPackageVersion} of {solutionPackageAnalyzerContextItem.Repository.GetRepositoryName()} is not found in any repository.");
                     continue;
                 }
 
-                if (localRepository.GetRepositoryName() == otherRepository.GetRepositoryName())
+                if (solutionPackageAnalyzerContextItem.Repository.GetRepositoryName() == otherRepository.GetRepositoryName())
                     continue;
 
-                NuGetVersion? latestVersion = await packageRepositoryClient.TryGetLastVersion(projectPackageVersion.Name);
-                if (latestVersion is null)
+                if (!packageToVersionMapping.TryGetValue(projectPackageVersion.Name, out string? latestVersion))
                 {
                     _logger.LogTrace($"Skip project {projectPackageVersion.Name} skipped. Information in package sources not found.");
                     continue;
                 }
 
+                bool isActual = latestVersion == projectPackageVersion.Version;
                 // TODO: Possible case when one dependency is actual and another is not
-                var currentVersion = NuGetVersion.Parse(projectPackageVersion.Version);
-                bool isActual = latestVersion == currentVersion;
-                repositoryLinks.Add(new RepositoryDependencyLink(otherRepository.GetRepositoryName(), localRepository.GetRepositoryName(), isActual));
+                repositoryLinks.Add(new RepositoryDependencyLink(otherRepository.GetRepositoryName(), solutionPackageAnalyzerContextItem.Repository.GetRepositoryName(), isActual));
             }
         }
 
@@ -108,32 +106,5 @@ public class NugetPackageUpdateOrderBuilder(
         }
 
         return result;
-    }
-
-    private Dictionary<string, ILocalRepository> GetPackageToRepositoryMapping(IReadOnlyCollection<ILocalRepository> repositories)
-    {
-        Dictionary<string, ILocalRepository> nugetPackageLocations = new Dictionary<string, ILocalRepository>();
-        foreach (ILocalRepository localRepository in repositories)
-        {
-            IReadOnlyCollection<string> solutionProjects = GetContainingProjectNames(localRepository);
-            foreach (string projectName in solutionProjects)
-            {
-                nugetPackageLocations[projectName] = localRepository;
-            }
-        }
-
-        return nugetPackageLocations;
-    }
-
-    public IReadOnlyCollection<string> GetContainingProjectNames(ILocalRepository repository)
-    {
-        repository.ThrowIfNull();
-
-        string solutionFilePath = repository.SolutionManager.GetSolutionFilePath();
-        string solutionFileContent = repository.FileSystem.ReadAllText(solutionFilePath);
-        IReadOnlyCollection<DotnetProjectFileDescriptor> projectFileDescriptors = solutionFileContentParser.ParseSolutionFileContent(solutionFileContent);
-        var nugetPackages = projectFileDescriptors.Select(p => p.ProjectName).ToList();
-
-        return nugetPackages;
     }
 }

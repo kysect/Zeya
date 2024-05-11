@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kysect.Zeya.RepositoryDependencies.PackageSources;
+namespace Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 
 public class PackageRepositoryClient : IPackageRepositoryClient, IDisposable
 {

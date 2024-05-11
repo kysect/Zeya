@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.RepositoryDependencies.PackageSources;
+using Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryDependencies;
 
