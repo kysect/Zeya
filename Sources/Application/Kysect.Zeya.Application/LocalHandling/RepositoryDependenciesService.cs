@@ -1,8 +1,10 @@
 ﻿using Kysect.CommonLib.Graphs;
+using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
 using Kysect.Zeya.DataAccess.EntityFramework;
+using Kysect.Zeya.Dtos;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryDependencies;
 using Kysect.Zeya.RepositoryDependencies.Visualization;
@@ -14,6 +16,7 @@ public class RepositoryDependenciesService(
     ValidationPolicyRepositoryFactory repositoryFactory,
     LocalRepositoryProvider localRepositoryProvider,
     NugetPackageUpdateOrderBuilder nugetPackageUpdateOrderBuilder,
+    ValidationPolicyDatabaseQueries databaseQueries,
     ZeyaDbContext context) : IRepositoryDependenciesService
 {
     public async Task<string> GetRepositoryDependenciesTree(Guid policyId)
@@ -28,7 +31,17 @@ public class RepositoryDependenciesService(
             .Select(localRepositoryProvider.InitializeRepository)
             .ToList();
 
+        IReadOnlyCollection<string> repositoriesWithDiagnostics = await GetRepositoriesWithDiagnostics(policyId);
         IReadOnlyCollection<GraphLink<string>> graphLinks = nugetPackageUpdateOrderBuilder.Build(localRepositories);
-        return new PlantUmlRepositoryDependencyVisualization().ConvertToString(graphLinks);
+        return new PlantUmlRepositoryDependencyVisualization().ConvertToString(graphLinks, repositoriesWithDiagnostics);
+    }
+
+    private async Task<IReadOnlyCollection<string>> GetRepositoriesWithDiagnostics(Guid policyId)
+    {
+        IReadOnlyCollection<RepositoryDiagnosticTableRow> repositoriesDiagnostics = await databaseQueries.GetDiagnosticsTable(policyId);
+        return repositoriesDiagnostics
+            .Where(r => r.Diagnostics.Any())
+            .Select(r => r.RepositoryName)
+            .ToList();
     }
 }
