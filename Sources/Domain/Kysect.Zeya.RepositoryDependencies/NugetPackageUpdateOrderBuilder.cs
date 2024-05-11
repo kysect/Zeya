@@ -1,5 +1,6 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
 using Kysect.CommonLib.Collections.Extensions;
+using Kysect.CommonLib.Graphs;
 using Kysect.DotnetProjectSystem.Parsing;
 using Kysect.DotnetProjectSystem.Projects;
 using Kysect.DotnetProjectSystem.SolutionModification;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 namespace Kysect.Zeya.RepositoryDependencies;
 
 public record RepositoryDependencyLink(string From, string To, bool IsActual);
+public record ActionPlanStep(ILocalRepository Repository, bool FixRequired, IReadOnlyCollection<string> NotUpdatedInternalReferences);
 
 public class NugetPackageUpdateOrderBuilder(
     SolutionFileContentParser solutionFileContentParser,
@@ -22,7 +24,7 @@ public class NugetPackageUpdateOrderBuilder(
 {
     private readonly ILogger _logger = logger;
 
-    public async Task<IReadOnlyCollection<RepositoryDependencyLink>> Build(IReadOnlyCollection<ILocalRepository> repositories)
+    public async Task<IReadOnlyCollection<RepositoryDependencyLink>> CreateDependencyLinks(IReadOnlyCollection<ILocalRepository> repositories)
     {
         repositories.ThrowIfNull();
 
@@ -61,6 +63,51 @@ public class NugetPackageUpdateOrderBuilder(
         }
 
         return repositoryLinks;
+    }
+
+    public IReadOnlyCollection<ActionPlanStep> CreateFixingActionPlan(IReadOnlyCollection<ILocalRepository> repositories, IReadOnlyCollection<string> repositoriesWithDiagnostics, IReadOnlyCollection<RepositoryDependencyLink> links)
+    {
+        List<ActionPlanStep> result = [];
+        List<RepositoryDependencyLink> currentLinks = links.ToList();
+        List<ILocalRepository> notVisitedRepositories = repositories.ToList();
+
+        while (notVisitedRepositories.Any())
+        {
+            List<GraphLink<string>> graphLinks = links.Select(l => new GraphLink<string>(l.From, l.To)).ToList();
+            List<string> repositoryNames = notVisitedRepositories.Select(r => r.GetRepositoryName()).ToList();
+
+            GraphBuildResult<string, ILocalRepository> graph = GraphBuilder.Build(repositoryNames, graphLinks, GraphValueResolverCreator.Create(notVisitedRepositories, r => r.GetRepositoryName()));
+
+            Dictionary<string, List<string>> notUpdatedInternalReferences = new();
+            foreach (GraphNode<string, ILocalRepository> graphRoot in graph.Roots)
+            {
+                notVisitedRepositories.RemoveAll(r => r.GetRepositoryName() == graphRoot.Value.GetRepositoryName());
+                graphLinks.RemoveAll(l => l.From == graphRoot.Value.GetRepositoryName());
+
+                if (!notUpdatedInternalReferences.TryGetValue(graphRoot.Id, out List<string>? notUpdatedReferencesForCurrent))
+                    notUpdatedReferencesForCurrent = [];
+
+                if (!repositoriesWithDiagnostics.Contains(graphRoot.Id))
+                {
+                    if (notUpdatedReferencesForCurrent.Any())
+                        result.Add(new ActionPlanStep(graphRoot.Value, false, notUpdatedReferencesForCurrent));
+                    continue;
+                }
+
+                result.Add(new ActionPlanStep(graphRoot.Value, true, notUpdatedReferencesForCurrent));
+                foreach (GraphNode<string, ILocalRepository> dependantNodes in graphRoot.DirectChildren)
+                {
+                    if (!notUpdatedInternalReferences.TryGetValue(dependantNodes.Id, out List<string>? notUpdatedReferencesForDependant))
+                    {
+                        notUpdatedReferencesForDependant = [];
+                        notUpdatedInternalReferences[dependantNodes.Id] = notUpdatedReferencesForDependant;
+                    }
+                    notUpdatedReferencesForDependant.Add(graphRoot.Id);
+                }
+            }
+        }
+
+        return result;
     }
 
     private Dictionary<string, ILocalRepository> GetPackageToRepositoryMapping(IReadOnlyCollection<ILocalRepository> repositories)

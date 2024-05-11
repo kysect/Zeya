@@ -92,7 +92,7 @@ public class NugetPackageUpdateOrderBuilderTests
             .AddDirectoryPackagesProps(dotnetProjectSystemRepositoryPackages)
             .Save(dotnetProjectSystemRepository.FileSystem.GetFullPath());
 
-        IReadOnlyCollection<RepositoryDependencyLink> dependencyLinks = await _nugetPackageUpdateOrderBuilder.Build(new List<ILocalRepository>()
+        IReadOnlyCollection<RepositoryDependencyLink> dependencyLinks = await _nugetPackageUpdateOrderBuilder.CreateDependencyLinks(new List<ILocalRepository>()
         {
             editorConfigRepository,
             commonLibRepository,
