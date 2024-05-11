@@ -98,4 +98,20 @@ else
         <FluentLabel Typo="Typography.H2"> Repositories dependencies </FluentLabel>
         <img src='https://g.gravizo.com/svg?@_dependencyTree' alt="Dependency tree diagram"/>
     }
+
+    @if (_fixingActionPlanRows.Count != 0)
+    {
+        <FluentLabel Typo="Typography.H2"> Fixing action plan </FluentLabel>
+        <ol>
+            @foreach (var fixingActionPlanRow in _fixingActionPlanRows)
+            {
+                <li>
+                    <FluentStack Orientation="Orientation.Horizontal">
+                        <FluentLabel>@fixingActionPlanRow.Message </FluentLabel>
+                        <FluentButton Appearance="Appearance.Accent">Create PR</FluentButton>
+                    </FluentStack>
+                </li>
+            }
+        </ol>
+    }
 }

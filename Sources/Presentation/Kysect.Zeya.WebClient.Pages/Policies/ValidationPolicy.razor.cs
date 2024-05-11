@@ -25,6 +25,7 @@ public partial class ValidationPolicy
     private IReadOnlyCollection<RepositoryDiagnosticTableRow> _diagnosticsTable = new List<RepositoryDiagnosticTableRow>();
     private string? _changesPreview;
     private string? _dependencyTree;
+    private IReadOnlyCollection<FixingActionPlanRow> _fixingActionPlanRows = new List<FixingActionPlanRow>();
 
     private GridItemsProvider<ValidationPolicyRepositoryDto> _repositoryProvider = null!;
 
@@ -70,6 +71,13 @@ public partial class ValidationPolicy
     public async Task LoadDependencyTree()
     {
         _dependencyTree = await RepositoryDependenciesService.GetRepositoryDependenciesTree(PolicyId);
+        await LoadFixingActionPlan();
+        StateHasChanged();
+    }
+
+    public async Task LoadFixingActionPlan()
+    {
+        _fixingActionPlanRows = await RepositoryDependenciesService.GetFixingActionPlan(PolicyId);
         StateHasChanged();
     }
 
