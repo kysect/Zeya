@@ -1,5 +1,4 @@
-﻿using Kysect.CommonLib.Graphs;
-using Kysect.Zeya.Application.DatabaseQueries;
+﻿using Kysect.Zeya.Application.DatabaseQueries;
 using Kysect.Zeya.Application.Repositories;
 using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.DataAccess.Abstractions;
@@ -32,7 +31,7 @@ public class RepositoryDependenciesService(
             .ToList();
 
         IReadOnlyCollection<string> repositoriesWithDiagnostics = await GetRepositoriesWithDiagnostics(policyId);
-        IReadOnlyCollection<GraphLink<string>> graphLinks = nugetPackageUpdateOrderBuilder.Build(localRepositories);
+        IReadOnlyCollection<RepositoryDependencyLink> graphLinks = await nugetPackageUpdateOrderBuilder.Build(localRepositories);
         return new PlantUmlRepositoryDependencyVisualization().ConvertToString(graphLinks, repositoriesWithDiagnostics);
     }
 

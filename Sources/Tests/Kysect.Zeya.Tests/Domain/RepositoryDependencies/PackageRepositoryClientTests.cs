@@ -1,14 +1,14 @@
 ﻿using FluentAssertions;
-using Kysect.Zeya.RepositoryDependencies;
+using Kysect.Zeya.RepositoryDependencies.PackageSources;
 
 namespace Kysect.Zeya.Tests.Domain.RepositoryDependencies;
 
-public class NugetRepositoryClientTests
+public class PackageRepositoryClientTests
 {
     [Fact]
     public async Task GetDependencies_DotnetProjectSystem_ReturnCorrectDependencyList()
     {
-        using var nugetRepositoryClient = new NugetRepositoryClient();
+        using var nugetRepositoryClient = new PackageRepositoryClient();
         string[] expected = ["GuiLabs.Language.Xml", "Kysect.CommonLib", "Kysect.Editorconfig"];
 
         IReadOnlyCollection<string> dependencies = await nugetRepositoryClient.GetDependencies("Kysect.DotnetProjectSystem");
