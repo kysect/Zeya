@@ -26,6 +26,7 @@ public partial class ValidationPolicy
     private string? _changesPreview;
     private string? _dependencyTree;
     private IReadOnlyCollection<FixingActionPlanRow> _fixingActionPlanRows = new List<FixingActionPlanRow>();
+    private bool _analyzeProcessing;
 
     private GridItemsProvider<ValidationPolicyRepositoryDto> _repositoryProvider = null!;
 
@@ -49,7 +50,10 @@ public partial class ValidationPolicy
 
     public async Task RunValidation()
     {
+        _analyzeProcessing = true;
         await PolicyValidationService.Validate(PolicyId);
+        _diagnosticsTable = await PolicyService.GetDiagnosticsTable(PolicyId);
+        _analyzeProcessing = false;
         StateHasChanged();
     }
 
