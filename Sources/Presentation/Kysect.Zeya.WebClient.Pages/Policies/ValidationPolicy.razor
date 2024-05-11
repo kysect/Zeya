@@ -53,37 +53,45 @@ else
     </FluentDataGrid>
 
     <FluentLabel Typo="Typography.H2"> Validation </FluentLabel>
-    <FluentButton Appearance="Appearance.Accent" @onclick="@RunValidation">Run validation</FluentButton>
-    <FluentButton Appearance="Appearance.Accent" @onclick="@LoadDependencyTree">Generate dependency tree</FluentButton>
-
-    @if (_diagnosticsTable.Any())
+    @if (_analyzeProcessing)
     {
-        <table class="table">
-            <thead class="thead-dark">
-            <th>Repository name</th>
-            <th>Action</th>
-            @foreach (var ruleId in GetDiagnosticHeaders())
-            {
-                <th>@ruleId</th>
-            }
-            </thead>
-            <tbody>
-            @foreach (var repositoryDiagnostics in _diagnosticsTable)
-            {
-                <tr>
-                    <td>@repositoryDiagnostics.RepositoryName</td>
-                    <td>
-                        <FluentButton Appearance="Appearance.Accent" @onclick="@(async () => await PreviewChanges(repositoryDiagnostics.Id))">Preview changes</FluentButton>
-                        <FluentButton Appearance="Appearance.Accent" @onclick="@(async () => await CreateFix(repositoryDiagnostics.Id))">Create Fix</FluentButton>
-                    </td>
-                    @foreach (var ruleId in GetDiagnosticHeaders())
-                    {
-                        <td>@repositoryDiagnostics.Diagnostics.GetValueOrDefault(ruleId, "")</td>
-                    }
-                </tr>
-            }
-            </tbody>
-        </table>
+        <FluentLabel Typo="Typography.H3"> Validation started, waiting for results </FluentLabel>
+
+    }
+    else
+    {
+        <FluentButton Appearance="Appearance.Accent" @onclick="@RunValidation">Run validation</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" @onclick="@LoadDependencyTree">Generate dependency tree</FluentButton>
+
+        @if (_diagnosticsTable.Any())
+        {
+            <table class="table">
+                <thead class="thead-dark">
+                <th>Repository name</th>
+                <th>Action</th>
+                @foreach (var ruleId in GetDiagnosticHeaders())
+                {
+                    <th>@ruleId</th>
+                }
+                </thead>
+                <tbody>
+                @foreach (var repositoryDiagnostics in _diagnosticsTable)
+                {
+                    <tr>
+                        <td>@repositoryDiagnostics.RepositoryName</td>
+                        <td>
+                            <FluentButton Appearance="Appearance.Accent" @onclick="@(async () => await PreviewChanges(repositoryDiagnostics.Id))">Preview changes</FluentButton>
+                            <FluentButton Appearance="Appearance.Accent" @onclick="@(async () => await CreateFix(repositoryDiagnostics.Id))">Create Fix</FluentButton>
+                        </td>
+                        @foreach (var ruleId in GetDiagnosticHeaders())
+                        {
+                            <td>@repositoryDiagnostics.Diagnostics.GetValueOrDefault(ruleId, "")</td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
     }
 
     @if (_changesPreview is not null)

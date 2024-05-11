@@ -55,7 +55,7 @@ dotnet build Sources/Kysect.Zeya.sln
 2. In Web UI go to the `Validation policies` tab and open Demo policy by clicking on '✏️' button.
 3. Add GitHub repository to policy by clicking on 'Add Github repository' button. You can add Kysect/Zeya repository.
 4. Start validation by clicking on 'Run validation' button.
-5. Refresh the page to see the result of the validation.
+5. Waiting for results
 
 ## How this works
 
