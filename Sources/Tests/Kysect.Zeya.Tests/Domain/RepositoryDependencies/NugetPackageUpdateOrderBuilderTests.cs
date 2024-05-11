@@ -69,4 +69,45 @@ public class NugetPackageUpdateOrderBuilderTests
 
         dependencyLinks.Should().BeEquivalentTo(expectedLinks);
     }
+
+    [Fact]
+    public void CreateFixingActionPlan_SampleSolutionGroup_ReturnExpectedActionPlan()
+    {
+        ILocalRepository editorConfigRepository = _localRepositoryProvider.GetLocalRepository("Kysect.Editorconfig", "*.sln");
+        ILocalRepository commonLibRepository = _localRepositoryProvider.GetLocalRepository("Kysect.CommonLib", "*.sln");
+        ILocalRepository githubUtilsRepository = _localRepositoryProvider.GetLocalRepository("Kysect.GithubUtils", "*.sln");
+        ILocalRepository dotnetProjectSystemRepository = _localRepositoryProvider.GetLocalRepository("Kysect.DotnetProjectSystem", "*.sln");
+        var repositories = new List<ILocalRepository>()
+        {
+            editorConfigRepository,
+            dotnetProjectSystemRepository,
+            commonLibRepository,
+            githubUtilsRepository,
+        };
+
+        var links = new List<RepositoryDependencyLink>()
+        {
+            new("Kysect.Editorconfig", "Kysect.DotnetProjectSystem", false),
+            new("Kysect.Editorconfig", "Kysect.CommonLib", true),
+            new("Kysect.CommonLib", "Kysect.GithubUtils", true),
+        };
+
+        List<string> repositoriesWithDiagnostics = ["Kysect.CommonLib"];
+
+
+        var actionPlan = _nugetPackageUpdateOrderBuilder.CreateFixingActionPlan(repositories, repositoriesWithDiagnostics, links).ToList();
+        actionPlan.Should().HaveCount(3);
+
+        actionPlan[0].Repository.GetRepositoryName().Should().Be("Kysect.DotnetProjectSystem");
+        actionPlan[0].FixRequired.Should().BeFalse();
+        actionPlan[0].NotUpdatedInternalReferences.Should().BeEquivalentTo(["Kysect.Editorconfig"]);
+
+        actionPlan[1].Repository.GetRepositoryName().Should().Be("Kysect.CommonLib");
+        actionPlan[1].FixRequired.Should().BeTrue();
+        actionPlan[1].NotUpdatedInternalReferences.Should().BeEquivalentTo([]);
+
+        actionPlan[2].Repository.GetRepositoryName().Should().Be("Kysect.GithubUtils");
+        actionPlan[2].FixRequired.Should().BeFalse();
+        actionPlan[2].NotUpdatedInternalReferences.Should().BeEquivalentTo(["Kysect.CommonLib"]);
+    }
 }
