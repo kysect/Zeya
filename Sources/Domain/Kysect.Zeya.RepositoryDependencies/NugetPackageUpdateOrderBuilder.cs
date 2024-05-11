@@ -7,11 +7,27 @@ using Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Kysect.Zeya.RepositoryDependencies;
 
 public record RepositoryDependencyLink(string From, string To, bool IsActual);
-public record ActionPlanStep(ILocalRepository Repository, bool FixRequired, IReadOnlyCollection<string> NotUpdatedInternalReferences);
+
+public record ActionPlanStep(ILocalRepository Repository, bool FixRequired, IReadOnlyCollection<string> NotUpdatedInternalReferences)
+{
+    public string ConvertToString()
+    {
+        var stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine($"Repository {Repository.GetRepositoryName()}:");
+        if (FixRequired)
+            stringBuilder.AppendLine("Diagnostics fix required;");
+
+        if (!NotUpdatedInternalReferences.IsEmpty())
+            stringBuilder.AppendLine($"Not updated internal references: {NotUpdatedInternalReferences.ToSingleString()};");
+
+        return stringBuilder.ToString();
+    }
+}
 
 public class NugetPackageUpdateOrderBuilder(
     ILogger<NugetPackageUpdateOrderBuilder> logger)
