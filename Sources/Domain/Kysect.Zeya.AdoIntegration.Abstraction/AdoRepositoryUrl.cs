@@ -1,5 +1,4 @@
 ﻿using Kysect.CommonLib.BaseTypes.Extensions;
-using System;
 
 namespace Kysect.Zeya.AdoIntegration.Abstraction;
 

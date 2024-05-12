@@ -1,9 +1,6 @@
 ﻿using Kysect.Zeya.Client.Abstractions;
 using Kysect.Zeya.Dtos;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Kysect.Zeya.WebClient.Pages.PolicyRepositories;
 
