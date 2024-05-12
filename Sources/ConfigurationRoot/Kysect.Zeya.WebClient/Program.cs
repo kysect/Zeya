@@ -1,7 +1,7 @@
 using Kysect.Zeya.WebApiClient;
+using Kysect.Zeya.WebClient;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Kysect.Zeya.WebClient;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

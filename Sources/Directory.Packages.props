@@ -35,7 +35,7 @@
     <PackageVersion Include="IsExternalInit" Version="1.0.3" />
     <PackageVersion Include="Kysect.CommonLib" Version="0.1.21" />
     <PackageVersion Include="GuiLabs.Language.Xml" Version="1.2.88" />
-    <PackageVersion Include="Kysect.EditorConfig" Version="1.1.9" />
+    <PackageVersion Include="Kysect.SolutionDefaults" Version="0.1.2" />
     <PackageVersion Include="Kysect.DotnetSlnParser" Version="0.1.6" />
     <PackageVersion Include="Kysect.ScenarioLib" Version="0.1.7" />
     <PackageVersion Include="Kysect.ScenarioLib.Abstractions" Version="0.1.7" />

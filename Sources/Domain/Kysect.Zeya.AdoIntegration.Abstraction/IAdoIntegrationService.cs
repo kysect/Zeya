@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Kysect.Zeya.AdoIntegration.Abstraction;
+﻿namespace Kysect.Zeya.AdoIntegration.Abstraction;
 
 public interface IAdoIntegrationService
 {

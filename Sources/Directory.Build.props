@@ -1,9 +1,10 @@
 <Project>
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Kysect.Editorconfig">
+    <PackageReference Include="Kysect.SolutionDefaults">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

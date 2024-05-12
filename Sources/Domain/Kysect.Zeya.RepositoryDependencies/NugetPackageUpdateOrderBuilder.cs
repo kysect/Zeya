@@ -5,8 +5,6 @@ using Kysect.DotnetProjectSystem.Projects;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Kysect.Zeya.RepositoryDependencies;

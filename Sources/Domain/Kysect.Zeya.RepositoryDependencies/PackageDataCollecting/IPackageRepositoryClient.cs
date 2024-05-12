@@ -1,5 +1,4 @@
 ﻿using NuGet.Versioning;
-using System.Threading.Tasks;
 
 namespace Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 

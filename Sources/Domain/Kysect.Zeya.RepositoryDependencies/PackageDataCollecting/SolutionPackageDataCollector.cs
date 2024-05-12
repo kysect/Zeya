@@ -6,9 +6,6 @@ using Kysect.DotnetProjectSystem.SolutionModification;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Kysect.Zeya.RepositoryDependencies.PackageDataCollecting;
 

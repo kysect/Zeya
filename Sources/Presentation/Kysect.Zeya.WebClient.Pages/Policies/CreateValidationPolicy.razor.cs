@@ -1,7 +1,6 @@
 ﻿using Kysect.Zeya.Client.Abstractions;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace Kysect.Zeya.WebClient.Pages.Policies;
 
