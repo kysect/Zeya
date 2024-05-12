@@ -6,42 +6,11 @@ on:
   pull_request:
     branches: [ '*' ]
 
-
-env:
-  working-directory: Sources
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_NOLOGO: true
-  dotnet-version: 8.0.x
-
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - run: git config --global core.autocrlf input
-    - uses: actions/checkout@v3
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.dotnet-version }}
-
-    - name: Install .NET Aspire workload
-      run: dotnet workload install aspire
-
-    - name: Restore dependencies
-      run: dotnet restore
-      working-directory: ${{ env.working-directory }}
-
-    - name: Build
-      run: dotnet build -c Release --no-restore --verbosity normal
-      working-directory: ${{ env.working-directory }}
-
-    - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      working-directory: ${{ env.working-directory }}
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    uses: Kysect/.github/.github/workflows/dotnet-releaser.yaml@master
+    with:
+      dotnet-version: '8.0'
+      install-dotnet-aspire: true
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
