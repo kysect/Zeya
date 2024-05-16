@@ -1,10 +1,8 @@
-name: Build and test
+name: CI/CD
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ '*' ]
 
 jobs:
   build:
