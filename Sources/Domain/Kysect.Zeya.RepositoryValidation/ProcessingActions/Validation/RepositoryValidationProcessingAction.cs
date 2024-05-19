@@ -3,6 +3,7 @@ using Kysect.CommonLib.Reflection;
 using Kysect.ScenarioLib.Abstractions;
 using Kysect.Zeya.LocalRepositoryAccess;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace Kysect.Zeya.RepositoryValidation.ProcessingActions.Validation;
 
@@ -28,9 +29,22 @@ public class RepositoryValidationProcessingAction(
         var reflectionAttributeFinder = new ReflectionAttributeFinder();
         foreach (IValidationRule scenarioStep in request.Rules)
         {
-            var attributeFromType = reflectionAttributeFinder.GetAttributeFromInstance<ScenarioStepAttribute>(scenarioStep);
+            ScenarioStepAttribute attributeFromType = reflectionAttributeFinder.GetAttributeFromInstance<ScenarioStepAttribute>(scenarioStep);
             logger.LogDebug($"Validate via rule {attributeFromType.ScenarioName}");
-            scenarioStepHandler.Handle(scenarioContext, scenarioStep);
+
+            try
+            {
+                scenarioStepHandler.Handle(scenarioContext, scenarioStep);
+            }
+            catch (Exception e)
+            {
+                // We use reflection for invoking scenario steps, so we need to unwrap TargetInvocationException
+                if (e is TargetInvocationException targetInvocationException && targetInvocationException.InnerException is not null)
+                    e = targetInvocationException.InnerException;
+
+                logger.LogWarning(e, "Unexpected exception during processing rule {Rule}", scenarioStep.DiagnosticCode);
+                repositoryDiagnosticCollector.AddDiagnostic(scenarioStep.DiagnosticCode, e.Message, RepositoryValidationSeverity.RuntimeError);
+            }
         }
 
         var report = new RepositoryValidationReport(repositoryValidationContext.DiagnosticCollector.GetDiagnostics());
